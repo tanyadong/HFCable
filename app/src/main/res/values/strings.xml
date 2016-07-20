@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">HFCable</string>
+    <string name="app_name">弘飞线缆</string>
+    <string name="title_activity_mine">MineActivity</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!--tabbar_bottoom-->
+    <string name="tabbar_bottom_main">首页</string>
+    <string name="tabbar_bottom_info">资讯</string>
+    <string name="tabbar_bottom_market">行情</string>
+    <string name="tabbar_bottom_mine">我的</string>
 </resources>
