@@ -1,27 +1,22 @@
-package com.hbhongfei.hfcable.fragment;
-
+package com.hbhongfei.hfcable.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.activity.CompanyInfoActivity;
-import com.hbhongfei.hfcable.activity.ProdectListActivity;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
-import com.hbhongfei.hfcable.adapter.MyAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,18 +24,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class IndexFragment extends Fragment implements View.OnClickListener {
-    private View view;
-    private String typeName;
+public class ProdectInfoActivity extends AppCompatActivity implements View.OnClickListener{
     private LayoutInflater inflater;
+    private ImageView img1, img2, img3, img4;
     private ViewPager mviewPager;
-    private ListView listView;
-    private ImageView img1;
-    private TextView textView1, textView2;
-    private Button btn_typeName1, btn_typeName2, btn_typeName3, btn_typeName4, btn_typeName5, btn_typeName6;
+    private LinearLayout prodectList_LLayout_phone,prodectList_LLayout_collect,prodectList_LLayout_shoppingCat;
+    private TextView prodect_addCart;
     /**
      * 用于小圆点图片
      */
@@ -55,7 +44,11 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     private int currentItem = 0;//当前页面
 
     boolean isAutoPlay = true;//是否自动轮播
-
+    /**
+     * ViewPager当前显示页的下标
+     *
+     */
+    int position1 = 0;
     private ScheduledExecutorService scheduledExecutorService;
     Intent intent;
     private Handler handler = new Handler() {
@@ -70,56 +63,27 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         }
 
     };
-
-    public IndexFragment() {
-        // Required empty public constructor
-    }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_index, container, false);
-        initView(view);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_prodect_info);
+        initVIew();
         setDate();
-        onClick();
-        ArrayList<String> list = new ArrayList<String>();
-        for (int i = 0; i < 10; i++) {
-            list.add("测试:" + i);
-        }
-        MyAdapter adapter = new MyAdapter(IndexFragment.this.getActivity(), R.layout.intentionlayout, list);
-        listView.setDivider(null);
-        listView.setAdapter(adapter);
+        click();
         if (isAutoPlay) {
             startPlay();
         }
-        return view;
     }
-
-    public void initView(View view) {
-        inflater = LayoutInflater.from(getActivity());
-        listView = (ListView) view.findViewById(R.id.lv);
-        mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
-        dotLayout = (LinearLayout)view.findViewById(R.id.dotLayout);
+    public void initVIew(){
+        inflater = LayoutInflater.from(this);
+        mviewPager = (ViewPager)findViewById(R.id.myviewPager);
+        dotLayout = (LinearLayout)findViewById(R.id.dotLayout);
         img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-        btn_typeName1 = (Button) view.findViewById(R.id.btn_type_name1);
-        btn_typeName2 = (Button) view.findViewById(R.id.btn_type_name2);
-        btn_typeName3 = (Button) view.findViewById(R.id.btn_type_name3);
-        btn_typeName4 = (Button) view.findViewById(R.id.btn_type_name4);
-        btn_typeName5 = (Button) view.findViewById(R.id.btn_type_name5);
-        btn_typeName6 = (Button) view.findViewById(R.id.btn_type_name6);
+        prodectList_LLayout_phone= (LinearLayout) findViewById(R.id.prodectList_LLayout_phone);
+        prodectList_LLayout_collect= (LinearLayout) findViewById(R.id.prodectList_LLayout_collect);
+        prodectList_LLayout_shoppingCat= (LinearLayout) findViewById(R.id.prodectList_LLayout_shoppingCat);
+        prodect_addCart= (TextView) findViewById(R.id.prodect_addCart);
     }
-
-    /**
-     * 点击事件
-     */
-    public void onClick() {
-//        img.setOnClickListener(this);
-        btn_typeName1.setOnClickListener(this);
-
-    }
-
-    /**
-     * 设置数据
-     */
     public void setDate() {
         list = new ArrayList<ImageView>();
         dotViewList = new ArrayList<ImageView>();
@@ -132,12 +96,10 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
             img1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-//                    // 跳到查看大图界面
-//                    Intent intent = new Intent(IndexFragment.this.getActivity(),
-//                            CompanyInfoActivity.class);
-//                    intent.putExtra("position", position1);
-//                    startActivity(intent);
-                    intent =new Intent(IndexFragment.this.getActivity(), CompanyInfoActivity.class);
+                    // 跳到查看大图界面
+                    Intent intent = new Intent(ProdectInfoActivity.this,
+                            ShowBigPictrue.class);
+                    intent.putExtra("position", position1);
                     startActivity(intent);
                 }
             });
@@ -145,7 +107,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         }
         //加入小圆点
         for (int i = 0; i < list.size(); i++) {
-            ImageView indicator = new ImageView(getContext());
+            ImageView indicator = new ImageView(this);
             if (i == 0) {
                 indicator.setPadding(20, 0, 20, 0);
                 indicator.setImageResource(R.mipmap.point_unpressed);
@@ -172,21 +134,28 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         scheduledExecutorService.scheduleAtFixedRate(new SlideShowTask(), 1, 4, TimeUnit.SECONDS);
         //根据他的参数说明，第一个参数是执行的任务，第二个参数是第一次执行的间隔，第三个参数是执行任务的周期；
     }
-
+    private void click(){
+        prodectList_LLayout_phone.setOnClickListener(this);
+        prodectList_LLayout_collect.setOnClickListener(this);
+        prodectList_LLayout_shoppingCat.setOnClickListener(this);
+        prodect_addCart.setOnClickListener(this);
+    }
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-//            case R.id.img:
-//                intent = new Intent(getActivity(), CompanyInfoActivity.class);
-//                startActivity(intent);
-//                break;
-            case R.id.btn_type_name1:
-                typeName = btn_typeName1.getText().toString();
-                intent = new Intent(getActivity(), ProdectListActivity.class);
-                intent.putExtra("typeName", typeName);
-                startActivity(intent);
+        switch (v.getId()){
+            case R.id.prodectList_LLayout_phone:
+                Toast.makeText(this,"1",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.prodectList_LLayout_collect:
+                Toast.makeText(this,"1",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.prodectList_LLayout_shoppingCat:
+                Toast.makeText(this,"1",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.prodect_addCart:
                 break;
         }
+
     }
 
     /**
@@ -202,7 +171,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
-
     /**
      * ViewPager的监听器
      * 当ViewPager中页面的状态发生改变时调用
@@ -243,6 +211,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public void onPageSelected(int position) {
+           position1=position;
             Log.i("zj", "onPagerChange position=" + position);
             for (int i = 0; i < list.size(); i++) {
                 dotViewList.get(i).setImageResource(R.mipmap.point_unpressed);

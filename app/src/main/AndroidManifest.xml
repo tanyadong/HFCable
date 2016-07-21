@@ -25,6 +25,8 @@
         <activity android:name=".activity.MyNameActivity" />
         <activity android:name=".activity.MyPasswordActivity"></activity>
         <activity android:name=".activity.MyInfoActivity"></activity>
+        <activity android:name=".activity.ProdectInfoActivity"></activity>
+        <activity android:name=".activity.ShowBigPictrue"></activity>
         <activity
             android:name=".activity.CompanyInfoActivity"
             android:label="@string/company_info"

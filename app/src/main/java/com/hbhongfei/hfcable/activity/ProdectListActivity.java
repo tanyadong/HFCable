@@ -6,15 +6,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.adapter.MyAdapter;
 import com.hbhongfei.hfcable.adapter.SpinnerListAdapter;
 import com.hbhongfei.hfcable.util.MySpinner;
+
+import java.util.ArrayList;
 
 public class ProdectListActivity extends AppCompatActivity implements View.OnClickListener{
     private LinearLayout prodectType_spinner;
     private TextView prodectType_textView;
+    private ListView prodectList_listView;
     private String array[],typeName;
     private int width;
     @Override
@@ -33,6 +38,7 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
     public void initView(){
         prodectType_spinner = (LinearLayout) findViewById(R.id.prodectType_spinner);
         prodectType_textView = (TextView) findViewById(R.id.prodectType_textView);
+        prodectList_listView= (ListView) findViewById(R.id.prodectlist_listView);
     }
     /**
      * 设置数据
@@ -45,6 +51,14 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         //获取屏幕宽度
         WindowManager wm = this.getWindowManager();
         width = wm.getDefaultDisplay().getWidth();
+
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < 10; i++) {
+            list.add("测试:"+i);
+        }
+        MyAdapter adapter = new MyAdapter(this,R.layout.intentionlayout,list);
+        prodectList_listView.setDivider(null);
+        prodectList_listView.setAdapter(adapter);
     }
     /**
      * 点击事件
