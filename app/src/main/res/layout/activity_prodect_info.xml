@@ -41,7 +41,7 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
         <TextView
         android:id="@+id/prodectInto_simpleDeclaration_tview"
         android:layout_marginTop="10dp"

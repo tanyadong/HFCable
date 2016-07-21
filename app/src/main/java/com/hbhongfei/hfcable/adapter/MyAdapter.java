@@ -1,6 +1,7 @@
 package com.hbhongfei.hfcable.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.activity.ProdectInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +74,8 @@ public class MyAdapter extends BaseAdapter {
             vh.layout1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Intent intent=new Intent(context, ProdectInfoActivity.class);
+                    context.startActivity(intent);
                     Toast.makeText(context, itemList.get(0)+"----"+position, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -81,6 +85,8 @@ public class MyAdapter extends BaseAdapter {
                 vh.layout2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Intent intent=new Intent(context, ProdectInfoActivity.class);
+                        context.startActivity(intent);
                         Toast.makeText(context, itemList.get(1), Toast.LENGTH_SHORT).show();
                     }
                 });
