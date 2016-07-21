@@ -1,17 +1,3 @@
 <resources>
     <string name="app_name">HFCable</string>
-    <!--主页-->
-    <string name="recommended_species">推荐种类</string>
-    <string name="recommended_products">推荐产品</string>
-    <!--公司信息页面-->
-    <string name="company_info">公司信息</string>
-    <string name="company_name">河北弘飞线缆有限公司</string>
-    <string name="company_introduce">公司简介</string>
-    <string name="company_introduce_content">该公司成立于1995年，注册资金1000晚，是河北省著名企业</string>
-    <string name="company_majorProduct">主营产品</string>
-    <string name="company_contactWay">联系方式</string>
-    <string name="company_address">地址：</string>
-    <string name="company_telphone">电话：</string>
-    <string name="company_emali">邮箱：</string>
-    <string name="company_postcode">邮编：</string>
 </resources>
