@@ -53,39 +53,22 @@
     <string name="mine_favorite">收藏</string>
     <string name="mine_order">订单</string>
 
-    <!--主页-->
-    <string name="recommended_species">推荐种类</string>
-    <string name="recommended_products">推荐产品</string>
-    <!--公司信息页面-->
-    <string name="company_info">公司信息</string>
-    <string name="company_name">河北弘飞线缆有限公司</string>
-    <string name="company_introduce">公司简介</string>
-    <string name="company_introduce_content">该公司成立于1995年，注册资金1000晚，是河北省著名企业00000000000000000000000
-        000000000000000000000000
-        000000000000000000000000000000000000000
-        000000000000000000000000000000000000000
-        0000000000000000000000000000000000000000
-        0000000000000000000000000000000000
-        00000000000000000000000000000000000
-        000000000000000000000000000000
-        0000000000000000000000000000000000
-        0000000000000000000000000000000000000000000000000000000000000000000000</string>
-    <string name="company_majorProduct">主营产品</string>
-    <string name="company_contactWay">联系方式</string>
-    <string name="company_address">地址：</string>
-    <string name="company_telphone">电话：</string>
-    <string name="company_emali">邮箱：</string>
-    <string name="company_postcode">邮编：</string>
+    <!--myInfo-->
+    <string name="myInfo_name">昵称</string>
+    <string name="myInfo_sex">性别</string>
+    <string name="myInfo_password">修改密码</string>
 
-    <!--产品信息-->
-    <string name="prodect_specifications">规格：</string>
-    <string name="prodect_model">型号：</string>
-    <string name="prodect_coreType">线芯种类：</string>
-    <string name="prodect_type">产品种类：</string>
-    <string name="prodect_introduce">产品说明</string>
-    <string name="prodect_detail">产品详情</string>
-    <string name="prodect_detailContent">shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</string>
-    <string name="prodect_phone">电话</string>
-    <string name="prodect_collect">收藏</string>
-    <string name="prodect_shoppingCat">购物车</string>
+    <!--myName-->
+    <string name="myName_hint">请输入您的昵称：</string>
+    <string name="myName_number">/8</string>
+    <string name="myName_text">昵称最多8个字符</string>
+
+    <!--myPassword-->
+    <string name="myPassword_before">原密码：</string>
+    <string name="myPassword_update">请设置6-20位新密码：</string>
+    <string name="myPassword_sure">确认密码：</string>
+
+    <!--sexSelector-->
+    <string name="sexSelector_sure">确定</string>
+
 </resources>

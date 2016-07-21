@@ -42,15 +42,16 @@ public class MyNameActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                getValues();
-//                number.setText(S_name.length());
-                System.out.println(S_name.length());
+
             }
 
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                getValues();
+                System.out.println(S_name);
+                number.setText(""+S_name.length());
+//                System.out.println(S_name.length());
             }
         });
     }
