@@ -18,6 +18,10 @@
         <activity android:name=".activity.MainActivity1">
 
         </activity>
+        <activity android:name=".activity.MyFavoriteActivity" />
+        <activity android:name=".activity.MyOrderActivity" />
+        <activity android:name=".activity.MyShoppingActivity" />
+        <activity android:name=".activity.MyInfoActivity"></activity>
         <activity
             android:name=".activity.CompanyInfoActivity"
             android:label="@string/company_info"
