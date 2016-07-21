@@ -18,8 +18,6 @@ public class IndexFragment extends Fragment {
     public IndexFragment() {
         // Required empty public constructor
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

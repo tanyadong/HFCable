@@ -21,6 +21,9 @@
         <activity android:name=".activity.MyFavoriteActivity" />
         <activity android:name=".activity.MyOrderActivity" />
         <activity android:name=".activity.MyShoppingActivity" />
+        <activity android:name=".activity.MyInfoActivity" />
+        <activity android:name=".activity.MyNameActivity" />
+        <activity android:name=".activity.MyPasswordActivity"></activity>
         <activity android:name=".activity.MyInfoActivity"></activity>
         <activity
             android:name=".activity.CompanyInfoActivity"
