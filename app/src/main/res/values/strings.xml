@@ -9,4 +9,10 @@
     <string name="tabbar_bottom_info">资讯</string>
     <string name="tabbar_bottom_market">行情</string>
     <string name="tabbar_bottom_mine">我的</string>
+
+    <!--mine-->
+    <string name="mine_myInfo">个人资料</string>
+    <string name="mine_shopping">购物车</string>
+    <string name="mine_favorite">收藏</string>
+    <string name="mine_order">订单</string>
 </resources>
