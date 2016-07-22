@@ -84,6 +84,10 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodectList_LLayout_shoppingCat= (LinearLayout) findViewById(R.id.prodectList_LLayout_shoppingCat);
         prodect_addCart= (TextView) findViewById(R.id.prodect_addCart);
     }
+
+    /**
+     * 设置数据
+     */
     public void setDate() {
         list = new ArrayList<ImageView>();
         dotViewList = new ArrayList<ImageView>();
