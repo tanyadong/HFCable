@@ -59,73 +59,148 @@
                 android:background="#6d6d6e"
                 />
         </LinearLayout>
-        <RelativeLayout
-            android:layout_marginTop="15dp"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
             <Button
-                android:id="@+id/btn_type_name1"
-                android:text="特种电缆"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_background"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="16dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
+            android:id="@+id/btn_type_name1"
+            android:text="特种电缆"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_background"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+             />
             <Button
-                android:id="@+id/btn_type_name2"
-                android:text="特种电缆"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_background"
-                android:layout_toRightOf="@id/btn_type_name1"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
+            android:id="@+id/btn_type_name2"
+            android:text="特种电缆"
+                android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_background"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            />
             <Button
                 android:id="@+id/btn_type_name3"
-                android:text="特种电缆"
+                android:text="特种电缆222"
+                android:layout_weight="1"
                 android:background="@drawable/text_background"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
             <Button
                 android:id="@+id/btn_type_name4"
                 android:text="特种电缆"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/text_background"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/btn_type_name1"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="15dp"
-                android:layout_centerHorizontal="true" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp">
+            </Button>
             <Button
                 android:id="@+id/btn_type_name5"
                 android:text="特种电缆"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_background"
-                android:layout_toRightOf="@id/btn_type_name1"
-                android:layout_below="@+id/btn_type_name2"
+                android:layout_weight="1"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="16dp"
-                android:layout_centerHorizontal="true" />
+             />
             <Button
                 android:id="@+id/btn_type_name6"
-                android:text="更多。。。。"
+                android:text="更多。。。"
                 android:background="@drawable/text_background"
+                android:layout_weight="1"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
-                android:layout_below="@+id/btn_type_name3"
+                android:maxLength="4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </RelativeLayout>
+        </LinearLayout>
+        <!--<RelativeLayout-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<Button-->
+                <!--android:id="@+id/btn_type_name1"-->
+                <!--android:text="特种电缆"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/text_background"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_centerHorizontal="true" />-->
+            <!--<Button-->
+                <!--android:id="@+id/btn_type_name2"-->
+                <!--android:text="特种电缆"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/text_background"-->
+                <!--android:layout_toRightOf="@id/btn_type_name1"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_centerHorizontal="true" />-->
+            <!--<Button-->
+                <!--android:id="@+id/btn_type_name3"-->
+                <!--android:text="特种电缆"-->
+                <!--android:background="@drawable/text_background"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+            <!--<Button-->
+                <!--android:id="@+id/btn_type_name4"-->
+                <!--android:text="特种电缆"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/text_background"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_below="@id/btn_type_name1"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:layout_centerHorizontal="true" />-->
+            <!--<Button-->
+                <!--android:id="@+id/btn_type_name5"-->
+                <!--android:text="特种电缆"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/text_background"-->
+                <!--android:layout_toRightOf="@id/btn_type_name1"-->
+                <!--android:layout_below="@+id/btn_type_name2"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:layout_centerHorizontal="true" />-->
+            <!--<Button-->
+                <!--android:id="@+id/btn_type_name6"-->
+                <!--android:text="更多。。。"-->
+                <!--android:background="@drawable/text_background"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:maxLength="4"-->
+                <!--android:layout_below="@+id/btn_type_name3"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</RelativeLayout>-->
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_marginTop="15dp"
