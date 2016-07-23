@@ -67,6 +67,7 @@
     <string name="myPassword_before">原密码：</string>
     <string name="myPassword_update">请设置6-20位新密码：</string>
     <string name="myPassword_sure">确认密码：</string>
+    <string name="myPassword_title">修改密码</string>
 
     <!--sexSelector-->
     <string name="sexSelector_sure">确定</string>
