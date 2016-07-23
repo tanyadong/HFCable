@@ -54,6 +54,7 @@
     <string name="mine_order">订单</string>
 
     <!--myInfo-->
+    <string name="myInfo_title">个人信息</string>
     <string name="myInfo_name">昵称</string>
     <string name="myInfo_sex">性别</string>
     <string name="myInfo_password">修改密码</string>

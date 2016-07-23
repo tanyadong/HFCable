@@ -21,7 +21,8 @@
         <activity
             android:name=".activity.MyShoppingActivity"
             android:label="我的购物车"></activity>
-        <activity android:name=".activity.MyInfoActivity" />
+        <activity android:name=".activity.MyInfoActivity"
+            android:label="@string/myInfo_title" />
         <activity android:name=".activity.ProdectInfoActivity"></activity>
         <activity android:name=".activity.ShowBigPictrue" />
         <activity

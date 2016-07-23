@@ -33,6 +33,14 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_my_info);
         initView();
         setOnClick();
+        toolBar();
+    }
+
+    private void toolBar(){
+        //返回键
+        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setDisplayShowTitleEnabled(true);
     }
 
     /**
