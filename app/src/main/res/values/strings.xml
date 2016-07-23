@@ -62,6 +62,7 @@
     <string name="myName_hint">请输入您的昵称：</string>
     <string name="myName_number">/8</string>
     <string name="myName_text">昵称最多8个字符</string>
+    <string name="myName_title">修改昵称</string>
 
     <!--myPassword-->
     <string name="myPassword_before">原密码：</string>
@@ -80,4 +81,5 @@
     <string name="myShopping_account">去结算</string>
     <string name="myShopping_selectAll">全选</string>
     <string name="myShopping_delete">删除</string>
+    <string name="title_activity_my_name">MyNameActivity</string>
 </resources>

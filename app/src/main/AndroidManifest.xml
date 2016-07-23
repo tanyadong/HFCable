@@ -9,7 +9,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.MainActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,18 +16,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.MainActivity1" />
-        <activity android:name=".activity.MyFavoriteActivity">
-
-        </activity>
+        <activity android:name=".activity.MyFavoriteActivity"></activity>
         <activity android:name=".activity.MyOrderActivity" />
-        <activity android:name=".activity.MyShoppingActivity"
-            android:label="我的购物车">
-        </activity>
+        <activity
+            android:name=".activity.MyShoppingActivity"
+            android:label="我的购物车"></activity>
         <activity android:name=".activity.MyInfoActivity" />
-        <activity android:name=".activity.MyNameActivity" />
-        <activity android:name=".activity.ProdectInfoActivity">
-
-        </activity>
+        <activity android:name=".activity.ProdectInfoActivity"></activity>
         <activity android:name=".activity.ShowBigPictrue" />
         <activity
             android:name=".activity.CompanyInfoActivity"
@@ -40,9 +34,11 @@
         <activity
             android:name=".activity.MyPasswordActivity"
             android:label="@string/title_activity_my_password"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.MyNameActivity"
+            android:label="@string/title_activity_my_name"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
