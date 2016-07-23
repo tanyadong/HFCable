@@ -70,5 +70,13 @@
 
     <!--sexSelector-->
     <string name="sexSelector_sure">确定</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_my_password">MyPasswordActivity</string>
 
+
+    <!--myShopping-->
+    <string name="myShopping_allMoney">总金额：￥</string>
+    <string name="myShopping_account">去结算</string>
+    <string name="myShopping_selectAll">全选</string>
+    <string name="myShopping_delete">删除</string>
 </resources>

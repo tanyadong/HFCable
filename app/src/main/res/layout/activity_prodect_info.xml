@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.hbhongfei.hfcable.activity.ProdectInfoActivity"
-    >
+    tools:context="com.hbhongfei.hfcable.activity.ProdectInfoActivity">
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="0dip"
@@ -142,11 +141,11 @@
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-     <View  android:layout_height="1px"
+        <View
+         android:layout_height="1px"
         android:layout_width="match_parent"
         android:layout_gravity="center_vertical"
-        android:background="@color/gray"
-        />
+        android:background="@color/gray"/>
             <TextView
                 android:id="@+id/prodectInfo_detail_textView"
                 android:text="@string/prodect_detailContent"
@@ -158,7 +157,7 @@
     </ScrollView>
     <LinearLayout
         android:orientation="horizontal"
-        android:gravity="bottom"
+        android:gravity="center"
         android:background="@drawable/prodectlayout_background"
         android:layout_width="match_parent"
         android:layout_height="45dp">
