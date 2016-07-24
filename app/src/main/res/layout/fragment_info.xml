@@ -2,12 +2,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
     tools:context="com.hbhongfei.hfcable.fragment.InfoFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/fragment_load_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="资讯" />
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/fragment_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dip"
+            android:text="@string/tip_text_data_loading"
+            android:textColor="#FFFFFFFF" />
+
+
+    </LinearLayout>
+    <ListView
+        android:id="@+id/fragment_info_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ListView>
 </FrameLayout>

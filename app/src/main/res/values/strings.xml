@@ -83,4 +83,10 @@
     <string name="myShopping_selectAll">全选</string>
     <string name="myShopping_delete">删除</string>
     <string name="title_activity_my_name">MyNameActivity</string>
+<!--行业资讯-->
+    <string name="button_text_reload">重新连接</string>
+    <string name="tip_text_data_loading">数据获取中...</string>
+    <string name="tip_text_data_fail">数据获取失败，点击再次获取！</string>
+    <string name="tip_speak_not_installed">无法朗读，请安装讯飞语音！</string>
+    <string name="tip_speak_error">阅读错误！</string>
 </resources>

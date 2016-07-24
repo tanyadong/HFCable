@@ -114,7 +114,11 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     public void onClick() {
 //        img.setOnClickListener(this);
         btn_typeName1.setOnClickListener(this);
-
+        btn_typeName2.setOnClickListener(this);
+        btn_typeName3.setOnClickListener(this);
+        btn_typeName4.setOnClickListener(this);
+        btn_typeName5.setOnClickListener(this);
+        btn_typeName6.setOnClickListener(this);
     }
 
     /**
@@ -132,11 +136,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
             img1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-//                    // 跳到查看大图界面
-//                    Intent intent = new Intent(IndexFragment.this.getActivity(),
-//                            CompanyInfoActivity.class);
-//                    intent.putExtra("position", position1);
-//                    startActivity(intent);
                     intent =new Intent(IndexFragment.this.getActivity(), CompanyInfoActivity.class);
                     startActivity(intent);
                 }
@@ -176,11 +175,37 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.img:
-//                intent = new Intent(getActivity(), CompanyInfoActivity.class);
-//                startActivity(intent);
-//                break;
             case R.id.btn_type_name1:
+                typeName = btn_typeName1.getText().toString();
+                intent = new Intent(getActivity(), ProdectListActivity.class);
+                intent.putExtra("typeName", typeName);
+                startActivity(intent);
+                break;
+            case R.id.btn_type_name2:
+                typeName = btn_typeName1.getText().toString();
+                intent = new Intent(getActivity(), ProdectListActivity.class);
+                intent.putExtra("typeName", typeName);
+                startActivity(intent);
+                break;
+            case R.id.btn_type_name3:
+                typeName = btn_typeName1.getText().toString();
+                intent = new Intent(getActivity(), ProdectListActivity.class);
+                intent.putExtra("typeName", typeName);
+                startActivity(intent);
+                break;
+            case R.id.btn_type_name4:
+                typeName = btn_typeName1.getText().toString();
+                intent = new Intent(getActivity(), ProdectListActivity.class);
+                intent.putExtra("typeName", typeName);
+                startActivity(intent);
+                break;
+            case R.id.btn_type_name5:
+                typeName = btn_typeName1.getText().toString();
+                intent = new Intent(getActivity(), ProdectListActivity.class);
+                intent.putExtra("typeName", typeName);
+                startActivity(intent);
+                break;
+            case R.id.btn_type_name6:
                 typeName = btn_typeName1.getText().toString();
                 intent = new Intent(getActivity(), ProdectListActivity.class);
                 intent.putExtra("typeName", typeName);

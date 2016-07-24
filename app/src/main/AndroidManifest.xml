@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hbhongfei.hfcable">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,6 +19,8 @@
         </activity>
         <activity android:name=".activity.MainActivity1" />
         <activity android:name=".activity.MyFavoriteActivity"></activity>
+
+        <activity android:name=".activity.MyFavoriteActivity" />
         <activity android:name=".activity.MyOrderActivity" />
         <activity
             android:name=".activity.MyShoppingActivity"
@@ -25,9 +29,20 @@
             android:label="@string/myInfo_title" />
         <activity android:name=".activity.ProdectInfoActivity"></activity>
         <activity android:name=".activity.ShowBigPictrue" />
+
+
+        <activity android:name=".activity.MyNameActivity" />
+        <activity android:name=".activity.MyPasswordActivity" />
+
+        <activity android:name=".activity.ShowBigPictrue" />
         <activity
             android:name=".activity.CompanyInfoActivity"
             android:label="@string/company_info"
+            android:parentActivityName=".activity.MainActivity1" />
+        <activity
+            android:name=".activity.ProdectListActivity"
+            android:parentActivityName=".activity.MainActivity1"></activity>
+        <activity android:name=".activity.InfoDetailActivity"></activity>
             android:parentActivityName=".activity.MainActivity1" />
         <activity
             android:name=".activity.ProdectListActivity"
