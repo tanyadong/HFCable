@@ -76,7 +76,6 @@ public class ImageFromMemoryCache {
         if (bitmap != null) {
             synchronized (mSoftCache) {
             	mSoftCache.put(url, new SoftReference<Bitmap>(bitmap));
-//                mLruCache.put(url, bitmap);
             }
         }
     }

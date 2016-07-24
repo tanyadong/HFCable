@@ -33,7 +33,7 @@ public class ImageFromHttp {
                 imageView.setImageBitmap(bitmap);
 
             }
-        }, 100, 100, Bitmap.Config.RGB_565, new Response.ErrorListener() {
+        }, 0, 0, Bitmap.Config.RGB_565, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 

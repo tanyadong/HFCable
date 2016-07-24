@@ -79,7 +79,6 @@ public class DataAdapter extends BaseAdapter {
 //			ImageLoader1 imageLoader=new ImageLoader1(mContext);
 //			imageLoader.DisplayImage(newsData.get(position).getImgUrl(), hView.image);
 			AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-//			String url="https://gd4.alicdn.com/bao/uploaded/i4/34931937/TB2ISnKsVXXXXXcXXXXXXXXXXXX_!!34931937.jpg";
 			asyncBitmapLoader.loadImage(mContext,hView.image,newsData.get(position).getImgUrl());
 //			ImageLoader1.getInstance(mContext).loadImage(newsData.get(position).getImgUrl(),hView.image);
 		} else {

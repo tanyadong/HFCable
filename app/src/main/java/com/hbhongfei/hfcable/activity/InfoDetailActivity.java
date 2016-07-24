@@ -3,17 +3,17 @@ package com.hbhongfei.hfcable.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.util.ImageLoader1;
+import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Information;
 
 import org.jsoup.Jsoup;
@@ -25,7 +25,7 @@ import java.io.IOException;
 
 public class InfoDetailActivity extends AppCompatActivity {
     private RequestQueue queue;
-    private NetworkImageView infoDetail_img;
+    private ImageView infoDetail_img;
     private TextView infoDetail_title;
     private TextView infoDetail_content;
     private String[] array;
@@ -48,7 +48,7 @@ public class InfoDetailActivity extends AppCompatActivity {
      */
     private void initView(){
         infoDetail_content= (TextView) findViewById(R.id.infoDetail_content);
-        infoDetail_img= (NetworkImageView) findViewById(R.id.infoDetail_img);
+        infoDetail_img= (ImageView) findViewById(R.id.infoDetail_img);
         infoDetail_title= (TextView) findViewById(R.id.infoDetail_title);
     }
     /**
@@ -58,7 +58,9 @@ public class InfoDetailActivity extends AppCompatActivity {
         Intent intent=getIntent();
         Information information= (Information) intent.getSerializableExtra("data");
         infoDetail_title.setText(information.getTitle());
-        ImageLoader1.getInstance(this).loadImage(information.getImgUrl(),infoDetail_img);
+//        ImageLoader1.getInstance(this).loadImage(information.getImgUrl(),infoDetail_img);
+        AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+        asyncBitmapLoader.loadImage(this,infoDetail_img,information.getImgUrl());
         loadData(information.getContentUrl());
     }
     private void loadData(String url){

@@ -124,13 +124,6 @@ public class InfoFragment extends Fragment{
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(getActivity(), InfoDetailActivity.class);
-                String[] value = new String[] {
-                        info_list.get(position).getTitle(),
-                        info_list.get(position).getBrief(),
-                        info_list.get(position).getImgUrl(),
-                        info_list.get(position).getContentUrl(),
-                         };
-//                intent.putExtra("data", value);
                 intent.putExtra("data", info_list.get(position));
                 getActivity().startActivity(intent);
             }
