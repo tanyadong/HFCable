@@ -22,7 +22,8 @@ import java.util.concurrent.Executors;
  */
 public class ImageLoader1{
     MemoryCache memoryCache = new MemoryCache();
-    FileCache fileCache;
+    private LruCache<String,Bitmap> mcatch;
+//    FileCache fileCache;
     Context mContext;
     private static ImageLoader1 mImageLoader = null;
     private Map<ImageView, String> imageViews = Collections
@@ -36,31 +37,27 @@ public class ImageLoader1{
         return mImageLoader;
     }
     public ImageLoader1(Context context) {
-        fileCache = new FileCache(context);
+//        fileCache = new FileCache(context);
         executorService = Executors.newFixedThreadPool(5);
         mContext=context;
     }
 
-//    // 当进入listview时默认的图片，可换成你自己的默认图片
-//    final int stub_id = R.mipmap.ic_launcher;
-
-
 
     // 最主要的方法
-    public void loadImage(String url, NetworkImageView imageView) {
-        //			//声明一个队列
-        RequestQueue queue= Volley.newRequestQueue(mContext);
-        imageView.setDefaultImageResId(R.mipmap.ic_launcher);
-        imageView.setErrorImageResId(R.mipmap.ic_launcher);
-        imageView.setImageUrl(url,new ImageLoader(queue,new BitmapCatch()));
+    public void loadImage(String url,NetworkImageView imageView) {
+//String url1= (String) imageView.getTag();
+            //			//声明一个队列
+            RequestQueue queue = Volley.newRequestQueue(mContext);
+            imageView.setDefaultImageResId(R.mipmap.ic_launcher);
+            imageView.setErrorImageResId(R.mipmap.ic_launcher);
+            imageView.setImageUrl(url, new ImageLoader(queue, new BitmapCatch()));
     }
-
 
     /**
      * 实现带缓存得分imageCatch
      */
     public class BitmapCatch implements ImageLoader.ImageCache {
-        private LruCache<String,Bitmap> mcatch;
+
         private int maxCatch=10*1024*1024;
 
         public BitmapCatch() {

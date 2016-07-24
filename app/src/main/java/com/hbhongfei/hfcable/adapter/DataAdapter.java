@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.util.ImageLoader1;
+import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Information;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class DataAdapter extends BaseAdapter {
 		if (null == convertView) {
 			hView = new HolderView();
 			convertView = inflater.inflate(R.layout.information_layout, null);
-			hView.image = (NetworkImageView) convertView.findViewById(R.id.info_img);
+			hView.image = (ImageView) convertView.findViewById(R.id.info_img);
 			hView.title = (TextView) convertView.findViewById(R.id.info_title_textView);
 			hView.brief = (TextView)convertView.findViewById(R.id.info_content_textVeiw);
 			convertView.setTag(hView);
@@ -78,7 +78,10 @@ public class DataAdapter extends BaseAdapter {
 			hView.image.setTag(newsData.get(position).getImgUrl());
 //			ImageLoader1 imageLoader=new ImageLoader1(mContext);
 //			imageLoader.DisplayImage(newsData.get(position).getImgUrl(), hView.image);
-			ImageLoader1.getInstance(mContext).loadImage(newsData.get(position).getImgUrl(), hView.image);
+			AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+//			String url="https://gd4.alicdn.com/bao/uploaded/i4/34931937/TB2ISnKsVXXXXXcXXXXXXXXXXXX_!!34931937.jpg";
+			asyncBitmapLoader.loadImage(mContext,hView.image,newsData.get(position).getImgUrl());
+//			ImageLoader1.getInstance(mContext).loadImage(newsData.get(position).getImgUrl(),hView.image);
 		} else {
 			hView.image.setImageResource(R.drawable.icon_image_default);
 		}
@@ -87,7 +90,7 @@ public class DataAdapter extends BaseAdapter {
 	}
 
 	public class HolderView {
-		private NetworkImageView image = null;
+		private ImageView image = null;
 		private TextView brief= null;
 		private TextView title = null;
 	}

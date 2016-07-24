@@ -22,6 +22,7 @@ import com.hbhongfei.hfcable.activity.CompanyInfoActivity;
 import com.hbhongfei.hfcable.activity.ProdectListActivity;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
 import com.hbhongfei.hfcable.adapter.MyAdapter;
+import com.hbhongfei.hfcable.util.showbigpictude.ScaleView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class IndexFragment extends Fragment implements View.OnClickListener {
     private View view;
+    private ScaleView scaleView;
     private String typeName;
     private LayoutInflater inflater;
     private ViewPager mviewPager;
@@ -96,7 +98,11 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
 
     public void initView(View view) {
         inflater = LayoutInflater.from(getActivity());
+//        scaleView= (ScaleView) view.findViewById(R.id.scrollView);
         listView = (ListView) view.findViewById(R.id.lv);
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
         mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
         dotLayout = (LinearLayout)view.findViewById(R.id.dotLayout);
         img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
