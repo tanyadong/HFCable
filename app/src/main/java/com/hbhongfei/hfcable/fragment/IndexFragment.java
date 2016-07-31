@@ -16,13 +16,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.CompanyInfoActivity;
 import com.hbhongfei.hfcable.activity.ProdectListActivity;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
 import com.hbhongfei.hfcable.adapter.MyAdapter;
+import com.hbhongfei.hfcable.util.Url;
 import com.hbhongfei.hfcable.util.showbigpictude.ScaleView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +54,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     private ImageView img1;
     private TextView textView1, textView2;
     private Button btn_typeName1, btn_typeName2, btn_typeName3, btn_typeName4, btn_typeName5, btn_typeName6;
+    private RequestQueue mQueue;
     /**
      * 用于小圆点图片
      */
@@ -80,7 +92,10 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_index, container, false);
+        mQueue = Volley.newRequestQueue(this.getActivity());
+
         initView(view);
+        connInter();
         setDate();
         onClick();
         ArrayList<String> list = new ArrayList<String>();
@@ -177,6 +192,64 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         scheduledExecutorService.scheduleAtFixedRate(new SlideShowTask(), 1, 4, TimeUnit.SECONDS);
         //根据他的参数说明，第一个参数是执行的任务，第二个参数是第一次执行的间隔，第三个参数是执行任务的周期；
     }
+    /**
+     * 展示当前用户管理任务连接服务
+     */
+    public void connInter(){
+
+
+
+
+        //使用自己书写的NormalPostRequest类，
+
+                String url = Url.url("androidType/getType");
+//        String url="http://apis.baidu.com/heweather/weather/free";
+                System.out.println(url);
+                JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
+                        jsonObjectListener,errorListener);
+//                Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, null);
+                mQueue.add(jsonObjectRequest);
+            }
+
+
+
+
+    /**
+     * 成功的监听器
+     */
+    private Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            Toast.makeText(IndexFragment.this.getActivity(),jsonObject.toString(),Toast.LENGTH_SHORT).show();
+            JSONArray jsonArray;
+            System.out.println(jsonObject.toString());
+//            try {
+//                jsonArray = jsonObject.getJSONArray("list");
+//                System.out.println("length"+jsonArray.length());
+//                for(int i=0;i<jsonArray.length();i++){
+//                    JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
+//                    String typeName=jsonObject1.getString("typeName");
+//                    btn_typeName1.setText(typeName);
+//                    Toast.makeText(IndexFragment.this.getActivity(),typeName,Toast.LENGTH_SHORT).show();
+//                    System.out.println(typeName);
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+        }
+    };
+
+    /**
+     *  失败的监听器
+     */
+    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            Toast.makeText(IndexFragment.this.getActivity(), "无法连接服务器", Toast.LENGTH_SHORT).show();
+            Log.e("TAG", volleyError.getMessage(), volleyError);
+        }
+    };
 
     @Override
     public void onClick(View v) {

@@ -1,15 +1,14 @@
 package com.hbhongfei.hfcable.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter;
-import com.hbhongfei.hfcable.adapter.MyAdapter_myShopping;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MyFavoriteActivity extends AppCompatActivity {
     private ListView list_myFavorite;
@@ -18,7 +17,8 @@ public class MyFavoriteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_favorite);
-
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         initView();
         setValues();
     }

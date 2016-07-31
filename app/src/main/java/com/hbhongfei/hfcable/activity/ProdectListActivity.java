@@ -29,6 +29,7 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         //返回键
         android.support.v7.app.ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
+//        actionbar.setHasOptionsMenu(true);
         //初始化
         initView();
         setValues();
@@ -82,4 +83,6 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
             break;
         }
     }
+
+
 }

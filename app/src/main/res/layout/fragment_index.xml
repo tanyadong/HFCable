@@ -80,20 +80,21 @@
             android:layout_marginLeft="10dp"
              />
             <Button
-            android:id="@+id/btn_type_name2"
-            android:text="特种电缆"
+                android:id="@+id/btn_type_name2"
+                android:text="特种电缆"
                 android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/text_background"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_background1"
+
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
             />
             <Button
                 android:id="@+id/btn_type_name3"
                 android:text="特种电缆222"
                 android:layout_weight="1"
-                android:background="@drawable/text_background"
+                android:background="@drawable/text_background2"
                 android:layout_marginRight="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
@@ -110,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/text_background"
+                android:background="@drawable/text_background3"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp">
             </Button>
@@ -119,7 +120,7 @@
                 android:text="特种电缆"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/text_background"
+                android:background="@drawable/text_background4"
                 android:layout_weight="1"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="15dp"
@@ -128,7 +129,7 @@
             <Button
                 android:id="@+id/btn_type_name6"
                 android:text="更多。。。"
-                android:background="@drawable/text_background"
+                android:background="@drawable/text_background5"
                 android:layout_weight="1"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"

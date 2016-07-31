@@ -2,6 +2,7 @@ package com.hbhongfei.hfcable.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout layout_index,layout_info,layout_market,layout_mine;
     private ImageView imageView_index,imageView_info,imageView_market,imageView_mine;
     private TextView textView_index,textView_info,textView_market,textView_mine;
+    private Handler myHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

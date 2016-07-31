@@ -2,8 +2,6 @@ package com.hbhongfei.hfcable.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -16,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.util.HintTestSize;
 
 public class MyNameActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText myName;
@@ -61,6 +60,12 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
         number = (TextView) findViewById(R.id.Tview_myName_number);
         cancel = (ImageView) findViewById(R.id.Image_myName_cancel);
         done = (ImageView) findViewById(R.id.Image_myName_done);
+//        SpannableString ss = new SpannableString("我是测试hint");//定义hint的值
+//        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(10,true);//设置字体大小 true表示单位是sp
+//        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        myName.setHint(new SpannedString(ss));
+        HintTestSize hintTestSize=new HintTestSize(myName,"请输入您的昵称：");
+        hintTestSize.setHintTextSize();
     }
 
     /**

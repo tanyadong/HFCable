@@ -21,8 +21,16 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dip"
             android:text="@string/tip_text_data_loading"
-            android:textColor="#FFFFFFFF" />
-
+             />
+        <Button
+            android:id="@+id/fragment_reload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/button_text_reload"
+            android:textColor="#FFFFFFFF"
+            android:visibility="gone" />
 
     </LinearLayout>
     <ListView

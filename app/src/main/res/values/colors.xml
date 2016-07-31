@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="white">#ffffff</color>
-    <color name="gray">#b6b2b2</color>
-    <color name="colorOrange">#FF8000</color>
-    <color name="colorBalck">#000000</color>
-    <color name="colorRed">#f70606</color>
-    <color name="colorWhiteBlack">#f5f3f3</color>
-    <color name="colorWhite">#ffff</color>
+<color name="colorPrimary">#ff0000</color>
+<color name="colorPrimaryDark">#ff0000</color>
+<color name="colorAccent">#44f8e6</color>
+<color name="white">#ffffff</color>
+<color name="gray">#b6b2b2</color>
+<color name="colorOrange">#FF8000</color>
+<color name="colorBalck">#000000</color>
+<color name="colorRed">#f70606</color>
+<color name="colorWhiteBlack">#f5f3f3</color>
+<color name="colorWhite">#ffff</color>
+
+    <!--主页种类按钮背景颜色-->
+    <color name="colorGreen">#0974f844</color>
+    <color name="colorQianlanse">#1844f8c2</color>
+    <color name="colorPink">#2af89844</color>
+    <color name="colorzise">#13f844e9</color>
+    <color name="colorYello">#11f8e944</color>
+    <color name="colorBlue">#0b3648e9</color>
 </resources>

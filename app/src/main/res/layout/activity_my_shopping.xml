@@ -26,6 +26,7 @@
                 android:id="@+id/Image_myShopping_select"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
                 android:src="@mipmap/select"/>
             <TextView
                 android:layout_width="wrap_content"

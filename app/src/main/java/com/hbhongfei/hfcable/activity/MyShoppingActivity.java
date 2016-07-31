@@ -28,7 +28,6 @@ public class MyShoppingActivity extends AppCompatActivity implements View.OnClic
         setOnClick();
         setValues();
     }
-
     /**
      * 初始化界面
      */

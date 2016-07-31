@@ -55,10 +55,13 @@ public class InfoFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view= inflater.inflate(R.layout.fragment_info, container, false);
+//        ActionBar actionbar =
+//        actionbar.setDisplayHomeAsUpEnabled(true);
         //声明一个队列
         queue= Volley.newRequestQueue(getActivity());
         initView();
         setValues();
+        click();
         return view;
     }
     @Override
@@ -92,12 +95,12 @@ public class InfoFragment extends Fragment{
                     info_listView.setVisibility(View.VISIBLE);
                     mAdapter.notifyDataSetChanged();
                     break;
-//                case 2:
-//                    reload.setVisibility(View.VISIBLE);
-//                    if(isAdded()){
-//                        loading.setText(getString(R.string.tip_text_data_fail));
-//                    }
-//                    break;
+                case 2:
+                    reload.setVisibility(View.VISIBLE);
+                    if(isAdded()){
+                        loading.setText(getString(R.string.tip_text_data_fail));
+                    }
+                    break;
                 default:
                     break;
             }
@@ -111,7 +114,8 @@ public class InfoFragment extends Fragment{
         info_listView = (ListView) view.findViewById(R.id.fragment_info_listView);
         loadLayout= (LinearLayout) view.findViewById(R.id.fragment_load_layout);
         loading = (TextView) view.findViewById(R.id.fragment_loading);
-//        reload = (Button) view.findViewById(R.id.fragment_reload);
+        reload = (Button) view.findViewById(R.id.fragment_reload);
+
     }
     /**
      * 初始化数据
@@ -130,7 +134,20 @@ public class InfoFragment extends Fragment{
 
         });
     }
+/***
+ * 点击事件
+ */
+    private void click(){
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loading.setText(getString(R.string.tip_text_data_loading));
+                reload.setVisibility(View.GONE);
+                loadData();
+            }
 
+        });
+    }
     /**
      * 加载数据
      */
@@ -143,10 +160,13 @@ public class InfoFragment extends Fragment{
                     @Override
                     public void onResponse(String s) {
                         parse(s);
+                        loading.setVisibility(View.GONE);
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        isFirst = true;
+                        mHandler.sendEmptyMessage(2);
                         System.out.println(volleyError);
                     }
                 });
@@ -179,4 +199,7 @@ public class InfoFragment extends Fragment{
         msg.obj = list;
         mHandler.sendMessage(msg);
     }
+
+
+
 }

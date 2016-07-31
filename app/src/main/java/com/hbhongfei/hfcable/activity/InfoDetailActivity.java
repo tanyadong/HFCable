@@ -33,6 +33,9 @@ public class InfoDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_detail);
+        //返回键
+        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
         //声明一个队列
         queue= Volley.newRequestQueue(this);
         initView();
@@ -97,4 +100,7 @@ public class InfoDetailActivity extends AppCompatActivity {
         }
         infoDetail_content.setText(content);
     }
+
+
+
 }

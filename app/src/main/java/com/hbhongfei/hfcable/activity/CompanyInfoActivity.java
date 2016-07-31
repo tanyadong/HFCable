@@ -15,4 +15,15 @@ public class CompanyInfoActivity extends AppCompatActivity {
         android.support.v7.app.ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
     }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                Intent upIntent = new Intent(this, IndexFragment.class);
+//                startActivity(upIntent);
+//                finish();
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 }
