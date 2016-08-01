@@ -1,5 +1,6 @@
 package com.hbhongfei.hfcable.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -75,6 +76,8 @@ public class MyShoppingActivity extends AppCompatActivity implements View.OnClic
             case R.id.Layout_myShopping_selectAll1:
                 break;
             case R.id.Tview_myShopping_account:
+                Intent intent=new Intent(this,OrderPayActivity.class);
+                startActivity(intent);
                 break;
             case R.id.Tview_myShopping_delete:
                 break;

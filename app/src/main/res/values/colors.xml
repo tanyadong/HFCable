@@ -2,9 +2,10 @@
 <resources>
 <color name="colorPrimary">#ff0000</color>
 <color name="colorPrimaryDark">#ff0000</color>
-<color name="colorAccent">#44f8e6</color>
+<color name="colorAccent">#ff0000</color>
 <color name="white">#ffffff</color>
 <color name="gray">#b6b2b2</color>
+    <color name="qianGray">#46b6b2b2</color>
 <color name="colorOrange">#FF8000</color>
 <color name="colorBalck">#000000</color>
 <color name="colorRed">#f70606</color>

@@ -89,6 +89,21 @@
     <string name="tip_text_data_fail">数据获取失败，点击再次获取！</string>
     <string name="tip_speak_not_installed">无法朗读，请安装讯飞语音！</string>
     <string name="tip_speak_error">阅读错误！</string>
+    <string name="title_activity_order_pay">订单支付</string>
+    <!--订单-->
+    <string name="orderPayHint">订单提交完成，请您尽快支付！</string>
+    <string name="orderPayHint1">请您在提交订单后</string>
+    <string name="orderPayHint2">24小时内</string>
+    <string name="orderPayHint3">完成支付，否则订单会自动取消！</string>
+    <string name="orderNumber">订单编号：</string>
+    <string name="orderMoney">订单金额：</string>
+    <string name="selectPay">选择支付</string>
+    <string name="confirmPayment">确认支付</string>
+    <string name="orderPay">订单支付</string>
+    <!--支付方式-->
+    <string name="alipay">支付宝</string>
+    <string name="weixin">微信</string>
+    <string name="yinlian">银联</string>
 
     <!--login-->
     <string name="login_tel">请输入手机号</string>

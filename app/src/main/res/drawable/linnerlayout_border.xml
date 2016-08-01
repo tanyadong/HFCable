@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--radius 边框角度-->
+    <corners android:radius="10px" ></corners>
+    <!--stroke 边框宽度 及颜色-->
+    <stroke android:color="@color/qianGray" android:width="5px"></stroke>
+    <!--<padding-->
+        <!--android:left="0dp"-->
+        <!--android:top="0dp"-->
+        <!--android:right="6dp"-->
+        <!--android:bottom="0dp" />-->
+</shape>
