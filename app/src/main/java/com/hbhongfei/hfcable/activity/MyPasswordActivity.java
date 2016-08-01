@@ -2,18 +2,16 @@ package com.hbhongfei.hfcable.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.util.HintTestSize;
 
 public class MyPasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -59,6 +57,12 @@ public class MyPasswordActivity extends AppCompatActivity implements View.OnClic
         pwd_sure = (EditText) findViewById(R.id.Etext_myPassword_sure);
         cancel = (ImageView) findViewById(R.id.Image_myPassword_cancel);
         done = (ImageView) findViewById(R.id.Image_myPassword_done);
+        HintTestSize hintTestSize=new HintTestSize(pwd_before,"原密码：");
+        hintTestSize.setHintTextSize();
+        HintTestSize hintTestSize1=new HintTestSize(pwd_update,"请设置6-20位新密码：");
+        hintTestSize1.setHintTextSize();
+        HintTestSize hintTestSize2=new HintTestSize(pwd_sure,"确认密码：");
+        hintTestSize2.setHintTextSize();
     }
 
     /**
