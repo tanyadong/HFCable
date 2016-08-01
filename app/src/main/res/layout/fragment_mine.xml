@@ -66,7 +66,7 @@
                 android:id="@+id/img1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/shopping_car"/>
+                android:src="@mipmap/shopping_cart"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
                 android:id="@+id/img2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/shopping_car"/>
+                android:src="@mipmap/favorite"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
                 android:id="@+id/img3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/shopping_car"/>
+                android:src="@mipmap/order"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

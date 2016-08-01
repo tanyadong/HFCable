@@ -28,7 +28,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentLeft="true"
-                    android:src="@mipmap/ic_action_cancel" />
+                    android:src="@mipmap/close" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:foregroundGravity="right"
-                    android:src="@mipmap/ic_action_done" />
+                    android:src="@mipmap/done" />
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>

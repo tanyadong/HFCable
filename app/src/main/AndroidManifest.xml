@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hbhongfei.hfcable">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -9,51 +10,54 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity"
+        <activity
+            android:name=".activity.MainActivity"
             android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-
-        <activity android:name=".activity.MyFavoriteActivity"
-            android:parentActivityName=".activity.MainActivity"/>
-        <activity android:name=".activity.MyOrderActivity"
-            android:parentActivityName=".activity.MainActivity"/>
+        <activity
+            android:name=".activity.MyFavoriteActivity"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
+            android:name=".activity.MyOrderActivity"
+            android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MyShoppingActivity"
-            android:parentActivityName=".activity.MainActivity"
-            android:label="我的购物车"></activity>
-
-        <activity android:name=".activity.MyInfoActivity"
-            android:parentActivityName=".activity.MainActivity"
-            android:label="@string/myInfo_title" />
-
-        <activity android:name=".activity.ProdectInfoActivity"></activity>
+            android:label="我的购物车"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
+            android:name=".activity.MyInfoActivity"
+            android:label="@string/myInfo_title"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity android:name=".activity.ProdectInfoActivity" />
         <activity android:name=".activity.ShowBigPictrue" />
-
         <activity
             android:name=".activity.CompanyInfoActivity"
-            android:parentActivityName=".activity.MainActivity"
             android:label="@string/company_info"
-             />
+            android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.ProdectListActivity"
-            android:parentActivityName=".activity.MainActivity"
-            ></activity>
-
-        <activity android:name=".activity.InfoDetailActivity"
-            android:parentActivityName=".activity.MainActivity"
-            ></activity>
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
+            android:name=".activity.InfoDetailActivity"
+            android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MyPasswordActivity"
             android:label="@string/title_activity_my_password"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.MyNameActivity"
             android:label="@string/title_activity_my_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+            </activity>
+        <activity android:name=".activity.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
