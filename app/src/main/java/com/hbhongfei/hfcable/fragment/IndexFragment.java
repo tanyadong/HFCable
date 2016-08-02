@@ -102,7 +102,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         for (int i = 0; i < 10; i++) {
             list.add("测试:" + i);
         }
-        MyAdapter adapter = new MyAdapter(IndexFragment.this.getActivity(), R.layout.intentionlayout, list);
+        MyAdapter adapter = new MyAdapter(IndexFragment.this.getActivity(), R.layout.intentionlayout, list,"IndexFragment");
         listView.setDivider(null);
         listView.setAdapter(adapter);
         if (isAutoPlay) {

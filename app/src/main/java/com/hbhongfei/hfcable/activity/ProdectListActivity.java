@@ -57,7 +57,7 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         for (int i = 0; i < 10; i++) {
             list.add("测试:"+i);
         }
-        MyAdapter adapter = new MyAdapter(this,R.layout.intentionlayout,list);
+        MyAdapter adapter = new MyAdapter(this,R.layout.intentionlayout,list,"ProdectList");
         prodectList_listView.setDivider(null);
         prodectList_listView.setAdapter(adapter);
     }

@@ -94,10 +94,10 @@
     <string name="orderPayHint">订单提交完成，请您尽快支付！</string>
     <string name="orderPayHint1">请您在提交订单后</string>
     <string name="orderPayHint2">24小时内</string>
-    <string name="orderPayHint3">完成支付，否则订单会自动取消！</string>
+    <string name="orderPayHint3">完成支付！</string>
     <string name="orderNumber">订单编号：</string>
     <string name="orderMoney">订单金额：</string>
-    <string name="selectPay">选择支付</string>
+    <string name="selectPay">支付方式</string>
     <string name="confirmPayment">确认支付</string>
     <string name="orderPay">订单支付</string>
     <!--支付方式-->
@@ -117,4 +117,5 @@
     <string name="register_verification_code">请输入验证码</string>
     <string name="register_verification_code_get">获取短信验证码</string>
     <string name="register">立即注册</string>
+    <string name="title_activity_confirm_order">ConfirmOrderActivity</string>
 </resources>

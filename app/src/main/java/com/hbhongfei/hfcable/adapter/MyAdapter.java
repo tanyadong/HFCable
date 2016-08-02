@@ -26,6 +26,7 @@ public class MyAdapter extends BaseAdapter {
     protected LayoutInflater inflater;
     protected int resource;
     protected ArrayList<String> list;
+    protected String tag;
     public MyAdapter(Context context, int resource, ArrayList<String> list){
         inflater = LayoutInflater.from(context);
         this.context = context;
@@ -36,6 +37,19 @@ public class MyAdapter extends BaseAdapter {
             this.list = list;
         }
     }
+
+    public MyAdapter(Context context, int resource, ArrayList<String> list, String tag) {
+        inflater = LayoutInflater.from(context);
+        this.context = context;
+        this.resource = resource;
+        if(list==null){
+            this.list=new ArrayList<>();
+        }else{
+            this.list = list;
+        }
+        this.tag = tag;
+    }
+
     @Override
     public int getCount() {
         if(list.size()%2>0) {
@@ -75,6 +89,7 @@ public class MyAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(context, ProdectInfoActivity.class);
+                    intent.putExtra("tag",tag);
                     context.startActivity(intent);
                     Toast.makeText(context, itemList.get(0)+"----"+position, Toast.LENGTH_SHORT).show();
                 }

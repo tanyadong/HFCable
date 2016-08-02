@@ -34,7 +34,6 @@ public class OrderPayActivity extends AppCompatActivity  {
         Toolbar toolbar = (Toolbar) findViewById(R.id.orderPay_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
     //初始化
     private void initView(){

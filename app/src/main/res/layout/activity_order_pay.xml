@@ -19,17 +19,17 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <!--<RelativeLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent">-->
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_centerInParent="true"-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:textSize="20dp"
-                    android:gravity="center"
-                    android:text="@string/orderPay"/>
+                    <!--android:textColor="@color/colorWhite"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="@string/orderPay"/>-->
                 <!--<ImageView-->
                     <!--android:id="@+id/Image_myPassword_done"-->
                     <!--android:layout_width="wrap_content"-->
@@ -38,7 +38,7 @@
                     <!--android:layout_alignParentRight="true"-->
                     <!--android:layout_marginRight="10dp"-->
                     <!--android:foregroundGravity="right"/>-->
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
 
         </android.support.v7.widget.Toolbar>
 

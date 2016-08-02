@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -51,6 +53,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     int position1 = 0;
     private ScheduledExecutorService scheduledExecutorService;
     Intent intent;
+    String tag;
     private Handler handler = new Handler() {
 
         @Override
@@ -67,12 +70,22 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prodect_info);
+        toolBar();
         initVIew();
         setDate();
         click();
         if (isAutoPlay) {
             startPlay();
         }
+    }
+
+    /**
+     * 展示toolbar
+     */
+    private void toolBar() {
+        tag=getIntent().getStringExtra("tag");
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
     public void initVIew(){
         inflater = LayoutInflater.from(this);
@@ -223,5 +236,22 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             dotViewList.get(position).setImageResource(R.mipmap.point_pressed);
         }
 
+    }
+
+    /**
+     * actionBar返回键
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        // TODO Auto-generated method stub
+        if(item.getItemId() == android.R.id.home)
+        {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
