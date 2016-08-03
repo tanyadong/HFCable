@@ -1,105 +1,125 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".activity.MyShoppingActivity">
-    <ListView
-        android:id="@+id/listView_myShopping"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:dividerHeight="30dp">
-    </ListView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/prodectlayout_background"
-        android:orientation="horizontal">
-        <LinearLayout
-            android:id="@+id/Layout_myShopping_selectAll"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/Image_myShopping_select"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:src="@mipmap/select"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/myShopping_selectAll"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/myShopping_allMoney"/>
-            <TextView
-                android:id="@+id/Tview_mySHopping_money"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="0.00"/>
-        </LinearLayout>
+    android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="@color/colorRed">
-            <TextView
-                android:id="@+id/Tview_myShopping_account"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/myShopping_account"/>
-            <TextView
-                android:id="@+id/Tview_myShopping_accountNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="(0)"/>
-        </LinearLayout>
-    </LinearLayout>
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@drawable/prodectlayout_background"
-        android:visibility="gone"
-        android:layout_alignParentBottom="true">
+        android:layout_height="match_parent" >
         <LinearLayout
-            android:id="@+id/Layout_myShopping_selectAll1"
-            android:layout_width="wrap_content"
+            android:id="@+id/ll_cart"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/Image_myShopping_select1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@mipmap/select"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/myShopping_selectAll"/>
+            android:orientation="vertical">
+            <ExpandableListView
+                android:id="@+id/exListView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:childIndicator="@null"
+                android:groupIndicator="@null" >
+            </ExpandableListView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <CheckBox
+                    android:id="@+id/all_chekbox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="4dp"
+                    android:button="@drawable/checkbox_selector"
+                    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                    android:gravity="center"
+                    android:minHeight="64dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/myShopping_selectAll"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+                <LinearLayout
+                    android:id="@+id/ll_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="right">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:text="@string/myShopping_allMoney"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_total_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="￥0.00"
+                                android:textColor="@color/colorRed"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/myShopping_noyunfei"
+                            android:gravity="right"
+                            android:textColor="@color/gray"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_go_to_pay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@color/colorRed"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:text="去支付(0)"
+                        android:textColor="#FAFAFA"
+
+                        />
+                </LinearLayout>
+                <RelativeLayout
+                    android:id="@+id/ll_shar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:layout_weight="4">
+                    <TextView
+                        android:id="@+id/tv_delete"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorRed"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:layout_alignParentRight="true"
+                        android:text="删除"
+                        android:textColor="@color/colorWhite"/>
+                </RelativeLayout>
+
+            </LinearLayout>
         </LinearLayout>
-        <TextView
-            android:id="@+id/Tview_myShopping_delete"
-            android:layout_width="100dp"
+        <include
+            android:id="@+id/layout_cart_empty"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@drawable/myshopping_delete"
-            android:layout_alignParentRight="true"
-            android:text="@string/myShopping_delete"/>
-    </RelativeLayout>
-</RelativeLayout>
+            layout="@layout/shoppingcart_empty"
+            android:visibility="gone"/>
+    </FrameLayout>
+</LinearLayout>

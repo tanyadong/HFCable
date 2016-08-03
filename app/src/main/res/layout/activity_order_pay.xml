@@ -29,7 +29,7 @@
 
                     <!--android:textColor="@color/colorWhite"-->
                     <!--android:gravity="center"-->
-                    <!--android:text="@string/orderPay"/>-->
+                    <!--android:text="@string/order_pay"/>-->
                 <!--<ImageView-->
                     <!--android:id="@+id/Image_myPassword_done"-->
                     <!--android:layout_width="wrap_content"-->

@@ -59,13 +59,14 @@
         <RelativeLayout
             android:id="@+id/Rlayout_mine_shopping"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:background="#ffff"
             android:layout_marginTop="5dp">
             <ImageView
                 android:id="@+id/img1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:src="@mipmap/shopping_cart"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -78,18 +79,19 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:background="@mipmap/jiantou1"/>
+                android:background="@mipmap/right_black"/>
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/Rlayout_mine_favorite"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:background="#ffff"
             android:layout_marginTop="5dp">
             <ImageView
                 android:id="@+id/img2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:src="@mipmap/favorite"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -102,18 +104,19 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:background="@mipmap/jiantou1"/>
+                android:background="@mipmap/right_black"/>
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/Rlayout_mine_order"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:background="#ffff"
             android:layout_marginTop="5dp">
             <ImageView
                 android:id="@+id/img3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:src="@mipmap/order"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -126,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:background="@mipmap/jiantou1"/>
+                android:background="@mipmap/right_black"/>
         </RelativeLayout>
     </LinearLayout>
 </FrameLayout>

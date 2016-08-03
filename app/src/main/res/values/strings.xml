@@ -64,6 +64,7 @@
     <string name="myName_number">/8</string>
     <string name="myName_text">昵称最多8个字符</string>
     <string name="myName_title">修改昵称</string>
+    <string name="title_activity_my_name">修改姓名</string>
 
     <!--myPassword-->
     <string name="myPassword_before">原密码：</string>
@@ -78,11 +79,21 @@
 
 
     <!--myShopping-->
-    <string name="myShopping_allMoney">总金额：￥</string>
+
+    <string name="myShopping_allMoney">总金额:</string>
     <string name="myShopping_account">去结算</string>
     <string name="myShopping_selectAll">全选</string>
     <string name="myShopping_delete">删除</string>
-    <string name="title_activity_my_name">MyNameActivity</string>
+    <string name="myShopping_menu_delete">删除</string>
+    <string name="item_shopcart_group_edit">编辑</string>
+    <string name="myShopping_noyunfei">不含运费</string>
+
+
+    <!--shoppingCart_empty-->
+    <string name="shoppingCart_empty_empty">购物车还没有商品</string>
+    <string name="shoppingCart_empty_shopping">快去逛逛吧</string>
+
+
     <!--行业资讯-->
     <string name="button_text_reload">重新连接</string>
     <string name="tip_text_data_loading">数据获取中...</string>

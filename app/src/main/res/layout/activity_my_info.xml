@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/Tview_myInfo_name"
-                android:background="@mipmap/jiantou1"/>
+                android:background="@mipmap/right_black"/>
         </RelativeLayout>
 
     </RelativeLayout>
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/Tview_myInfo_sex"
-                android:background="@mipmap/jiantou1"/>
+                android:background="@mipmap/right_black"/>
         </RelativeLayout>
 
     </RelativeLayout>
@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/Tview_myInfo_password"
-                android:background="@mipmap/jiantou1"/>
+                android:background="@mipmap/right_black"/>
         </RelativeLayout>
 
     </RelativeLayout>

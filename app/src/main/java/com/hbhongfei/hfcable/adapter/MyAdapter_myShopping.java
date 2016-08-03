@@ -1,117 +1,367 @@
 package com.hbhongfei.hfcable.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Build;
+import android.support.v7.app.AlertDialog;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.activity.MyShoppingActivity;
+import com.hbhongfei.hfcable.entity.CablesInfo;
+import com.hbhongfei.hfcable.entity.TypeInfo;
+import com.iflytek.voiceads.IFLYAdListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
- * 2列ListView的适配器
- * @author tongleer.com
+ * 购物车的适配器
+ * @author 苑雪元
  *
  */
-public class MyAdapter_myShopping extends BaseAdapter implements View.OnClickListener {
-    protected Context context;
-    protected LayoutInflater inflater;
-    protected int resource;
-    protected ArrayList<String> list;
-    protected ViewHolder vh;
-    public MyAdapter_myShopping(Context context, int resource, ArrayList<String> list){
-        inflater = LayoutInflater.from(context);
+public class MyAdapter_myShopping extends BaseExpandableListAdapter {
+    private List<TypeInfo> groups;
+    private Map<String, List<CablesInfo>> children;
+    private Context context;
+    private CheckInterface checkInterface;
+    private ModifyCountInterface modifyCountInterface;
+    public  int flag = 0;
+    private GroupEdtorListener mListener;
+
+    public GroupEdtorListener getmListener() {
+        return mListener;
+    }
+
+    public void setmListener(GroupEdtorListener mListener) {
+        this.mListener = mListener;
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param groups   组元素列表
+     * @param children 子元素列表
+     * @param context
+     */
+    public MyAdapter_myShopping(List<TypeInfo> groups, Map<String, List<CablesInfo>> children, Context context) {
+        this.groups = groups;
+        this.children = children;
         this.context = context;
-        this.resource = resource;
-        if(list==null){
-            this.list=new ArrayList<>();
-        }else{
-            this.list = list;
+    }
+
+    public void setCheckInterface(CheckInterface checkInterface) {
+        this.checkInterface = checkInterface;
+    }
+
+    public void setModifyCountInterface(ModifyCountInterface modifyCountInterface) {
+        this.modifyCountInterface = modifyCountInterface;
+    }
+
+    @Override
+    public int getGroupCount() {
+        return groups.size();
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        String groupId = groups.get(groupPosition).getId();
+        return children.get(groupId).size();
+    }
+
+    @Override
+    public Object getGroup(int groupPosition) {
+        return groups.get(groupPosition);
+    }
+
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        List<CablesInfo> childs = children.get(groups.get(groupPosition).getId());
+        return childs.get(childPosition);
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+
+        final GroupViewHolder gholder;
+        if (convertView == null) {
+            gholder = new GroupViewHolder();
+            convertView = View.inflate(context, R.layout.item_shopcart_group, null);
+            gholder.cb_check = (CheckBox) convertView.findViewById(R.id.determine_checkbox);
+            gholder.tv_group_name = (TextView) convertView.findViewById(R.id.tv_source_name);
+            gholder.store_edtor = (Button) convertView.findViewById(R.id.tv_store_edtor);
+            convertView.setTag(gholder);
+        } else {
+            gholder = (GroupViewHolder) convertView.getTag();
         }
-    }
-    @Override
-    public int getCount() {
-        return list.size();
-    }
-    @Override
-    public Object getItem(int position) {
-        return list.get(position);
-    }
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        vh = null;
-        if (convertView == null ) {
-            convertView = inflater.inflate(resource, null);
-            vh = new ViewHolder();
-            vh.select = (ImageView) convertView.findViewById(R.id.Image_myShoppingIntention_select);
-            vh.image = (ImageView) convertView.findViewById(R.id.Image_myShoppingIntention_image);
-            vh.name = (TextView) convertView.findViewById(R.id.Tview_myShoppingIntention_name);
-            vh.introduce = (TextView) convertView.findViewById(R.id.Tview_myShoppingIntention_introduce);
-            vh.money = (TextView) convertView.findViewById(R.id.Tview_myShoppingIntention_money);
-            convertView.setTag(vh);
-        }else {
-            vh = (ViewHolder)convertView.getTag();
-        }
-        //赋值
-        vh.select.setOnClickListener(this);
-        for (String s:list){
-            vh.name.setText(s);
-        }
-        /*
-        int distance =  list.size() - position*2;
-        int cellCount = distance >= 2? 2:distance;
-        final List<String> itemList = list.subList(position*2,position*2+cellCount);
-        if (itemList.size() >0) {
-            vh.tv1.setText(itemList.get(0));
-            vh.layout1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, itemList.get(0)+"----"+position, Toast.LENGTH_SHORT).show();
-                }
-            });
-            if (itemList.size() >1){
-                vh.tv2.setVisibility(View.VISIBLE);
-                vh.tv2.setText(itemList.get(1));
-                vh.layout2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(context, itemList.get(1), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }else{
-                vh.tv2.setVisibility(View.INVISIBLE);
+        final TypeInfo group = (TypeInfo) getGroup(groupPosition);
+
+        gholder.tv_group_name.setText(group.getName());
+        gholder.cb_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                group.setChoosed(((CheckBox) v).isChecked());
+                checkInterface.checkGroup(groupPosition, ((CheckBox) v).isChecked());// 暴露组选接口
             }
-        }*/
+        });
+        gholder.cb_check.setChecked(group.isChoosed());
+        if (group.isEdtor()) {
+            gholder.store_edtor.setText("完成");
+        } else {
+            gholder.store_edtor.setText("编辑");
+        }
+        gholder.store_edtor.setOnClickListener(new GroupViewClick(groupPosition,gholder.store_edtor,group));
+        notifyDataSetChanged();
         return convertView;
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.Image_myShoppingIntention_select:
-                vh.select.setImageResource(R.mipmap.selected);
-                break;
+    public View getChildView(final int groupPosition, final int childPosition, final boolean isLastChild, View convertView, final ViewGroup parent) {
+        final ChildViewHolder cholder;
+        if (convertView == null) {
+            cholder = new ChildViewHolder();
+            convertView = View.inflate(context, R.layout.item_shopcart_product, null);
+            cholder.cb_check = (CheckBox) convertView.findViewById(R.id.check_box);
+            cholder.tv_product_name = (TextView) convertView.findViewById(R.id.tv_name);
+            cholder.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
+            cholder.iv_increase = (TextView) convertView.findViewById(R.id.tv_add);
+            cholder.iv_decrease = (TextView) convertView.findViewById(R.id.tv_reduce);
+            cholder.tv_count = (TextView) convertView.findViewById(R.id.tv_num);
+            cholder.rl_no_edtor = (RelativeLayout) convertView.findViewById(R.id.rl_no_edtor);
+
+            cholder.tv_introduce = (TextView) convertView.findViewById(R.id.tv_introduce);
+            cholder.tv_buy_num = (TextView) convertView.findViewById(R.id.tv_buy_num);
+            cholder.ll_edtor = (LinearLayout) convertView.findViewById(R.id.ll_edtor);
+            cholder.tv_introduce2 = (TextView) convertView.findViewById(R.id.tv_introduce2);
+            cholder.tv_goods_delete = (TextView) convertView.findViewById(R.id.tv_goods_delete);
+            cholder.iv_adapter_list_pic= (ImageView) convertView.findViewById(R.id.iv_adapter_list_pic);
+            convertView.setTag(cholder);
+        } else {
+            cholder = (ChildViewHolder) convertView.getTag();
         }
+        if (groups.get(groupPosition).isEdtor() == true) {
+            cholder.ll_edtor.setVisibility(View.VISIBLE);
+            cholder.rl_no_edtor.setVisibility(View.GONE);
+        } else {
+            cholder.ll_edtor.setVisibility(View.GONE);
+            cholder.rl_no_edtor.setVisibility(View.VISIBLE);
+        }
+        final CablesInfo cablesInfo = (CablesInfo) getChild(groupPosition, childPosition);
+        if (cablesInfo != null) {
+            cholder.tv_product_name.setText(cablesInfo.getName());
+            cholder.tv_price.setText("￥" + cablesInfo.getPrice() + "");
+            cholder.tv_count.setText(cablesInfo.getCount() + "");
+            cholder.iv_adapter_list_pic.setImageResource(cablesInfo.getGoodsImg());
+            cholder.tv_introduce.setText(cablesInfo.getIntroduce());
+            cholder.tv_introduce2.setText(cablesInfo.getIntroduce());
+            cholder.tv_buy_num.setText("x" + cablesInfo.getCount());
+            cholder.cb_check.setChecked(cablesInfo.isChoosed());
+            cholder.cb_check.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cablesInfo.setChoosed(((CheckBox) v).isChecked());
+                    cholder.cb_check.setChecked(((CheckBox) v).isChecked());
+                    checkInterface.checkChild(groupPosition, childPosition, ((CheckBox) v).isChecked());// 暴露子选接口
+                }
+            });
+            cholder.iv_increase.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    modifyCountInterface.doIncrease(groupPosition, childPosition, cholder.tv_count, cholder.cb_check.isChecked());// 暴露增加接口
+                }
+            });
+            cholder.iv_decrease.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    modifyCountInterface.doDecrease(groupPosition, childPosition, cholder.tv_count, cholder.cb_check.isChecked());// 暴露删减接口
+                }
+            });
+            //删除 购物车
+            cholder.tv_goods_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog alert = new AlertDialog.Builder(context).create();
+                    alert.setTitle("操作提示");
+                    alert.setMessage("您确定要将这些商品从购物车中移除吗？");
+                    alert.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    return;
+                                }
+                            });
+                    alert.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    modifyCountInterface.childDelete(groupPosition, childPosition);
+
+                                }
+                            });
+                    alert.show();
+
+                }
+            });
+        }
+        return convertView;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return false;
+
     }
 
     /**
-     * 封装ListView中item控件以优化ListView
-     * @author tongleer
-     *
+     * 组元素绑定器
      */
-    public static class ViewHolder{
-        ImageView select,image;
-        TextView name,introduce,money;
+    private class GroupViewHolder {
+        CheckBox cb_check;
+        TextView tv_group_name;
+        Button store_edtor;
+    }
+
+    /**
+     * 子元素绑定器
+     */
+    private class ChildViewHolder {
+        CheckBox cb_check;
+        ImageView iv_adapter_list_pic;
+        TextView tv_product_name;
+        TextView tv_price;
+        TextView iv_increase;
+        TextView tv_count;
+        TextView iv_decrease;
+        RelativeLayout rl_no_edtor;
+        TextView tv_introduce;
+        TextView tv_buy_num;
+        LinearLayout ll_edtor;
+        TextView tv_introduce2;
+        TextView tv_goods_delete;
+    }
+
+    /**
+     * 复选框接口
+     */
+    public interface CheckInterface {
+        /**
+         * 组选框状态改变触发的事件
+         *
+         * @param groupPosition 组元素位置
+         * @param isChecked     组元素选中与否
+         */
+        void checkGroup(int groupPosition, boolean isChecked);
+
+        /**
+         * 子选框状态改变时触发的事件
+         *
+         * @param groupPosition 组元素位置
+         * @param childPosition 子元素位置
+         * @param isChecked     子元素选中与否
+         */
+        void checkChild(int groupPosition, int childPosition, boolean isChecked);
+    }
+
+    /**
+     * 改变数量的接口
+     */
+    public interface ModifyCountInterface {
+        /**
+         * 增加操作
+         *
+         * @param groupPosition 组元素位置
+         * @param childPosition 子元素位置
+         * @param showCountView 用于展示变化后数量的View
+         * @param isChecked     子元素选中与否
+         */
+        void doIncrease(int groupPosition, int childPosition, View showCountView, boolean isChecked);
+
+        /**
+         * 删减操作
+         *
+         * @param groupPosition 组元素位置
+         * @param childPosition 子元素位置
+         * @param showCountView 用于展示变化后数量的View
+         * @param isChecked     子元素选中与否
+         */
+        void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked);
+
+        /**
+         * 删除子item
+         * @param groupPosition
+         * @param childPosition
+         */
+        void childDelete(int groupPosition, int childPosition);
+    }
+
+    /**
+     * 监听编辑状态
+     */
+    public interface GroupEdtorListener{
+        void groupEdit(int groupPosition);
+    }
+    /**
+     * 使某个组处于编辑状态
+     * <p>
+     * groupPosition组的位置
+     */
+    class GroupViewClick implements View.OnClickListener {
+        private int groupPosition;
+        private Button edtor;
+        private TypeInfo group;
+
+        public GroupViewClick(int groupPosition, Button edtor, TypeInfo group) {
+            this.groupPosition = groupPosition;
+            this.edtor = edtor;
+            this.group = group;
+        }
+
+        @Override
+        public void onClick(View v) {
+            int groupId = v.getId();
+            if (groupId == edtor.getId()) {
+                if (group.isEdtor()) {
+                    group.setEdtor(false);
+                } else {
+                    group.setEdtor(true);
+
+                }
+                notifyDataSetChanged();
+            }
+        }
     }
 }

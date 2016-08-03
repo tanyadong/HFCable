@@ -40,7 +40,7 @@ public class MyOrderActivity extends AppCompatActivity {
         for (int i = 0; i < 10; i++) {
             list.add("测试:"+i);
         }
-        MyAdapter_myShopping myAdapter_myShopping = new MyAdapter_myShopping(this,R.layout.intention_my_shopping_layout,list);
-        list_myOrder.setAdapter(myAdapter_myShopping);
+//        MyAdapter_myShopping myAdapter_myShopping = new MyAdapter_myShopping(this,R.layout.intention_my_shopping_layout,list);
+//        list_myOrder.setAdapter(myAdapter_myShopping);
     }
 }

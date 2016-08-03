@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -143,6 +144,7 @@ public class InfoFragment extends Fragment{
             public void onClick(View v) {
                 loading.setText(getString(R.string.tip_text_data_loading));
                 reload.setVisibility(View.GONE);
+                Toast.makeText(getActivity(),"1111111111111111",Toast.LENGTH_SHORT).show();
                 loadData();
             }
 
