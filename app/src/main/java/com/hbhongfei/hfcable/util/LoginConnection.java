@@ -16,7 +16,6 @@ import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.MainActivity;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -74,8 +73,8 @@ public class LoginConnection {
         public void onResponse(JSONObject jsonObject) {
             try {
                 String s = jsonObject.getString("login");
-                JSONObject userInfo = jsonObject.getJSONObject("user");
                 if (s.equals("success")){
+                    JSONObject userInfo = jsonObject.getJSONObject("user");
                     S_user = userInfo.getString("phoneNumber");
                     S_password = userInfo.getString("password");
                     S_id = userInfo.getString("id");

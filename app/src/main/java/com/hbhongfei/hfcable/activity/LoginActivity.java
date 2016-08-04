@@ -98,7 +98,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (isEmpty()){
             loginConnection = new LoginConnection(LoginActivity.this);
             loginConnection.connInter(S_user,S_password);
-            this.finish();
         }
     }
 
