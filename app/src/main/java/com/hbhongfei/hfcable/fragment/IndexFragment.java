@@ -28,11 +28,13 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.CompanyInfoActivity;
 import com.hbhongfei.hfcable.activity.ProdectListActivity;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
-import com.hbhongfei.hfcable.adapter.MyAdapter;
+import com.hbhongfei.hfcable.pojo.Company;
+import com.hbhongfei.hfcable.util.ConnectionProduct;
 import com.hbhongfei.hfcable.util.Url;
 import com.hbhongfei.hfcable.util.showbigpictude.ScaleView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -97,14 +99,8 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         initView(view);
         connInter();
         setDate();
+//        setTypeValue();
         onClick();
-        ArrayList<String> list = new ArrayList<String>();
-        for (int i = 0; i < 10; i++) {
-            list.add("测试:" + i);
-        }
-        MyAdapter adapter = new MyAdapter(IndexFragment.this.getActivity(), R.layout.intentionlayout, list,"IndexFragment");
-        listView.setDivider(null);
-        listView.setAdapter(adapter);
         if (isAutoPlay) {
             startPlay();
         }
@@ -133,7 +129,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
      * 点击事件
      */
     public void onClick() {
-//        img.setOnClickListener(this);
         btn_typeName1.setOnClickListener(this);
         btn_typeName2.setOnClickListener(this);
         btn_typeName3.setOnClickListener(this);
@@ -146,6 +141,13 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
      * 设置数据
      */
     public void setDate() {
+        ConnectionProduct connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),listView);
+        try {
+            connectionProduct.connInterByType("全部");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         list = new ArrayList<ImageView>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
@@ -193,23 +195,14 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         //根据他的参数说明，第一个参数是执行的任务，第二个参数是第一次执行的间隔，第三个参数是执行任务的周期；
     }
     /**
-     * 展示当前用户管理任务连接服务
+     * 获取产品种类服务
      */
     public void connInter(){
-
-
-
-
-        //使用自己书写的NormalPostRequest类，
-
-                String url = Url.url("androidType/getType");
-//        String url="http://apis.baidu.com/heweather/weather/free";
-                System.out.println(url);
-                JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
-                        jsonObjectListener,errorListener);
-//                Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, null);
+        String url = Url.url("androidType/getType");
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
+                jsonObjectListener,errorListener);
                 mQueue.add(jsonObjectRequest);
-            }
+    }
 
 
 
@@ -220,23 +213,21 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     private Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject jsonObject) {
-            Toast.makeText(IndexFragment.this.getActivity(),jsonObject.toString(),Toast.LENGTH_SHORT).show();
             JSONArray jsonArray;
-            System.out.println(jsonObject.toString());
-//            try {
-//                jsonArray = jsonObject.getJSONArray("list");
-//                System.out.println("length"+jsonArray.length());
-//                for(int i=0;i<jsonArray.length();i++){
-//                    JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
-//                    String typeName=jsonObject1.getString("typeName");
-//                    btn_typeName1.setText(typeName);
-//                    Toast.makeText(IndexFragment.this.getActivity(),typeName,Toast.LENGTH_SHORT).show();
-//                    System.out.println(typeName);
-//                }
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+            List<String> type_list=new ArrayList<>();
+            try {
+                jsonArray = jsonObject.getJSONArray("list");
+                System.out.println("length"+jsonArray.length());
+                for(int i=0;i<jsonArray.length();i++){
+                    JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
+                    String typeName=jsonObject1.getString("typeName");
+                    type_list.add(typeName);
+                }
+                setTypeValue(type_list);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -251,6 +242,68 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         }
     };
 
+
+    /**
+     * 获取公司信息
+     */
+    public void connInterGetCompanyInfo(){
+        String url = Url.url("androidCompany/getCompanyInfo");
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
+                jsonObjectCompanyListener,errorListener);
+        mQueue.add(jsonObjectRequest);
+    }
+
+    /**
+     * 成功的监听器
+     */
+    private Response.Listener<JSONObject> jsonObjectCompanyListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            JSONArray jsonArray;
+            List<Company> company_list=new ArrayList<>();
+            try {
+                jsonArray = jsonObject.getJSONArray("companyList");
+
+                for(int i=0;i<jsonArray.length();i++){
+                    Company company=new Company();
+                    JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
+                    company.setLogo(jsonObject1.getString("logo"));
+                    company.setAddress(jsonObject1.getString("address"));
+                    company.setCompanyName(jsonObject1.getString("companyName"));
+                    company.setDescription(jsonObject1.getString("description"));
+                    company.setEmail(jsonObject1.getString("email"));
+                    company.setProductIntroduction(jsonObject1.getString("productIntroduction"));
+                    company.setTelephone(jsonObject1.getString("telephone"));
+                    company.setZipCode(jsonObject1.getInt("zipCode"));
+                    JSONArray jsonArray1=jsonObject1.getJSONArray("list");
+                    ArrayList<String> list=new ArrayList<>();
+                    for (int j=0;j<jsonArray1.length();j++){
+                        JSONObject jsonObject2=jsonArray1.getJSONObject(j);
+                        list.add(jsonObject2.getString("image"));
+                    }
+                    company.setList(list);
+
+
+                }
+//                setTypeValue(type_list);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    /**
+     * 设置种类名称
+     */
+    public void setTypeValue(List<String> list){
+
+        btn_typeName1.setText(list.get(0));
+        btn_typeName2.setText(list.get(1));
+        btn_typeName3.setText(list.get(2));
+        btn_typeName4.setText(list.get(3));
+        btn_typeName5.setText(list.get(4));
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -261,31 +314,31 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.btn_type_name2:
-                typeName = btn_typeName1.getText().toString();
+                typeName = btn_typeName2.getText().toString();
                 intent = new Intent(getActivity(), ProdectListActivity.class);
                 intent.putExtra("typeName", typeName);
                 startActivity(intent);
                 break;
             case R.id.btn_type_name3:
-                typeName = btn_typeName1.getText().toString();
+                 typeName = btn_typeName3.getText().toString();
                 intent = new Intent(getActivity(), ProdectListActivity.class);
                 intent.putExtra("typeName", typeName);
                 startActivity(intent);
                 break;
             case R.id.btn_type_name4:
-                typeName = btn_typeName1.getText().toString();
+                typeName = btn_typeName4.getText().toString();
                 intent = new Intent(getActivity(), ProdectListActivity.class);
                 intent.putExtra("typeName", typeName);
                 startActivity(intent);
                 break;
             case R.id.btn_type_name5:
-                typeName = btn_typeName1.getText().toString();
+                typeName = btn_typeName5.getText().toString();
                 intent = new Intent(getActivity(), ProdectListActivity.class);
                 intent.putExtra("typeName", typeName);
                 startActivity(intent);
                 break;
             case R.id.btn_type_name6:
-                typeName = btn_typeName1.getText().toString();
+                typeName = btn_typeName6.getText().toString();
                 intent = new Intent(getActivity(), ProdectListActivity.class);
                 intent.putExtra("typeName", typeName);
                 startActivity(intent);

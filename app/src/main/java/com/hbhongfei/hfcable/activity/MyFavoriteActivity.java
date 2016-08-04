@@ -7,8 +7,10 @@ import android.widget.ListView;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter;
+import com.hbhongfei.hfcable.pojo.Product;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyFavoriteActivity extends AppCompatActivity {
     private ListView list_myFavorite;
@@ -29,12 +31,9 @@ public class MyFavoriteActivity extends AppCompatActivity {
     private void initView(){
         list_myFavorite = (ListView) findViewById(R.id.listView_myFavorite);
     }
-
     private void setValues(){
-        ArrayList<String> list = new ArrayList<String>();
-        for (int i = 0; i < 10; i++) {
-            list.add("测试:"+i);
-        }
+        List<Product> list = new ArrayList<Product>();
+
         MyAdapter myAdapter = new MyAdapter(this,R.layout.intentionlayout,list);
         list_myFavorite.setAdapter(myAdapter);
     }

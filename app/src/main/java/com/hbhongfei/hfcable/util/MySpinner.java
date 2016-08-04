@@ -13,17 +13,18 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.SpinnerListAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MySpinner extends PopupWindow implements AdapterView.OnItemClickListener {
-    private ArrayList<Object> list;
-    private String[] mItems;
+
+    private List<String> type_list;
     private MySpinner mWindow;
     private SpinnerListAdapter.onItemClickListener mListener;
     public MySpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MySpinner(Activity activity, int width, String[] items){
+    public MySpinner(Activity activity, int width, List<String> list){
         LayoutInflater inflater=activity.getLayoutInflater();
         View contentView=inflater.inflate(R.layout.myspinner_layout, null);
         // 设置PopupWindow的View 
@@ -40,10 +41,10 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
 //        ColorDrawable dw = new ColorDrawable(0xffffffff);
 //        this.setBackgroundDrawable(dw);
 //        this.list=arrayList;
-        this.mItems=items;
+        this.type_list=list;
         ListView listView=(ListView) contentView.findViewById(R.id.lv_list);
         mWindow=this;
-        SpinnerListAdapter adapter=new SpinnerListAdapter(mWindow,activity, mItems);
+        SpinnerListAdapter adapter=new SpinnerListAdapter(mWindow,activity, type_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
     }

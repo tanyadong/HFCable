@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
+import com.hbhongfei.hfcable.pojo.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,9 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     private ImageView img1, img2, img3, img4;
     private ViewPager mviewPager;
     private LinearLayout prodectList_LLayout_phone,prodectList_LLayout_collect,prodectList_LLayout_shoppingCat;
+    private TextView prodectInto_simpleDeclaration,prodectInfo_price,
+            prodectInfo_intro,prodectInfo_specifications,prodectInfo_model,prodectInfo_coreType,
+            prodectInfo_type,prodectInfo_detail;
     private TextView prodect_addCart;
     /**
      * 用于小圆点图片
@@ -96,12 +100,35 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodectList_LLayout_collect= (LinearLayout) findViewById(R.id.prodectList_LLayout_collect);
         prodectList_LLayout_shoppingCat= (LinearLayout) findViewById(R.id.prodectList_LLayout_shoppingCat);
         prodect_addCart= (TextView) findViewById(R.id.prodect_addCart);
+
+        //产品信息
+        prodectInfo_coreType= (TextView) findViewById(R.id.prodectInfo_coreType_textView);
+        prodectInfo_detail= (TextView) findViewById(R.id.prodectInfo_detail_textView);
+        prodectInfo_intro= (TextView) findViewById(R.id.prodectInfo_intro_textView);
+        prodectInfo_model= (TextView) findViewById(R.id.prodectInfo_model_textview);
+        prodectInfo_price= (TextView) findViewById(R.id.prodectInfo_price_textView);
+        prodectInfo_specifications= (TextView) findViewById(R.id.prodectInfo_specifications_textview);
+        prodectInfo_type= (TextView) findViewById(R.id.prodectInfo_type_textView);
+        prodectInto_simpleDeclaration= (TextView) findViewById(R.id.prodectInto_simpleDeclaration_tview);
     }
 
     /**
      * 设置数据
      */
     public void setDate() {
+        //获取产品列表的详细产品信息
+        intent=getIntent();
+        Product product= (Product) intent.getSerializableExtra("product");
+//        Toast.makeText(this,product.toString()+"0000000000000",Toast.LENGTH_SHORT).show();
+        prodectInfo_detail.setText(product.getDetail());
+        prodectInfo_coreType.setText(product.getLineCoreType());
+        prodectInfo_intro.setText(product.getDetail());
+        prodectInfo_price.setText(String.valueOf(product.getPrice()));
+        prodectInfo_model.setText(product.getModel());
+        prodectInfo_type.setText(product.getTypeName());
+        prodectInfo_specifications.setText(product.getSpecifications());
+        prodectInto_simpleDeclaration.setText(product.getProdectName());
+
         list = new ArrayList<ImageView>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();

@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InfoFragment extends Fragment{
+public class InfoFragment extends Fragment {
     RequestQueue queue=null;
     private View view;
     private ListView info_listView;
@@ -60,11 +60,14 @@ public class InfoFragment extends Fragment{
 //        actionbar.setDisplayHomeAsUpEnabled(true);
         //声明一个队列
         queue= Volley.newRequestQueue(getActivity());
-        initView();
+        initView(view);
+
         setValues();
-        click();
+//        click();
         return view;
     }
+
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -111,11 +114,12 @@ public class InfoFragment extends Fragment{
     /**
      * 初始化组件
      */
-    private  void  initView(){
+    private  void  initView(View view){
         info_listView = (ListView) view.findViewById(R.id.fragment_info_listView);
         loadLayout= (LinearLayout) view.findViewById(R.id.fragment_load_layout);
         loading = (TextView) view.findViewById(R.id.fragment_loading);
-        reload = (Button) view.findViewById(R.id.fragment_reload);
+        reload = (Button)view.findViewById(R.id.fragment_reload);
+
 
     }
     /**
@@ -128,28 +132,29 @@ public class InfoFragment extends Fragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+
                 Intent intent = new Intent(getActivity(), InfoDetailActivity.class);
                 intent.putExtra("data", info_list.get(position));
                 getActivity().startActivity(intent);
             }
 
         });
-    }
-/***
- * 点击事件
- */
-    private void click(){
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loading.setText(getString(R.string.tip_text_data_loading));
                 reload.setVisibility(View.GONE);
-                Toast.makeText(getActivity(),"1111111111111111",Toast.LENGTH_SHORT).show();
+                Toast.makeText(InfoFragment.this.getActivity(),"asd ",Toast.LENGTH_SHORT).show();
                 loadData();
             }
-
         });
     }
+/***
+ * 点击事件
+ */
+//    private void click(){
+//        reload.setOnClickListener(this);
+//    }
     /**
      * 加载数据
      */
@@ -168,7 +173,9 @@ public class InfoFragment extends Fragment{
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         isFirst = true;
-                        mHandler.sendEmptyMessage(2);
+                        Message msg = new Message();
+                        msg.what = 2;
+                        mHandler.sendMessage(msg);
                         System.out.println(volleyError);
                     }
                 });
@@ -186,7 +193,6 @@ public class InfoFragment extends Fragment{
         Document doc = Jsoup.parse(html);
         //Elements
         Elements topnews = doc.getElementsByClass("list31_newlist1");
-
         for (Element link : topnews) {
             Information information=new Information();
             information.setTitle(link.getElementsByClass("list31_title1").text());
@@ -203,5 +209,12 @@ public class InfoFragment extends Fragment{
     }
 
 
-
+//    @Override
+//    public void onClick(View v) {
+//        switch (v.getId()){
+//            case R.id.fragment_reload:
+//
+//                break;
+//        }
+//    }
 }

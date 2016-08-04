@@ -42,16 +42,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
         <TextView
-        android:id="@+id/prodectInto_simpleDeclaration_tview"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/slideView"
-        android:text="zheshiyikuan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            android:id="@+id/prodectInto_simpleDeclaration_tview"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/slideView"
+            android:text="zheshiyikuan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <TextView
             android:text="￥"
             android:textColor="@color/colorRed"
@@ -116,7 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
-            android:id="@+id/prodectInfo__coreType_textView"
+            android:id="@+id/prodectInfo_coreType_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -135,17 +135,17 @@
     </LinearLayout>
 <!--产品详情-->
          <TextView
-        android:id="@+id/prodectInfo_detail"
-        android:text="@string/prodect_detail"
-        android:textSize="18dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+            android:id="@+id/prodectInfo_detail"
+            android:text="@string/prodect_detail"
+            android:textSize="18dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <View
-         android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:layout_gravity="center_vertical"
-        android:background="@color/gray"/>
+            android:layout_height="1px"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@color/gray"/>
             <TextView
                 android:id="@+id/prodectInfo_detail_textView"
                 android:text="@string/prodect_detailContent"

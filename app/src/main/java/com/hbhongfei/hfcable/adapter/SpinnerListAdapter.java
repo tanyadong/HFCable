@@ -9,12 +9,12 @@ import android.widget.TextView;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.MySpinner;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SpinnerListAdapter extends BaseAdapter {
-    private ArrayList<Object> list;
+//    private ArrayList<Object> list;
     private int mPosition;
-    private String[] mItems;
+    private List<String> list;
     private MySpinner mSpinner;
     private Activity mActivity;
     private onItemClickListener mListener;
@@ -24,13 +24,13 @@ public class SpinnerListAdapter extends BaseAdapter {
 //        this.list=arrayList;
 //        this.mSpinner =spinner;
 //    }
-    public SpinnerListAdapter(MySpinner spinner, Activity activity, String[] items){
+    public SpinnerListAdapter(MySpinner spinner, Activity activity, List<String> list){
         this.mActivity=activity;
-        this.mItems=items;
+        this.list=list;
         this.mSpinner =spinner;
     }
     public int getCount() {
-        return mItems.length;
+        return list.size();
     }
 
     public Object getItem(int position) {
@@ -58,7 +58,7 @@ public class SpinnerListAdapter extends BaseAdapter {
         }else {
             holder = (ViewHolder) view.getTag();
         }
-        holder.text.setText(mItems[arg0]);
+        holder.text.setText(list.get(arg0));
 //        holder.text.setText(list.get(arg0).g);
         view.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
