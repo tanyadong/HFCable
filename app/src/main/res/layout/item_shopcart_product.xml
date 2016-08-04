@@ -32,7 +32,7 @@
             android:layout_height="85dp"
             android:layout_marginBottom="15dp"
             android:layout_marginTop="13dp"
-            android:scaleType="centerCrop"/>
+            android:scaleType="fitXY"/>
         <RelativeLayout
             android:id="@+id/rl_no_edtor"
             android:layout_width="wrap_content"

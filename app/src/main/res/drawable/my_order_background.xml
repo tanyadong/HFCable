@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- 最上边的颜色 -->
+    <item>
+        <shape>
+            <solid android:color="@color/colorWhite" />
+        </shape>
+    </item>
+
+    <!--中间部分-->
+    <item android:top="50dp">
+        <shape>
+            <solid android:color="@color/colorGray" />
+        </shape>
+    </item>
+    <!--最下边-->
+    <item android:top="160dp">
+        <shape>
+            <solid android:color="@color/colorWhite" />
+        </shape>
+    </item>
+</layer-list>

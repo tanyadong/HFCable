@@ -10,6 +10,7 @@
 <color name="colorBalck">#000000</color>
 <color name="colorRed">#f70606</color>
 <color name="colorWhiteBlack">#f5f3f3</color>
+    <color name="colorGray">#f5f3f3</color>
 <color name="colorWhite">#ffff</color>
     <color name="colorLogin">#589DF6</color>
 

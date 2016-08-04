@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context="com.hbhongfei.hfcable.activity.MyOrderActivity">
-    <ListView
-        android:id="@+id/listView_myOrder"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_FindFragment_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fadingEdgeLength="10dp"
-        android:dividerHeight="30dp">
-    </ListView>
-</RelativeLayout>
+        android:background="@color/colorRed"
+        app:tabIndicatorColor="@color/white"
+        app:tabSelectedTextColor="@color/colorBalck"
+        app:tabTextColor="@color/white"/>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_FindFragment_pager"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+</LinearLayout>

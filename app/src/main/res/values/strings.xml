@@ -129,4 +129,7 @@
     <string name="register_verification_code_get">获取短信验证码</string>
     <string name="register">立即注册</string>
     <string name="title_activity_confirm_order">ConfirmOrderActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,18 +1,30 @@
 package com.hbhongfei.hfcable.activity;
 
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ListView;
 
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.adapter.MyAdapter_myShopping;
+import com.hbhongfei.hfcable.adapter.MyOrder_tab_Adapter;
+import com.hbhongfei.hfcable.fragment.MyOrderAllFragment;
+import com.hbhongfei.hfcable.fragment.MyOrderUnPaymenFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyOrderActivity extends AppCompatActivity {
 
-    private ListView list_myOrder;
+    private TabLayout tab_FindFragment_title; //定义TabLayout
+    private ViewPager vp_FindFragment_pager; //定义viewPager
+    private FragmentPagerAdapter fAdapter; //定义adapter
+    private List<Fragment> list_fragment; //定义要装fragment的列表
+    private List<String> list_title; //tab名称列表
+    private MyOrderAllFragment myOrderAllFragment; //全部订单的fragment
+    private MyOrderUnPaymenFragment myOrderUnPaymenFragment; //未付款的订单fragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,27 +32,35 @@ public class MyOrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_order);
         ActionBar actionBar=getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        initView();
-
-        setValues();
+        initControls();
     }
 
     /**
-     * 初始化界面
+     * 初始化各控件
      */
-    private void initView(){
-        list_myOrder = (ListView) findViewById(R.id.listView_myOrder);
-    }
-
-    /**
-     * 设置数据
-     */
-    private void setValues(){
-        ArrayList<String> list = new ArrayList<String>();
-        for (int i = 0; i < 10; i++) {
-            list.add("测试:"+i);
-        }
-//        MyAdapter_myShopping myAdapter_myShopping = new MyAdapter_myShopping(this,R.layout.intention_my_shopping_layout,list);
-//        list_myOrder.setAdapter(myAdapter_myShopping);
+    private void initControls() {
+        tab_FindFragment_title = (TabLayout)findViewById(R.id.tab_FindFragment_title);
+        vp_FindFragment_pager = (ViewPager)findViewById(R.id.vp_FindFragment_pager);
+        //初始化各fragment
+        myOrderAllFragment = new MyOrderAllFragment();
+        myOrderUnPaymenFragment = new MyOrderUnPaymenFragment();
+        //将fragment装进列表中
+        list_fragment = new ArrayList<>();
+        list_fragment.add(myOrderAllFragment);
+        list_fragment.add(myOrderUnPaymenFragment);
+        //将名称加载tab名字列表，正常情况下，我们应该在values/arrays.xml中进行定义然后调用
+        list_title = new ArrayList<>();
+        list_title.add("全部");
+        list_title.add("未付款");
+        //设置TabLayout的模式
+        tab_FindFragment_title.setTabMode(TabLayout.MODE_FIXED);
+        //为TabLayout添加tab名称
+        tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(0)));
+        tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(1)));
+        fAdapter = new MyOrder_tab_Adapter(getSupportFragmentManager(),list_fragment,list_title);
+        //viewpager加载adapter
+        vp_FindFragment_pager.setAdapter(fAdapter);
+        //TabLayout加载viewpager
+        tab_FindFragment_title.setupWithViewPager(vp_FindFragment_pager);
     }
 }
