@@ -1,27 +1,44 @@
 package com.hbhongfei.hfcable.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.HintTestSize;
+import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.NormalPostRequest;
+import com.hbhongfei.hfcable.util.Url;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MyNameActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText myName;
     private TextView number;
-    private String S_name;
+    private String S_name,S_phoneNumber;
     private ImageView cancel, done;
-    private Boolean tag = true;
+    private static final String USER = LoginConnection.USER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +48,7 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
         initView();
         count();
         setOnClick();
+        initValue();
     }
 
     /**
@@ -60,10 +78,6 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
         number = (TextView) findViewById(R.id.Tview_myName_number);
         cancel = (ImageView) findViewById(R.id.Image_myName_cancel);
         done = (ImageView) findViewById(R.id.Image_myName_done);
-//        SpannableString ss = new SpannableString("我是测试hint");//定义hint的值
-//        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(10,true);//设置字体大小 true表示单位是sp
-//        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        myName.setHint(new SpannedString(ss));
         HintTestSize hintTestSize=new HintTestSize(myName,"请输入您的昵称：");
         hintTestSize.setHintTextSize();
     }
@@ -87,10 +101,18 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void afterTextChanged(Editable s) {
                 getValues();
-                System.out.println(S_name);
                 number.setText("" + S_name.length());
             }
         });
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initValue(){
+        Intent intent = getIntent();
+        S_name = intent.getStringExtra("nickName");
+        S_phoneNumber = intent.getStringExtra("phoneNumber");
     }
 
     /**
@@ -115,8 +137,21 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
      */
     private void intent(Class c) {
         Intent i = new Intent();
-        i.setClass(MyNameActivity.this, c);
-        startActivity(i);
+        i.putExtra("back","back");
+        setResult(2,i);
+        this.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //数据是使用Intent返回
+        Intent intent = new Intent();
+        //把返回数据存入Intent
+        intent.putExtra("back", "back");
+        //设置返回数据
+        this.setResult(RESULT_OK, intent);
+        //关闭Activity
+        this.finish();
     }
 
     /**
@@ -129,16 +164,10 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
         getValues();
         if (TextUtils.isEmpty(S_name)) {
             toast("昵称不能为空，请输入");
-            tag = false;
+            return false;
+        }else{
+            return true;
         }
-        return tag;
-    }
-
-    /**
-     * 将数据进行保存
-     */
-    private void saveValues() {
-
     }
 
     @Override
@@ -149,11 +178,63 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.Image_myName_done:
                 if (checkValues()) {
-                    toast("昵称修改成功");
                     saveValues();
-                    intent(MyInfoActivity.class);
                 }
                 break;
         }
     }
+
+
+    /**
+     * 将数据进行保存
+     * 修改昵称时进行连接服务
+     */
+    private void saveValues() {
+        Map<String,String> params =new HashMap<>();
+        params.put("nickName", S_name);
+        params.put("phoneNumber", S_phoneNumber);
+        String url = Url.url("androidUser/updateNickName");
+        System.out.println(url);
+        RequestQueue mQueue = Volley.newRequestQueue(this);
+
+        //使用自己书写的NormalPostRequest类，
+        Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
+        mQueue.add(request);
+    }
+
+    /**
+     * 成功的监听器
+     */
+    private Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                String s = jsonObject.getString("updateNickName");
+                if (s.equals("success")){
+                    SharedPreferences.Editor editor = getSharedPreferences(USER, Context.MODE_PRIVATE).edit();
+                    editor.putString("nickName", S_name);
+                    editor.apply();
+                    Intent i = new Intent();
+                    i.putExtra("nickName",S_name);
+                    setResult(0,i);
+                    finish();
+                }else {
+                    Toast.makeText(MyNameActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    /**
+     *  失败的监听器
+     */
+    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            Toast.makeText(MyNameActivity.this,"链接网络失败", Toast.LENGTH_SHORT).show();
+            Log.e("TAG", volleyError.getMessage(), volleyError);
+        }
+    };
 }

@@ -15,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.MainActivity;
+import com.hbhongfei.hfcable.entity.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +32,7 @@ public class LoginConnection {
 
     private Context context;
     private int i=-1;
-    private String S_user,S_password,S_id;
+    private String S_phoneNumber,S_id,S_sex,S_nickName,S_headPortrait;
     public static final String USER = "hfcable_user";
 
     public LoginConnection(Context context){
@@ -41,11 +42,13 @@ public class LoginConnection {
     /**
      * 保存数据
      */
-    private void saveValues(String user,String password,String id){
+    private void saveValues(){
         SharedPreferences.Editor editor = context.getSharedPreferences(USER, Context.MODE_PRIVATE).edit();
-        editor.putString("userName", user);
-        editor.putString("password", password);
-        editor.putString("id", id);
+        editor.putString("phoneNumber", S_phoneNumber);
+        editor.putString("id", S_id);
+        editor.putString("sex", S_sex);
+        editor.putString("nickName", S_nickName);
+        editor.putString("headPortrait", S_headPortrait);
         editor.apply();
     }
 
@@ -75,10 +78,12 @@ public class LoginConnection {
                 String s = jsonObject.getString("login");
                 if (s.equals("success")){
                     JSONObject userInfo = jsonObject.getJSONObject("user");
-                    S_user = userInfo.getString("phoneNumber");
-                    S_password = userInfo.getString("password");
+                    S_phoneNumber = userInfo.getString("phoneNumber");
                     S_id = userInfo.getString("id");
-                    saveValues(S_user,S_password,S_id);
+                    S_sex = userInfo.getString("sex");
+                    S_nickName = userInfo.getString("nickName");
+                    S_headPortrait = userInfo.getString("headPortrait");
+                    saveValues();
                     showDialog();
                 }else if(s.equals("filed")){
                     Toast.makeText(context, "账号密码错误", Toast.LENGTH_SHORT).show();

@@ -232,7 +232,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         Map<String,String> params =new HashMap<>();
         params.put("phoneNumber", S_user);
         params.put("password", S_password);
-        String url = Url.url("androidUser/update");
+        String url = Url.url("androidUser/updatePassword");
         System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this);
 
@@ -249,7 +249,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         @Override
         public void onResponse(JSONObject jsonObject) {
             try {
-                String s = jsonObject.getString("update");
+                String s = jsonObject.getString("updatePassword");
                 if (s.equals("success")){
                     Toast.makeText(RegisterActivity.this, "更新密码成功", Toast.LENGTH_SHORT).show();
                 }else if(s.equals("filed")) {

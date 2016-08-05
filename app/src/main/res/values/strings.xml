@@ -58,6 +58,7 @@
     <string name="myInfo_name">昵称</string>
     <string name="myInfo_sex">性别</string>
     <string name="myInfo_password">修改密码</string>
+    <string name="myInfo_login_out">退出登录</string>
 
     <!--myName-->
     <string name="myName_hint">请输入您的昵称：</string>

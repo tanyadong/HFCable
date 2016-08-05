@@ -1,7 +1,9 @@
 package com.hbhongfei.hfcable.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import com.hbhongfei.hfcable.activity.MyFavoriteActivity;
 import com.hbhongfei.hfcable.activity.MyInfoActivity;
 import com.hbhongfei.hfcable.activity.MyOrderActivity;
 import com.hbhongfei.hfcable.activity.MyShoppingActivity;
+import com.hbhongfei.hfcable.util.LoginConnection;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +31,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private TextView myName;
     private String S_name;
     private RelativeLayout shopping,order,favorite;
+    private static final String USER = LoginConnection.USER;
 
 
     public MineFragment() {
@@ -42,8 +46,13 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         View v = inflater.inflate(R.layout.fragment_mine, container, false);
         initView(v);
         setOnClick();
-        initValues();
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initValues();
     }
 
     /**
@@ -75,12 +84,15 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * 初始化设置值
+     * 初始化数据
      * 苑雪元
      * 2016/07/21
      */
     private void initValues(){
+        SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
+        S_name = spf.getString("nickName", null);
         this.myName.setText(S_name);
+
     }
 
     /**
@@ -114,6 +126,5 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 intent(MyInfoActivity.class);
                 break;
         }
-
     }
 }

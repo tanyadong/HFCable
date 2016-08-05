@@ -18,13 +18,15 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.hbhongfei.hfcable.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Author: wangjie
- * Email: tiantian.china.2@gmail.com
- * Date: 7/1/14.
+ * 苑雪元
+ * 选择器
+ *
  */
 public class WheelView extends ScrollView {
     public static final String TAG = WheelView.class.getSimpleName();
@@ -281,9 +283,11 @@ public class WheelView extends ScrollView {
                 return;
             }
             if (position == i) {
-                itemView.setTextColor(Color.parseColor("#ff0000"));
+                //选中状态
+                itemView.setTextColor(getResources().getColor(R.color.colorRed));
             } else {
-                itemView.setTextColor(Color.parseColor("#ffffff"));
+                //未选中状态
+                itemView.setTextColor(getResources().getColor(R.color.qianGray));
             }
         }
     }
@@ -320,7 +324,8 @@ public class WheelView extends ScrollView {
 
         if (null == paint) {
             paint = new Paint();
-            paint.setColor(Color.parseColor("#83cde6"));
+            //横线
+            paint.setColor(getResources().getColor(R.color.qianGray));
             paint.setStrokeWidth(dip2px(1f));
         }
 
