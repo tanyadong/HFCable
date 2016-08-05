@@ -31,6 +31,7 @@ public class MyOrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_order);
         ActionBar actionBar=getSupportActionBar();
+        actionBar.setElevation(0);
         actionBar.setDisplayHomeAsUpEnabled(true);
         initControls();
     }

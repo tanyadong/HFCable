@@ -70,7 +70,7 @@ public class MyOrderAllFragment extends Fragment {
             map = new HashMap<>();
             map.put("name","电缆"+i);
             map.put("type","种类"+i);
-            map.put("introduce","很好的电缆");
+            map.put("introduce","很好的电缆很好的电缆很好的电缆很好的电缆很好的电缆很好的电缆很好的电缆很好的电缆很好的电缆");
             map.put("money","14.00");
             list.add(map);
         }
