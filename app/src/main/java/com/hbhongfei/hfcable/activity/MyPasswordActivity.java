@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.HintTestSize;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -34,6 +35,7 @@ public class MyPasswordActivity extends AppCompatActivity implements View.OnClic
     private String S_before, S_update, S_sure,S_phoneNumber;
     private ImageView cancel, done;
     private Boolean tag = true;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,7 @@ public class MyPasswordActivity extends AppCompatActivity implements View.OnClic
      * 初始化界面
      */
     private void initView() {
+        dialog = new Dialog(this);
         pwd_before = (EditText) findViewById(R.id.Etext_myPassword_before);
         pwd_update = (EditText) findViewById(R.id.Etext_myPassword_update);
         pwd_sure = (EditText) findViewById(R.id.Etext_myPassword_sure);
@@ -187,6 +190,7 @@ public class MyPasswordActivity extends AppCompatActivity implements View.OnClic
      * 修改密码时连接服务
      */
     private void saveValues() {
+        dialog.showDialog("正在保存...");
         Map<String,String> params =new HashMap<>();
         params.put("phoneNumber", S_phoneNumber);
         params.put("password", S_before);
@@ -224,18 +228,22 @@ public class MyPasswordActivity extends AppCompatActivity implements View.OnClic
             try {
                 String s = jsonObject.getString("updatePassword1");
                 if (s.equals("success")){
+                    dialog.cancle();
                     Toast.makeText(MyPasswordActivity.this, "更新密码成功", Toast.LENGTH_SHORT).show();
                     intent();
                 }else if(s.equals("filed")) {
+                    dialog.cancle();
                     Toast.makeText(MyPasswordActivity.this, "更新密码失败", Toast.LENGTH_SHORT).show();
                     setValuesEmpty();
                 }else if(s.equals("noUser")){
+                    dialog.cancle();
                     Toast.makeText(MyPasswordActivity.this, "输入的原密码不正确", Toast.LENGTH_SHORT).show();
                     setValuesEmpty();
 
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.cancle();
             }
         }
     };
@@ -248,6 +256,7 @@ public class MyPasswordActivity extends AppCompatActivity implements View.OnClic
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(MyPasswordActivity.this,"链接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
         }
     };
 

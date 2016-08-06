@@ -34,6 +34,7 @@ public class LoginConnection {
     private int i=-1;
     private String S_phoneNumber,S_id,S_sex,S_nickName,S_headPortrait;
     public static final String USER = "hfcable_user";
+    private Dialog dialog;
 
     public LoginConnection(Context context){
         this.context = context;
@@ -56,6 +57,8 @@ public class LoginConnection {
      * 连接服务
      */
     public void connInter(String S_user,String S_password){
+        dialog = new Dialog(this.context);
+        dialog.showDialog("正在登录中...");
         Map<String,String> params =new HashMap<>();
         params.put("userName", S_user);
         params.put("password", S_password);
@@ -84,12 +87,21 @@ public class LoginConnection {
                     S_nickName = userInfo.getString("nickName");
                     S_headPortrait = userInfo.getString("headPortrait");
                     saveValues();
-                    showDialog();
+                    //dialog消失
+                   dialog.cancle();
+                    //跳转界面
+                    Intent intent  = new Intent(context,MainActivity.class);
+                    context.startActivity(intent);
                 }else if(s.equals("filed")){
                     Toast.makeText(context, "账号密码错误", Toast.LENGTH_SHORT).show();
+                    //dialog消失
+                    dialog.cancle();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                //dialog消失
+                dialog.cancle();
+
             }
         }
     };
@@ -102,54 +114,11 @@ public class LoginConnection {
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
+            //dialog消失
+            dialog.cancle();
         }
     };
 
-    /**
-     * 显示dialog
-     */
-    public void showDialog(){
-        final SweetAlertDialog pDialog = new SweetAlertDialog(this.context, SweetAlertDialog.PROGRESS_TYPE)
-                .setTitleText("正在登录....");
-        pDialog.show();
-        pDialog.setCancelable(false);
-        new CountDownTimer(800 * 7, 800) {
-            public void onTick(long millisUntilFinished) {
-                i++;
-                switch (i){
-                    case 0:
-                        pDialog.getProgressHelper().setBarColor(context.getResources().getColor(R.color.blue_btn_bg_color));
-                        break;
-                    case 1:
-                        pDialog.getProgressHelper().setBarColor(context.getResources().getColor(R.color.material_deep_teal_50));
-                        break;
-                    case 2:
-                        pDialog.getProgressHelper().setBarColor(context.getResources().getColor(R.color.success_stroke_color));
-                        break;
-                    case 3:
-                        pDialog.getProgressHelper().setBarColor(context.getResources().getColor(R.color.material_deep_teal_20));
-                        break;
-                    case 4:
-                        pDialog.getProgressHelper().setBarColor(context.getResources().getColor(R.color.material_blue_grey_80));
-                        break;
-                    case 5:
-                        pDialog.getProgressHelper().setBarColor(context.getResources().getColor(R.color.warning_stroke_color));
-                        break;
-                    case 6:
-                        pDialog.getProgressHelper().setBarColor(context.getResources().getColor(R.color.success_stroke_color));
-                        break;
-                }
-            }
 
-            public void onFinish() {
-                i = -1;
-                pDialog.setTitleText("登录成功!")
-                        .setConfirmText("OK")
-                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                Intent intent  = new Intent(context,MainActivity.class);
-                context.startActivity(intent);
-            }
-        }.start();
-    }
 
 }

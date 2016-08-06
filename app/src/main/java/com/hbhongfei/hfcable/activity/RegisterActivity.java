@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.CheckPhoneNumber;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -36,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Button Btn_register;
     private boolean Tag =true;
     private LoginConnection loginConnection;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
      * 初始化界面
      */
     private void initView() {
+        dialog = new Dialog(this);
         this.Txt_tel_fragment_user = (EditText) findViewById(R.id.Txt_tel_fragment_user);
         this.Txt_tel_fragment_password = (EditText) findViewById(R.id.Txt_tel_fragment_password);
         this.Txt_tel_fragment_password_sure = (EditText) findViewById(R.id.Txt_tel_fragment_password_sure);
@@ -181,6 +184,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
      * 检查手机号是否已经注册时连接服务
      */
     private void checkPhone(){
+        if (S_w.equals("register")){
+            //注册
+            dialog.showDialog("正在注册...");
+        }else if(S_w.equals("forget")){
+            //找回密码
+            dialog.showDialog("正在找回...");
+        }
         Map<String,String> params =new HashMap<>();
         params.put("userName", S_user);
         String url = Url.url("androidUser/exist");
@@ -205,6 +215,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     if (S_w.equals("register")){
                         //注册
                         Toast.makeText(RegisterActivity.this, "手机号已经注册，请更换手机号或者找回密码", Toast.LENGTH_SHORT).show();
+                        dialog.cancle();
                     }else if(S_w.equals("forget")){
                         //找回密码
                         updateConnInter();
@@ -217,10 +228,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     }else if(S_w.equals("forget")){
                         //找回密码
                         Toast.makeText(RegisterActivity.this, "手机号未注册，请注册", Toast.LENGTH_SHORT).show();
+                        dialog.cancle();
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.cancle();
             }
         }
     };
@@ -251,12 +264,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             try {
                 String s = jsonObject.getString("updatePassword");
                 if (s.equals("success")){
+                    dialog.cancle();
                     Toast.makeText(RegisterActivity.this, "更新密码成功", Toast.LENGTH_SHORT).show();
                 }else if(s.equals("filed")) {
+                    dialog.cancle();
                     Toast.makeText(RegisterActivity.this, "更新密码失败", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.cancle();
             }
         }
     };
@@ -286,14 +302,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             try {
                 String s = jsonObject.getString("add");
                 if (s.equals("success")){
+                    dialog.cancle();
                     Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
                     loginConnection = new LoginConnection(RegisterActivity.this);
                     loginConnection.connInter(S_user,S_password);
                 }else {
+                    dialog.cancle();
                     Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.cancle();
             }
         }
     };
@@ -306,6 +325,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(RegisterActivity.this,"链接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
         }
     };
 

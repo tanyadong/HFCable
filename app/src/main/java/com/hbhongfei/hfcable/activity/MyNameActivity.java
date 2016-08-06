@@ -22,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.HintTestSize;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
@@ -39,6 +40,7 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
     private String S_name,S_phoneNumber;
     private ImageView cancel, done;
     private static final String USER = LoginConnection.USER;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,7 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
      * 初始化界面
      */
     private void initView() {
+        dialog = new Dialog(this);
         myName = (EditText) findViewById(R.id.Etext_myName_text);
         number = (TextView) findViewById(R.id.Tview_myName_number);
         cancel = (ImageView) findViewById(R.id.Image_myName_cancel);
@@ -190,6 +193,7 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
      * 修改昵称时进行连接服务
      */
     private void saveValues() {
+        dialog.showDialog("正在保存...");
         Map<String,String> params =new HashMap<>();
         params.put("nickName", S_name);
         params.put("phoneNumber", S_phoneNumber);
@@ -217,9 +221,11 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
                     Intent i = new Intent();
                     i.putExtra("nickName",S_name);
                     setResult(0,i);
+                    dialog.cancle();
                     finish();
                 }else {
                     Toast.makeText(MyNameActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
+                    dialog.cancle();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -235,6 +241,7 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(MyNameActivity.this,"链接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
         }
     };
 }

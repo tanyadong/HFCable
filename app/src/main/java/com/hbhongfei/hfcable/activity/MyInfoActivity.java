@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -43,6 +44,7 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
     private String S_sex = "男",S_name,S_phoneNumber;
     private static final String[] SEX = new String[]{"男", "女"};
     private static final String USER = LoginConnection.USER;
+    private Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +72,7 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
      * 初始化界面
      */
     private void initView(){
+        dialog =new Dialog(this);
         myInfo_name = (RelativeLayout) findViewById(R.id.Rlayout_myInfo_name);
         myInfo_sex = (RelativeLayout) findViewById(R.id.Rlayout_myInfo_sex);
         myInfo_password = (RelativeLayout) findViewById(R.id.Rlayout_myInfo_password);
@@ -222,6 +225,7 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
      * 修改性别时进行连接服务
      */
     private void saveSex() {
+        dialog.showDialog("正在保存...");
         Map<String,String> params =new HashMap<>();
         params.put("sex", S_sex);
         params.put("phoneNumber", S_phoneNumber);
@@ -248,11 +252,14 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
                     editor.putString("sex", S_sex);
                     editor.apply();
                     sex.setText(S_sex);
+                    dialog.cancle();
                 }else {
                     Toast.makeText(MyInfoActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
+                    dialog.cancle();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.cancle();
             }
         }
     };
@@ -265,6 +272,7 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(MyInfoActivity.this,"链接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
         }
     };
 }
