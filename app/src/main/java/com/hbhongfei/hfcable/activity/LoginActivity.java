@@ -3,18 +3,24 @@ package com.hbhongfei.hfcable.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.util.LoginConnection;
+
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText Txt_login_user,Txt_login_password;
     private TextView Txt_login_forget_password,Txt_login_sign_in;
     private Button Btn_login_login;
     private String S_user,S_password;
+    private boolean Tag =true;
+    private LoginConnection loginConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,41 +65,61 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            //忘记密码
             case R.id.Txt_login_forget_password:
                 forgetPwdClick();
                 break;
+            //注册
             case R.id.Txt_login_sign_in:
                 registerClick();
                 break;
+            //登录
             case R.id.Btn_login_login:
+                getValues();
                 loginClick();
                 break;
         }
     }
 
-
     /**
-     * 忘记密码
+     * 点击忘记密码
      */
     private void forgetPwdClick(){
         Intent intent = new Intent();
         intent.putExtra("W","forget");
         intent.setClass(LoginActivity.this,RegisterActivity.class);
         startActivity(intent);
-
     }
 
     /**
-     * 登录
+     * 点击登录
      */
     private void loginClick(){
-
-        Intent intent  = new Intent(this,MainActivity.class);
-        startActivity(intent);
+        if (isEmpty()){
+            loginConnection = new LoginConnection(LoginActivity.this);
+            loginConnection.connInter(S_user,S_password);
+        }
     }
 
     /**
-     * 注册
+     * 验证是否为空
+     */
+    private boolean isEmpty(){
+        if (TextUtils.isEmpty(S_user)){
+            Toast.makeText(LoginActivity.this,"请填写账号", Toast.LENGTH_SHORT).show();
+            Tag = false;
+        }else if(TextUtils.isEmpty(S_password)){
+            Toast.makeText(LoginActivity.this,"请填写密码", Toast.LENGTH_SHORT).show();
+            Tag = false;
+        }else {
+            Tag =true;
+        }
+        return Tag;
+    }
+
+
+    /**
+     * 点击注册
      */
     private void registerClick(){
         Intent intent = new Intent();
@@ -101,4 +127,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         intent.setClass(LoginActivity.this,RegisterActivity.class);
         startActivity(intent);
     }
+
 }

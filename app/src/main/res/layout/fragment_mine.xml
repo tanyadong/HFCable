@@ -41,9 +41,10 @@
                 android:background="#44ffffff">
                 <ImageView
                     android:id="@+id/Iamge_mine_head"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/mine_head"/>
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/man"/>
                 <TextView
                     android:id="@+id/Tview_mine_myName"
                     android:layout_width="wrap_content"
@@ -60,12 +61,13 @@
             android:id="@+id/Rlayout_mine_shopping"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#ffff"
+            android:background="@color/colorWhite"
             android:layout_marginTop="5dp">
             <ImageView
                 android:id="@+id/img1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_centerVertical="true"
                 android:src="@mipmap/shopping_cart"/>
             <TextView
@@ -73,6 +75,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/img1"
+                android:layout_marginLeft="5dp"
+                android:textSize="18sp"
                 android:text="@string/mine_shopping"/>
             <ImageView
                 android:layout_width="wrap_content"
@@ -85,12 +89,13 @@
             android:id="@+id/Rlayout_mine_favorite"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#ffff"
+            android:background="@color/colorWhite"
             android:layout_marginTop="5dp">
             <ImageView
                 android:id="@+id/img2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_centerVertical="true"
                 android:src="@mipmap/favorite"/>
             <TextView
@@ -98,6 +103,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/img2"
+                android:layout_marginLeft="5dp"
+                android:textSize="18sp"
                 android:text="@string/mine_favorite"/>
             <ImageView
                 android:layout_width="wrap_content"
@@ -110,19 +117,22 @@
             android:id="@+id/Rlayout_mine_order"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#ffff"
+            android:background="@color/colorWhite"
             android:layout_marginTop="5dp">
             <ImageView
                 android:id="@+id/img3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_centerVertical="true"
                 android:src="@mipmap/order"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/img3"
+                android:textSize="18sp"
                 android:text="@string/mine_order"/>
             <ImageView
                 android:layout_width="wrap_content"

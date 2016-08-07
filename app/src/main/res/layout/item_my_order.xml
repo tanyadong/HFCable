@@ -1,67 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/my_order_background">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <TextView
-            android:id="@+id/Tview_myOrder_type"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:gravity="center"
-            android:layout_marginLeft="10dp"
-            android:textSize="18dp"
-            android:text="种类名"/>
-        <ImageView
-            android:id="@+id/Image_myOrder_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:src="@mipmap/delete"/>
-    </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/image_myOrder"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/main_img1"/>
-        <LinearLayout
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/Tview_myOrder_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:gravity="center_vertical"
+                android:text="种类名"
+                android:textSize="@dimen/text_size" />
+            <ImageView
+                android:id="@+id/Image_myOrder_delete"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@mipmap/delete" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="#E8E8E8">
+
+            <ImageView
+                android:id="@+id/image_myOrder"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="16dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/main_img1" />
             <TextView
                 android:id="@+id/Tview_myOrder_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:textSize="20dp"
+                android:textSize="@dimen/text_size"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorRed"
+                android:layout_toRightOf="@id/image_myOrder"
                 android:text="电缆名"/>
             <TextView
                 android:id="@+id/Tview_myOrder_introduce"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18dp"
-                android:gravity="left"
-                android:textColor="@color/gray"
-                android:text="介绍"/>
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="16dp"
+                android:layout_toRightOf="@id/image_myOrder"
+                android:ellipsize="end"
+                android:maxEms="11"
+                android:maxLines="2"
+                android:textSize="@dimen/text_size"
+                android:text="魔帝（MUNDUS）OTG数据转接线USB接口/用于小米盒子OTG线，U盘/鼠标 黑色" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="220dp"
+            android:src="@mipmap/success_my_order" />
+    </FrameLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:clickable="false"
@@ -72,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_toLeftOf="@+id/Tview_myOrder_money"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:text="实付款："/>
         <TextView
             android:id="@+id/Tview_myOrder_money"

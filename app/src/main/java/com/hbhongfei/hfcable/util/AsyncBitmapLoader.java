@@ -41,7 +41,6 @@ public class AsyncBitmapLoader {
 		//内存中不存在，在sd卡查找
 		if (null != resultBitmap) {
 			imageView.setImageBitmap(resultBitmap);
-//			Toast.makeText(mcontent,resultBitmap.toString()+"ssssssssssssssssssssss",Toast.LENGTH_SHORT).show();
 		} else {
 
 			Bitmap fbm = ImageFromFileCache.getImage(imageURL);
@@ -50,7 +49,6 @@ public class AsyncBitmapLoader {
 			if (fbm != null) {
 				String iurl = (String) imageView.getTag();
 				if (iurl.equals(imageURL)) {
-//					Toast.makeText(mcontent,fbm.toString()+"ss",Toast.LENGTH_SHORT).show();
 					imageView.setImageBitmap(fbm);
 				}else{
 //					imageView.setImageResource(R.mipmap.ic_launcher);

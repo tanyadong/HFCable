@@ -43,6 +43,7 @@
                 android:background="@null"
                 android:maxLength="20"
                 android:layout_marginLeft="15dp"
+                android:inputType="phone"
                 android:digits="1234567890"
                 android:drawablePadding="20sp"
                 android:hint="@string/login_tel"
