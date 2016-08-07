@@ -2,6 +2,8 @@ package com.hbhongfei.hfcable.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +14,6 @@ import android.widget.PopupWindow;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.SpinnerListAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MySpinner extends PopupWindow implements AdapterView.OnItemClickListener {
@@ -34,7 +35,10 @@ public class MySpinner extends PopupWindow implements AdapterView.OnItemClickLis
         // 设置PopupWindow弹出窗体的高  
         this.setHeight(android.view.WindowManager.LayoutParams.WRAP_CONTENT);  
         this.setFocusable(true);  
-        this.setOutsideTouchable(true);  
+        this.setOutsideTouchable(true);
+        //设置点击窗口外边窗口消失
+        this.setOutsideTouchable(true);
+        this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // 刷新状态  
         this.update();   
         // 实例化一个ColorDrawable颜色

@@ -32,5 +32,11 @@
             android:ellipsize="end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/info_time_textView"
+            android:gravity="right"
+            android:text="asdasd "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>

@@ -41,7 +41,7 @@ public class ConnectionProduct {
      * */
     public void connInterByType(String typeName) throws JSONException {
         RequestQueue mQueue = Volley.newRequestQueue(context);
-        String url = Url.url("androidProduct/getProduct");
+        String url = Url.url("/androidProduct/getProduct");
         Map<String,String> map=new HashMap<>();
         map.put("typeName",typeName);
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
@@ -57,7 +57,6 @@ public class ConnectionProduct {
             try {
                 List<Product> list=new ArrayList<>();
                 JSONArray jsonArray=jsonObject.getJSONArray("productList");
-
                 for(int i=0;i<jsonArray.length();i++){
                     JSONObject jsonObject1=jsonArray.getJSONObject(i);
 
@@ -71,11 +70,14 @@ public class ConnectionProduct {
                     JSONObject jsonObject2=jsonObject1.getJSONObject("type");
                     product.setTypeName((String) jsonObject2.get("typeName"));
                     JSONArray jsonArray1=jsonObject1.getJSONArray("productImages");
-                    ArrayList<String> list1=new ArrayList<>();
-                    for(int j=0;j<jsonArray1.length();j++){
-                        list1.add((String) jsonArray1.get(i));
+                    //有图片时加入到产品图片集合
+                    if(jsonArray1.length()>0){
+                        ArrayList<String> list1=new ArrayList<>();
+                        for(int j=0;j<jsonArray1.length();j++){
+                            list1.add((String) jsonArray1.get(i));
+                        }
+                        product.setProductImages(list1);
                     }
-                    product.setProductImages(list1);
                     list.add(product);
                 }
                 MyAdapter adapter = new MyAdapter(context, R.layout.intentionlayout,list);

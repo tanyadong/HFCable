@@ -14,6 +14,8 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.fragment.PictrueFragment;
 import com.zdp.aseo.content.AseoZdpAseo;
 
+import java.util.ArrayList;
+
 /*	
 *显示大图
 */
@@ -24,7 +26,7 @@ public class ShowBigPictrue extends FragmentActivity {
 			R.mipmap.main_img3,R.mipmap.main_img4};
 	/**得到上一个界面点击图片的位置*/
 	private int position=0;
-	
+	private ArrayList<String> list;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,11 +36,15 @@ public class ShowBigPictrue extends FragmentActivity {
 		setContentView(R.layout.show_bigpicture);
 		Intent intent=getIntent();
 		position=intent.getIntExtra("position", 0);
+		list=intent.getStringArrayListExtra("image_List");
 		AseoZdpAseo.initType(this, AseoZdpAseo.INSERT_TYPE);
 		initViewPager();
 	}
-	
-private void initViewPager(){
+
+	/**
+	 * 初始化图片pager
+	 */
+    private void initViewPager(){
 		
 		viewPager = (ViewPager) findViewById(R.id.viewPager_show_bigPic);
 		ViewPagerAdapter adapter=new ViewPagerAdapter(getSupportFragmentManager());
@@ -56,13 +62,13 @@ private void initViewPager(){
 
 		@Override
 		public Fragment getItem(int position) {
-			int show_resId=resId[position];
-			return new PictrueFragment(show_resId);
+			String image=list.get(position);
+			return new PictrueFragment(image);
 		}
 
 		@Override
 		public int getCount() {
-			return resId.length;
+			return list.size();
 		}
 
 		

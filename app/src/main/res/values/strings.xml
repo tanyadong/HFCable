@@ -36,7 +36,9 @@
     <string name="company_postcode">邮编：</string>
 
     <!--产品信息-->
-    <string name="prodect_specifications">规格：</string>
+    <string name="prodect_specifications">选择颜色，规格</string>
+    <string name="prodect_selected">已选择：</string>
+    <string name="prodect_cAnds">完善颜色规格</string>
     <string name="prodect_model">型号：</string>
     <string name="prodect_coreType">线芯种类：</string>
     <string name="prodect_type">产品种类：</string>
@@ -46,7 +48,9 @@
     <string name="prodect_phone">电话</string>
     <string name="prodect_collect">收藏</string>
     <string name="prodect_shoppingCat">购物车</string>
-
+    <string name="product_selectColor">请选择规格,颜色分类</string>
+    <string name="product_specifications">规格</string>
+    <string name="product_color">颜色</string>
     <!--mine-->
     <string name="mine_myInfo">个人资料</string>
     <string name="mine_shopping">购物车</string>

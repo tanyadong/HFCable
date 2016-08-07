@@ -9,12 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.ProdectInfoActivity;
 import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
+import com.hbhongfei.hfcable.util.Url;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +60,7 @@ public class MyAdapter extends BaseAdapter {
         } else {
             return list.size()/2;
         }
+//        if(list == null){ return 0; }else{ return list.size()/2 + list.size()%2; }
     }
     @Override
     public Object getItem(int position) {
@@ -79,6 +80,7 @@ public class MyAdapter extends BaseAdapter {
             vh.layout2= (LinearLayout) convertView.findViewById(R.id.prodectList_LLayout2);
             vh.prodect_introduce1=(TextView)convertView.findViewById(R.id.prodect_introduce1);
             vh.prodect_introduce2=(TextView)convertView.findViewById(R.id.prodect_introduce2);
+            vh.prodect_price= (TextView) convertView.findViewById(R.id.prodect_price);
             vh.prodect_price1= (TextView) convertView.findViewById(R.id.prodect_price1);
             vh.prodect_price2= (TextView) convertView.findViewById(R.id.prodect_price2);
             vh.prodect_imgView1= (ImageView) convertView.findViewById(R.id.prodect_imgView1);
@@ -93,10 +95,16 @@ public class MyAdapter extends BaseAdapter {
         if (itemList.size() >0) {
             vh.prodect_introduce1.setText(itemList.get(0).getProdectName());
             vh.prodect_price1.setText(String.valueOf(itemList.get(0).getPrice()));
-            String path="file:///"+itemList.get(0).getProductImages().get(0);
-            vh.prodect_imgView1.setTag(path);
+//            Toast.makeText(context,itemList.get(0).getProductImages().size(),Toast.LENGTH_SHORT).show();
+            //有图片时加载
+            if(itemList.get(0).getProductImages()!=null){
+               String url=Url.url(itemList.get(0).getProductImages().get(0));
+            vh.prodect_imgView1.setTag(url);
             AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-            asyncBitmapLoader.loadImage(context,vh.prodect_imgView1,path);
+            asyncBitmapLoader.loadImage(context,vh.prodect_imgView1,url);
+            }else {
+                vh.prodect_imgView1.setImageResource(R.drawable.icon_image_default);
+            }
             vh.layout1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -104,15 +112,26 @@ public class MyAdapter extends BaseAdapter {
                     intent.putExtra("product",itemList.get(0));
                     intent.putExtra("tag",tag);
                     context.startActivity(intent);
-                    Toast.makeText(context, itemList.get(0)+"----"+position, Toast.LENGTH_SHORT).show();
                 }
             });
             if (itemList.size() >1){
+                vh.layout2.setVisibility(View.VISIBLE);
+                vh.layout2.setBackgroundResource(R.drawable.list_background);
                 vh.prodect_introduce2.setVisibility(View.VISIBLE);
                 vh.prodect_price2.setVisibility(View.VISIBLE);
                 vh.prodect_imgView2.setVisibility(View.VISIBLE);
                 vh.prodect_introduce2.setText(itemList.get(1).getProdectName());
                 vh.prodect_price2.setText(String.valueOf(itemList.get(1).getPrice()));
+                //有图片时加载
+                if(itemList.get(1).getProductImages()!=null){
+                    String url=Url.url(itemList.get(1).getProductImages().get(1));
+                    vh.prodect_imgView1.setTag(url);
+                    AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+                    asyncBitmapLoader.loadImage(context,vh.prodect_imgView1,url);
+                }else {
+                    vh.prodect_imgView2.setImageResource(R.drawable.icon_image_default);
+                }
+//                vh.prodect_imgView2.setImageResource(R.drawable.icon_image_default);
                 vh.layout2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -123,9 +142,9 @@ public class MyAdapter extends BaseAdapter {
                     }
                 });
             }else{
-                vh.prodect_introduce2.setVisibility(View.INVISIBLE);
-                vh.prodect_price2.setVisibility(View.INVISIBLE);
-                vh.prodect_imgView2.setVisibility(View.INVISIBLE);
+
+                vh.layout2.setVisibility(View.INVISIBLE);
+
             }
         }
         return convertView;
@@ -138,7 +157,7 @@ public class MyAdapter extends BaseAdapter {
     public static class ViewHolder{
         LinearLayout layout1;
         LinearLayout layout2;
-        TextView prodect_introduce1,prodect_price1;
+        TextView prodect_introduce1,prodect_price1,prodect_price;
         TextView prodect_introduce2,prodect_price2;
         ImageView prodect_imgView2,prodect_imgView1;
     }

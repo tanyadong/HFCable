@@ -4,7 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/layout"
     tools:context="com.hbhongfei.hfcable.activity.ProdectInfoActivity">
+    <!--<View-->
+        <!--android:id="@+id/all_choice_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:theme="@android:style/Theme.Translucent"-->
+        <!--android:background="#b0000000"-->
+        <!--android:visibility="gone"-->
+        <!--&gt;-->
+    <!--</View>-->
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="0dip"
@@ -17,146 +27,239 @@
                 android:id="@+id/slideView"
                 android:layout_width="match_parent"
                 android:layout_height="300dp" >
-        <android.support.v4.view.ViewPager
-            android:id="@+id/myviewPager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <android.support.v4.view.ViewPager
+                android:id="@+id/myviewPager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         <!--小圆点-->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:id="@+id/dotLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:paddingLeft="10dp"
-            android:layout_marginLeft="20dp"
-            />
-    </RelativeLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/dotLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:paddingLeft="10dp"
+                android:layout_marginLeft="20dp"
+                />
+            </RelativeLayout>
+
             <LinearLayout
                 android:orientation="vertical"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                android:id="@+id/prodectInto_simpleDeclaration_tview"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:text="zheshiyikuan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+                <LinearLayout
+                android:orientation="horizontal"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/prodectInto_simpleDeclaration_tview"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/slideView"
-            android:text="zheshiyikuan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <TextView
-            android:text="￥"
-            android:textColor="@color/colorRed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/prodectInfo_price_textView"
-            android:textColor="@color/colorRed"
-            android:text="1000"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+                <TextView
+                    android:text="￥"
+                    android:textColor="@color/colorRed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/prodectInfo_price_textView"
+                    android:textColor="@color/colorRed"
+                    android:text="1000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
     <!--产品说明-->
-        <TextView
-        android:id="@+id/prodectInfo_intro_textView"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/prodectInto_simpleDeclaration_tview"
-        android:text="@string/prodect_introduce"
-        android:textSize="18dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-        <View  android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:layout_gravity="center_vertical"
-        android:background="@color/gray"
-        />
-    <!--规格-->
-        <LinearLayout
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/prodectInfo_intro_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/prodectInfo_specifications"
-            android:text="@string/prodect_specifications"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/prodectInfo_specifications_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/prodectInfo_model"
-            android:text="@string/prodect_model"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/prodectInfo_model_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-        <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/prodectInfo__coreType"
-            android:text="@string/prodect_coreType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/prodectInfo_coreType_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-        <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/prodectInfo_type"
-            android:text="@string/prodect_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/prodectInfo_type_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-<!--产品详情-->
-         <TextView
-            android:id="@+id/prodectInfo_detail"
-            android:text="@string/prodect_detail"
-            android:textSize="18dp"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <View
-            android:layout_height="1px"
-            android:layout_width="match_parent"
-            android:layout_gravity="center_vertical"
-            android:background="@color/gray"/>
-            <TextView
-                android:id="@+id/prodectInfo_detail_textView"
-                android:text="@string/prodect_detailContent"
-                android:layout_marginTop="10dp"
+        <!--<TextView-->
+            <!--android:id="@+id/prodectInfo_intro_textView"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_below="@+id/prodectInto_simpleDeclaration_tview"-->
+            <!--android:text="@string/prodect_introduce"-->
+            <!--android:textSize="18dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+        <!--<View  android:layout_height="1px"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:background="@color/gray"-->
+        <!--/>-->
+            <!--产品说明-->
+            <LinearLayout
+             android:orientation="vertical"
+             android:background="@color/white"
+             android:layout_marginTop="10dp"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+             <TextView
+             android:id="@+id/prodectInfo_intro_textView"
+             android:text="@string/prodect_introduce"
+                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
+             android:textSize="18dp"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+             <View  android:layout_height="1px"
+             android:layout_width="match_parent"
+             android:layout_gravity="center_vertical"
+             android:background="@color/gray"
+             />
+             <!--型号-->
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                android:layout_height="wrap_content">
+                 <TextView
+                    android:id="@+id/prodectInfo_model"
+                    android:text="@string/prodect_model"
+                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                     android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/prodectInfo_model_textview"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:text="@string/action_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+             <!--线芯种类-->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/prodectInfo__coreType"
+                    android:text="@string/prodect_coreType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/prodectInfo_coreType_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+             <!--种类-->
+            <LinearLayout
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/prodectInfo_type"
+                    android:text="@string/prodect_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/prodectInfo_type_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+             </LinearLayout>
+            </LinearLayout>
+                <!--规格-->
+            <RelativeLayout
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/selectSpec_layout"
+                    android:background="@color/colorWhite"
+                    android:layout_width="fill_parent"
+                     android:orientation="horizontal"
+                    android:layout_height="50dp">
+                    <TextView
+                        android:id="@+id/prodectInfo_specifications"
+                        android:text="@string/prodect_specifications"
+                        android:textColor="@color/colorBalck"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:visibility="visible"
+                        android:gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/prodectInfo_s"
+                    android:text="@string/prodect_selected"
+                    android:textColor="@color/colorBalck"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:visibility="gone"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/prodectInfo_s1"
+                    android:visibility="gone"
+                    android:layout_toRightOf="@+id/prodectInfo_s"
+                    android:textColor="@color/colorPrimary"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/prodectInfo_s2"
+                    android:visibility="gone"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_toRightOf="@+id/prodectInfo_s1"
+                    android:paddingLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+                    <TextView
+                        android:id="@+id/prodectInfo_specifications_textview"
+                        android:hint="@string/prodect_cAnds"
+                        android:gravity="center_vertical"
+                        android:layout_toLeftOf="@+id/prodectInfo_sImg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                    <ImageView
+                        android:id="@+id/prodectInfo_sImg"
+                        android:src="@mipmap/right_black"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                </RelativeLayout>
+        <!--产品详情-->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:background="@color/colorWhite"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                     <TextView
+                        android:id="@+id/prodectInfo_detail"
+                        android:text="@string/prodect_detail"
+                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                         android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:textSize="18dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <View
+                        android:layout_height="1px"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/gray"/>
+                    <TextView
+                        android:id="@+id/prodectInfo_detail_textView"
+                        android:text="@string/prodect_detailContent"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
     <LinearLayout
         android:orientation="horizontal"
+        android:id="@+id/prodect_bottom"
         android:gravity="center"
         android:background="@drawable/prodectlayout_background"
         android:layout_width="match_parent"
@@ -231,6 +334,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
     </LinearLayout>
+
 </LinearLayout>
 
 

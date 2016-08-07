@@ -28,6 +28,11 @@
         <item name="android:windowExitAnimation">@anim/pophidden_anim</item>
         <!-- 指定消失的动画xml -->
     </style>
+    <!--指定产品详情页面弹出框的动画-->
+    <style name="popWindow_anim_style" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/pop_up_in</item>
+        <item name="android:windowExitAnimation">@anim/pop_down_out</item>
+    </style>
 
     <style name="Theme.Foo" parent="android:style/Theme.Light">
         <item name="android:windowContentOverlay">@null</item>

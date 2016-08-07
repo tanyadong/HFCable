@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
+import com.hbhongfei.hfcable.util.Url;
 
 /*	
  **��ʾ��ͼ��ʵ�֣����ҿ��ԷŴ���С
@@ -20,11 +22,10 @@ import com.hbhongfei.hfcable.R;
 public class PictrueFragment extends Fragment {
 
 	private int resId;
-
+	private String image;
 	@SuppressLint("ValidFragment")
-	public PictrueFragment(int resId) {
-
-		this.resId = resId;
+	public PictrueFragment(String image) {
+		this.image=image;
 	}
 
 	@Override
@@ -39,8 +40,13 @@ public class PictrueFragment extends Fragment {
 
 	private void initView(View view) {
 		ImageView imageView = (ImageView) view.findViewById(R.id.scale_pic_item);
+		//获取图片并显示
 
-		imageView.setImageResource(resId);
+		String url = Url.url(image);
+		imageView.setTag(url);
+		AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+		asyncBitmapLoader.loadImage(getContext(),imageView,url);
+//		imageView.setImageResource(resId);
 
 	}
 

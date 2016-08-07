@@ -1,7 +1,9 @@
 package com.hbhongfei.hfcable.fragment;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,6 +31,7 @@ import com.hbhongfei.hfcable.activity.CompanyInfoActivity;
 import com.hbhongfei.hfcable.activity.ProdectListActivity;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
 import com.hbhongfei.hfcable.pojo.Company;
+import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.ConnectionProduct;
 import com.hbhongfei.hfcable.util.Url;
 import com.hbhongfei.hfcable.util.showbigpictude.ScaleView;
@@ -100,6 +103,8 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         connInter();
         setDate();
 //        setTypeValue();
+        //连接获取公司的服务
+        connInterGetCompanyInfo();
         onClick();
         if (isAutoPlay) {
             startPlay();
@@ -141,30 +146,24 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
      * 设置数据
      */
     public void setDate() {
+        //首页根据条件查询产品
         ConnectionProduct connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),listView);
         try {
             connectionProduct.connInterByType("全部");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         list = new ArrayList<ImageView>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
-        int[] resId = { R.mipmap.main_img1, R.mipmap.main_img2,
-                R.mipmap.main_img3,R.mipmap.main_img4};
-        for (int i = 0; i < resId.length; i++) {
-            img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-            img1.setImageResource(resId[i]);
-            img1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-                    intent =new Intent(IndexFragment.this.getActivity(), CompanyInfoActivity.class);
-                    startActivity(intent);
-                }
-            });
-            list.add(img1);
-        }
+
+    }
+
+    /**
+     * 设置小圆点
+     * @param list
+     */
+    public void setSmallDot(List<ImageView>list){
         //加入小圆点
         for (int i = 0; i < list.size(); i++) {
             ImageView indicator = new ImageView(getContext());
@@ -198,7 +197,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
      * 获取产品种类服务
      */
     public void connInter(){
-        String url = Url.url("androidType/getType");
+        String url = Url.url("/androidType/getType");
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
                 jsonObjectListener,errorListener);
                 mQueue.add(jsonObjectRequest);
@@ -247,7 +246,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
      * 获取公司信息
      */
     public void connInterGetCompanyInfo(){
-        String url = Url.url("androidCompany/getCompanyInfo");
+        String url = Url.url("/androidCompany/getCompanyInfo");
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
                 jsonObjectCompanyListener,errorListener);
         mQueue.add(jsonObjectRequest);
@@ -263,10 +262,8 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
             List<Company> company_list=new ArrayList<>();
             try {
                 jsonArray = jsonObject.getJSONArray("companyList");
-
-                for(int i=0;i<jsonArray.length();i++){
-                    Company company=new Company();
-                    JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
+                    final Company company=new Company();
+                    JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(0);
                     company.setLogo(jsonObject1.getString("logo"));
                     company.setAddress(jsonObject1.getString("address"));
                     company.setCompanyName(jsonObject1.getString("companyName"));
@@ -274,18 +271,35 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
                     company.setEmail(jsonObject1.getString("email"));
                     company.setProductIntroduction(jsonObject1.getString("productIntroduction"));
                     company.setTelephone(jsonObject1.getString("telephone"));
+                     //保存电话号码
+                    savePhoneNum(jsonObject1.getString("telephone"));
+
                     company.setZipCode(jsonObject1.getInt("zipCode"));
                     JSONArray jsonArray1=jsonObject1.getJSONArray("list");
-                    ArrayList<String> list=new ArrayList<>();
+                    ArrayList<String> list1=new ArrayList<>();
                     for (int j=0;j<jsonArray1.length();j++){
                         JSONObject jsonObject2=jsonArray1.getJSONObject(j);
-                        list.add(jsonObject2.getString("image"));
+                        list1.add(jsonObject2.getString("image"));
+                        String url=Url.url(jsonObject2.getString("image"));
+                        img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
+                        img1.setTag(url);
+                        AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+                        asyncBitmapLoader.loadImage(getActivity(),img1,url);
+                        list.add(img1);
+                        //给图片添加点击事件。跳转到公司信息界面
+                        img1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                intent =new Intent(IndexFragment.this.getActivity(), CompanyInfoActivity.class);
+                                intent.putExtra("company",company);
+                                startActivity(intent);
+                            }
+                        });
                     }
-                    company.setList(list);
+                    company.setList(list1);
+                //设置小圆点
+                    setSmallDot(list);
 
-
-                }
-//                setTypeValue(type_list);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -303,6 +317,18 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         btn_typeName3.setText(list.get(2));
         btn_typeName4.setText(list.get(3));
         btn_typeName5.setText(list.get(4));
+    }
+
+    /**
+     * 保存公司电话信息
+     * 方便产品详情界面拨打电话
+     * @param v
+     */
+    private void savePhoneNum(String phoneNum){
+        SharedPreferences settings = getActivity().getSharedPreferences("SAVE_PHONE", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("phoneNum", phoneNum);
+        editor.commit();
     }
     @Override
     public void onClick(View v) {

@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp"
     android:orientation="horizontal">
     <LinearLayout
         android:id="@+id/prodectList_LLayout1"
@@ -16,8 +16,9 @@
         <ImageView
             android:id="@+id/prodect_imgView1"
             android:src="@mipmap/main_img1"
+            android:scaleType="fitXY"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="150dp" />
         <TextView
             android:id="@+id/prodect_introduce1"
             android:text="..电缆"
@@ -44,17 +45,20 @@
     <LinearLayout
         android:id="@+id/prodectList_LLayout2"
         android:layout_weight="1"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:orientation="vertical"
         android:background="@drawable/list_background"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/prodect_imgView2"
             android:src="@mipmap/main_img1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" />
         <TextView
             android:id="@+id/prodect_introduce2"
             android:text="..电缆"
@@ -67,6 +71,7 @@
             android:layout_height="match_parent">
             <TextView
                 android:text="￥"
+                android:id="@+id/prodect_price"
                 android:textColor="@color/colorRed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

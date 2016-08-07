@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -127,12 +126,14 @@ public class InfoFragment extends Fragment {
      */
     private  void setValues(){
         mAdapter = new DataAdapter(getActivity(), info_list);
+        //添加头和尾
+//        info_listView.addHeaderView(new View(getActivity()));
+//        info_listView.addFooterView(new View(getActivity()));
         info_listView.setAdapter(mAdapter);
         info_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-
                 Intent intent = new Intent(getActivity(), InfoDetailActivity.class);
                 intent.putExtra("data", info_list.get(position));
                 getActivity().startActivity(intent);
@@ -144,7 +145,6 @@ public class InfoFragment extends Fragment {
             public void onClick(View v) {
                 loading.setText(getString(R.string.tip_text_data_loading));
                 reload.setVisibility(View.GONE);
-                Toast.makeText(InfoFragment.this.getActivity(),"asd ",Toast.LENGTH_SHORT).show();
                 loadData();
             }
         });
@@ -199,22 +199,61 @@ public class InfoFragment extends Fragment {
             information.setBrief(link.getElementsByClass("list31_text1").text());
             information.setImgUrl(link.getElementsByTag("img").attr("src"));
             information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
+            loadContentData(information.getContentUrl(),information);
             System.out.println(information.toString());
             list.add(information);
         }
+//        Message msg = new Message();
+//        msg.what = 1;
+//        msg.obj = list;
+//        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * 解析资讯详情
+     * @param url
+     */
+    private void loadContentData(String url, final Information information){
+
+        StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                parseContent(s,information);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println(volleyError);
+            }
+        });
+        queue.add(request);
+//                return s;
+    }
+    /**
+     * 解析html
+     * @param html
+     */
+    protected void parseContent(String html,Information information) {
+//        list=new ArrayList<>();
+        Document doc = Jsoup.parse(html);
+        //获取资讯时间
+        Elements time = doc.getElementsByClass("contentspage");
+        String s=time.get(0).getElementsByTag("span").first().text();
+        //Elements
+        //获取资讯内容
+        Element id = doc.getElementById("main_ContentPlaceHolder1_pnlContent");
+        Elements contents=id.getElementsByTag("p");
+        String content=new String();
+        for (int i=2;i<contents.size();i++){
+            content+="\u3000\u3000"+contents.get(i).text();
+            content+="\n";
+        }
+        information.setTime(s);
+        information.setDetailContent(content);
         Message msg = new Message();
         msg.what = 1;
         msg.obj = list;
         mHandler.sendMessage(msg);
     }
 
-
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()){
-//            case R.id.fragment_reload:
-//
-//                break;
-//        }
-//    }
 }

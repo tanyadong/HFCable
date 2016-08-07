@@ -19,12 +19,14 @@
     android:id="@+id/companyInfo_logo"
     android:src="@mipmap/main_img2"
     android:layout_gravity="center"
-    android:layout_width="150dp"
-    android:layout_height="150dp" />
+    android:scaleType="fitXY"
+    android:layout_width="match_parent"
+    android:layout_height="200dp" />
     <TextView
         android:id="@+id/companyInfo_name_textView"
         android:gravity="center"
         android:textSize="18dp"
+        android:layout_marginTop="10dp"
         android:text="@string/company_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

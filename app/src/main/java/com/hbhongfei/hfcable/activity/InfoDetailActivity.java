@@ -6,20 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Information;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
@@ -27,7 +18,7 @@ public class InfoDetailActivity extends AppCompatActivity {
     private RequestQueue queue;
     private ImageView infoDetail_img;
     private TextView infoDetail_title;
-    private TextView infoDetail_content;
+    private TextView infoDetail_content,infoDetail_time;
     private String[] array;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +44,7 @@ public class InfoDetailActivity extends AppCompatActivity {
         infoDetail_content= (TextView) findViewById(R.id.infoDetail_content);
         infoDetail_img= (ImageView) findViewById(R.id.infoDetail_img);
         infoDetail_title= (TextView) findViewById(R.id.infoDetail_title);
+        infoDetail_time= (TextView) findViewById(R.id.infoDetail_time);
     }
     /**
      * 数据
@@ -65,41 +57,9 @@ public class InfoDetailActivity extends AppCompatActivity {
         AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
         infoDetail_img.setTag(information.getImgUrl());
         asyncBitmapLoader.loadImage(this,infoDetail_img,information.getImgUrl());
-        loadData(information.getContentUrl());
-    }
-    private void loadData(String url){
-
-                StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        parse(s);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        System.out.println(volleyError);
-                    }
-                });
-                queue.add(request);
-//                return s;
-    }
-    /**
-     * 解析html
-     * @param html
-     */
-    protected void parse(String html) {
-//        list=new ArrayList<>();
-
-        Document doc = Jsoup.parse(html);
-        //Elements
-        Element id = doc.getElementById("main_ContentPlaceHolder1_pnlContent");
-        Elements contents=id.getElementsByTag("p");
-        String content=new String();
-        for (int i=2;i<contents.size();i++){
-            content+="\u3000\u3000"+contents.get(i).text();
-            content+="\n";
-        }
-        infoDetail_content.setText(content);
+        infoDetail_content.setText(information.getDetailContent());
+        infoDetail_time.setText(information.getTime());
+//        loadContentData(information.getContentUrl());
     }
 
 

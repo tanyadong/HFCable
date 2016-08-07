@@ -46,41 +46,26 @@ public class DataAdapter extends BaseAdapter {
 		HolderView hView = null;
 		if (null == convertView) {
 			hView = new HolderView();
-			convertView = inflater.inflate(R.layout.information_layout, null);
+			convertView = inflater.inflate(R.layout.list_item_card, null);
 			hView.image = (ImageView) convertView.findViewById(R.id.info_img);
 			hView.title = (TextView) convertView.findViewById(R.id.info_title_textView);
 			hView.brief = (TextView)convertView.findViewById(R.id.info_content_textVeiw);
+			hView.time= (TextView) convertView.findViewById(R.id.info_time_textView);
 			convertView.setTag(hView);
 		} else {
 			hView = (HolderView) convertView.getTag();
 		}
 		hView.title.setText(newsData.get(position).getTitle());
-//		if(!"".equals(newsData.get(position).getContent()) && newsData.get(position).getContent().length()>26){
-//			String str=newsData.get(position).getContent().trim().substring(0, 24);
-//			Toast.makeText(mContext,newsData.get(position).getContent()+"dddddddddddd",Toast.LENGTH_SHORT).show();
-//			hView.brief.setText(NetUtil2.replaceBlank(str));
-//		} else {
-//			hView.brief.setText("");
-//		}
+
 		hView.brief.setText(newsData.get(position).getBrief());
-		
-//		if (NetUtil2.CURRENT_SPEAK.equals(newsData.get(position).getUrl())) {
-//			hView.speak.setVisibility(View.VISIBLE);
-//			hView.title.setTextColor(Color.RED);
-//		} else {
-//			hView.speak.setVisibility(View.GONE);
-//			hView.title.setTextColor(Color.WHITE);
-//		}
+		hView.time.setText(newsData.get(position).getTime());
 
 
 		if (null != newsData.get(position).getImgUrl()
 				&& !"".equals(newsData.get(position).getImgUrl())) {
 			hView.image.setTag(newsData.get(position).getImgUrl());
-//			ImageLoader1 imageLoader=new ImageLoader1(mContext);
-//			imageLoader.DisplayImage(newsData.get(position).getImgUrl(), hView.image);
 			AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
 			asyncBitmapLoader.loadImage(mContext,hView.image,newsData.get(position).getImgUrl());
-//			ImageLoader1.getInstance(mContext).loadImage(newsData.get(position).getImgUrl(),hView.image);
 		} else {
 			hView.image.setImageResource(R.drawable.icon_image_default);
 		}
@@ -92,6 +77,7 @@ public class DataAdapter extends BaseAdapter {
 		private ImageView image = null;
 		private TextView brief= null;
 		private TextView title = null;
+		private TextView time=null;
 	}
 	
 }

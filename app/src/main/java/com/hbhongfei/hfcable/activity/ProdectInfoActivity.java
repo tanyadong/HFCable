@@ -1,25 +1,41 @@
 package com.hbhongfei.hfcable.activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
+import com.hbhongfei.hfcable.adapter.SkuAdapter;
+import com.hbhongfei.hfcable.pojo.Bean;
 import com.hbhongfei.hfcable.pojo.Product;
+import com.hbhongfei.hfcable.pojo.SkuItme;
+import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
+import com.hbhongfei.hfcable.util.DataUtil;
+import com.hbhongfei.hfcable.util.Url;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +43,48 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ProdectInfoActivity extends AppCompatActivity implements View.OnClickListener{
+public class ProdectInfoActivity extends AppCompatActivity implements View.OnClickListener,PopupWindow.OnDismissListener {
     private LayoutInflater inflater;
-    private ImageView img1, img2, img3, img4;
+    private ImageView img1;
     private ViewPager mviewPager;
-    private LinearLayout prodectList_LLayout_phone,prodectList_LLayout_collect,prodectList_LLayout_shoppingCat;
-    private TextView prodectInto_simpleDeclaration,prodectInfo_price,
-            prodectInfo_intro,prodectInfo_specifications,prodectInfo_model,prodectInfo_coreType,
-            prodectInfo_type,prodectInfo_detail;
+    private LinearLayout prodectList_LLayout_phone, prodectList_LLayout_collect, prodectList_LLayout_shoppingCat;
+    private TextView prodectInto_simpleDeclaration, prodectInfo_price,
+            prodectInfo_intro, prodectInfo_specifications, prodectInfo_model, prodectInfo_coreType,
+            prodectInfo_type, prodectInfo_detail;
     private TextView prodect_addCart;
+    private RelativeLayout selectSpec_layout;
+    private LinearLayout all_choice_layout, prodect_bottom;
+    private View mGrayLayout;
+    private boolean isPopWindowShowing=false;
+    LinearLayout layout;
+    private int mnSeclectItem = 0;
+    private ArrayList<String> mArrayList = new ArrayList<String>();
+//    popwindow弹框
+    private TextView prodectInfo_s,prodectInfo_s1,prodectInfo_s2;
+    String color;//
+    String specifications;//规格
+    List<SkuItme> mList;// sku数据
+
+    List<Bean> mColorList;// 颜色列表
+    List<Bean> mSpecificationsList;// 尺码列表
+
+    GridView gvColor;// 颜色
+    GridView gvSpecifications;// 规格
+    SkuAdapter skuColorAdapter;// 颜色适配器
+    SkuAdapter skuSpecificationsAdapter;// 规格适配器
+    TextView tvSkuName;// 显示sku
+    TextView tvSkuStock;// 显示库存
+    ImageView pop_del;//关闭图片
+    Button btn_sure;//确定按钮
+    TextView pop_add,pop_reduce,pop_num;
+    private final int ADDORREDUCE=1;
+    boolean isAddCart=false;
+    int color_position=0;
+    int spec_position=0;
+    /**
+     * 弹出商品订单信息详情
+     */
+    private PopupWindow popWindow;
     /**
      * 用于小圆点图片
      */
@@ -52,14 +101,12 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     boolean isAutoPlay = true;//是否自动轮播
     /**
      * ViewPager当前显示页的下标
-     *
      */
     int position1 = 0;
     private ScheduledExecutorService scheduledExecutorService;
     Intent intent;
     String tag;
     private Handler handler = new Handler() {
-
         @Override
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
@@ -82,73 +129,98 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             startPlay();
         }
     }
-
     /**
      * 展示toolbar
      */
     private void toolBar() {
-        tag=getIntent().getStringExtra("tag");
-        ActionBar actionBar=getSupportActionBar();
+        tag = getIntent().getStringExtra("tag");
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
-    public void initVIew(){
-        inflater = LayoutInflater.from(this);
-        mviewPager = (ViewPager)findViewById(R.id.myviewPager);
-        dotLayout = (LinearLayout)findViewById(R.id.dotLayout);
-        img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-        prodectList_LLayout_phone= (LinearLayout) findViewById(R.id.prodectList_LLayout_phone);
-        prodectList_LLayout_collect= (LinearLayout) findViewById(R.id.prodectList_LLayout_collect);
-        prodectList_LLayout_shoppingCat= (LinearLayout) findViewById(R.id.prodectList_LLayout_shoppingCat);
-        prodect_addCart= (TextView) findViewById(R.id.prodect_addCart);
 
+    public void initVIew() {
+        inflater = LayoutInflater.from(this);
+        mviewPager = (ViewPager) findViewById(R.id.myviewPager);
+        dotLayout = (LinearLayout) findViewById(R.id.dotLayout);
+        img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
+        prodectList_LLayout_phone = (LinearLayout) findViewById(R.id.prodectList_LLayout_phone);
+        prodectList_LLayout_collect = (LinearLayout) findViewById(R.id.prodectList_LLayout_collect);
+        prodectList_LLayout_shoppingCat = (LinearLayout) findViewById(R.id.prodectList_LLayout_shoppingCat);
+        prodect_addCart = (TextView) findViewById(R.id.prodect_addCart);
+//        mGrayLayout=findViewById(R.id.all_choice_layout);
         //产品信息
-        prodectInfo_coreType= (TextView) findViewById(R.id.prodectInfo_coreType_textView);
-        prodectInfo_detail= (TextView) findViewById(R.id.prodectInfo_detail_textView);
-        prodectInfo_intro= (TextView) findViewById(R.id.prodectInfo_intro_textView);
-        prodectInfo_model= (TextView) findViewById(R.id.prodectInfo_model_textview);
-        prodectInfo_price= (TextView) findViewById(R.id.prodectInfo_price_textView);
-        prodectInfo_specifications= (TextView) findViewById(R.id.prodectInfo_specifications_textview);
-        prodectInfo_type= (TextView) findViewById(R.id.prodectInfo_type_textView);
-        prodectInto_simpleDeclaration= (TextView) findViewById(R.id.prodectInto_simpleDeclaration_tview);
+        prodectInfo_coreType = (TextView) findViewById(R.id.prodectInfo_coreType_textView);
+        prodectInfo_detail = (TextView) findViewById(R.id.prodectInfo_detail_textView);
+        prodectInfo_intro = (TextView) findViewById(R.id.prodectInfo_intro_textView);
+        prodectInfo_model = (TextView) findViewById(R.id.prodectInfo_model_textview);
+        prodectInfo_price = (TextView) findViewById(R.id.prodectInfo_price_textView);
+        prodectInfo_specifications = (TextView) findViewById(R.id.prodectInfo_specifications);
+        prodectInfo_type = (TextView) findViewById(R.id.prodectInfo_type_textView);
+        prodectInto_simpleDeclaration = (TextView) findViewById(R.id.prodectInto_simpleDeclaration_tview);
+        selectSpec_layout = (RelativeLayout) findViewById(R.id.selectSpec_layout);//选择颜色规格
+        prodect_bottom = (LinearLayout) findViewById(R.id.prodect_bottom);
+        //选择规格和颜色
+        prodectInfo_s= (TextView) findViewById(R.id.prodectInfo_s);
+        prodectInfo_s1= (TextView) findViewById(R.id.prodectInfo_s1);
+        prodectInfo_s2= (TextView) findViewById(R.id.prodectInfo_s2);
+
+        //初始化对话框
+//        popWindow = new BabyPopWindow(ProdectInfoActivity.this);
     }
 
     /**
      * 设置数据
      */
     public void setDate() {
-        //获取产品列表的详细产品信息
-        intent=getIntent();
-        Product product= (Product) intent.getSerializableExtra("product");
-//        Toast.makeText(this,product.toString()+"0000000000000",Toast.LENGTH_SHORT).show();
-        prodectInfo_detail.setText(product.getDetail());
-        prodectInfo_coreType.setText(product.getLineCoreType());
-        prodectInfo_intro.setText(product.getDetail());
-        prodectInfo_price.setText(String.valueOf(product.getPrice()));
-        prodectInfo_model.setText(product.getModel());
-        prodectInfo_type.setText(product.getTypeName());
-        prodectInfo_specifications.setText(product.getSpecifications());
-        prodectInto_simpleDeclaration.setText(product.getProdectName());
 
         list = new ArrayList<ImageView>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
-        int[] resId = { R.mipmap.main_img1, R.mipmap.main_img2,
-                R.mipmap.main_img3,R.mipmap.main_img4};
-        for (int i = 0; i < resId.length; i++) {
-            img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-            img1.setImageResource(resId[i]);
-            img1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-                    // 跳到查看大图界面
-                    Intent intent = new Intent(ProdectInfoActivity.this,
-                            ShowBigPictrue.class);
-                    intent.putExtra("position", position1);
-                    startActivity(intent);
-                }
-            });
-            list.add(img1);
+        //获取产品列表的详细产品信息
+        intent = getIntent();
+        final Product product = (Product) intent.getSerializableExtra("product");
+        prodectInfo_detail.setText(product.getDetail());
+        prodectInfo_coreType.setText(product.getLineCoreType());
+        prodectInfo_price.setText(String.valueOf(product.getPrice()));
+        prodectInfo_model.setText(product.getModel());
+        prodectInfo_type.setText(product.getTypeName());
+        prodectInto_simpleDeclaration.setText(product.getProdectName());//产品名称
+        //产品图片
+        if(product.getProductImages()!=null){
+            for (String s:product.getProductImages()){
+                //获取图片并显示
+                String url= Url.url(s);
+                img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
+                img1.setTag(url);
+                AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+                asyncBitmapLoader.loadImage(this,img1,url);
+                list.add(img1);
+                //给图片添加点击事件。查看大图
+                img1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        // 跳到查看大图界面
+                        Intent intent = new Intent(ProdectInfoActivity.this,
+                                ShowBigPictrue.class);
+                        intent.putExtra("position", position1);
+                        intent.putStringArrayListExtra("image_List",product.getProductImages());
+                        startActivity(intent);
+                    }
+                });
+            }
+            setSmallDot(list);
+        }else {
+            img1.setImageResource(R.mipmap.main_img1);
         }
+
+    }
+
+
+    /**
+     * 设置小圆点
+     * @param list
+     */
+    public void setSmallDot(List<ImageView>list){
         //加入小圆点
         for (int i = 0; i < list.size(); i++) {
             ImageView indicator = new ImageView(this);
@@ -170,6 +242,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         mviewPager.setOnPageChangeListener(new MyPageChangeListener());
     }
 
+
     /**
      * 开始轮播图切换
      */
@@ -178,30 +251,341 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         scheduledExecutorService.scheduleAtFixedRate(new SlideShowTask(), 1, 4, TimeUnit.SECONDS);
         //根据他的参数说明，第一个参数是执行的任务，第二个参数是第一次执行的间隔，第三个参数是执行任务的周期；
     }
-    private void click(){
+
+    private void click() {
         prodectList_LLayout_phone.setOnClickListener(this);
         prodectList_LLayout_collect.setOnClickListener(this);
         prodectList_LLayout_shoppingCat.setOnClickListener(this);
         prodect_addCart.setOnClickListener(this);
+        selectSpec_layout.setOnClickListener(this);
+
+
     }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
+            //拨打电话
             case R.id.prodectList_LLayout_phone:
-                Toast.makeText(this,"1",Toast.LENGTH_SHORT).show();
+                SharedPreferences settings = getSharedPreferences("SAVE_PHONE", Activity.MODE_PRIVATE);
+                String phone=settings.getString("phoneNum","");
+
+                Toast.makeText(this, phone, Toast.LENGTH_SHORT).show();
                 break;
+            //添加收藏
             case R.id.prodectList_LLayout_collect:
-                Toast.makeText(this,"1",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
                 break;
+            //购物车
             case R.id.prodectList_LLayout_shoppingCat:
-                Toast.makeText(this,"1",Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(this,MyShoppingActivity.class);
+                startActivity(intent);
                 break;
+            //添加购物车
             case R.id.prodect_addCart:
+                if(!TextUtils.isEmpty(color) && !TextUtils.isEmpty(specifications)){
+                    //添加到购物车
+                    Toast.makeText(this, pop_num.getText().toString()+"添加成功",Toast.LENGTH_SHORT).show();
+                }else{
+                    isAddCart=true;
+                    showPopwindow();
+                }
+                break;
+            //弹出框中的添加数量
+            case R.id.pop_add:
+                if (!pop_num.getText().toString().equals("750")) {
+                    String num_add=Integer.valueOf(pop_num.getText().toString())+ADDORREDUCE+"";
+                    pop_num.setText(num_add);
+                }else {
+                    Toast.makeText(this, "不能超过最大产品数量", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            //弹出框中的减少数量
+            case R.id.pop_reduce:
+                if (!pop_num.getText().toString().equals("1")) {
+                    String num_reduce=Integer.valueOf(pop_num.getText().toString())-ADDORREDUCE+"";
+                    pop_num.setText(num_reduce);
+                }else {
+                    Toast.makeText(this, "购买数量不能低于1件", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            //选择规格事件
+            case R.id.selectSpec_layout:
+                //显示颜色和规格
+                showPopwindow();
+                break;
+            //弹出框中的删除按钮
+            case R.id.pop_del:
+                showColorandSpec();
+//                popWindow.dismiss();
+                dismiss();
+                break;
+            //弹出框的确定按钮
+            case R.id.btn_sure:
+                if (TextUtils.isEmpty(color)) {
+                    Toast.makeText(this, "亲，你还没有选择颜色哟~", Toast.LENGTH_SHORT).show();
+                }else if (TextUtils.isEmpty(specifications)) {
+                    Toast.makeText(this, "亲，你还没有选择规格哟~",Toast.LENGTH_SHORT).show();
+                }else {
+                    showColorandSpec();
+                    if (isAddCart){
+                        //添加到购物车
+                        dismiss();
+                        Toast.makeText(this, pop_num.getText().toString()+"添加成功",Toast.LENGTH_SHORT).show();
+                        isAddCart=false;
+                    }
+                    dismiss();
+                }
                 break;
         }
+    }
+
+
+    /**
+ * 显示颜色规格
+ */
+    private void showColorandSpec(){
+        if(!TextUtils.isEmpty(color)|| !TextUtils.isEmpty(specifications)){
+            prodectInfo_specifications.setVisibility(View.GONE);
+            prodectInfo_s.setVisibility(View.VISIBLE);
+            prodectInfo_s1.setVisibility(View.VISIBLE);
+            prodectInfo_s2.setVisibility(View.VISIBLE);
+            prodectInfo_s2.setText(color);
+            prodectInfo_s1.setText(specifications);
+        }else {
+            prodectInfo_specifications.setVisibility(View.VISIBLE);
+            prodectInfo_s.setVisibility(View.INVISIBLE);
+            prodectInfo_s1.setVisibility(View.INVISIBLE);
+            prodectInfo_s2.setVisibility(View.INVISIBLE);
+        }
+    }
+    /**
+     * 设置popwindow
+     */
+    private void showPopwindow() {
+        View view=LayoutInflater.from(this).inflate(R.layout.adapter_popwindow, null);
+        gvSpecifications = (GridView) view.findViewById(R.id.gv_specifications);
+        gvColor = (GridView) view.findViewById(R.id.gv_color);
+        tvSkuName = (TextView) view.findViewById(R.id.tv_sku);
+        pop_del= (ImageView) view.findViewById(R.id.pop_del);
+        btn_sure= (Button) view.findViewById(R.id.btn_sure);
+        pop_add=(TextView) view.findViewById(R.id.pop_add);
+        pop_reduce=(TextView) view.findViewById(R.id.pop_reduce);
+        pop_num=(TextView) view.findViewById(R.id.pop_num);
+        pop_del.setOnClickListener(this);
+        btn_sure.setOnClickListener(this);
+        pop_add.setOnClickListener(this);
+        pop_reduce.setOnClickListener(this);
+        addData();
+        setColorData();
+        setSpecificationsData();
+        pop_num.setText(pop_num.getText().toString());
+        //设置popowindow属性
+        popWindow=new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,false);
+        //设置popwindow的动画效果
+        popWindow.setAnimationStyle(R.style.popWindow_anim_style);
+        //在PopupWindow里面就加上下面代码，让键盘弹出时，不会挡住pop窗口。
+        popWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        popWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//		popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        popWindow.showAtLocation(findViewById(R.id.selectSpec_layout), Gravity.BOTTOM, 0, 0);
+        popWindow.setFocusable(true);
+        popWindow.setOutsideTouchable(true);
+        popWindow.getBackground().setAlpha(50);
+        popWindow.update();
+        //设置activity背景变暗淡
+        WindowManager.LayoutParams params=this.getWindow().getAttributes();
+        params.alpha=0.5f;
+        this.getWindow().setAttributes(params);
+
+        //点击其他地方消失
+        popWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                dismiss();
+            }
+        });
+    }
+
+    /**
+     * 设置产品规格
+     */
+    public void setSpecificationsData(){
+        skuSpecificationsAdapter = new SkuAdapter(mSpecificationsList, this);
+        //设置默认选中的位置
+        skuSpecificationsAdapter.setSelectedPosition(spec_position);
+        gvSpecifications.setAdapter(skuSpecificationsAdapter);
+        skuSpecificationsAdapter.setItemClickListener(new SkuAdapter.onItemClickListener() {
+            @Override
+            public void onItemClick(Bean bean, int position) {
+                // TODO Auto-generated method stub
+                specifications = bean.getName();
+                switch (Integer.parseInt(bean.getStates())) {
+                    case 0:
+                        // 清空规格
+                        mSpecificationsList= DataUtil.clearAdapterStates(mSpecificationsList);
+                        skuSpecificationsAdapter.notifyDataSetChanged();
+                        // 清空颜色
+                        mColorList=DataUtil.clearAdapterStates(mColorList);
+                        skuColorAdapter.notifyDataSetChanged();
+                        specifications = "";
+                        if (!TextUtils.isEmpty(color)) {
+                            tvSkuName.setText("请选择规格");
+                            mColorList=DataUtil.setAdapterStates(mColorList,color);
+                            skuColorAdapter.notifyDataSetChanged();
+                        } else {
+                            tvSkuName.setText("请选择规格,颜色");
+                        }
+                        break;
+                    case 1:
+                        // 选中规格
+                        mSpecificationsList=DataUtil.updateAdapterStates(mSpecificationsList, "0", position);
+                        skuSpecificationsAdapter.notifyDataSetChanged();
+//                        prodectInfo_s2.setText(specifications);
+                        spec_position=position;
+                        if (!TextUtils.isEmpty(color)) {
+                            // 选择规格的同事选择颜色
+                            tvSkuName.setText("规格:" + color + " " + specifications);
+//
+                        } else {
+                            tvSkuName.setText("请选择颜色");
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    /**
+     * 通过颜色适配器设置颜色数据
+     */
+    public void setColorData(){
+        skuColorAdapter = new SkuAdapter(mColorList, this);
+        skuColorAdapter.setSelectedPosition(color_position);
+        gvColor.setAdapter(skuColorAdapter);
+        skuColorAdapter.setItemClickListener(new SkuAdapter.onItemClickListener() {
+            @Override
+            public void onItemClick(Bean bean, int position) {
+                color = bean.getName();
+                switch (Integer.parseInt(bean.getStates())) {
+                    case 0:
+                        // 清空规格
+//                        mSpecificationsList=DataUtil.clearAdapterStates(mSpecificationsList);
+//                        skuSpecificationsAdapter.notifyDataSetChanged();
+                        // 清空颜色
+                        mColorList=DataUtil.clearAdapterStates(mColorList);
+                        skuColorAdapter.notifyDataSetChanged();
+                        color = "";
+                        // 判断是否选中了规格
+                        if(TextUtils.isEmpty(specifications)){
+                            tvSkuName.setText("请选择规格,颜色");
+                        }else {
+                            tvSkuName.setText("请选择颜色");
+                        }
+                        break;
+                    case 1:
+                        // 选中颜色
+                        mColorList=DataUtil.updateAdapterStates(mColorList,"0", position);
+                        skuColorAdapter.notifyDataSetChanged();
+//                        prodectInfo_s1.setText(color);
+                        color_position=position;
+//                        Toast.makeText(context,color,Toast.LENGTH_SHORT).show();
+                        // 计算改颜色对应的尺码列表
+                        List<String> list = DataUtil.getSizeListByColor(mList,color);
+                        if (!TextUtils.isEmpty(specifications)) {
+                            // 计算改颜色与尺码对应的库存
+//                            stock = DataUtil.getStockByColorAndSize(mList,color, specifications);
+                            tvSkuName.setText("规格:" + color + " " + specifications);
+//                            if (list != null && list.size() > 0) {
+//                                // 更新尺码列表
+//                                mSpecificationsList = DataUtil.setSizeOrColorListStates(mSpecificationsList,list, specifications);
+//                                skuSpecificationsAdapter.notifyDataSetChanged();
+//                            }
+                        } else {
+                            // 根据颜色计算库存
+//                            stock = DataUtil.getColorAllStock(mList,color);
+                            tvSkuName.setText("请选择规格");
+//                            if (list != null && list.size() > 0) {
+//                                // 更新尺码列表
+//                                mSpecificationsList = DataUtil.setSizeOrColorListStates(mSpecificationsList,list, "");
+//                                skuSpecificationsAdapter.notifyDataSetChanged();
+//                            }
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+    }
+    public void addData() {
+        mList = new ArrayList<SkuItme>();
+        //颜色规格列表
+        mColorList = new ArrayList<Bean>();
+        mSpecificationsList = new ArrayList<Bean>();
+        List<String> color_list=new ArrayList<>();
+        List<String> specifications_list=new ArrayList<>();
+        for(int i=0;i<5;i++){
+            color_list.add("颜色"+i);
+        }
+        for(int i=0;i<5;i++){
+            specifications_list.add("规格"+i);
+        }
+        //所有的颜色和规格
+        //颜色列表
+        for (int i = 0; i <color_list.size(); i++) {
+            Bean bean = new Bean();
+            bean.setName(color_list.get(i));
+            bean.setStates("1");
+            mColorList.add(bean);
+        }
+        for (int i = 0; i < specifications_list.size(); i++) {
+            Bean bean = new Bean();
+            bean.setName(specifications_list.get(i));
+            bean.setStates("1");
+            mSpecificationsList.add(bean);
+        }
+
+//        String color0 = color_list.get(0);
+//        String size0 = specifications_list.get(0);
+//       for (int i=0;i<10;i++){
+//           SkuItme item = new SkuItme();
+//           item.setId(String.valueOf(i));
+//           item.setSkuColor(color0);
+//           item.setSkuSpecifications(String.valueOf(size0));
+//           mList.add(item);
+//       }
+    }
+    @Override
+    public void onDismiss() {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        color="";
+        specifications="";
+        color_position=0;
+        spec_position=0;
+        prodectInfo_s1.setText(null);
+        prodectInfo_s2.setText(null);
+    }
+
+/**
+ * 关闭弹框
+ */
+    private void dismiss(){
+        popWindow.dismiss();
+        WindowManager.LayoutParams params=this.getWindow().getAttributes();
+        params.alpha=1f;
+        this.getWindow().setAttributes(params);
+    }
     /**
      * 执行轮播图切换任务
      */
@@ -215,12 +599,14 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             }
         }
     }
+
     /**
      * ViewPager的监听器
      * 当ViewPager中页面的状态发生改变时调用
      */
     private class MyPageChangeListener implements ViewPager.OnPageChangeListener {
         boolean isAutoPlay = false;
+
         @Override
         public void onPageScrollStateChanged(int arg0) {
             // TODO Auto-generated method stub
@@ -255,7 +641,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
         @Override
         public void onPageSelected(int position) {
-           position1=position;
+            position1 = position;
             Log.i("zj", "onPagerChange position=" + position);
             for (int i = 0; i < list.size(); i++) {
                 dotViewList.get(i).setImageResource(R.mipmap.point_unpressed);
@@ -267,15 +653,14 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * actionBar返回键
+     *
      * @param item
      * @return
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // TODO Auto-generated method stub
-        if(item.getItemId() == android.R.id.home)
-        {
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }
