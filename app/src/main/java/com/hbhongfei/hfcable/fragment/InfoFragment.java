@@ -48,6 +48,7 @@ public class InfoFragment extends Fragment {
     Button reload = null;
     LinearLayout loadLayout = null;
     TextView loading = null;
+
     public InfoFragment() {
         // Required empty public constructor
     }
@@ -97,6 +98,7 @@ public class InfoFragment extends Fragment {
                     loadLayout.setVisibility(View.GONE);
                     info_listView.setVisibility(View.VISIBLE);
                     mAdapter.notifyDataSetChanged();
+
                     break;
                 case 2:
                     reload.setVisibility(View.VISIBLE);
@@ -172,6 +174,8 @@ public class InfoFragment extends Fragment {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+
+                        //请求失败
                         isFirst = true;
                         Message msg = new Message();
                         msg.what = 2;
@@ -200,13 +204,8 @@ public class InfoFragment extends Fragment {
             information.setImgUrl(link.getElementsByTag("img").attr("src"));
             information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
             loadContentData(information.getContentUrl(),information);
-            System.out.println(information.toString());
             list.add(information);
         }
-//        Message msg = new Message();
-//        msg.what = 1;
-//        msg.obj = list;
-//        mHandler.sendMessage(msg);
     }
 
     /**
@@ -238,7 +237,8 @@ public class InfoFragment extends Fragment {
         Document doc = Jsoup.parse(html);
         //获取资讯时间
         Elements time = doc.getElementsByClass("contentspage");
-        String s=time.get(0).getElementsByTag("span").first().text();
+        String s_time=time.get(0).getElementsByTag("span").first().text();
+        String s_source=time.get(0).getElementsByTag("span").get(1).text();
         //Elements
         //获取资讯内容
         Element id = doc.getElementById("main_ContentPlaceHolder1_pnlContent");
@@ -248,7 +248,7 @@ public class InfoFragment extends Fragment {
             content+="\u3000\u3000"+contents.get(i).text();
             content+="\n";
         }
-        information.setTime(s);
+        information.setTime(s_time+s_source);
         information.setDetailContent(content);
         Message msg = new Message();
         msg.what = 1;

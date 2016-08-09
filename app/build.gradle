@@ -37,4 +37,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile project(path: ':xAlertDialogLibrary')
     compile files('libs/android-async-http-1.4.4.jar')
+    compile files('libs/httpmime-4.3.6.jar')
 }

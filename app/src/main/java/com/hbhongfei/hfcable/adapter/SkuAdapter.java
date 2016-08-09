@@ -18,7 +18,7 @@ public class SkuAdapter extends BaseAdapter {
     private List<Bean> list;//数据源
     private LayoutInflater mInflater;// 得到一个LayoutInfalter对象用来导入布局
     public onItemClickListener itemClickListener;// 接口回调  
-    private int selectedPosition = 0;// 选中的位置
+    private int selectedPosition;// 选中的位置
     public void setItemClickListener(onItemClickListener itemClickListener) {  
         this.itemClickListener = itemClickListener;  
     }  
@@ -58,12 +58,35 @@ public class SkuAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.gridview_item, null);
             /** 得到各个控件的对象 */  
             holder.title = (TextView) convertView.findViewById(R.id.ItemText);
-            holder.layout = (LinearLayout) convertView.findViewById(R.id.layout);
+            holder.layout = (LinearLayout) convertView.findViewById(R.id.grid_layout);
             convertView.setTag(holder);// 绑定ViewHolder对象  
         } else {  
             holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象  
         }
-
+//        if(selectedPosition==position){
+////            list.get(position).setStates("0");
+//            switch (list.get(position).getStates()) {
+//                // 选中
+//                case "0":
+//                    holder.layout.setBackgroundResource(R.drawable.shape2);
+//                    holder.title.setTextColor(Color.WHITE);
+//                    break;
+//                // 未选中
+//                case "1":
+//                    holder.layout.setBackgroundResource(R.drawable.shape1);
+//                    holder.title.setTextColor(Color.BLACK);
+//                    break;
+//                // 不可选
+//                case "2":
+//                    holder.layout.setBackgroundResource(R.drawable.shape1);
+//                    holder.title.setTextColor(Color.parseColor("#999999"));
+//                    break;
+//                default:
+//                    break;
+//
+//            }
+//
+//        }
             final Bean bean = list.get(position);
 
             switch (bean.getStates()) {

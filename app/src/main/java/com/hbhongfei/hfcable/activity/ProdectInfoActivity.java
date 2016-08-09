@@ -62,6 +62,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     LinearLayout layout;
     private int mnSeclectItem = 0;
     private ArrayList<String> mArrayList = new ArrayList<String>();
+    private Product product;
 //    popwindow弹框
     private TextView prodectInfo_s,prodectInfo_s1,prodectInfo_s2;
     String color;//
@@ -76,8 +77,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     SkuAdapter skuColorAdapter;// 颜色适配器
     SkuAdapter skuSpecificationsAdapter;// 规格适配器
     TextView tvSkuName;// 显示sku
-    TextView tvSkuStock;// 显示库存
-    ImageView pop_del;//关闭图片
+    TextView tv_name;// 显示库存
+    ImageView pop_del,iv_pic;//关闭图片
     Button btn_sure;//确定按钮
     TextView pop_add,pop_reduce,pop_num;
     private final int ADDORREDUCE=1;
@@ -181,7 +182,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         dotLayout.removeAllViews();
         //获取产品列表的详细产品信息
         intent = getIntent();
-        final Product product = (Product) intent.getSerializableExtra("product");
+        product = (Product) intent.getSerializableExtra("product");
         prodectInfo_detail.setText(product.getDetail());
         prodectInfo_coreType.setText(product.getLineCoreType());
         prodectInfo_price.setText(String.valueOf(product.getPrice()));
@@ -391,11 +392,25 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         gvSpecifications = (GridView) view.findViewById(R.id.gv_specifications);
         gvColor = (GridView) view.findViewById(R.id.gv_color);
         tvSkuName = (TextView) view.findViewById(R.id.tv_sku);
+        tv_name= (TextView) view.findViewById(R.id.tv_name);
+        iv_pic= (ImageView) view.findViewById(R.id.iv_pic);
         pop_del= (ImageView) view.findViewById(R.id.pop_del);
         btn_sure= (Button) view.findViewById(R.id.btn_sure);
         pop_add=(TextView) view.findViewById(R.id.pop_add);
         pop_reduce=(TextView) view.findViewById(R.id.pop_reduce);
         pop_num=(TextView) view.findViewById(R.id.pop_num);
+
+        tv_name.setText(product.getProdectName());
+        //设置弹窗的图片
+        if(product.getProductImages()!=null){
+            String url=Url.url(product.getProductImages().get(0));
+            iv_pic.setTag(url);
+            AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+            asyncBitmapLoader.loadImage(this,iv_pic,url);
+        }else {
+            iv_pic.setImageResource(R.mipmap.ic_launcher);
+        }
+
         pop_del.setOnClickListener(this);
         btn_sure.setOnClickListener(this);
         pop_add.setOnClickListener(this);
@@ -430,6 +445,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 dismiss();
             }
         });
+
     }
 
     /**
@@ -468,6 +484,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                         skuSpecificationsAdapter.notifyDataSetChanged();
 //                        prodectInfo_s2.setText(specifications);
                         spec_position=position;
+                        bean.setStates("0");
+                        gvSpecifications.setSelection(position);
                         if (!TextUtils.isEmpty(color)) {
                             // 选择规格的同事选择颜色
                             tvSkuName.setText("规格:" + color + " " + specifications);
@@ -512,10 +530,13 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                         break;
                     case 1:
                         // 选中颜色
-                        mColorList=DataUtil.updateAdapterStates(mColorList,"0", position);
+                        color_position=position;
+                        mColorList=DataUtil.updateAdapterStates(mColorList,"0", color_position);
+
                         skuColorAdapter.notifyDataSetChanged();
 //                        prodectInfo_s1.setText(color);
-                        color_position=position;
+
+
 //                        Toast.makeText(context,color,Toast.LENGTH_SHORT).show();
                         // 计算改颜色对应的尺码列表
                         List<String> list = DataUtil.getSizeListByColor(mList,color);
@@ -548,6 +569,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
     }
     public void addData() {
+
         mList = new ArrayList<SkuItme>();
         //颜色规格列表
         mColorList = new ArrayList<Bean>();
@@ -575,15 +597,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             mSpecificationsList.add(bean);
         }
 
-//        String color0 = color_list.get(0);
-//        String size0 = specifications_list.get(0);
-//       for (int i=0;i<10;i++){
-//           SkuItme item = new SkuItme();
-//           item.setId(String.valueOf(i));
-//           item.setSkuColor(color0);
-//           item.setSkuSpecifications(String.valueOf(size0));
-//           mList.add(item);
-//       }
     }
     @Override
     public void onDismiss() {

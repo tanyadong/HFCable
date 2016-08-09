@@ -322,7 +322,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     /**
      * 保存公司电话信息
      * 方便产品详情界面拨打电话
-     * @param v
+     * @param
      */
     private void savePhoneNum(String phoneNum){
         SharedPreferences settings = getActivity().getSharedPreferences("SAVE_PHONE", Activity.MODE_PRIVATE);

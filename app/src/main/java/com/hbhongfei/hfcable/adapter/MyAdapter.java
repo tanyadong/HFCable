@@ -125,9 +125,9 @@ public class MyAdapter extends BaseAdapter {
                 //有图片时加载
                 if(itemList.get(1).getProductImages()!=null){
                     String url=Url.url(itemList.get(1).getProductImages().get(1));
-                    vh.prodect_imgView1.setTag(url);
+                    vh.prodect_imgView2.setTag(url);
                     AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-                    asyncBitmapLoader.loadImage(context,vh.prodect_imgView1,url);
+                    asyncBitmapLoader.loadImage(context,vh.prodect_imgView2,url);
                 }else {
                     vh.prodect_imgView2.setImageResource(R.drawable.icon_image_default);
                 }
