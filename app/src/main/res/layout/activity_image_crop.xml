@@ -17,20 +17,17 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="返回"
+            android:layout_weight="1"
+            android:text="@string/image_crop_cancel"
             android:textColor="@android:color/white" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/sure"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="确定"
+            android:layout_weight="1"
+            android:text="@string/image_crop_sure"
             android:textColor="@android:color/white" />
     </LinearLayout>
 

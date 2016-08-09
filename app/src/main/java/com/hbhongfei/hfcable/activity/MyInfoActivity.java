@@ -57,7 +57,6 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(MyInfoActivity.this, "onPostResume", Toast.LENGTH_SHORT).show();
         initValues();
     }
 
@@ -229,7 +228,7 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
         Map<String,String> params =new HashMap<>();
         params.put("sex", S_sex);
         params.put("phoneNumber", S_phoneNumber);
-        String url = Url.url("androidUser/updateSex");
+        String url = Url.url("/androidUser/updateSex");
         System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this);
 

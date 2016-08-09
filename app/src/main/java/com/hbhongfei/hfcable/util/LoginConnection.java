@@ -62,7 +62,7 @@ public class LoginConnection {
         Map<String,String> params =new HashMap<>();
         params.put("userName", S_user);
         params.put("password", S_password);
-        String url = Url.url("androidUser/login");
+        String url = Url.url("/androidUser/login");
         System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this.context);
 

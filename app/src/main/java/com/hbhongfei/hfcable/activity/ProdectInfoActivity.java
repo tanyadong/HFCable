@@ -34,6 +34,7 @@ import com.hbhongfei.hfcable.pojo.Bean;
 import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.pojo.SkuItme;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
+import com.hbhongfei.hfcable.util.CallTel;
 import com.hbhongfei.hfcable.util.DataUtil;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -42,6 +43,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ProdectInfoActivity extends AppCompatActivity implements View.OnClickListener,PopupWindow.OnDismissListener {
     private LayoutInflater inflater;
@@ -268,8 +271,29 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             //拨打电话
             case R.id.prodectList_LLayout_phone:
                 SharedPreferences settings = getSharedPreferences("SAVE_PHONE", Activity.MODE_PRIVATE);
-                String phone=settings.getString("phoneNum","");
-
+                final String phone=settings.getString("phoneNum","");
+                //打电话对话框
+                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("确定要拨打电话？")
+                        .setContentText(phone)
+                        .setConfirmText("确认")
+                        .showCancelButton(true)
+                        .setCancelText("取消")
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                CallTel callTel=new CallTel(ProdectInfoActivity.this);
+                                callTel.call(phone);
+                                sDialog.dismiss();
+                            }
+                        })
+                           .show();
                 Toast.makeText(this, phone, Toast.LENGTH_SHORT).show();
                 break;
             //添加收藏

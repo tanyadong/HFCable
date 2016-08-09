@@ -73,7 +73,7 @@
 
     <!--myPassword-->
     <string name="myPassword_before">原密码：</string>
-    <string name="myPassword_update">请设置6-20位新密码：</string>
+    <string name="myPassword_update">请设置6-16位新密码：</string>
     <string name="myPassword_sure">确认密码：</string>
     <string name="myPassword_title">修改密码</string>
 
@@ -135,6 +135,9 @@
     <string name="register">立即注册</string>
     <string name="title_activity_confirm_order">ConfirmOrderActivity</string>
 
+    <!--image_crop-->
+    <string name="image_crop_sure">确定</string>
+    <string name="image_crop_cancel">返回</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

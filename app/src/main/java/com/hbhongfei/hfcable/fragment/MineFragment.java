@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,16 +35,19 @@ import com.hbhongfei.hfcable.activity.MyFavoriteActivity;
 import com.hbhongfei.hfcable.activity.MyInfoActivity;
 import com.hbhongfei.hfcable.activity.MyOrderActivity;
 import com.hbhongfei.hfcable.activity.MyShoppingActivity;
+import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Constants;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
+import com.hbhongfei.hfcable.util.UpLoadImage;
 import com.hbhongfei.hfcable.util.Url;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,11 +61,15 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private LinearLayout myInfoEdit;
     private ImageView myhead;
     private TextView myName;
-    private String S_name,S_phoneNumber;
+    private String S_name,S_phoneNumber,S_head,S_head1;
     private RelativeLayout shopping,order,favorite;
     private static final String USER = LoginConnection.USER;
     private Dialog dialog;
-
+    private AsyncBitmapLoader asyncBitmapLoader;
+    private UpLoadImage upLoadImage;
+    private int tag = 0;
+    private Bitmap b;
+    private Drawable drawable;
 
     public MineFragment() {
         // Required empty public constructor
@@ -79,8 +88,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onResume() {
-        super.onResume();
         initValues();
+        super.onResume();
     }
 
     /**
@@ -90,6 +99,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      * @param v 主界面
      */
     public void initView(View v){
+        upLoadImage =new UpLoadImage(this.getActivity());
         dialog = new Dialog(this.getActivity());
         myInfoEdit = (LinearLayout) v.findViewById(R.id.mine_edit);
         myhead = (ImageView) v.findViewById(R.id.Iamge_mine_head);
@@ -121,8 +131,17 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_name = spf.getString("nickName", null);
         S_phoneNumber = spf.getString("phoneNumber",null);
+        S_head  =spf.getString("headPortrait",null);
         this.myName.setText(S_name);
-
+//        imageHead();
+        if (tag==0){
+            String url = Url.url(S_head);
+            myhead.setTag(url);
+            asyncBitmapLoader = new AsyncBitmapLoader();
+            asyncBitmapLoader.loadImage(MineFragment.this.getContext(),myhead,url);
+        }else{
+            myhead.setImageBitmap(b);
+        }
     }
 
     /**
@@ -164,13 +183,18 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      * 选择拍照还是相册
      */
     private void showDialog(){
+        if (tag==0){
+            drawable = MineFragment.this.getActivity().getResources().getDrawable(R.mipmap.man);
+        }else{
+            drawable =new BitmapDrawable(b);
+        }
         new SweetAlertDialog(this.getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                 .setTitleText("选择途径")
                 .setContentText("一张美美的头像")
                 .setCancelText("拍照")
                 .setConfirmText("相册")
                 //设置标题图片
-                .setCustomImage(R.mipmap.man)
+                .setCustomImage(drawable)
                 .showCancelButton(true)
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
@@ -220,66 +244,14 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         if (requestCode == Constants.CROP_BEAUTY && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 final String path = data.getStringExtra("path");
-                Bitmap b = BitmapFactory.decodeFile(path);
+                 b = BitmapFactory.decodeFile(path);
                 if (b != null) {
+                    tag++;
                     myhead.setImageBitmap(b);
-//                    setImage(path);
+                    //上传
+                    upLoadImage.load(b,S_phoneNumber);
                 }
             }
         }
     }
-
-   /* *//**
-     * 更改头像
-     *//*
-    public void setImage(String path){
-        Map<String,String> params =new HashMap<>();
-        params.put("image", path);
-        params.put("Content-Type","multipart/form-data");
-        params.put("phoneNumber", S_phoneNumber);
-        String url = Url.url("androidUser/updateNickName");
-        System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this);
-
-        //使用自己书写的NormalPostRequest类，
-        Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
-        mQueue.add(request);
-    }
-
-    *//**
-     * 成功的监听器
-     *//*
-    private Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
-        @Override
-        public void onResponse(JSONObject jsonObject) {
-            try {
-                String s = jsonObject.getString("updateNickName");
-                if (s.equals("success")){
-                    SharedPreferences.Editor editor = getSharedPreferences(USER, Context.MODE_PRIVATE).edit();
-                    editor.putString("nickName", S_name);
-                    editor.apply();
-                    Intent i = new Intent();
-                    i.putExtra("nickName",S_name);
-                    setResult(0,i);
-                    finish();
-                }else {
-                    Toast.makeText(MyNameActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
-    *//**
-     *  失败的监听器
-     *//*
-    private Response.ErrorListener errorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(MyNameActivity.this,"链接网络失败", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
-        }
-    };*/
-
 }

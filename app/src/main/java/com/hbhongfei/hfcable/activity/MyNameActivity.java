@@ -197,7 +197,7 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
         Map<String,String> params =new HashMap<>();
         params.put("nickName", S_name);
         params.put("phoneNumber", S_phoneNumber);
-        String url = Url.url("androidUser/updateNickName");
+        String url = Url.url("/androidUser/updateNickName");
         System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this);
 

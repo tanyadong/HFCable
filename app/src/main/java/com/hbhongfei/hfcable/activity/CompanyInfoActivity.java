@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.Company;
@@ -54,7 +53,7 @@ public class CompanyInfoActivity extends AppCompatActivity {
         companyInfo_address.setText(company.getAddress());
         companyInfo_email_textView.setText(company.getEmail());
         companyInfo_introduce_textView.setText(company.getDescription());
-        Toast.makeText(this,company.getLogo(),Toast.LENGTH_SHORT).show();
+        //网络加载图片
         String url= Url.url(company.getLogo());
         logo.setTag(url);
         AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();

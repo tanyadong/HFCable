@@ -41,9 +41,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextView TView_tel_fragment_get_verification_code;
     private String S_user,S_password,S_password_sure,S_verificationCode,S_w;
     private Button Btn_register;
-    private boolean Tag =true;
     private LoginConnection loginConnection;
     private Dialog dialog;
+    private boolean SMSTag = false;
 
     private static final String APPKEY = "1395ca88614b6";
     // 填写从短信SDK应用后台注册得到的APPSECRET
@@ -62,26 +62,32 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {// 提交验证码成功
                     //进行注册操作
                     Toast.makeText(getApplicationContext(), "提交验证码成功", Toast.LENGTH_SHORT).show();
-
+                    SMSTag = true;
+                    checkPhone();
                 } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                     // 验证码发送成功
                     Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
+                    dialog.cancle();
                 }
-
             } else {
                 ((Throwable) data).printStackTrace();
-//                Toast.makeText(RegisterActivity.this, "验证码错误",
-//                        Toast.LENGTH_SHORT).show();
                 int status = 0;
                 try {
                     ((Throwable) data).printStackTrace();
                     Throwable throwable = (Throwable) data;
-
                     JSONObject object = new JSONObject(throwable.getMessage());
                     String des = object.optString("detail");
                     status = object.optInt("status");
                     if (!TextUtils.isEmpty(des)) {
-                        Toast.makeText(RegisterActivity.this, des, Toast.LENGTH_SHORT).show();
+                        if (status==603){
+                            Toast.makeText(RegisterActivity.this, "输入的手机号不正确，请重新填写", Toast.LENGTH_SHORT).show();
+                        }else if (status==466){
+                            Toast.makeText(RegisterActivity.this, "请输入验证码", Toast.LENGTH_SHORT).show();
+                        }else if (status==408||status==468){
+                            Toast.makeText(RegisterActivity.this, "验证码不正确", Toast.LENGTH_SHORT).show();
+                        }else if(status==477){
+                            Toast.makeText(RegisterActivity.this, "当前手机号发送短信的数量超过限额，请稍后再进行注册", Toast.LENGTH_SHORT).show();
+                        }
                         return;
                     }
                 } catch (Exception e) {
@@ -89,7 +95,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
 
-        };
+        }
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,9 +168,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void getValues(){
         S_user = this.Txt_tel_fragment_user.getText().toString().trim();
         S_password = this.Txt_tel_fragment_password.getText().toString().trim();
-        S_password_sure = this.Txt_tel_fragment_password.getText().toString().trim();
+        S_password_sure = this.Txt_tel_fragment_password_sure.getText().toString().trim();
         S_verificationCode = this.Txt_tel_fragment_verification_code.getText().toString().trim();
-
     }
 
     @Override
@@ -173,84 +178,66 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             //获取验证码
             case R.id.TView_tel_fragment_get_verification_code:
                 getValues();
-//                getVerificationCode(S_user);
                 SMSSDK.getVerificationCode("86",S_user);
+                dialog.showDialog("验证码发送中");
                 break;
             //进行注册
             case R.id.Btn_register:
-                if (S_w.equals("register")){
-                    //注册
-                    getValues();
+                //注册或者找回密码
+                getValues();
+                if (isEmpty()){
+                    Toast.makeText(RegisterActivity.this, "请完善全部信息", Toast.LENGTH_SHORT).show();
+                }else if(!checkPhoneNumber()){
+                    Toast.makeText(RegisterActivity.this,"手机号不正确，请重新填写",Toast.LENGTH_SHORT).show();
+                }else if(!PasswordLength()){
+                    Toast.makeText(RegisterActivity.this,"输入的密码太长或太短，请重新填写",Toast.LENGTH_SHORT).show();
+                }else if(!surePassword()){
+                    Toast.makeText(RegisterActivity.this,"两次输入的密码不相同",Toast.LENGTH_SHORT).show();
+                }
+                if (!isEmpty()&&checkPhoneNumber()&&PasswordLength()&&surePassword()){
+                    Toast.makeText(RegisterActivity.this,"信息完善", Toast.LENGTH_SHORT).show();
                     SMSSDK.submitVerificationCode("86",S_user,S_verificationCode);
-                    register();
-                }else if(S_w.equals("forget")){
-                    //找回密码
-                    getValues();
-                    SMSSDK.submitVerificationCode("86",S_user,S_verificationCode);
-                    forget();
                 }
                 break;
         }
     }
 
     /**
-     * 验证是否为空
+     * 判断输入的所有数据是否为空
+     * @return true表示为空，false表示不为空
      */
     private boolean isEmpty(){
-        if (TextUtils.isEmpty(S_user)){
-            Toast.makeText(RegisterActivity.this,"请填写手机号", Toast.LENGTH_SHORT).show();
-            Tag = false;
-        }else if(!CheckPhoneNumber.checkPhoneNum(S_user)){
-            Toast.makeText(RegisterActivity.this,"请填写正确的手机号", Toast.LENGTH_SHORT).show();
-            Tag = false;
-        }else if(TextUtils.isEmpty(S_password)){
-            Toast.makeText(RegisterActivity.this,"请填写密码", Toast.LENGTH_SHORT).show();
-            Tag = false;
-        }else if(!(S_password.length()>=6 && S_password.length()<=16)){
-            Toast.makeText(RegisterActivity.this,"请填写合适长度的密码", Toast.LENGTH_SHORT).show();
-            Tag = false;
-        }else if(TextUtils.isEmpty(S_password_sure)){
-            Toast.makeText(RegisterActivity.this,"请填写确认密码", Toast.LENGTH_SHORT).show();
-            Tag = false;
-        }else if(!(S_password.equals(S_password_sure))){
-            Toast.makeText(RegisterActivity.this,"两次输入的密码不一致", Toast.LENGTH_SHORT).show();
-            Tag = false;
-        }else if(TextUtils.isEmpty(S_verificationCode)){
-            Toast.makeText(RegisterActivity.this,"请填写验证码", Toast.LENGTH_SHORT).show();
-            Tag = false;
-        }else{
-            Tag = true;
-        }
-        return Tag;
+        return S_user.isEmpty()||S_password.isEmpty()||S_password_sure.isEmpty()||S_verificationCode.isEmpty();
     }
 
     /**
-     * 进行注册
+     * 验证验证码是否正确
+     * @return true为正确，false为不正确
      */
-    public void register(){
-        if (isEmpty()){
-            Toast.makeText(RegisterActivity.this,"信息完善", Toast.LENGTH_SHORT).show();
-            checkPhone();
-        }
+    private boolean verificationCode(){
+        return SMSTag;
     }
 
     /**
-     * 找回密码
+     * 验证手机号格式是否正确
+     * @return true 表示正确，false表示不正确
      */
-    public  void forget(){
-        if (isEmpty()){
-            Toast.makeText(RegisterActivity.this,"信息完善", Toast.LENGTH_SHORT).show();
-            checkPhone();
-        }
+    private boolean checkPhoneNumber(){
+        return CheckPhoneNumber.checkPhoneNum(S_user);
+    }
+    /**
+     * 判断密码是否是6-16位
+     */
+    private boolean PasswordLength(){
+        return S_password.length()>=6 && S_password.length()<=16;
     }
 
-
     /**
-     * 获取验证码
-     * @param S_tel
+     * 两次的密码是否一致
+     * @return
      */
-    private void getVerificationCode(String S_tel){
-
+    public boolean surePassword(){
+        return S_password.equals(S_password_sure);
     }
 
     /**
@@ -266,7 +253,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
         Map<String,String> params =new HashMap<>();
         params.put("userName", S_user);
-        String url = Url.url("androidUser/exist");
+        String url = Url.url("/androidUser/exist");
         System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this);
 
@@ -318,7 +305,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         Map<String,String> params =new HashMap<>();
         params.put("phoneNumber", S_user);
         params.put("password", S_password);
-        String url = Url.url("androidUser/updatePassword");
+        String url = Url.url("/androidUser/updatePassword");
         System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this);
 
@@ -357,7 +344,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         Map<String,String> params =new HashMap<>();
         params.put("phoneNumber", S_user);
         params.put("password", S_password);
-        String url = Url.url("androidUser/add");
+        String url = Url.url("/androidUser/add");
         System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this);
 

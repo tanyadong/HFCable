@@ -2,9 +2,9 @@ package com.hbhongfei.hfcable.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +19,6 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter_myShopping;
 import com.hbhongfei.hfcable.entity.CablesInfo;
 import com.hbhongfei.hfcable.entity.TypeInfo;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;

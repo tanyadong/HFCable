@@ -141,7 +141,11 @@ public class MyPasswordActivity extends AppCompatActivity implements View.OnClic
             toast("密码不一致，请重新填写");
             setValuesEmpty();
             tag = false;
-        } else {
+        }else if(!(S_update.length()>=6 && S_update.length()<=16)){
+            toast("输入的密码太长或太短，请重新填写");
+            setValuesEmpty();
+            tag = false;
+        } else{
             tag = true;
         }
         return tag;
@@ -195,7 +199,7 @@ public class MyPasswordActivity extends AppCompatActivity implements View.OnClic
         params.put("phoneNumber", S_phoneNumber);
         params.put("password", S_before);
         params.put("password1", S_update);
-        String url = Url.url("androidUser/updatePassword1");
+        String url = Url.url("/androidUser/updatePassword1");
         System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this);
 
