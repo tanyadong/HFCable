@@ -137,10 +137,10 @@ public class GuideActivity extends AppCompatActivity {
             ImageView indicator = new ImageView(this);
             if (i == 0) {
                 indicator.setPadding(20, 0, 20, 0);
-                indicator.setImageResource(R.mipmap.guide_indicator_inactive);
+                indicator.setImageResource(R.mipmap.guide_indicator_active);
             }else {
                 indicator.setPadding(20,0,20,0);
-                indicator.setImageResource(R.mipmap.guide_indicator_active);
+                indicator.setImageResource(R.mipmap.guide_indicator_inactive);
             }
 
             indicator.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
