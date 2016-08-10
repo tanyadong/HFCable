@@ -17,13 +17,12 @@
             android:id="@+id/img_main"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/tabbar_home_highlighted"/>
+            android:src="@mipmap/home"/>
         <TextView
             android:id="@+id/txt_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
-            android:textColor="#FF8000"
             android:text="@string/tabbar_bottom_main"/>
     </LinearLayout>
 
@@ -39,7 +38,7 @@
             android:id="@+id/img_mess"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/tabbar_message_center"/>
+            android:src="@mipmap/info_black"/>
         <TextView
             android:id="@+id/txt_mess"
             android:layout_width="wrap_content"
@@ -60,7 +59,7 @@
             android:id="@+id/img_find"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/tabbar_discover"/>
+            android:src="@mipmap/market"/>
         <TextView
             android:id="@+id/txt_find"
             android:layout_width="wrap_content"
@@ -81,7 +80,7 @@
             android:id="@+id/img_mine"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/tabbar_profile"/>
+            android:src="@mipmap/my"/>
         <TextView
             android:id="@+id/txt_mine"
             android:layout_width="wrap_content"

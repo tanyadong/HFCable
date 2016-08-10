@@ -78,20 +78,7 @@
                     android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
-    <!--产品说明-->
-        <!--<TextView-->
-            <!--android:id="@+id/prodectInfo_intro_textView"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:layout_below="@+id/prodectInto_simpleDeclaration_tview"-->
-            <!--android:text="@string/prodect_introduce"-->
-            <!--android:textSize="18dp"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
-        <!--<View  android:layout_height="1px"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_gravity="center_vertical"-->
-            <!--android:background="@color/gray"-->
-        <!--/>-->
+
             <!--产品说明-->
             <LinearLayout
              android:orientation="vertical"

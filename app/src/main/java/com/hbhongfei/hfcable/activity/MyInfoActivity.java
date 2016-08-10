@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class MyInfoActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private RelativeLayout myInfo_name,myInfo_sex,myInfo_password;
+    private RelativeLayout myInfo_name,myInfo_sex,myInfo_password,myInfo_address;
     private TextView sex,name,loginOut;
     private String S_sex = "男",S_name,S_phoneNumber;
     private static final String[] SEX = new String[]{"男", "女"};
@@ -75,6 +75,7 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
         myInfo_name = (RelativeLayout) findViewById(R.id.Rlayout_myInfo_name);
         myInfo_sex = (RelativeLayout) findViewById(R.id.Rlayout_myInfo_sex);
         myInfo_password = (RelativeLayout) findViewById(R.id.Rlayout_myInfo_password);
+        myInfo_address= (RelativeLayout) findViewById(R.id.Rlayout_myInfo_address);
         sex = (TextView) findViewById(R.id.Tview_myInfo_sex);
         name = (TextView) findViewById(R.id.Tview_myInfo_name);
         loginOut = (TextView) findViewById(R.id.Tview_myInfo_login_out);
@@ -87,6 +88,7 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
         this.myInfo_name.setOnClickListener(this);
         this.myInfo_sex.setOnClickListener(this);
         this.myInfo_password.setOnClickListener(this);
+        this.myInfo_address.setOnClickListener(this);
         this.loginOut.setOnClickListener(this);
     }
 
@@ -132,6 +134,10 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.Tview_myInfo_login_out:
                 loginOut();
                 intent.setClass(MyInfoActivity.this,LoginActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.Rlayout_myInfo_address:
+                intent.setClass(MyInfoActivity.this,ReceiptAddressActivity.class);
                 startActivity(intent);
                 break;
         }

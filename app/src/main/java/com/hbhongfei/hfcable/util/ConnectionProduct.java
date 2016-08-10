@@ -61,6 +61,7 @@ public class ConnectionProduct {
                     JSONObject jsonObject1=jsonArray.getJSONObject(i);
 
                     Product product=new Product();
+                    product.setId(jsonObject1.getString("id"));
                     product.setProdectName(jsonObject1.getString("prodectName"));
                     product.setPrice(jsonObject1.getDouble("price"));
                     product.setDetail(jsonObject1.getString("detail"));

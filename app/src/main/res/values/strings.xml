@@ -36,6 +36,8 @@
     <string name="company_postcode">邮编：</string>
 
     <!--产品信息-->
+    <string name="prodect_lable">产品信息</string>
+    <string name="prodectList_lable">产品列表</string>
     <string name="prodect_specifications">选择颜色，规格</string>
     <string name="prodect_selected">已选择：</string>
     <string name="prodect_cAnds">完善颜色规格</string>
@@ -56,12 +58,16 @@
     <string name="mine_shopping">购物车</string>
     <string name="mine_favorite">收藏</string>
     <string name="mine_order">订单</string>
-
+    <!--MyFavoriteActivity-->
+    <string name="myfavorite_lable">我的收藏</string>
+    <string name="favorite_emity">您还没有收藏宝贝</string>
+    <string name="favorite_emity_to">快去收藏一个吧！</string>
     <!--myInfo-->
     <string name="myInfo_title">个人信息</string>
     <string name="myInfo_name">昵称</string>
     <string name="myInfo_sex">性别</string>
     <string name="myInfo_password">修改密码</string>
+    <string name="myInfo_address">收货地址</string>
     <string name="myInfo_login_out">退出登录</string>
 
     <!--myName-->
@@ -103,6 +109,7 @@
 
     <!--行业资讯-->
     <string name="button_text_reload">重新连接</string>
+    <string name="infoDetail_lable">资讯详情</string>
     <string name="tip_text_data_loading">数据获取中...</string>
     <string name="tip_text_data_fail">数据获取失败，点击再次获取！</string>
     <string name="tip_speak_not_installed">无法朗读，请安装讯飞语音！</string>
@@ -142,4 +149,16 @@
     <string name="image_crop_cancel">返回</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!--收货地址管理-->
+    <string name="add_receiptAddress">新增收货地址</string>
+    <string name="title_activity_receipt_address">收货地址管理</string>
+    <!--addAddress-->
+    <string name="add_address_lable"></string>
+    <string name="add_consignee">收货人:</string>
+    <string name="add_phone">手机号码:</string>
+    <string name="add_localArea">所在地区:</string>
+    <string name="add_addressDetail">详细地址:</string>
+    <string name="hint_addressDetail">街道楼牌号等</string>
 </resources>

@@ -2,17 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hbhongfei.hfcable">
 
-    <!--上网的权限-->
+    <!-- 上网的权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!--拍照的权限-->
-    <uses-permission android:name="ANDROID.PERMISSION.CAMERA"/>
+    <!-- 拍照的权限 -->
+    <uses-permission android:name="ANDROID.PERMISSION.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
-    <!--短信验证码相关权限-->
+    <!-- 短信验证码相关权限 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -22,8 +23,8 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--拨打电话权限-->
-    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+    <!-- 拨打电话权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -31,43 +32,40 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".activity.MyFavoriteActivity"
-            android:parentActivityName=".activity.MainActivity"/>
-        <activity android:name=".activity.MyOrderActivity"
-            android:parentActivityName=".activity.MainActivity"/>
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.MyFavoriteActivity"
+            android:label="@string/myfavorite_lable"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
+            android:name=".activity.MyOrderActivity"
+            android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MyShoppingActivity"
-            android:parentActivityName=".activity.MainActivity"
-            android:label="我的购物车"></activity>
-
-        <activity android:name=".activity.MyInfoActivity"
-            android:parentActivityName=".activity.MainActivity"
-            android:label="@string/myInfo_title" />
-
-        <activity android:name=".activity.ProdectInfoActivity"></activity>
+            android:label="我的购物车"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
+            android:name=".activity.MyInfoActivity"
+            android:label="@string/myInfo_title"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
+            android:name=".activity.ProdectInfoActivity"
+            android:label="@string/prodect_lable" />
         <activity android:name=".activity.ShowBigPictrue" />
-
         <activity
             android:name=".activity.CompanyInfoActivity"
-            android:parentActivityName=".activity.MainActivity"
             android:label="@string/company_info"
-             />
+            android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.ProdectListActivity"
-            android:parentActivityName=".activity.MainActivity"
-            ></activity>
-
-        <activity android:name=".activity.InfoDetailActivity"
-            android:parentActivityName=".activity.MainActivity"
-            ></activity>
+            android:label="@string/prodectList_lable"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
+            android:name=".activity.InfoDetailActivity"
+            android:label="@string/infoDetail_lable"
+            android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MyPasswordActivity"
             android:label="@string/title_activity_my_password"
@@ -79,30 +77,40 @@
         <activity
             android:name=".activity.OrderPayActivity"
             android:label="@string/title_activity_order_pay"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".activity.RegisterActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.GuideActivity"/>
-        <activity android:name=".activity.SplashActivity">
-
-        </activity>
-        <activity android:name=".activity.ImageCropActivity"/>
-
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.GuideActivity" />
+        <activity android:name=".activity.SplashActivity" />
+        <activity android:name=".activity.ImageCropActivity" />
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".activity.ReceiptAddressActivity"
+            android:label="@string/title_activity_receipt_address"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.AddRecietAddress"></activity>
     </application>
 
 </manifest>

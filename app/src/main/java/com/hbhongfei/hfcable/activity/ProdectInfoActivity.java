@@ -1,6 +1,7 @@
 package com.hbhongfei.hfcable.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -27,6 +28,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
 import com.hbhongfei.hfcable.adapter.SkuAdapter;
@@ -36,10 +41,17 @@ import com.hbhongfei.hfcable.pojo.SkuItme;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.CallTel;
 import com.hbhongfei.hfcable.util.DataUtil;
+import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -78,13 +90,18 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     SkuAdapter skuSpecificationsAdapter;// 规格适配器
     TextView tvSkuName;// 显示sku
     TextView tv_name;// 显示库存
-    ImageView pop_del,iv_pic;//关闭图片
+    ImageView pop_del,iv_pic,prodectList_img_collect;//关闭图片
     Button btn_sure;//确定按钮
     TextView pop_add,pop_reduce,pop_num;
+    TextView prodectList_tview_collect;
     private final int ADDORREDUCE=1;
     boolean isAddCart=false;
     int color_position=0;
     int spec_position=0;
+    boolean isFirst=true;
+    private static final String USER = LoginConnection.USER;
+    String S_phoneNumber;
+    RequestQueue mQueue;
     /**
      * 弹出商品订单信息详情
      */
@@ -125,6 +142,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prodect_info);
+        mQueue = Volley.newRequestQueue(this);
         toolBar();
         initVIew();
         setDate();
@@ -163,6 +181,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodectInto_simpleDeclaration = (TextView) findViewById(R.id.prodectInto_simpleDeclaration_tview);
         selectSpec_layout = (RelativeLayout) findViewById(R.id.selectSpec_layout);//选择颜色规格
         prodect_bottom = (LinearLayout) findViewById(R.id.prodect_bottom);
+        prodectList_img_collect= (ImageView) findViewById(R.id.prodectList_img_collect);
+        prodectList_tview_collect= (TextView) findViewById(R.id.prodectList_tview_collect);
         //选择规格和颜色
         prodectInfo_s= (TextView) findViewById(R.id.prodectInfo_s);
         prodectInfo_s1= (TextView) findViewById(R.id.prodectInfo_s1);
@@ -176,7 +196,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
      * 设置数据
      */
     public void setDate() {
-
+        SharedPreferences spf =getSharedPreferences(USER, Context.MODE_PRIVATE);
+        S_phoneNumber = spf.getString("phoneNumber",null);
         list = new ArrayList<ImageView>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
@@ -216,7 +237,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         }else {
             img1.setImageResource(R.mipmap.main_img1);
         }
-
+        //设置收藏
+        isOrNotColl();
     }
 
 
@@ -299,7 +321,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 break;
             //添加收藏
             case R.id.prodectList_LLayout_collect:
-                Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
+                //收藏服务
+                collectionCollect();
                 break;
             //购物车
             case R.id.prodectList_LLayout_shoppingCat:
@@ -310,6 +333,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             case R.id.prodect_addCart:
                 if(!TextUtils.isEmpty(color) && !TextUtils.isEmpty(specifications)){
                     //添加到购物车
+                    addShoppingCartCoon();
                     Toast.makeText(this, pop_num.getText().toString()+"添加成功",Toast.LENGTH_SHORT).show();
                 }else{
                     isAddCart=true;
@@ -354,9 +378,9 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 }else {
                     showColorandSpec();
                     if (isAddCart){
-                        //添加到购物车
+                        //添加到购物车服务
+                        addShoppingCartCoon();
                         dismiss();
-                        Toast.makeText(this, pop_num.getText().toString()+"添加成功",Toast.LENGTH_SHORT).show();
                         isAddCart=false;
                     }
                     dismiss();
@@ -364,7 +388,139 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 break;
         }
     }
+    /**
+     *添加购物车服务
+     */
+    private void  addShoppingCartCoon(){
+        String url = Url.url("/androidShoppingCart/sava");
+        Map<String,String> map=new HashMap<>();
+        map.put("productId",product.getId());
+        map.put("color",color);
+        map.put("specifications",specifications);
+        map.put("quantity",pop_num.getText().toString());
+        map.put("userName",S_phoneNumber);
+        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectAddShoppingListener,errorListener,map);
+        mQueue.add(normalPostRequest);
+    }
 
+
+    /**
+     * 添加收藏服务
+     */
+    private void  collectionCollect(){
+        String url = Url.url("/androidCollecton/sava");
+        Map<String,String> map=new HashMap<>();
+        map.put("productId",product.getId());
+        map.put("userName",S_phoneNumber);
+        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectCollectionListener,errorListener,map);
+        mQueue.add(normalPostRequest);
+    }
+    /**
+     * 添加购物车成功的监听器
+     * 返回的添加购物车的状态信息
+     */
+    private Response.Listener<JSONObject> jsonObjectAddShoppingListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                String msg = jsonObject.getString("msg");
+                if(TextUtils.equals(msg,"成功")){
+                    new SweetAlertDialog(ProdectInfoActivity.this,SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText("添加购物车成功")
+                            .show();
+                }else{
+                    new SweetAlertDialog(ProdectInfoActivity.this,SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("添加购物车失败")
+                            .show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ;
+    };
+    /**
+     * s收藏成功的监听器
+     * 返回的收藏状态信息
+     */
+    private Response.Listener<JSONObject> jsonObjectCollectionListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                String msg = jsonObject.getString("msg");
+                if(TextUtils.equals(msg, "收藏成功")){
+                    prodectList_img_collect.setImageResource(R.mipmap.heart_red);
+                    prodectList_tview_collect.setText("已收藏");
+                    new SweetAlertDialog(ProdectInfoActivity.this,SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText("添加收藏成功")
+                            .show();
+                }
+                else if (TextUtils.equals(msg, "取消收藏")) {
+                    new SweetAlertDialog(ProdectInfoActivity.this,SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText("取消收藏成功")
+                            .show();
+                    prodectList_img_collect.setImageResource(R.mipmap.heart);
+                    prodectList_tview_collect.setText("收藏");
+                } else if(TextUtils.equals(msg, "取消收藏失败")){
+                    Toast.makeText(ProdectInfoActivity.this, "取消收藏失败", Toast.LENGTH_SHORT).show();
+                }else {
+                    new SweetAlertDialog(ProdectInfoActivity.this,SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("收藏失败")
+                            .show();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ;
+    };
+
+    /**
+     *  失败的监听器
+     */
+    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            Toast.makeText(ProdectInfoActivity.this, "请求数据失败", Toast.LENGTH_SHORT).show();
+            Log.e("TAG", volleyError.getMessage(), volleyError);
+        }
+    };
+
+    /**
+     * 判断是否收藏
+     */
+    private void  isOrNotColl(){
+        String url = Url.url("/androidCollecton/isCollection");
+        Map<String,String> map=new HashMap<>();
+        map.put("productId",product.getId());
+        map.put("userName",S_phoneNumber);
+        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectIsListener,errorListener,map);
+        mQueue.add(normalPostRequest);
+    }
+    /**
+     * 成功的监听器
+     * 返回的手长状态信息
+     */
+    private Response.Listener<JSONObject> jsonObjectIsListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            String msg = null;
+            try {
+                msg = jsonObject.getString("msg");
+                if (TextUtils.equals(msg, "isexist")) {
+                    prodectList_img_collect.setImageResource(R.mipmap.heart_red);
+                    prodectList_tview_collect.setText("已收藏");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        };
+    };
 
     /**
  * 显示颜色规格
@@ -482,7 +638,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                         // 选中规格
                         mSpecificationsList=DataUtil.updateAdapterStates(mSpecificationsList, "0", position);
                         skuSpecificationsAdapter.notifyDataSetChanged();
-//                        prodectInfo_s2.setText(specifications);
                         spec_position=position;
                         bean.setStates("0");
                         gvSpecifications.setSelection(position);
@@ -514,9 +669,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 color = bean.getName();
                 switch (Integer.parseInt(bean.getStates())) {
                     case 0:
-                        // 清空规格
-//                        mSpecificationsList=DataUtil.clearAdapterStates(mSpecificationsList);
-//                        skuSpecificationsAdapter.notifyDataSetChanged();
+
                         // 清空颜色
                         mColorList=DataUtil.clearAdapterStates(mColorList);
                         skuColorAdapter.notifyDataSetChanged();
@@ -534,30 +687,14 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                         mColorList=DataUtil.updateAdapterStates(mColorList,"0", color_position);
 
                         skuColorAdapter.notifyDataSetChanged();
-//                        prodectInfo_s1.setText(color);
-
-
-//                        Toast.makeText(context,color,Toast.LENGTH_SHORT).show();
-                        // 计算改颜色对应的尺码列表
                         List<String> list = DataUtil.getSizeListByColor(mList,color);
                         if (!TextUtils.isEmpty(specifications)) {
                             // 计算改颜色与尺码对应的库存
 //                            stock = DataUtil.getStockByColorAndSize(mList,color, specifications);
                             tvSkuName.setText("规格:" + color + " " + specifications);
-//                            if (list != null && list.size() > 0) {
-//                                // 更新尺码列表
-//                                mSpecificationsList = DataUtil.setSizeOrColorListStates(mSpecificationsList,list, specifications);
-//                                skuSpecificationsAdapter.notifyDataSetChanged();
-//                            }
                         } else {
                             // 根据颜色计算库存
-//                            stock = DataUtil.getColorAllStock(mList,color);
                             tvSkuName.setText("请选择规格");
-//                            if (list != null && list.size() > 0) {
-//                                // 更新尺码列表
-//                                mSpecificationsList = DataUtil.setSizeOrColorListStates(mSpecificationsList,list, "");
-//                                skuSpecificationsAdapter.notifyDataSetChanged();
-//                            }
                         }
 
                         break;
