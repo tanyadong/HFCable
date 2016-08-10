@@ -92,6 +92,8 @@
     <string name="myShopping_menu_delete">删除</string>
     <string name="item_shopcart_group_edit">编辑</string>
     <string name="myShopping_noyunfei">不含运费</string>
+    <string name="myShopping_color">颜色：</string>
+    <string name="myShopping_specifications">规格：</string>
 
 
     <!--shoppingCart_empty-->

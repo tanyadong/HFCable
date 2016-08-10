@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * 购物车的适配器
  * @author 苑雪元
@@ -166,6 +168,8 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
             cholder.tv_buy_num = (TextView) convertView.findViewById(R.id.tv_buy_num);
             cholder.ll_edtor = (LinearLayout) convertView.findViewById(R.id.ll_edtor);
             cholder.tv_introduce2 = (TextView) convertView.findViewById(R.id.tv_introduce2);
+            cholder.tv_color = (TextView) convertView.findViewById(R.id.tv_color);
+            cholder.tv_specifications = (TextView) convertView.findViewById(R.id.tv_specifications);
             cholder.tv_goods_delete = (TextView) convertView.findViewById(R.id.tv_goods_delete);
             cholder.iv_adapter_list_pic= (ImageView) convertView.findViewById(R.id.iv_adapter_list_pic);
             convertView.setTag(cholder);
@@ -187,6 +191,8 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
             cholder.iv_adapter_list_pic.setImageResource(cablesInfo.getGoodsImg());
             cholder.tv_introduce.setText(cablesInfo.getIntroduce());
             cholder.tv_introduce2.setText(cablesInfo.getIntroduce());
+            cholder.tv_color.setText(cablesInfo.getColor());
+            cholder.tv_specifications.setText(cablesInfo.getSpecifications());
             cholder.tv_buy_num.setText("x" + cablesInfo.getCount());
             cholder.cb_check.setChecked(cablesInfo.isChoosed());
             cholder.cb_check.setOnClickListener(new View.OnClickListener() {
@@ -213,26 +219,25 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
             cholder.tv_goods_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog alert = new AlertDialog.Builder(context).create();
-                    alert.setTitle("操作提示");
-                    alert.setMessage("您确定要将这些商品从购物车中移除吗？");
-                    alert.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
-                            new DialogInterface.OnClickListener() {
+                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("确定删除？")
+                            .setContentText("删除将不可恢复")
+                            .setConfirmText("删除")
+                            .setCancelText("取消")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    return;
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog.dismissWithAnimation();
                                 }
-                            });
-                    alert.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
-                            new DialogInterface.OnClickListener() {
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                                public void onClick(SweetAlertDialog sDialog) {
                                     modifyCountInterface.childDelete(groupPosition, childPosition);
-
+                                    sDialog.dismissWithAnimation();
                                 }
-                            });
-                    alert.show();
+                            })
+                            .show();
 
                 }
             });
@@ -272,6 +277,8 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
         LinearLayout ll_edtor;
         TextView tv_introduce2;
         TextView tv_goods_delete;
+        TextView tv_color;//颜色
+        TextView tv_specifications;//规格
     }
 
     /**

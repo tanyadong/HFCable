@@ -109,7 +109,7 @@
                         android:clickable="true"
                         android:gravity="center"
                         android:layout_alignParentRight="true"
-                        android:text="删除"
+                        android:text="@string/myShopping_menu_delete"
                         android:textColor="@color/colorWhite"/>
                 </RelativeLayout>
 

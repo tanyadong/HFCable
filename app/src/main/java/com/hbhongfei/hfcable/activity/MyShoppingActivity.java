@@ -2,9 +2,12 @@ package com.hbhongfei.hfcable.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,16 +18,34 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter_myShopping;
 import com.hbhongfei.hfcable.entity.CablesInfo;
 import com.hbhongfei.hfcable.entity.TypeInfo;
+import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
+import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.NormalPostRequest;
+import com.hbhongfei.hfcable.util.NormalPostRequestArray;
+import com.hbhongfei.hfcable.util.Url;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_myShopping.CheckInterface,
         MyAdapter_myShopping.ModifyCountInterface, MyAdapter_myShopping.GroupEdtorListener ,View.OnClickListener{
@@ -41,6 +62,9 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     private List<TypeInfo> groups = new ArrayList<TypeInfo>();// 组元素数据列表
     private Map<String, List<CablesInfo>> children = new HashMap<String, List<CablesInfo>>();// 子元素数据列表
     private int flag = 0;
+    private String S_phoneNumber;
+    private static final String USER = LoginConnection.USER;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +72,9 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         setContentView(R.layout.activity_my_shopping);
         context = this;
         initView();
-        initDatas();
+//        initDatas();
         setOnClick();
 
-        initEvents();
     }
     /**
      * 初始化界面
@@ -69,6 +92,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         exListView = (ExpandableListView) findViewById(R.id.exListView);
 
         allChekbox = (CheckBox) findViewById(R.id.all_chekbox);
+        SharedPreferences spf = this.getSharedPreferences(USER, Context.MODE_PRIVATE);
+        S_phoneNumber = spf.getString("phoneNumber",null);
     }
     /**
      * 设置点击事件
@@ -85,20 +110,112 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
      * 其键是组元素的Id(通常是一个唯一指定组元素身份的值)
      */
     private void initDatas() {
-        for (int i = 0; i < 3; i++) {
+        /*for (int i = 0; i < 3; i++) {
             groups.add(new TypeInfo(i + "", "弘飞电缆的第" + (i + 1) + "个种类"));
             List<CablesInfo> cablesInfos = new ArrayList<CablesInfo>();
             for (int j = 0; j <= i; j++) {
                 int[] img = {R.mipmap.main_img1, R.mipmap.main_img2, R.mipmap.main_img3, R.mipmap.main_img4, R.mipmap.main_img1, R.mipmap.main_img2};
                 cablesInfos.add(new CablesInfo(j + "", "电缆"+(j+1), groups.get(i)
-                        .getName() + "的第" + (j + 1) + "个电缆", 12.00 + new Random().nextInt(23), new Random().nextInt(5) + 1, img[i * j]));
+                        .getName() + "的第" + (j + 1) + "个电缆","红色","大号", 12.00 + new Random().nextInt(23), new Random().nextInt(5) + 1, img[i * j]));
             }
             children.put(groups.get(i).getId(), cablesInfos);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
-        }
+        }*/
+
+        connInter();
 
     }
 
-    private void initEvents() {
+
+
+    /**
+     * 连接服务
+     */
+    public void connInter(){
+        dialog = new Dialog(this.context);
+        dialog.showDialog("正在加载中...");
+        Map<String,String> params =new HashMap<>();
+        params.put("phoneNumber", S_phoneNumber);
+        String url = Url.url("/androidShoppingCart/list");
+        System.out.println(url);
+        RequestQueue mQueue = Volley.newRequestQueue(this.context);
+
+        //使用自己书写的NormalPostRequest类，
+        Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
+        mQueue.add(request);
+    }
+
+    /**
+     * 成功的监听器
+     */
+    private Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                JSONArray shoppingCarts = jsonObject.getJSONArray("shoppingCarts");
+                if (shoppingCarts.length()!=0){
+                    for (int i=0;i<shoppingCarts.length();i++){
+                        JSONObject shoppingCart= (JSONObject) shoppingCarts.opt(i);//shoppingCarts的第一组
+                        /****************产品种类*******************/
+                        JSONObject type = shoppingCart.getJSONObject("type");
+                        groups.add(new TypeInfo(i + "", type.getString("typeName")));//添加组
+                        /****************产品信息*******************/
+                        JSONArray products = shoppingCart.getJSONArray("product");
+                        List<CablesInfo> cablesInfos = new ArrayList<>();
+                        for(int j=0;j<products.length();j++){
+                        /**************购物车信息*****************/
+                            JSONObject product= (JSONObject) products.opt(j);
+                            int quantity = product.getInt("quantity");
+                            String color = product.getString("color");
+                            String specifications = product.getString("specifications");
+                            String id = product.getString("id");
+
+                        /**************产品信息*****************/
+                            JSONObject productInfo = product.getJSONObject("product");
+                            String productName = productInfo.getString("prodectName");//名
+                            String detail = productInfo.getString("detail");//简介
+                            Double price = productInfo.getDouble("price");//价格
+                            int[] img = {R.mipmap.main_img1, R.mipmap.main_img2, R.mipmap.main_img3, R.mipmap.main_img4, R.mipmap.main_img1, R.mipmap.main_img2};
+                            cablesInfos.add(new CablesInfo(id, productName, detail,color,specifications,price, quantity,img[i * j]));
+                        }
+                        children.put(groups.get(i).getId(), cablesInfos);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
+                    }
+                    selva = new MyAdapter_myShopping(groups, children, MyShoppingActivity.this);
+                    selva.setCheckInterface( MyShoppingActivity.this);// 关键步骤1,设置复选框接口
+                    selva.setModifyCountInterface( MyShoppingActivity.this);// 关键步骤2,设置数量增减接口
+                    selva.setmListener( MyShoppingActivity.this);//设置监听器接口
+                    exListView.setAdapter(selva);
+                    for (int i = 0; i < selva.getGroupCount(); i++) {
+                        exListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
+                    }
+                }else{
+                    clearCart();
+                }
+
+                dialog.cancle();
+            } catch (JSONException e) {
+                e.printStackTrace();
+                dialog.cancle();
+            }
+        }
+    };
+
+    /**
+     *  失败的监听器
+     */
+    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
+            Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
+        }
+    };
+
+
+
+
+
+    /*private void initEvents() {
         selva = new MyAdapter_myShopping(groups, children, this);
         selva.setCheckInterface(this);// 关键步骤1,设置复选框接口
         selva.setModifyCountInterface(this);// 关键步骤2,设置数量增减接口
@@ -108,12 +225,13 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         for (int i = 0; i < selva.getGroupCount(); i++) {
             exListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
         }
-    }
+    }*/
 
     @Override
     protected void onResume() {
         super.onResume();
-        setCartNum();
+        initDatas();
+//        setCartNum();
     }
 
     @Override
@@ -126,22 +244,22 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         children.clear();
     }
     /**
-     * 设置购物车产品数量
+     * 设置标题购物车产品数量
      */
     private void setCartNum() {
         int count = 0;
-        for (int i = 0; i < groups.size(); i++) {
+        /*for (int i = 0; i < groups.size(); i++) {
             groups.get(i).setChoosed(allChekbox.isChecked());
             TypeInfo group = groups.get(i);
             List<CablesInfo> childs = children.get(group.getId());
             for (CablesInfo cablesInfo : childs) {
                 count += 1;
             }
-        }
+        }*/
 
         //购物车已清空
         if(count==0){
-            clearCart();
+//            clearCart();
         } else{
         }
     }
@@ -216,21 +334,78 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         selva.notifyDataSetChanged();
     }
 
+    /**
+     * 连接服务
+     */
+    public void updateQuantity(String proId,String quantity){
+        dialog = new Dialog(this.context);
+        dialog.showDialog("正在修改中...");
+        Map<String,String> params =new HashMap<>();
+        params.put("id",proId);
+        params.put("quantity",quantity);
+        String url = Url.url("/androidShoppingCart/quantity");
+        System.out.println(url);
+        RequestQueue mQueue = Volley.newRequestQueue(this.context);
+
+        //使用自己书写的NormalPostRequest类，
+        Request<JSONObject> request = new NormalPostRequest(url,updateListener,errorListener, params);
+        mQueue.add(request);
+    }
+
+    /**
+     * 成功的监听器
+     */
+    private Response.Listener<JSONObject> updateListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                String s = jsonObject.getString("quantity");
+                if (s.equals("success")){
+                    Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
+                    dialog.cancle();
+                }else if(s.equals("filed")){
+                    Toast.makeText(context, "修改失败", Toast.LENGTH_SHORT).show();
+                    dialog.cancle();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                dialog.cancle();
+
+            }
+        }
+    };
+
+
+
+    /**
+     *  增加
+     * @param groupPosition 组元素位置
+     * @param childPosition 子元素位置
+     * @param showCountView 用于展示变化后数量的View
+     * @param isChecked     子元素选中与否
+     */
     @Override
     public void doIncrease(int groupPosition, int childPosition, View showCountView, boolean isChecked) {
-        CablesInfo product = (CablesInfo) selva.getChild(groupPosition,
-                childPosition);
+        CablesInfo product = (CablesInfo) selva.getChild(groupPosition,childPosition);
         int currentCount = product.getCount();
         currentCount++;
         product.setCount(currentCount);
+        //联网修改
+        updateQuantity(product.getId(),String.valueOf(currentCount));
         ((TextView) showCountView).setText(currentCount + "");
         selva.notifyDataSetChanged();
         calculate();
     }
 
+    /**
+     * 减少
+     * @param groupPosition 组元素位置
+     * @param childPosition 子元素位置
+     * @param showCountView 用于展示变化后数量的View
+     * @param isChecked     子元素选中与否
+     */
     @Override
     public void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked) {
-
         CablesInfo product = (CablesInfo) selva.getChild(groupPosition,
                 childPosition);
         int currentCount = product.getCount();
@@ -238,6 +413,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             return;
         currentCount--;
         product.setCount(currentCount);
+        //联网修改
+        updateQuantity(product.getId(),String.valueOf(currentCount));
         ((TextView) showCountView).setText(currentCount + "");
         selva.notifyDataSetChanged();
         calculate();
@@ -245,14 +422,19 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
 
     @Override
     public void childDelete(int groupPosition, int childPosition) {
-        children.get(groups.get(groupPosition).getId()).remove(childPosition);
         TypeInfo group = groups.get(groupPosition);
         List<CablesInfo> childs = children.get(group.getId());
+        for (int i=0;i<childs.size();i++){
+            delete(childs.get(i).getId());
+            children.get(groups.get(groupPosition).getId()).remove(childPosition);
+        }
         if (childs.size() == 0) {
             groups.remove(groupPosition);
         }
+        if (groups.size()==0){
+            clearCart();
+        }
         selva.notifyDataSetChanged();
-        //     handler.sendEmptyMessage(0);
         calculate();
     }
 
@@ -281,7 +463,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         tvGoToPay.setText("去支付(" + totalCount + ")");
         //计算购物车的金额为0时候清空购物车的视图
         if(totalCount==0){
-            setCartNum();
+//            setCartNum();
         } else{
         }
     }
@@ -300,24 +482,25 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                     Toast.makeText(context, "请选择要移除的商品", Toast.LENGTH_LONG).show();
                     return;
                 }
-                alert = new AlertDialog.Builder(context).create();
-                alert.setTitle("操作提示");
-                alert.setMessage("您确定要将这些商品从购物车中移除吗？");
-                alert.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
-                        new DialogInterface.OnClickListener() {
+                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("确定删除？")
+                        .setContentText("删除将不可恢复")
+                        .setConfirmText("删除")
+                        .setCancelText("取消")
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                return;
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
                             }
-                        });
-                alert.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
-                        new DialogInterface.OnClickListener() {
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(SweetAlertDialog sDialog) {
                                 doDelete();
+                                sDialog.dismissWithAnimation();
                             }
-                        });
-                alert.show();
+                        })
+                        .show();
                 break;
             case R.id.tv_go_to_pay:
                 if (totalCount == 0) {
@@ -367,26 +550,73 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
      * 2.现将要删除的对象放进相应的列表容器中，待遍历完后，以removeAll的方式进行删除
      */
     protected void doDelete() {
-        List<TypeInfo> toBeDeleteGroups = new ArrayList<TypeInfo>();// 待删除的组元素列表
+        List<TypeInfo> toBeDeleteGroups = new ArrayList<>();// 待删除的组元素列表
         for (int i = 0; i < groups.size(); i++) {
             TypeInfo group = groups.get(i);
             if (group.isChoosed()) {
                 toBeDeleteGroups.add(group);
             }
-            List<CablesInfo> toBeDeleteProducts = new ArrayList<CablesInfo>();// 待删除的子元素列表
+            List<CablesInfo> toBeDeleteProducts = new ArrayList<>();// 待删除的子元素列表
             List<CablesInfo> childs = children.get(group.getId());
             for (int j = 0; j < childs.size(); j++) {
                 if (childs.get(j).isChoosed()) {
                     toBeDeleteProducts.add(childs.get(j));
+                    //链接网络进行删除
+                    delete(childs.get(j).getId());
                 }
             }
             childs.removeAll(toBeDeleteProducts);
         }
         groups.removeAll(toBeDeleteGroups);
         //记得重新设置购物车
-        setCartNum();
+//        setCartNum();
+        if (groups.size()==0){
+            clearCart();
+        }
         selva.notifyDataSetChanged();
     }
+
+
+
+    /**
+     * 连接服务
+     */
+    public void delete(String id){
+        dialog = new Dialog(this.context);
+        dialog.showDialog("正在删除中...");
+        Map<String,String> params =new HashMap<>();
+        params.put("id", id);
+        String url = Url.url("/androidShoppingCart/delete");
+        System.out.println(url);
+        RequestQueue mQueue = Volley.newRequestQueue(this.context);
+
+        //使用自己书写的NormalPostRequest类，
+        Request<JSONObject> request = new NormalPostRequest(url,deleteListener,errorListener, params);
+        mQueue.add(request);
+    }
+
+    /**
+     * 成功的监听器
+     */
+    private Response.Listener<JSONObject> deleteListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                String s = jsonObject.getString("delete");
+                if (s.equals("success")){
+                    Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
+                    dialog.cancle();
+                }else if(s.equals("filed")){
+                    Toast.makeText(context, "删除失败", Toast.LENGTH_SHORT).show();
+                    dialog.cancle();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                dialog.cancle();
+
+            }
+        }
+    };
 
 
     @Override

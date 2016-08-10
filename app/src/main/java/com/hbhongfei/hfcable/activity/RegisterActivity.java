@@ -67,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                     // 验证码发送成功
                     Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
-                    dialog.cancle();
+//                    dialog.cancle();
                 }
             } else {
                 ((Throwable) data).printStackTrace();
@@ -179,7 +179,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.TView_tel_fragment_get_verification_code:
                 getValues();
                 SMSSDK.getVerificationCode("86",S_user);
-                dialog.showDialog("验证码发送中");
+//                dialog.showDialog("验证码发送中");
                 break;
             //进行注册
             case R.id.Btn_register:
