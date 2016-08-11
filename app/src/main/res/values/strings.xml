@@ -161,4 +161,10 @@
     <string name="add_localArea">所在地区:</string>
     <string name="add_addressDetail">详细地址:</string>
     <string name="hint_addressDetail">街道楼牌号等</string>
+
+
+    <!--comfirm_order-->
+    <string name="comfirm_order_shouhuo">收货人：</string>
+    <string name="comfirm_order_location">收获地址：</string>
+
 </resources>

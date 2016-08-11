@@ -16,7 +16,7 @@ public class CablesInfo {
     private String specifications;
     private int count;
     private int position;// 绝对位置，只在ListView构造的购物车中，在删除时有效
-    private int goodsImg;
+    private String goodsImg;
 
 
     public String getId() {
@@ -83,11 +83,11 @@ public class CablesInfo {
         this.position = position;
     }
 
-    public int getGoodsImg() {
+    public String getGoodsImg() {
         return goodsImg;
     }
 
-    public void setGoodsImg(int goodsImg) {
+    public void setGoodsImg(String goodsImg) {
         this.goodsImg = goodsImg;
     }
 
@@ -107,7 +107,7 @@ public class CablesInfo {
         this.specifications = specifications;
     }
 
-    public CablesInfo(String id, String name, boolean isChoosed, String imageUrl, String introduce, double price, int count, int position, int goodsImg) {
+    public CablesInfo(String id, String name, boolean isChoosed, String imageUrl, String introduce, double price, int count, int position, String goodsImg) {
         Id = id;
         this.name = name;
         this.isChoosed = isChoosed;
@@ -119,7 +119,7 @@ public class CablesInfo {
         this.goodsImg = goodsImg;
     }
     public CablesInfo(String id, String name, String introduce,String color,String specifications, double price, int count,
-                     int goodsImg) {
+                      String goodsImg) {
         Id = id;
         this.name = name;
         this.introduce = introduce;

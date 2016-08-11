@@ -174,8 +174,13 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             String productName = productInfo.getString("prodectName");//名
                             String detail = productInfo.getString("detail");//简介
                             Double price = productInfo.getDouble("price");//价格
-                            int[] img = {R.mipmap.main_img1, R.mipmap.main_img2, R.mipmap.main_img3, R.mipmap.main_img4, R.mipmap.main_img1, R.mipmap.main_img2};
-                            cablesInfos.add(new CablesInfo(id, productName, detail,color,specifications,price, quantity,img[i * j]));
+//                            String  image = productInfo.getString("productImages");//图片
+                            JSONArray images = productInfo.getJSONArray("productImages");
+                            String image = (String) images.get(0);
+                            if (image==null){
+                                image = "/images/b3043ec169634ba5a7d2631200723a67.jpeg";
+                            }
+                            cablesInfos.add(new CablesInfo(id, productName, detail,color,specifications,price, quantity,image));
                         }
                         children.put(groups.get(i).getId(), cablesInfos);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
                     }
@@ -507,7 +512,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                     Toast.makeText(context, "请选择要支付的商品", Toast.LENGTH_LONG).show();
                     return;
                 }
-                alert = new AlertDialog.Builder(context).create();
+                /*alert = new AlertDialog.Builder(context).create();
                 alert.setTitle("操作提示");
                 alert.setMessage("总计:\n" + totalCount + "种商品\n" + totalPrice + "元");
                 alert.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
@@ -524,7 +529,25 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                                 return;
                             }
                         });
-                alert.show();
+                alert.show();*/
+                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("操作提示")
+                        .setContentText("总计:\n" + totalCount + "种商品\n" + totalPrice + "元")
+                        .setConfirmText("支付")
+                        .setCancelText("取消")
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
+                            }
+                        })
+                        .show();
                 break;
 
         }

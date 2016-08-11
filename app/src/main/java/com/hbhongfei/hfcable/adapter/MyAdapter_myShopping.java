@@ -25,6 +25,8 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.MyShoppingActivity;
 import com.hbhongfei.hfcable.entity.CablesInfo;
 import com.hbhongfei.hfcable.entity.TypeInfo;
+import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
+import com.hbhongfei.hfcable.util.Url;
 import com.iflytek.voiceads.IFLYAdListener;
 
 import java.util.ArrayList;
@@ -188,7 +190,12 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
             cholder.tv_product_name.setText(cablesInfo.getName());
             cholder.tv_price.setText("￥" + cablesInfo.getPrice() + "");
             cholder.tv_count.setText(cablesInfo.getCount() + "");
-            cholder.iv_adapter_list_pic.setImageResource(cablesInfo.getGoodsImg());
+            String url = Url.url(cablesInfo.getGoodsImg());
+            cholder.iv_adapter_list_pic.setTag(url);
+            AsyncBitmapLoader asyncBitmapLoader = new AsyncBitmapLoader();
+            asyncBitmapLoader.loadImage(context,cholder.iv_adapter_list_pic,url);
+
+//            cholder.iv_adapter_list_pic.setImageResource(cablesInfo.getGoodsImg());//设置头像
             cholder.tv_introduce.setText(cablesInfo.getIntroduce());
             cholder.tv_introduce2.setText(cablesInfo.getIntroduce());
             cholder.tv_color.setText(cablesInfo.getColor());
