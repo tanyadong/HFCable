@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <solid android:color="@color/colorWhite" ></solid>
     <!--stroke 边框宽度 及颜色-->
-    <stroke android:color="@color/qianGray" android:width="1px"></stroke>
+    <stroke android:color="@color/gray" android:width="1px"></stroke>
     <padding
-        android:left="6dp"
+        android:left="0dp"
         android:top="6dp"
-        android:right="6dp"
-        android:bottom="0dp" />
+        android:right="0dp"
+        android:bottom="6dp" />
 </shape>
