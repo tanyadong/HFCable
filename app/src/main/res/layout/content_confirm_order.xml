@@ -74,6 +74,7 @@
     <!--订单-->
     <ListView
         android:id="@+id/list_confirm_order_product"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/Layout_confirm_order_location">

@@ -65,6 +65,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     private String S_phoneNumber;
     private static final String USER = LoginConnection.USER;
     private Dialog dialog;
+    private ArrayList<String> proIds = new ArrayList<>();
+    private ArrayList<Map<String,Object>> proInfos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +176,6 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             String productName = productInfo.getString("prodectName");//名
                             String detail = productInfo.getString("detail");//简介
                             Double price = productInfo.getDouble("price");//价格
-//                            String  image = productInfo.getString("productImages");//图片
                             JSONArray images = productInfo.getJSONArray("productImages");
                             String image = (String) images.get(0);
                             if (image==null){
@@ -235,6 +236,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     @Override
     protected void onResume() {
         super.onResume();
+        groups.clear();
+        children.clear();
         initDatas();
 //        setCartNum();
     }
@@ -244,9 +247,9 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         super.onDestroy();
         selva=null;
         groups.clear();
+        children.clear();
         totalPrice=0;
         totalCount=0;
-        children.clear();
     }
     /**
      * 设置标题购物车产品数量
@@ -456,14 +459,19 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             TypeInfo group = groups.get(i);
             List<CablesInfo> childs = children.get(group.getId());
             for (int j = 0; j < childs.size(); j++) {
+                Map<String,Object> map = new HashMap<>();
                 CablesInfo cable = childs.get(j);
                 if (cable.isChoosed()) {
                     totalCount++;
+                    map.put("product_name",cable.getName());
+                    map.put("introduce",cable.getIntroduce());
+                    map.put("product_price",cable.getPrice());
+                    map.put("product_num",cable.getCount());
+                    proInfos.add(map);
                     totalPrice += cable.getPrice() * cable.getCount();
                 }
             }
         }
-
         tvTotalPrice.setText("￥" + totalPrice);
         tvGoToPay.setText("去支付(" + totalCount + ")");
         //计算购物车的金额为0时候清空购物车的视图
@@ -512,25 +520,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                     Toast.makeText(context, "请选择要支付的商品", Toast.LENGTH_LONG).show();
                     return;
                 }
-                /*alert = new AlertDialog.Builder(context).create();
-                alert.setTitle("操作提示");
-                alert.setMessage("总计:\n" + totalCount + "种商品\n" + totalPrice + "元");
-                alert.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                return;
-                            }
-                        });
-                alert.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                return;
-                            }
-                        });
-                alert.show();*/
-                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
                         .setTitleText("操作提示")
                         .setContentText("总计:\n" + totalCount + "种商品\n" + totalPrice + "元")
                         .setConfirmText("支付")
@@ -544,6 +534,10 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
+                                Intent intent = new Intent(MyShoppingActivity.this,ConfirmOrderActivity.class);
+                                intent.putExtra("proInfos",proInfos);
+                                intent.putExtra("price",totalPrice);
+                                startActivity(intent);
                                 sDialog.dismissWithAnimation();
                             }
                         })
