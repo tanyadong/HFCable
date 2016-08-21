@@ -33,15 +33,14 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.MainActivity"
             android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity android:name=".activity.MyFavoriteActivity"
+            android:label="@string/myfavorite_lable"
             android:parentActivityName=".activity.MainActivity"/>
         <activity android:name=".activity.MyOrderActivity"
+            android:label="@string/myOrder_lable"
             android:parentActivityName=".activity.MainActivity"/>
         <activity
             android:name=".activity.MyShoppingActivity"
@@ -93,19 +92,28 @@
         <activity android:name=".activity.ConfirmOrderActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".activity.SplashActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".activity.ImageCropActivity"/>
+        <activity android:name=".activity.AddRecietAddress"></activity>
+        <activity android:name=".activity.CitySelect1Activity"
+            ></activity>
+        <activity
+            android:name=".activity.ReceiptAddressActivity"
+            android:label="@string/title_activity_receipt_address"
+            android:theme="@style/AppTheme.NoActionBar">
 
+        </activity>
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
     </application>
-
 </manifest>

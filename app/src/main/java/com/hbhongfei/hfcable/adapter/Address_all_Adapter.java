@@ -41,13 +41,15 @@ public class Address_all_Adapter extends BaseAdapter {
 	List<ShoppingAddress> list = new ArrayList<ShoppingAddress>();
 	String phoneNum;
 	ListView listView;
+	LinearLayout linearLayout;
 	SweetAlertDialog sweetAlertDialog=null;
-	public Address_all_Adapter(Context context, List<ShoppingAddress> nList, String S_phone, ListView listView) {
+	public Address_all_Adapter(Context context, List<ShoppingAddress> nList, String S_phone, ListView listView,LinearLayout linearLayout) {
 		mContext = context;
 		inflater = LayoutInflater.from(context);
 		this.list = nList;
 		this.listView=listView;
 		this.phoneNum=S_phone;
+		this.linearLayout=linearLayout;
 	}
 
 	@Override
@@ -180,8 +182,9 @@ public class Address_all_Adapter extends BaseAdapter {
 				String msg=jsonObject.getString("msg");
 				if(msg.equals("success")){
 					sweetAlertDialog.dismiss();
-					ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(phoneNum,mContext,listView);
+					ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(phoneNum,mContext,listView,linearLayout);
 					shoppingAddress_conn.addressListConnection();
+
 					Toast.makeText(mContext,"删除成功",Toast.LENGTH_SHORT).show();
 				}else {
 					Toast.makeText(mContext,"删除失败",Toast.LENGTH_SHORT).show();
@@ -224,7 +227,7 @@ public class Address_all_Adapter extends BaseAdapter {
 				String msg=jsonObject.getString("msg");
 				if(msg.equals("success")){
 //					sweetAlertDialog.dismiss();
-					ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(phoneNum,mContext,listView);
+					ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(phoneNum,mContext,listView,linearLayout);
 					shoppingAddress_conn.addressListConnection();
 					Toast.makeText(mContext,"设置成功",Toast.LENGTH_SHORT).show();
 				}else {

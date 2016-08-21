@@ -116,6 +116,7 @@
     <string name="tip_speak_error">阅读错误！</string>
     <string name="title_activity_order_pay">订单支付</string>
     <!--订单-->
+    <string name="myOrder_lable">我的订单</string>
     <string name="orderPayHint">订单提交完成，请您尽快支付！</string>
     <string name="orderPayHint1">请您在提交订单后</string>
     <string name="orderPayHint2">24小时内</string>
@@ -154,6 +155,8 @@
     <!--收货地址管理-->
     <string name="add_receiptAddress">新增收货地址</string>
     <string name="title_activity_receipt_address">收货地址管理</string>
+    <string name="address_emity">您还没有收货地址</string>
+    <string name="address_emity_to">前去添加一个吧！</string>
     <!--addAddress-->
     <string name="add_address_lable"></string>
     <string name="add_consignee">收货人:</string>

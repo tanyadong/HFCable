@@ -2,6 +2,8 @@ package com.hbhongfei.hfcable.util;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,10 +31,12 @@ public class ShoppingAddress_conn {
     private Context context;
     private  Dialog dialog;
     private ListView listView;
-    public ShoppingAddress_conn(String phoneNum,Context context,ListView listView) {
+    private LinearLayout linearLayout;
+    public ShoppingAddress_conn(String phoneNum,Context context,ListView listView,LinearLayout linearLayout) {
         this.phoneNum = phoneNum;
         this.context=context;
         this.listView=listView;
+        this.linearLayout=linearLayout;
     }
 
     /**
@@ -58,25 +62,38 @@ public class ShoppingAddress_conn {
         @Override
         public void onResponse(JSONObject jsonObject) {
             try {
-                List<ShoppingAddress> list=new ArrayList<>();
-                JSONArray jsonArray=jsonObject.getJSONArray("address_list");
-                for (int i=0;i<jsonArray.length();i++){
-                    ShoppingAddress shoppingAddress=new ShoppingAddress();
-                    JSONObject jsonObject1=jsonArray.getJSONObject(i);
-                    shoppingAddress.setId(jsonObject1.getString("id"));
-                    shoppingAddress.setConsignee(jsonObject1.getString("consignee"));
-                    shoppingAddress.setDetailAddress(jsonObject1.getString("detailAddress"));
-                    shoppingAddress.setLocalArea(jsonObject1.getString("localArea"));
-                    shoppingAddress.setPhone(jsonObject1.getString("phone"));
-                    shoppingAddress.setTag(jsonObject1.getInt("tag"));
-                    list.add(shoppingAddress);
+
+//                if(jsonObject.getString("address_list").isEmpty()){
+//                    dialog.cancle();
+//                    Toast.makeText(context,"k"+jsonObject.toString(),Toast.LENGTH_SHORT).show();
+//                    linearLayout.setVisibility(View.VISIBLE);
+//                }else {
+                    List<ShoppingAddress> list = new ArrayList<>();
+                    JSONArray jsonArray = jsonObject.getJSONArray("address_list");
+                if(jsonArray.length()>0){
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        ShoppingAddress shoppingAddress = new ShoppingAddress();
+                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                        shoppingAddress.setId(jsonObject1.getString("id"));
+                        shoppingAddress.setConsignee(jsonObject1.getString("consignee"));
+                        shoppingAddress.setDetailAddress(jsonObject1.getString("detailAddress"));
+                        shoppingAddress.setLocalArea(jsonObject1.getString("localArea"));
+                        shoppingAddress.setPhone(jsonObject1.getString("phone"));
+                        shoppingAddress.setTag(jsonObject1.getInt("tag"));
+                        list.add(shoppingAddress);
+                    }
+                    //给listview添加数据
+                    Address_all_Adapter address_all_adapter = new Address_all_Adapter(context, list, phoneNum, listView, linearLayout);
+                    listView.setAdapter(address_all_adapter);
+                    listView.setDivider(null);
+                    listView.setDividerHeight(30);
+                    dialog.cancle();
+                }else{
+                    dialog.cancle();
+//                    Toast.makeText(context,"k"+jsonObject.toString(),Toast.LENGTH_SHORT).show();
+                    linearLayout.setVisibility(View.VISIBLE);
                 }
-                //给listview添加数据
-                Address_all_Adapter address_all_adapter=new Address_all_Adapter(context,list,phoneNum,listView);
-                listView.setAdapter(address_all_adapter);
-                listView.setDivider(null);
-                listView.setDividerHeight(30);
-                dialog.cancle();
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

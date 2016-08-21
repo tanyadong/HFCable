@@ -33,6 +33,7 @@ import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
 import com.hbhongfei.hfcable.pojo.Company;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.ConnectionProduct;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Url;
 import com.hbhongfei.hfcable.util.showbigpictude.ScaleView;
 
@@ -77,6 +78,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
 
     private ScheduledExecutorService scheduledExecutorService;
     Intent intent;
+    private Dialog dialog;
     private Handler handler = new Handler() {
 
         @Override
@@ -98,7 +100,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_index, container, false);
         mQueue = Volley.newRequestQueue(this.getActivity());
-
+        dialog=new Dialog(getActivity());
         initView(view);
         connInter();
         setDate();
@@ -197,6 +199,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
      * 获取产品种类服务
      */
     public void connInter(){
+        dialog.showDialog("正在加载中。。。");
         String url = Url.url("/androidType/getType");
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
                 jsonObjectListener,errorListener);
@@ -223,7 +226,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
                     type_list.add(typeName);
                 }
                 setTypeValue(type_list);
-
+                dialog.cancle();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -236,6 +239,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
+            dialog.cancle();
             Toast.makeText(IndexFragment.this.getActivity(), "无法连接服务器", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
         }

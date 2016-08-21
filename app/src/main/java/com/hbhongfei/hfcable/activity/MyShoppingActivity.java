@@ -1,8 +1,6 @@
 package com.hbhongfei.hfcable.activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -27,11 +25,9 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter_myShopping;
 import com.hbhongfei.hfcable.entity.CablesInfo;
 import com.hbhongfei.hfcable.entity.TypeInfo;
-import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
-import com.hbhongfei.hfcable.util.NormalPostRequestArray;
 import com.hbhongfei.hfcable.util.Url;
 
 import org.json.JSONArray;
@@ -40,10 +36,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 

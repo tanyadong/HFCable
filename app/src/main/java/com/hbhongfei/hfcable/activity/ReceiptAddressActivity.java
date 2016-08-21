@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import com.hbhongfei.hfcable.util.ShoppingAddress_conn;
 public class ReceiptAddressActivity extends AppCompatActivity implements View.OnClickListener{
     private ListView lview_recriptAddress;
     private TextView add_recriptAddress;
+    private LinearLayout layout_address_emity;
     private static final String USER = LoginConnection.USER;
     private String S_phoneNumber;//用户名
     private  Dialog dialog;
@@ -38,7 +40,7 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
         initView();
         setValue();
         //获取地址
-        ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(S_phoneNumber,this,lview_recriptAddress);
+        ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(S_phoneNumber,this,lview_recriptAddress,layout_address_emity);
         shoppingAddress_conn.addressListConnection();
 //        addresListConnection();
         click();
@@ -57,6 +59,7 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
     private void initView(){
         lview_recriptAddress= (ListView) findViewById(R.id.lview_recriptAddress);
         add_recriptAddress= (TextView) findViewById(R.id.add_recriptAddress_tview);
+        layout_address_emity= (LinearLayout) findViewById(R.id.layout_address_emity);
     }
 
     private void setValue(){
