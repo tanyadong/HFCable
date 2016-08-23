@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -44,6 +43,7 @@ public class MarketFragment extends Fragment {
     private View view;
     private RequestQueue queue;
     private Dialog dialog;
+    private int i;
     public MarketFragment() {
         // Required empty public constructor
     }
@@ -69,13 +69,6 @@ public class MarketFragment extends Fragment {
     private void setvalues() {
         MyExpandableListViewAdapter myExpandableListViewAdapter=new MyExpandableListViewAdapter(getActivity(),group_list,item_list,expandableListView);
         expandableListView.setAdapter(myExpandableListViewAdapter);
-        Toast.makeText(getActivity(),group_list.toString()+"--"+item_list.toString(),Toast.LENGTH_SHORT).show();
-//
-//        if(myExpandableListViewAdapter!=null&&myExpandableListViewAdapter.getGroupCount()>0){
-//            for (int i = 0; i < myExpandableListViewAdapter.getGroupCount(); i++) {
-//                expandableListView.expandGroup(i);
-//            }
-//        }
         //为ExpandableListView的子列表单击事件设置监听器
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
@@ -102,26 +95,24 @@ public class MarketFragment extends Fragment {
     public void initvalues() {
         //父列表数据
         group_list = new ArrayList<String>();
-        item_list = new ArrayList<List<MarketInfo>>();
         url_list=new LinkedList<>();
-
+        item_list = new ArrayList<List<MarketInfo>>();
         group_list.add("铜");
         group_list.add("铝");
         group_list.add("橡胶");
         group_list.add("塑料");
-
-
         dialog.showDialog("正在加载中。。。");
-        url_list.add(0,"http://material.cableabc.com/matermarket/spotshow_001.html");
-        url_list.add(1,"http://material.cableabc.com/matermarket/spotshow_002.html");
-        url_list.add(2,"http://material.cableabc.com/matermarket/spotshow_003.html");
-        url_list.add(3,"http://material.cableabc.com/matermarket/spotshow_004.html");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
                 //遍历地址集合
-//                Toast.makeText(getContext(),url_list.size(),Toast.LENGTH_SHORT).show();
-                for (int i=0;i<url_list.size();i++){
+                url_list.add("http://material.cableabc.com/matermarket/spotshow_001.html");
+                url_list.add("http://material.cableabc.com/matermarket/spotshow_002.html");
+                url_list.add("http://material.cableabc.com/matermarket/spotshow_003.html");
+                url_list.add("http://material.cableabc.com/matermarket/spotshow_004.html");
+//                for(String string:url_list){
+                for (i=0;i<url_list.size();i++){
+
                     String url=url_list.get(i);
                     StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                         @Override
@@ -139,18 +130,19 @@ public class MarketFragment extends Fragment {
                     queue.add(request);
                 }
             }
-        }).start();
-    }
+//        }).start();
+//    }
     /**
      * 解析html
      * @param html
      */
     protected void parse(String html) {
-        child_list=new ArrayList<>();
+
         Document doc = Jsoup.parse(html);
         //Elements
         Element table = doc.getElementsByTag("table").first();
         Elements lists = table.getElementsByTag("tr");
+        child_list=new LinkedList<>();
         for (int i = 1; i < lists.size(); i++) {
             Element item = lists.get(i);
             Elements els = item.getElementsByTag("td");
@@ -171,8 +163,18 @@ public class MarketFragment extends Fragment {
         }
         //父列表添加子列表
         item_list.add(child_list);
-
-
+//        expandableListView.expandGroup(i);
         dialog.cancle();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        item_list.clear();
+        url_list.clear();
+        group_list.clear();
+        item_list=null;
+        url_list=null;
+        group_list=null;
     }
 }

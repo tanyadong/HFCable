@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
@@ -28,7 +29,6 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     public MyExpandableListViewAdapter(Context context,List<String> group_list,List<List<MarketInfo>> item_list,ExpandableListView listView) {
         inflater = LayoutInflater.from(context);
         this.context = context;
-
         this.item_list=item_list;
         this.group_list=group_list;
         this.expandableListView=listView;
@@ -39,8 +39,11 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
         return group_list.size();
     }
 
+
+
     @Override
     public int getChildrenCount(int groupPosition) {
+//        Toast.makeText()
         return item_list.get(groupPosition).size();
     }
 
@@ -89,6 +92,7 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         ItemHolder itemHolder = null;
+//        Toast.makeText(context,item_list.toString(),Toast.LENGTH_SHORT).show();
         if (convertView == null) {
             convertView=inflater.inflate(R.layout.market_childlist_layout, null);
             itemHolder = new ItemHolder();
@@ -136,7 +140,9 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public void notifyDataSetChanged() {
+
         int groupCount = expandableListView.getCount();
+        Toast.makeText(context,groupCount+"",Toast.LENGTH_SHORT).show();
         Log.i("-------", "groupCount="+groupCount);
         super.notifyDataSetChanged();
         for (int i=0; i<groupCount; i++) {
