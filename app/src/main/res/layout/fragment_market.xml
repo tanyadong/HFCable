@@ -3,11 +3,76 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hbhongfei.hfcable.fragment.MarketFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="行情页" />
-
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/market_title_llayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:divider="@color/gray"
+        android:background="@drawable/list_background"
+        android:gravity="center"
+        android:layout_height="40dp">
+        <TextView
+            android:text="@string/market_area"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_average_price"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:text="@string/market_fallorise"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_minprice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_maxprice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_factory_area"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <ExpandableListView
+        android:id="@+id/market_expendlist"
+        android:layout_marginTop="10dp"
+        android:groupIndicator="@null"
+        android:indicatorLeft="16dip"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ExpandableListView>
+    </LinearLayout>
 </FrameLayout>

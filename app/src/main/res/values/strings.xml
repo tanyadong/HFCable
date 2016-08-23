@@ -176,4 +176,14 @@
     <string name="comfirm_order_shouhuo">收货人：</string>
     <string name="comfirm_order_location">收获地址：</string>
 
+
+    <!--行情-->
+    <string name="market_area">市场/地区</string>
+    <string name="market_product_name">产品名称</string>
+    <string name="market_average_price">均价</string>
+    <string name="market_fallorise">跌涨</string>
+    <string name="market_minprice">最低价</string>
+    <string name="market_maxprice">最高价</string>
+    <string name="market_factory_area">厂家/地区</string>
+    <string name="market_data">日期</string>
 </resources>

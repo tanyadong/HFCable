@@ -14,6 +14,7 @@
     <color name="colorWhite">#ffff</color>
     <color name="colorLogin">#589DF6</color>
     <color name="nullBagck">#00d9d5d5</color>
+    <color name="green">#fb47fa05</color>
 
     <!--主页种类按钮背景颜色-->
     <color name="colorGreen">#0974f844</color>

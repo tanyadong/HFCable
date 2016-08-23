@@ -56,8 +56,6 @@ public class InfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view= inflater.inflate(R.layout.fragment_info, container, false);
-//        ActionBar actionbar =
-//        actionbar.setDisplayHomeAsUpEnabled(true);
         //声明一个队列
         queue= Volley.newRequestQueue(getActivity());
         initView(view);
