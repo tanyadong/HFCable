@@ -36,16 +36,14 @@ public class MarketFragment extends Fragment {
     private ExpandableListView expandableListView;
     private ArrayList<String> url_list=null;
 //    private TreeSet<String> url_list;
-    private List<String> group_list=null;
-    private List<MarketInfo> child_list=null;
-    private List<List<MarketInfo>> item_list=null;
+    private ArrayList<String> group_list=null;
+    private ArrayList<MarketInfo> child_list=null;
+    private ArrayList<List<MarketInfo>> item_list=null;
     private View view;
     private RequestQueue queue;
     private Dialog dialog;
     public MarketFragment() {
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,7 +53,6 @@ public class MarketFragment extends Fragment {
         // 初始化数据
         initvalues();
         return view;
-
     }
 
     /**
