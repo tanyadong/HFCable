@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:divider="@color/gray"
         android:background="@drawable/list_background"
-        android:gravity="center"
         android:layout_height="40dp">
         <TextView
             android:text="@string/market_area"

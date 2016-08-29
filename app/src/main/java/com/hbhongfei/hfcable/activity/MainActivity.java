@@ -65,17 +65,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.layout_mine = (LinearLayout) findViewById(R.id.ll_main_mine);
 
         this.textView_index = (TextView) findViewById(R.id.txt_main);
-        this.textView_info = (TextView) findViewById(R.id.txt_find);
-        this.textView_market = (TextView) findViewById(R.id.txt_mess);
+        this.textView_info = (TextView) findViewById(R.id.txt_mess);
+        this.textView_market = (TextView) findViewById(R.id.txt_find);
         this.textView_mine = (TextView) findViewById(R.id.txt_mine);
 
         this.imageView_index = (ImageView) findViewById(R.id.img_main);
-        this.imageView_info = (ImageView) findViewById(R.id.img_find);
-        this.imageView_market = (ImageView) findViewById(R.id.img_mess);
+        this.imageView_info = (ImageView) findViewById(R.id.img_mess);
+        this.imageView_market = (ImageView) findViewById(R.id.img_find);
         this.imageView_mine = (ImageView) findViewById(R.id.img_mine);
-
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-
         IndexFragment indexFragment = new IndexFragment();
         InfoFragment infoFragment = new InfoFragment();
         MarketFragment marketFragment = new MarketFragment();
@@ -101,10 +99,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void showHome(){
         imageView_index.setImageResource(R.mipmap.home_red);
         textView_index.setTextColor(Color.parseColor("#ff0000"));
-        imageView_info.setImageResource(R.mipmap.market);
-        textView_info.setTextColor(Color.parseColor("#000000"));
-        imageView_market.setImageResource(R.mipmap.info_black);
+        imageView_market.setImageResource(R.mipmap.market);
         textView_market.setTextColor(Color.parseColor("#000000"));
+        imageView_info.setImageResource(R.mipmap.info_black);
+        textView_info.setTextColor(Color.parseColor("#000000"));
         imageView_mine.setImageResource(R.mipmap.my);
         textView_mine.setTextColor(Color.parseColor("#000000"));
     }
@@ -113,12 +111,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 点击资讯时显示
      */
     private void showInfo(){
-        imageView_market.setImageResource(R.mipmap.info_red);
-        textView_market.setTextColor(Color.parseColor("#ff0000"));
+        imageView_info.setImageResource(R.mipmap.info_red);
+        textView_info.setTextColor(Color.parseColor("#ff0000"));
         imageView_index.setImageResource(R.mipmap.home);
         textView_index.setTextColor(Color.parseColor("#000000"));
-        imageView_info.setImageResource(R.mipmap.market);
-        textView_info.setTextColor(Color.parseColor("#000000"));
+        imageView_market.setImageResource(R.mipmap.market);
+        textView_market.setTextColor(Color.parseColor("#000000"));
         imageView_mine.setImageResource(R.mipmap.my);
         textView_mine.setTextColor(Color.parseColor("#000000"));
     }
@@ -127,12 +125,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 点击行情时显示
      */
     private void showMarket(){
-        imageView_info.setImageResource(R.mipmap.market_red);
-        textView_info.setTextColor(Color.parseColor("#ff0000"));
+        imageView_market.setImageResource(R.mipmap.market_red);
+        textView_market.setTextColor(Color.parseColor("#ff0000"));
         imageView_index.setImageResource(R.mipmap.home);
         textView_index.setTextColor(Color.parseColor("#000000"));
-        imageView_market.setImageResource(R.mipmap.info_black);
-        textView_market.setTextColor(Color.parseColor("#000000"));
+        imageView_info.setImageResource(R.mipmap.info_black);
+        textView_info.setTextColor(Color.parseColor("#000000"));
         imageView_mine.setImageResource(R.mipmap.my);
         textView_mine.setTextColor(Color.parseColor("#000000"));
     }
@@ -145,10 +143,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textView_mine.setTextColor(Color.parseColor("#ff0000"));
         imageView_index.setImageResource(R.mipmap.home);
         textView_index.setTextColor(Color.parseColor("#000000"));
-        imageView_market.setImageResource(R.mipmap.info_black);
-        textView_market.setTextColor(Color.parseColor("#000000"));
-        imageView_info.setImageResource(R.mipmap.market);
+        imageView_info.setImageResource(R.mipmap.info_black);
         textView_info.setTextColor(Color.parseColor("#000000"));
+        imageView_market.setImageResource(R.mipmap.market);
+        textView_market.setTextColor(Color.parseColor("#000000"));
     }
     @Override
     public void onClick(View v) {

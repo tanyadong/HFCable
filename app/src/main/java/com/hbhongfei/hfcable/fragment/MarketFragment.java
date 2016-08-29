@@ -27,7 +27,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -35,17 +34,15 @@ import java.util.List;
  */
 public class MarketFragment extends Fragment {
     private ExpandableListView expandableListView;
-    private List<String> url_list;
-    private List<String> group_list;
-    private List<MarketInfo> child_list;
-    private List<List<MarketInfo>> item_list;
-    private List<List<String>> item_list2;
+    private ArrayList<String> url_list=null;
+//    private TreeSet<String> url_list;
+    private List<String> group_list=null;
+    private List<MarketInfo> child_list=null;
+    private List<List<MarketInfo>> item_list=null;
     private View view;
     private RequestQueue queue;
     private Dialog dialog;
-    private int i;
     public MarketFragment() {
-        // Required empty public constructor
     }
 
 
@@ -57,8 +54,6 @@ public class MarketFragment extends Fragment {
         initview(view);
         // 初始化数据
         initvalues();
-        //适配器，加载数据
-        setvalues();
         return view;
 
     }
@@ -87,64 +82,70 @@ public class MarketFragment extends Fragment {
     private void initview(View view) {
         expandableListView = (ExpandableListView) view.findViewById(R.id.market_expendlist);
         dialog=new Dialog(getActivity());
+        item_list = new ArrayList<List<MarketInfo>>();
     }
+    /**
+     * 访问网络
+     */
+    private void netWork(final String url){
 
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Toast.makeText(getContext(),url,Toast.LENGTH_SHORT).show();
+         String s=url;
+                StringRequest request=new StringRequest(Request.Method.GET, s, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        parse(s);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //请求失败
+                        dialog.cancle();
+                        System.out.println(volleyError);
+                    }
+                });
+                queue.add(request);
+//            }
+//        }).start();
+    }
     /**
      * 初始化数据
      */
     public void initvalues() {
+        group_list = new ArrayList<>();
+        url_list=new ArrayList<>();
         //父列表数据
-        group_list = new ArrayList<String>();
-        url_list=new LinkedList<>();
-        item_list = new ArrayList<List<MarketInfo>>();
         group_list.add("铜");
         group_list.add("铝");
         group_list.add("橡胶");
         group_list.add("塑料");
         dialog.showDialog("正在加载中。。。");
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-                //遍历地址集合
-                url_list.add("http://material.cableabc.com/matermarket/spotshow_001.html");
-                url_list.add("http://material.cableabc.com/matermarket/spotshow_002.html");
-                url_list.add("http://material.cableabc.com/matermarket/spotshow_003.html");
-                url_list.add("http://material.cableabc.com/matermarket/spotshow_004.html");
-//                for(String string:url_list){
-                for (i=0;i<url_list.size();i++){
-
-                    String url=url_list.get(i);
-                    StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String s) {
-                            parse(s);
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            //请求失败
-                            dialog.cancle();
-                            System.out.println(volleyError);
-                        }
-                    });
-                    queue.add(request);
-                }
-            }
-//        }).start();
-//    }
+        //遍历地址集合
+        url_list.add("http://material.cableabc.com/matermarket/spotshow_001.html");
+        url_list.add("http://material.cableabc.com/matermarket/spotshow_002.html");
+        url_list.add("http://material.cableabc.com/matermarket/spotshow_003.html");
+        url_list.add("http://material.cableabc.com/matermarket/spotshow_004.html");
+        for(String string:url_list) {
+            netWork(string);
+        }
+//      适配器，加载数据
+        setvalues();
+    }
     /**
      * 解析html
      * @param html
      */
     protected void parse(String html) {
-
         Document doc = Jsoup.parse(html);
         //Elements
         Element table = doc.getElementsByTag("table").first();
         Elements lists = table.getElementsByTag("tr");
-        child_list=new LinkedList<>();
-        for (int i = 1; i < lists.size(); i++) {
-            Element item = lists.get(i);
+        child_list=new ArrayList<>();
+        for (int j = 1; j < lists.size(); j++) {
+            Element item = lists.get(j);
             Elements els = item.getElementsByTag("td");
             MarketInfo marketInfo=new MarketInfo();
             //遍历所有的列
@@ -159,22 +160,20 @@ public class MarketFragment extends Fragment {
             String url=els.get(8).getElementsByTag("a").attr("href");
             marketInfo.setTrend("http://material.cableabc.com"+url);
             child_list.add(marketInfo);
-
         }
         //父列表添加子列表
         item_list.add(child_list);
-//        expandableListView.expandGroup(i);
         dialog.cancle();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        item_list.clear();
-        url_list.clear();
+    public void onStop() {
+        super.onStop();
         group_list.clear();
+        child_list.clear();
+        item_list.clear();
         item_list=null;
-        url_list=null;
+        child_list=null;
         group_list=null;
     }
 }

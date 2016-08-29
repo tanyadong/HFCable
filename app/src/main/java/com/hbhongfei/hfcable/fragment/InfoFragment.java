@@ -172,7 +172,6 @@ public class InfoFragment extends Fragment {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-
                         //请求失败
                         isFirst = true;
                         Message msg = new Message();
