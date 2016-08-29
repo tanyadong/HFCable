@@ -10,5 +10,4 @@ public  class  Url {
     public static String url(String url){
         return URL+url;
     }
-
 }

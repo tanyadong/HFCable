@@ -288,6 +288,14 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
     }
 
+    /**
+     * 跳转到登录界面
+     * @param v
+     */
+    private void toLogin(){
+        Intent intent=new Intent(this,LoginActivity.class);
+        startActivity(intent);
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -296,33 +304,41 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 SharedPreferences settings = getSharedPreferences("SAVE_PHONE", Activity.MODE_PRIVATE);
                 final String phone=settings.getString("phoneNum","");
                 //打电话对话框
-                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("确定要拨打电话？")
-                        .setContentText(phone)
-                        .setConfirmText("确认")
-                        .showCancelButton(true)
-                        .setCancelText("取消")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
-                            }
-                        })
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                CallTel callTel=new CallTel(ProdectInfoActivity.this);
-                                callTel.call(phone);
-                                sDialog.dismiss();
-                            }
-                        })
-                           .show();
-                Toast.makeText(this, phone, Toast.LENGTH_SHORT).show();
+                if(TextUtils.isEmpty(S_phoneNumber)) {
+                    new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("确定要拨打电话？")
+                            .setContentText(phone)
+                            .setConfirmText("确认")
+                            .showCancelButton(true)
+                            .setCancelText("取消")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    CallTel callTel = new CallTel(ProdectInfoActivity.this);
+                                    callTel.call(phone);
+                                    sDialog.dismiss();
+                                }
+                            })
+                            .show();
+                }else{
+                    //跳转到登陆界面
+                    toLogin();
+                }
                 break;
             //添加收藏
             case R.id.prodectList_LLayout_collect:
                 //收藏服务
-                collectionCollect();
+                if(TextUtils.isEmpty(S_phoneNumber)) {
+                    collectionCollect();
+                }else{
+                    toLogin();
+                }
                 break;
             //购物车
             case R.id.prodectList_LLayout_shoppingCat:
@@ -333,7 +349,12 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             case R.id.prodect_addCart:
                 if(!TextUtils.isEmpty(color) && !TextUtils.isEmpty(specifications)){
                     //添加到购物车
-                    addShoppingCartCoon();
+                    if(TextUtils.isEmpty(S_phoneNumber)) {
+                        addShoppingCartCoon();
+                    }else{
+                        toLogin();
+                    }
+
                     Toast.makeText(this, pop_num.getText().toString()+"添加成功",Toast.LENGTH_SHORT).show();
                 }else{
                     isAddCart=true;
@@ -371,20 +392,25 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 break;
             //弹出框的确定按钮
             case R.id.btn_sure:
-                if (TextUtils.isEmpty(color)) {
-                    Toast.makeText(this, "亲，你还没有选择颜色哟~", Toast.LENGTH_SHORT).show();
-                }else if (TextUtils.isEmpty(specifications)) {
-                    Toast.makeText(this, "亲，你还没有选择规格哟~",Toast.LENGTH_SHORT).show();
-                }else {
-                    showColorandSpec();
-                    if (isAddCart){
-                        //添加到购物车服务
-                        addShoppingCartCoon();
+                if(TextUtils.isEmpty(S_phoneNumber)) {
+                    if (TextUtils.isEmpty(color)) {
+                        Toast.makeText(this, "亲，你还没有选择颜色哟~", Toast.LENGTH_SHORT).show();
+                    }else if (TextUtils.isEmpty(specifications)) {
+                        Toast.makeText(this, "亲，你还没有选择规格哟~",Toast.LENGTH_SHORT).show();
+                    }else {
+                        showColorandSpec();
+                        if (isAddCart){
+                            //添加到购物车服务
+                            addShoppingCartCoon();
+                            dismiss();
+                            isAddCart=false;
+                        }
                         dismiss();
-                        isAddCart=false;
                     }
-                    dismiss();
+                }else{
+                    toLogin();
                 }
+
                 break;
         }
     }
