@@ -133,7 +133,7 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.Tview_myInfo_login_out:
                 loginOut();
-                intent.setClass(MyInfoActivity.this,LoginActivity.class);
+                intent.setClass(MyInfoActivity.this,MainActivity.class);
                 startActivity(intent);
                 break;
             case R.id.Rlayout_myInfo_address:

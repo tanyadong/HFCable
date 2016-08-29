@@ -14,16 +14,16 @@
         android:id="@+id/Iamge_mine_head"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:paddingTop="5dp"
+        android:layout_gravity="center_horizontal"
         android:src="@mipmap/man" />
 
     <TextView
         android:id="@+id/Tview_mine_myName"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:layout_gravity="center_horizontal"
         android:text="用户名"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-
 </LinearLayout>

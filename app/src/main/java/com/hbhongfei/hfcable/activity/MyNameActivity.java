@@ -3,6 +3,7 @@ package com.hbhongfei.hfcable.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -68,6 +69,10 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
     private void toolBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.myName_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setElevation(0);
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }

@@ -188,4 +188,5 @@
     <string name="market_data">日期</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_input_my_info">InputMyInfoActivity</string>
 </resources>

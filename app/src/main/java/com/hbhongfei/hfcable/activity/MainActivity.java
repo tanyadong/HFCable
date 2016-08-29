@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -81,7 +82,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setElevation(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setElevation(0);
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -94,15 +98,18 @@ public class MainActivity extends AppCompatActivity
         //初始化界面
         initView();
 
-        //初始化数据
-        initValues();
 
         //点击事件
         click();
 
     }
 
-
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        //初始化数据
+        initValues();
+    }
 
     @Override
     public void onBackPressed() {
@@ -132,7 +139,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
     /**
@@ -147,22 +153,36 @@ public class MainActivity extends AppCompatActivity
         startActivity(i);
     }
 
+    /**
+     * 判断是否登录
+     */
+    private void toLoginOrNot(Class c){
+        if (S_phoneNumber!=null){
+            intent(c);
+        }else{
+            toLogin();
+        }
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.Rlayout_mine_favorite) {
-            intent(MyFavoriteActivity.class);
-        } else if (id==R.id.Rlayout_mine_order) {
-            intent(MyOrderActivity.class);
-        } else if (id == R.id.Rlayout_mine_shopping) {
-            intent(MyShoppingActivity.class);
-        } else if (id == R.id.mine_edit) {
-            intent(MyInfoActivity.class);
+        switch (id){
+            case R.id.Rlayout_mine_favorite:
+                toLoginOrNot(MyFavoriteActivity.class);
+                break;
+            case R.id.Rlayout_mine_order:
+                toLoginOrNot(MyOrderActivity.class);
+                break;
+            case R.id.Rlayout_mine_shopping:
+                toLoginOrNot(MyShoppingActivity.class);
+                break;
+            case R.id.mine_edit:
+                toLoginOrNot(MyInfoActivity.class);
+                break;
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -226,33 +246,43 @@ public class MainActivity extends AppCompatActivity
 
         upLoadImage =new UpLoadImage(this);
         dialog = new Dialog(this);
-
     }
     /**
      * 初始化数据
      */
     private void initValues() {
         SharedPreferences spf = this.getSharedPreferences(USER, Context.MODE_PRIVATE);
-
+        //用户名
         S_name = spf.getString("nickName", null);
         if (S_name==null){
-            Toast.makeText(this,"11111111111111",Toast.LENGTH_SHORT).show();
-            S_name = "请填写用户名";
+            S_name = "还未登录哦";
             myName.setText(S_name);
         }else{
             myName.setText(S_name);
-            Toast.makeText(this,"2222222222",Toast.LENGTH_SHORT).show();
         }
         S_phoneNumber = spf.getString("phoneNumber",null);
+
+        //头像
         S_head  =spf.getString("headPortrait",null);
-        if (tag==0){
+        if(S_head!=null&&tag==0){
+            String url = Url.url(S_head);
+            head.setTag(url);
+            asyncBitmapLoader = new AsyncBitmapLoader();
+            asyncBitmapLoader.loadImage(this,head,url);
+        }else if(tag!=0&&S_head!=null){
+            head.setImageBitmap(b);
+        }else{
+            drawable = MainActivity.this.getResources().getDrawable(R.mipmap.man);
+            head.setImageDrawable(drawable);
+        }
+        /*if (tag==0){
             String url = Url.url(S_head);
             head.setTag(url);
             asyncBitmapLoader = new AsyncBitmapLoader();
             asyncBitmapLoader.loadImage(this,head,url);
         }else{
             head.setImageBitmap(b);
-        }
+        }*/
     }
 
     /**
@@ -328,6 +358,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * 跳转到登录界面
+     */
+    private void toLogin(){
+        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onClick(View v) {
         boolean isLogin = isLogin(MainActivity.this,MainActivity.this.getClass().getName());
@@ -346,19 +384,20 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.ll_main_mine:
                 if(isLogin) {
-
                     showMine();
                     viewPager.setCurrentItem(3);
                 }
                 else{
-                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                    startActivity(intent);
-//                    this.finish();
+                    toLogin();
                 }
                 break;
             case R.id.Iamge_mine_head:
-                //修改头像
-                showDialog();
+                if (S_phoneNumber!=null){
+                    //修改头像
+                    showDialog();
+                }else{
+                    toLogin();
+                }
                 break;
             }
     }
@@ -394,9 +433,9 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         //相册中选择
-//                        Intent intent = new Intent(Intent.ACTION_PICK, null);
-//                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image");
-//                        startActivityForResult(intent, Constants.PICK_PHOTO);
+                        Intent intent = new Intent(Intent.ACTION_PICK, null);
+                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                        startActivityForResult(intent, Constants.PICK_PHOTO);
                         sDialog.cancel();
                     }
                 })

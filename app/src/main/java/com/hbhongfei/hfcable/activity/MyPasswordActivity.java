@@ -67,6 +67,7 @@ public class MyPasswordActivity extends AppCompatActivity implements View.OnClic
     private void toolBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.myPassword_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(0);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             toolbar.setElevation(0);
         }

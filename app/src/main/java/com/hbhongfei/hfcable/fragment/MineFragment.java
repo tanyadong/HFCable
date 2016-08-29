@@ -81,14 +81,14 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_mine, container, false);
-        initView(v);
-        setOnClick();
+//        initView(v);
+//        setOnClick();
         return v;
     }
 
     @Override
     public void onResume() {
-        initValues();
+//        initValues();
         super.onResume();
     }
 
@@ -96,9 +96,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      * 初始化界面
      * 苑雪元
      * 2016/07/21
-     * @param v 主界面
      */
-    public void initView(View v){
+   /* public void initView(View v){
         upLoadImage =new UpLoadImage(this.getActivity());
         dialog = new Dialog(this.getActivity());
         myInfoEdit = (LinearLayout) v.findViewById(R.id.mine_edit);
@@ -107,7 +106,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         shopping = (RelativeLayout) v.findViewById(R.id.Rlayout_mine_shopping);
         order = (RelativeLayout) v.findViewById(R.id.Rlayout_mine_order);
         favorite = (RelativeLayout) v.findViewById(R.id.Rlayout_mine_favorite);
-    }
+    }*/
 
     /**
      * 设置点击事件
@@ -115,11 +114,11 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      * 2016/07/21
      */
     private void setOnClick(){
-        this.shopping.setOnClickListener(this);
+       /* this.shopping.setOnClickListener(this);
         this.order.setOnClickListener(this);
         this.favorite.setOnClickListener(this);
         this.myInfoEdit.setOnClickListener(this);
-        this.myhead.setOnClickListener(this);
+        this.myhead.setOnClickListener(this);*/
     }
 
     /**
@@ -128,7 +127,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      * 2016/07/21
      */
     private void initValues(){
-        SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
+       /* SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_name = spf.getString("nickName", null);
         S_phoneNumber = spf.getString("phoneNumber",null);
         S_head  =spf.getString("headPortrait",null);
@@ -141,7 +140,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             asyncBitmapLoader.loadImage(MineFragment.this.getContext(),myhead,url);
         }else{
             myhead.setImageBitmap(b);
-        }
+        }*/
     }
 
     /**
@@ -158,7 +157,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        /*switch (v.getId()){
             case R.id.Rlayout_mine_favorite:
                 intent(MyFavoriteActivity.class);
                 break;
@@ -175,14 +174,14 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             case R.id.mine_edit:
                 intent(MyInfoActivity.class);
                 break;
-        }
+        }*/
     }
 
     /**
      * 选择拍照还是相册
      */
     private void showDialog(){
-        if (tag==0){
+        /*if (tag==0){
             drawable = MineFragment.this.getActivity().getResources().getDrawable(R.mipmap.man);
         }else{
             drawable =new BitmapDrawable(b);
@@ -216,12 +215,12 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         sDialog.cancel();
                     }
                 })
-                .show();
+                .show();*/
     }
-    @Override
-    public   void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
+//    @Override
+//    public   void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        /*if (requestCode == Constants.TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
             Intent intent = new Intent(MineFragment.this.getActivity(), ImageCropActivity.class);
             intent.putExtra("PHOTO_PATH",Constants.PHOTONAME);
             startActivityForResult(intent, Constants.CROP_BEAUTY);
@@ -251,6 +250,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     upLoadImage.load(b,S_phoneNumber);
                 }
             }
-        }
-    }
+        }*/
+//    }
 }

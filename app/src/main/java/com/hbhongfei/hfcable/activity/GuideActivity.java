@@ -115,7 +115,7 @@ public class GuideActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
                 mPopupWindow.dismiss();
                 setGuided();
-                Intent intent=new Intent(GuideActivity.this,LoginActivity.class);
+                Intent intent=new Intent(GuideActivity.this,MainActivity.class);
                 startActivity(intent);
                 finish();
             }
