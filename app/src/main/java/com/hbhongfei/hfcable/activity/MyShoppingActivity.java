@@ -179,6 +179,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             cablesInfos.add(new CablesInfo(id, productName, detail,color,specifications,price, quantity,image));
                         }
                         children.put(groups.get(i).getId(), cablesInfos);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
+                        Toast.makeText(getApplicationContext(),cablesInfos.toString(),Toast.LENGTH_SHORT).show();
                     }
                     selva = new MyAdapter_myShopping(groups, children, MyShoppingActivity.this);
                     selva.setCheckInterface( MyShoppingActivity.this);// 关键步骤1,设置复选框接口
