@@ -19,13 +19,11 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         boolean mFirst = isFirstEnter(SplashActivity.this,SplashActivity.this.getClass().getName());
-        boolean isLogin = isLogin(SplashActivity.this,SplashActivity.this.getClass().getName());
+//        boolean isLogin = isLogin(SplashActivity.this,SplashActivity.this.getClass().getName());
         if(mFirst)
             mHandler.sendEmptyMessageDelayed(SWITCH_GUIDACTIVITY,5000);
-        else if (isLogin)
-            mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY,4000);
         else
-            mHandler.sendEmptyMessageDelayed(SWITCH_LOGINACTIVITY,2000);
+            mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY,4000);
     }
 
     //****************************************************************
@@ -49,7 +47,7 @@ public class SplashActivity extends Activity {
     //****************************************************************
     // 判断应用是否进行登录过
     //****************************************************************
-    private static final String LOGINORNOT = LoginConnection.USER;
+   /* private static final String LOGINORNOT = LoginConnection.USER;
     private boolean isLogin(Context context,String className){
         if(context==null || className==null||"".equalsIgnoreCase(className)){
             return false;
@@ -62,26 +60,26 @@ public class SplashActivity extends Activity {
             return false;
         }
 
-    }
+    }*/
 
 
     //*************************************************
     // Handler:跳转至不同页面
     //*************************************************
-    private final static int SWITCH_LOGINACTIVITY = 500;
+//    private final static int SWITCH_LOGINACTIVITY = 500;
     private final static int SWITCH_GUIDACTIVITY = 501;
     private final static int SWITCH_MAINACTIVITY = 502;
     public Handler mHandler = new Handler(){
         public void handleMessage(Message msg) {
             switch(msg.what){
-                case SWITCH_LOGINACTIVITY:
+                /*case SWITCH_LOGINACTIVITY:
                     Intent mIntent = new Intent();
                     mIntent.setClass(SplashActivity.this, LoginActivity.class);
                     SplashActivity.this.startActivity(mIntent);
                     SplashActivity.this.finish();
-                    break;
+                    break;*/
                 case SWITCH_GUIDACTIVITY:
-                    mIntent = new Intent();
+                    Intent mIntent = new Intent();
                     mIntent.setClass(SplashActivity.this, GuideActivity.class);
                     SplashActivity.this.startActivity(mIntent);
                     SplashActivity.this.finish();

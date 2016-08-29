@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/mine_edit"
+            android:icon="@mipmap/ic_edit_mine"
+            android:title="@string/mine_myInfo" />
+    </group>
+
+    <item android:title="购物">
+        <menu>
+            <item
+                android:id="@+id/Rlayout_mine_shopping"
+                android:icon="@mipmap/shopping_cart"
+                android:title="@string/mine_shopping" />
+            <item
+                android:id="@+id/Rlayout_mine_favorite"
+                android:icon="@mipmap/favorite"
+                android:title="@string/mine_favorite" />
+            <item
+                android:id="@+id/Rlayout_mine_order"
+                android:icon="@mipmap/order"
+                android:title="@string/mine_order" />
+        </menu>
+    </item>
+
+</menu>

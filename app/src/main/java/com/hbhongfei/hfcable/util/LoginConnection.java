@@ -1,10 +1,8 @@
 package com.hbhongfei.hfcable.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,17 +11,13 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.MainActivity;
-import com.hbhongfei.hfcable.entity.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by 苑雪元 on 2016/8/4.

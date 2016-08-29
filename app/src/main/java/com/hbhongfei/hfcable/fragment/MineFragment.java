@@ -148,7 +148,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      * 跳转页面
      * 苑雪元
      * 2016/07/21
-     * @param c 要跳转的页面
      */
     private void intent(Class c){
         Intent i = new Intent();
@@ -212,7 +211,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     public void onClick(SweetAlertDialog sDialog) {
                         //相册中选择
                         Intent intent = new Intent(Intent.ACTION_PICK, null);
-                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image");
                         startActivityForResult(intent, Constants.PICK_PHOTO);
                         sDialog.cancel();
                     }

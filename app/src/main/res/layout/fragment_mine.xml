@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hbhongfei.hfcable.fragment.MineFragment">
-
+<!--
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -56,7 +56,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!--收藏，订单和购物车-->
+        &lt;!&ndash;收藏，订单和购物车&ndash;&gt;
         <RelativeLayout
             android:id="@+id/Rlayout_mine_shopping"
             android:layout_width="match_parent"
@@ -141,5 +141,5 @@
                 android:layout_alignParentRight="true"
                 android:background="@mipmap/right_black"/>
         </RelativeLayout>
-    </LinearLayout>
+    </LinearLayout>-->
 </FrameLayout>

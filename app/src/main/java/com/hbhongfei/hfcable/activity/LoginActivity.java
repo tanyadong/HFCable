@@ -77,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.Btn_login_login:
                 getValues();
                 loginClick();
+                this.finish();
                 break;
         }
     }
