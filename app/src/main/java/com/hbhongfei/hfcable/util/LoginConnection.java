@@ -1,5 +1,6 @@
 package com.hbhongfei.hfcable.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,14 +25,16 @@ import java.util.Map;
  */
 public class LoginConnection {
 
-    private Context context;
+    private Activity context;
     private int i=-1;
     private String S_phoneNumber,S_id,S_sex,S_nickName,S_headPortrait;
     public static final String USER = "hfcable_user";
     private Dialog dialog;
+    Intent intent;
 
-    public LoginConnection(Context context){
+    public LoginConnection(Activity context){
         this.context = context;
+
     }
 
     /**
@@ -59,7 +62,6 @@ public class LoginConnection {
         String url = Url.url("/androidUser/login");
         System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this.context);
-
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
         mQueue.add(request);
@@ -84,6 +86,7 @@ public class LoginConnection {
                     //dialog消失
                    dialog.cancle();
                     //跳转界面
+
                     Intent intent  = new Intent(context,MainActivity.class);
                     context.startActivity(intent);
                 }else if(s.equals("filed")){

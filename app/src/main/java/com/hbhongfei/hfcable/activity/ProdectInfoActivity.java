@@ -99,8 +99,9 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     int color_position=0;
     int spec_position=0;
     boolean isFirst=true;
-    private static final String USER = LoginConnection.USER;
     String S_phoneNumber;
+    private static final String USER = LoginConnection.USER;
+
     RequestQueue mQueue;
     /**
      * 弹出商品订单信息详情
@@ -147,6 +148,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         initVIew();
         setDate();
         click();
+//        setDate();
         if (isAutoPlay) {
             startPlay();
         }
@@ -159,7 +161,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
-
     public void initVIew() {
         inflater = LayoutInflater.from(this);
         mviewPager = (ViewPager) findViewById(R.id.myviewPager);
@@ -197,7 +198,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
      */
     public void setDate() {
         SharedPreferences spf =getSharedPreferences(USER, Context.MODE_PRIVATE);
-        S_phoneNumber = spf.getString("phoneNumber",null);
+        S_phoneNumber = spf.getString("phoneNumber","");
         list = new ArrayList<ImageView>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
@@ -290,12 +291,15 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 跳转到登录界面
-     * @param v
+     * @param
      */
     private void toLogin(){
         Intent intent=new Intent(this,LoginActivity.class);
         startActivity(intent);
     }
+
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -304,8 +308,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 SharedPreferences settings = getSharedPreferences("SAVE_PHONE", Activity.MODE_PRIVATE);
                 final String phone=settings.getString("phoneNum","");
                 //打电话对话框
-                if(TextUtils.isEmpty(S_phoneNumber)) {
-                    new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("确定要拨打电话？")
                             .setContentText(phone)
                             .setConfirmText("确认")
@@ -326,15 +329,11 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                                 }
                             })
                             .show();
-                }else{
-                    //跳转到登陆界面
-                    toLogin();
-                }
                 break;
             //添加收藏
             case R.id.prodectList_LLayout_collect:
                 //收藏服务
-                if(TextUtils.isEmpty(S_phoneNumber)) {
+                if(!TextUtils.isEmpty(S_phoneNumber)) {
                     collectionCollect();
                 }else{
                     toLogin();
@@ -347,19 +346,17 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 break;
             //添加购物车
             case R.id.prodect_addCart:
-                if(!TextUtils.isEmpty(color) && !TextUtils.isEmpty(specifications)){
-                    //添加到购物车
-                    if(TextUtils.isEmpty(S_phoneNumber)) {
+                if(!TextUtils.isEmpty(S_phoneNumber)) {
+                    if(!TextUtils.isEmpty(color) && !TextUtils.isEmpty(specifications)){
+                        //添加到购物车
                         addShoppingCartCoon();
                     }else{
-                        toLogin();
+                        isAddCart=true;
+                        showPopwindow();
                     }
-
-                    Toast.makeText(this, pop_num.getText().toString()+"添加成功",Toast.LENGTH_SHORT).show();
                 }else{
-                    isAddCart=true;
-                    showPopwindow();
-                }
+                    toLogin();
+                 }
                 break;
             //弹出框中的添加数量
             case R.id.pop_add:
@@ -392,7 +389,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 break;
             //弹出框的确定按钮
             case R.id.btn_sure:
-                if(TextUtils.isEmpty(S_phoneNumber)) {
+                if(!TextUtils.isEmpty(S_phoneNumber)) {
                     if (TextUtils.isEmpty(color)) {
                         Toast.makeText(this, "亲，你还没有选择颜色哟~", Toast.LENGTH_SHORT).show();
                     }else if (TextUtils.isEmpty(specifications)) {
