@@ -38,7 +38,7 @@ import java.util.Map;
 public class MyNameActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText myName;
     private TextView number;
-    private String S_name,S_phoneNumber;
+    private String S_name,S_phoneNumber,S_input;
     private ImageView cancel, done;
     private static final String USER = LoginConnection.USER;
     private Dialog dialog;
@@ -121,6 +121,7 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = getIntent();
         S_name = intent.getStringExtra("nickName");
         S_phoneNumber = intent.getStringExtra("phoneNumber");
+        S_input = intent.getStringExtra("input");
     }
 
     /**
@@ -186,7 +187,14 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.Image_myName_done:
                 if (checkValues()) {
-                    saveValues();
+                    if (S_input!=null){
+                        Intent i = new Intent();
+                        i.putExtra("nickName",S_name);
+                        setResult(0,i);
+                        finish();
+                    }else{
+                        saveValues();
+                    }
                 }
                 break;
         }

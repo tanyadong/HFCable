@@ -64,7 +64,7 @@
     <string name="favorite_emity_to">快去收藏一个吧！</string>
     <!--myInfo-->
     <string name="myInfo_title">个人信息</string>
-    <string name="myInfo_name">昵称</string>
+    <string name="myInfo_name">姓名</string>
     <string name="myInfo_sex">性别</string>
     <string name="myInfo_password">修改密码</string>
     <string name="myInfo_address">收货地址</string>
@@ -188,5 +188,13 @@
     <string name="market_data">日期</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="title_activity_input_my_info">InputMyInfoActivity</string>
+
+    <!--InputMyInfo-->
+    <string name="title_activity_input_my_info">设置个人资料</string>
+    <string name="input_my_info_head">头像</string>
+    <string name="input_my_info_name">例如:张三</string>
+    <string name="input_my_info_birthday">生日</string>
+    <string name="input_my_info_save">保存个人信息</string>
+
+
 </resources>

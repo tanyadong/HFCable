@@ -211,14 +211,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     /**
-     * 验证验证码是否正确
-     * @return true为正确，false为不正确
-     */
-    private boolean verificationCode(){
-        return SMSTag;
-    }
-
-    /**
      * 验证手机号格式是否正确
      * @return true 表示正确，false表示不正确
      */

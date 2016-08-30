@@ -75,17 +75,15 @@ public class MainActivity extends AppCompatActivity
     private UpLoadImage upLoadImage;
     private Dialog dialog;
     private AsyncBitmapLoader asyncBitmapLoader;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setElevation(0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            toolbar.setElevation(0);
-        }
+
+        //toolbar
+        toolbar();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -97,11 +95,20 @@ public class MainActivity extends AppCompatActivity
 
         //初始化界面
         initView();
-
-
         //点击事件
         click();
+    }
 
+    /**
+     * toolbar
+     */
+    private void toolbar(){
+        toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setElevation(0);
+        }
     }
 
     @Override

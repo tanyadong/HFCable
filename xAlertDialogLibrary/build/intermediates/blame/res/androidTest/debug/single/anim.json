@@ -16,11 +16,11 @@
         "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\xAlertDialogLibrary\\build\\intermediates\\bundles\\debug\\res\\anim\\success_bow_roate.xml"
     },
     {
-        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\xAlertDialogLibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\modal_in.xml",
-        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\xAlertDialogLibrary\\build\\intermediates\\bundles\\debug\\res\\anim\\modal_in.xml"
-    },
-    {
         "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\xAlertDialogLibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\error_x_in.xml",
         "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\xAlertDialogLibrary\\build\\intermediates\\bundles\\debug\\res\\anim\\error_x_in.xml"
+    },
+    {
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\xAlertDialogLibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\modal_in.xml",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\xAlertDialogLibrary\\build\\intermediates\\bundles\\debug\\res\\anim\\modal_in.xml"
     }
 ]
