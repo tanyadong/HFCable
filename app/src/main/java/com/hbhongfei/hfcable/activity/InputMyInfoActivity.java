@@ -3,6 +3,7 @@ package com.hbhongfei.hfcable.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,14 +29,31 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Constants;
 import com.hbhongfei.hfcable.util.DatepickerFragment;
+import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.NormalPostRequest;
+import com.hbhongfei.hfcable.util.Url;
 import com.hbhongfei.hfcable.utils.WheelView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -42,9 +63,12 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
     private TextView Tname,Tsex,Tbirthday,Tsave;
     private ImageView Ihead;
     private static final String[] SEX = new String[]{"男", "女"};
-    private String S_name,S_sex,S_birthday;
+    private String S_name,S_sex="男",S_birthday,S_phone,S_Info,S_password,photo;
     private Bitmap b;
     private Drawable drawable;
+    private Dialog dialog;
+    private LoginConnection loginConnection;
+    private static final String USER = LoginConnection.USER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +80,9 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
 
         //初始化界面
         initView();
+
+        //初始化数据
+        initValue();
 
         //设置点击事件
         setOnclick();
@@ -78,6 +105,7 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
      * 初始化界面
      */
     private void initView(){
+        dialog = new Dialog(this);
         this.Rhead = (RelativeLayout) findViewById(R.id.Rlayout_inputMyInfo_head);
         this.Rname = (RelativeLayout) findViewById(R.id.Rlayout_inputMyInfo_name);
         this.Rsex = (RelativeLayout) findViewById(R.id.Rlayout_inputMyInfo_sex);
@@ -91,6 +119,24 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
     }
 
     /**
+     * 初始化数据
+     */
+    private void initValue(){
+        Intent intent = getIntent();
+        S_phone = intent.getStringExtra("phoneNumber");
+        S_Info = intent.getStringExtra("register");
+        S_password = intent.getStringExtra("password");
+//        S_Info = "company";
+        if (S_Info.equals("person")){
+            //个人信息完善
+            this.Tsave.setText("保存");
+        }else{
+            //公司信息完善
+            this.Tsave.setText("下一步");
+        }
+    }
+
+    /**
      * 设置点击事件
      */
     private void setOnclick(){
@@ -98,7 +144,7 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
         this.Rname.setOnClickListener(this);
         this.Rsex.setOnClickListener(this);
         this.Rbirthday.setOnClickListener(this);
-
+        this.Tsave.setOnClickListener(this);
     }
 
     @Override
@@ -125,9 +171,38 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
                 break;
             //保存个人信息
             case R.id.Tview_inputMyInfo_saveInfo:
+                if (IsEmpty()){
+                    if (S_Info.equals("person")){
+                        //个人信息完善
+                        savePersonInfoConnInter();
+                    }else{
+                        //公司信息完善
+                        intent.setClass(this,InputCompanyInfoActivity.class);
+                        intent.putExtra("phoneNumber",S_phone);
+                        intent.putExtra("password",S_password);
+                        intent.putExtra("photo",photo);
+                        intent.putExtra("nickName",S_name);
+                        intent.putExtra("sex",S_sex);
+                        intent.putExtra("birthday",S_birthday);
+                        startActivity(intent);
+                    }
+                }
                 break;
         }
     }
+
+    /**
+     * 是否为空
+     */
+    private boolean IsEmpty(){
+        if (TextUtils.isEmpty(S_birthday)||TextUtils.isEmpty(photo)||TextUtils.isEmpty(S_name)||TextUtils.isEmpty(S_sex)){
+            Toast.makeText(this,"数据不能为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }else{
+            return true;
+        }
+    }
+
 
     /**
      * 选择拍照还是相册
@@ -195,6 +270,15 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
                     Ihead.setImageBitmap(b);
                     //上传
 //                    upLoadImage.load(b,S_phoneNumber);
+                    try {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        b.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        baos.close();
+                        byte[] buffer = baos.toByteArray();
+                        photo = Base64.encodeToString(buffer, 0, buffer.length,Base64.DEFAULT);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -229,7 +313,8 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
         }else{
             date1=String.valueOf(date);
         }
-        Tbirthday.setText(year + "-" + month1 + "-" + date1);
+        S_birthday=year + "-" + month1 + "-" + date1;
+        Tbirthday.setText(S_birthday);
     }
     /**
      *  显示popWindow
@@ -289,4 +374,65 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
             }
         });
     }
+
+
+
+    /**
+     * 保存个人信息时连接服务
+     */
+    private void savePersonInfoConnInter(){
+        dialog.showDialog("正在保存...");
+        Map<String,String> params =new HashMap<>();
+        params.put("phoneNumber", S_phone);
+        params.put("photo",photo);
+        params.put("nickName",S_name);
+        params.put("tag","0");
+        params.put("sex",S_sex);
+        params.put("birthday",S_birthday);
+        String url = Url.url("/androidUser/addPersonInfo");
+        System.out.println(url);
+        RequestQueue mQueue = Volley.newRequestQueue(this);
+        //使用自己书写的NormalPostRequest类，
+        Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
+        mQueue.add(request);
+    }
+
+    /**
+     * 成功的监听器
+     */
+    private Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                String s = jsonObject.getString("savePersonInfo");
+                if (s.equals("success")){
+                    Toast.makeText(InputMyInfoActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                    SharedPreferences.Editor editor = InputMyInfoActivity.this.getSharedPreferences(USER, Context.MODE_PRIVATE).edit();
+                    editor.putString("tag", "0");
+                    editor.apply();
+                    loginConnection = new LoginConnection(InputMyInfoActivity.this);
+                    loginConnection.connInter(S_phone,S_password);
+                    dialog.cancle();
+                }else {
+                    dialog.cancle();
+                    Toast.makeText(InputMyInfoActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                dialog.cancle();
+            }
+        }
+    };
+
+    /**
+     *  失败的监听器
+     */
+    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            Toast.makeText(InputMyInfoActivity.this,"链接网络失败", Toast.LENGTH_SHORT).show();
+            Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
+        }
+    };
 }

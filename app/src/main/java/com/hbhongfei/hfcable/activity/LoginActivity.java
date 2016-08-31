@@ -1,6 +1,8 @@
 package com.hbhongfei.hfcable.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,14 +15,17 @@ import android.widget.Toast;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.LoginConnection;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText Txt_login_user,Txt_login_password;
     private TextView Txt_login_forget_password,Txt_login_sign_in;
     private Button Btn_login_login;
-    private String S_user,S_password;
+    private String S_user,S_password,S_tag;
     private boolean Tag =true;
     private LoginConnection loginConnection;
+    private static final String USER = LoginConnection.USER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         //初始化界面
         initView();
+
 
         //初始化点击事件
         click();
@@ -96,6 +102,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private void loginClick(){
         if (isEmpty()){
+            //注册完善
             loginConnection = new LoginConnection(LoginActivity.this);
             loginConnection.connInter(S_user,S_password);
         }

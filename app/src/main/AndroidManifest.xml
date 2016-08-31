@@ -35,7 +35,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.MyFavoriteActivity"
             android:parentActivityName=".activity.MainActivity" />
@@ -74,24 +74,26 @@
         <activity
             android:name=".activity.OrderPayActivity"
             android:label="@string/title_activity_order_pay"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.ReceiptAddressActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".activity.AddRecietAddress">
-
-        </activity>
+        <activity
+            android:name=".activity.ReceiptAddressActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activity.AddRecietAddress"></activity>
         <activity android:name=".activity.GuideActivity" />
         <activity
             android:name=".activity.ConfirmOrderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.MarketChartActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.SplashActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -118,6 +120,10 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
+        <activity
+            android:name=".activity.InputCompanyInfoActivity"
+            android:label="@string/title_activity_input_company_info"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
