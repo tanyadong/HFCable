@@ -8,12 +8,11 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.ProdectInfoActivity;
-import com.hbhongfei.hfcable.entity.TypeInfo;
 import com.hbhongfei.hfcable.pojo.Product;
+import com.hbhongfei.hfcable.pojo.TypeInfo;
 import com.hbhongfei.hfcable.pojo.TypeTwo;
 
 import java.util.ArrayList;
@@ -234,26 +233,16 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
     class GroupViewClick implements View.OnClickListener {
         private int groupPosition;
         private Button edtor;
-        private TypeInfo group;
 
         public GroupViewClick(int groupPosition, Button edtor, TypeInfo group) {
             this.groupPosition = groupPosition;
             this.edtor = edtor;
-            this.group = group;
         }
+
 
         @Override
         public void onClick(View v) {
-            int groupId = v.getId();
-            if (groupId == edtor.getId()) {
-                if (group.isEdtor()) {
-                    group.setEdtor(false);
-                } else {
-                    group.setEdtor(true);
 
-                }
-                notifyDataSetChanged();
-            }
         }
     }
 }

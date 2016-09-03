@@ -223,13 +223,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         //获取产品列表的详细产品信息
         intent = getIntent();
         product = (Product) intent.getSerializableExtra("product");
-        prodectInfo_detail.setText(product.getDetail());
-        prodectInfo_coreType.setText(product.getLineCoreType());
         D_beforePrice = product.getPrice();
         prodectInfo_price.setText(String.valueOf(product.getPrice()));
-        prodectInfo_model.setText(product.getModel());
-        prodectInfo_type.setText(product.getTypeName());
-        prodectInto_simpleDeclaration.setText(product.getProdectName());//产品名称
         //产品图片
         if (product.getProductImages() != null) {
             for (String s : product.getProductImages()) {
@@ -607,7 +602,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         pop_reduce = (TextView) view.findViewById(R.id.pop_reduce);
         pop_num = (TextView) view.findViewById(R.id.pop_num);
         Layout_add.setVisibility(View.GONE);
-        tv_name.setText(product.getProdectName());
+        tv_name.setText(product.getSpecifications());
         D_price =D_beforePrice;
         D_tagPrice = D_price;
         //设置弹窗的图片

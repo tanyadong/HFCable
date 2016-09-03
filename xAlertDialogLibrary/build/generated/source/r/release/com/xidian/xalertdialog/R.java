@@ -176,11 +176,11 @@ containing a value of this type.
         public static int warning_stroke_color=0x7f050012;
     }
     public static final class dimen {
-        public static int activity_horizontal_margin=0x7f070000;
-        public static int activity_vertical_margin=0x7f070001;
-        public static int alert_width=0x7f070002;
-        public static int common_circle_width=0x7f070003;
-        public static int progress_circle_radius=0x7f070004;
+        public static int activity_horizontal_margin=0x7f060000;
+        public static int activity_vertical_margin=0x7f060001;
+        public static int alert_width=0x7f060002;
+        public static int common_circle_width=0x7f060003;
+        public static int progress_circle_radius=0x7f060004;
     }
     public static final class drawable {
         public static int blue_button_background=0x7f020000;
@@ -195,42 +195,42 @@ containing a value of this type.
         public static int warning_sigh=0x7f020009;
     }
     public static final class id {
-        public static int cancel_button=0x7f060010;
-        public static int confirm_button=0x7f060011;
-        public static int content_text=0x7f06000f;
-        public static int custom_image=0x7f060004;
-        public static int error_frame=0x7f060005;
-        public static int error_x=0x7f060006;
-        public static int loading=0x7f060003;
-        public static int mask_left=0x7f060009;
-        public static int mask_right=0x7f060008;
-        public static int progressWheel=0x7f06000d;
-        public static int progress_dialog=0x7f06000c;
-        public static int success_frame=0x7f060007;
-        public static int success_tick=0x7f06000a;
-        public static int title_text=0x7f06000e;
-        public static int warning_frame=0x7f06000b;
-        public static int x=0x7f060000;
-        public static int y=0x7f060001;
-        public static int z=0x7f060002;
+        public static int cancel_button=0x7f090010;
+        public static int confirm_button=0x7f090011;
+        public static int content_text=0x7f09000f;
+        public static int custom_image=0x7f090004;
+        public static int error_frame=0x7f090005;
+        public static int error_x=0x7f090006;
+        public static int loading=0x7f090003;
+        public static int mask_left=0x7f090009;
+        public static int mask_right=0x7f090008;
+        public static int progressWheel=0x7f09000d;
+        public static int progress_dialog=0x7f09000c;
+        public static int success_frame=0x7f090007;
+        public static int success_tick=0x7f09000a;
+        public static int title_text=0x7f09000e;
+        public static int warning_frame=0x7f09000b;
+        public static int x=0x7f090000;
+        public static int y=0x7f090001;
+        public static int z=0x7f090002;
     }
     public static final class layout {
         public static int activity_main=0x7f030000;
         public static int alert_dialog=0x7f030001;
     }
     public static final class string {
-        public static int LOADING=0x7f080000;
-        public static int action_settings=0x7f080001;
-        public static int app_name=0x7f080002;
-        public static int default_progressbar=0x7f080003;
-        public static int dialog_cancel=0x7f080004;
-        public static int dialog_default_title=0x7f080005;
-        public static int dialog_ok=0x7f080006;
-        public static int hello_world=0x7f080007;
+        public static int LOADING=0x7f070000;
+        public static int action_settings=0x7f070001;
+        public static int app_name=0x7f070002;
+        public static int default_progressbar=0x7f070003;
+        public static int dialog_cancel=0x7f070004;
+        public static int dialog_default_title=0x7f070005;
+        public static int dialog_ok=0x7f070006;
+        public static int hello_world=0x7f070007;
     }
     public static final class style {
-        public static int alert_dialog=0x7f090000;
-        public static int dialog_blue_button=0x7f090001;
+        public static int alert_dialog=0x7f080000;
+        public static int dialog_blue_button=0x7f080001;
     }
     public static final class styleable {
         /** Attributes that can be used with a ProgressWheel.
@@ -280,7 +280,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:matProg_barColor
         */
-        public static final int ProgressWheel_matProg_barColor = 1;
+        public static int ProgressWheel_matProg_barColor = 1;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#matProg_barSpinCycleTime}
           attribute's value can be found in the {@link #ProgressWheel} array.
@@ -294,7 +294,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:matProg_barSpinCycleTime
         */
-        public static final int ProgressWheel_matProg_barSpinCycleTime = 5;
+        public static int ProgressWheel_matProg_barSpinCycleTime = 5;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#matProg_barWidth}
           attribute's value can be found in the {@link #ProgressWheel} array.
@@ -310,7 +310,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:matProg_barWidth
         */
-        public static final int ProgressWheel_matProg_barWidth = 8;
+        public static int ProgressWheel_matProg_barWidth = 8;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#matProg_circleRadius}
           attribute's value can be found in the {@link #ProgressWheel} array.
@@ -326,7 +326,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:matProg_circleRadius
         */
-        public static final int ProgressWheel_matProg_circleRadius = 6;
+        public static int ProgressWheel_matProg_circleRadius = 6;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#matProg_fillRadius}
           attribute's value can be found in the {@link #ProgressWheel} array.
@@ -340,7 +340,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:matProg_fillRadius
         */
-        public static final int ProgressWheel_matProg_fillRadius = 7;
+        public static int ProgressWheel_matProg_fillRadius = 7;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#matProg_linearProgress}
           attribute's value can be found in the {@link #ProgressWheel} array.
@@ -354,7 +354,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:matProg_linearProgress
         */
-        public static final int ProgressWheel_matProg_linearProgress = 9;
+        public static int ProgressWheel_matProg_linearProgress = 9;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#matProg_progressIndeterminate}
           attribute's value can be found in the {@link #ProgressWheel} array.
@@ -368,7 +368,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:matProg_progressIndeterminate
         */
-        public static final int ProgressWheel_matProg_progressIndeterminate = 0;
+        public static int ProgressWheel_matProg_progressIndeterminate = 0;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#matProg_rimColor}
           attribute's value can be found in the {@link #ProgressWheel} array.
@@ -383,7 +383,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:matProg_rimColor
         */
-        public static final int ProgressWheel_matProg_rimColor = 2;
+        public static int ProgressWheel_matProg_rimColor = 2;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#matProg_rimWidth}
           attribute's value can be found in the {@link #ProgressWheel} array.
@@ -399,7 +399,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:matProg_rimWidth
         */
-        public static final int ProgressWheel_matProg_rimWidth = 3;
+        public static int ProgressWheel_matProg_rimWidth = 3;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#matProg_spinSpeed}
           attribute's value can be found in the {@link #ProgressWheel} array.
@@ -413,7 +413,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:matProg_spinSpeed
         */
-        public static final int ProgressWheel_matProg_spinSpeed = 4;
+        public static int ProgressWheel_matProg_spinSpeed = 4;
         /** Attributes that can be used with a Rotate3dAnimation.
            <p>Includes the following attributes:</p>
            <table>
@@ -449,7 +449,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:fromDeg
         */
-        public static final int Rotate3dAnimation_fromDeg = 1;
+        public static int Rotate3dAnimation_fromDeg = 1;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#pivotX}
           attribute's value can be found in the {@link #Rotate3dAnimation} array.
@@ -465,7 +465,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:pivotX
         */
-        public static final int Rotate3dAnimation_pivotX = 3;
+        public static int Rotate3dAnimation_pivotX = 3;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#pivotY}
           attribute's value can be found in the {@link #Rotate3dAnimation} array.
@@ -481,7 +481,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:pivotY
         */
-        public static final int Rotate3dAnimation_pivotY = 4;
+        public static int Rotate3dAnimation_pivotY = 4;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#rollType}
           attribute's value can be found in the {@link #Rotate3dAnimation} array.
@@ -499,7 +499,7 @@ containing a value of this type.
 </table>
           @attr name com.xidian.xalertdialog:rollType
         */
-        public static final int Rotate3dAnimation_rollType = 0;
+        public static int Rotate3dAnimation_rollType = 0;
         /**
           <p>This symbol is the offset where the {@link com.xidian.xalertdialog.R.attr#toDeg}
           attribute's value can be found in the {@link #Rotate3dAnimation} array.
@@ -513,6 +513,6 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.xidian.xalertdialog:toDeg
         */
-        public static final int Rotate3dAnimation_toDeg = 2;
+        public static int Rotate3dAnimation_toDeg = 2;
     };
 }
