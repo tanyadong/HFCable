@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +19,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.SpinnerListAdapter;
-import com.hbhongfei.hfcable.util.ConnectionProduct;
+import com.hbhongfei.hfcable.util.ConnectionTypeTwo;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.MySpinner;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -33,10 +34,11 @@ import java.util.List;
 public class ProdectListActivity extends AppCompatActivity implements View.OnClickListener{
     private LinearLayout prodectType_spinner;
     private TextView prodectType_textView;
-    private ListView prodectList_listView;
+    private ExpandableListView prodectList_listView;
     private String typeName;
     private int width;
     private RequestQueue mQueue;
+    private Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +57,8 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
     public void initView(){
         prodectType_spinner = (LinearLayout) findViewById(R.id.prodectType_spinner);
         prodectType_textView = (TextView) findViewById(R.id.prodectType_textView);
-        prodectList_listView= (ListView) findViewById(R.id.prodectlist_listView);
+        prodectList_listView= (ExpandableListView) findViewById(R.id.prodectlist_listView);
+
     }
 
     /**
@@ -115,8 +118,8 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         WindowManager wm = this.getWindowManager();
         width = wm.getDefaultDisplay().getWidth();
         try {
-            ConnectionProduct connectionProduct=new ConnectionProduct(this,prodectList_listView);
-            connectionProduct.connInterByType(typeName);
+            ConnectionTypeTwo typtTwoConnection=new ConnectionTypeTwo(ProdectListActivity.this,prodectList_listView);
+            typtTwoConnection.connInterByType(typeName);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -136,8 +139,8 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
                         typeName=list.get(position);
                         prodectType_textView.setText(list.get(position));
                         try {
-                            ConnectionProduct connectionProduct=new ConnectionProduct(ProdectListActivity.this,prodectList_listView);
-                            connectionProduct.connInterByType(list.get(position));
+                            ConnectionTypeTwo typtTwoConnection=new ConnectionTypeTwo(ProdectListActivity.this,prodectList_listView);
+                            typtTwoConnection.connInterByType(list.get(position));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -153,7 +152,6 @@ public class MarketChartActivity extends AppCompatActivity {
             averagePrice_list.add(els.get(1).text());
             data_list.add(els.get(0).text());
         }
-        Toast.makeText(this,data_list.toString()+"--"+averagePrice_list.toString(),Toast.LENGTH_SHORT).show();
         //显示图表
         showChart();
     }
@@ -167,13 +165,13 @@ public class MarketChartActivity extends AppCompatActivity {
         mChart.setStartAtZero(false);
         //是否在Y轴显示数据，就是曲线上的数据
         mChart.setDrawYValues(true);
-
         //设置网格
         mChart.setDrawBorder(true);
         mChart.setBorderPositions(new BarLineChartBase.BorderPosition[] {
                 BarLineChartBase.BorderPosition.BOTTOM});
         //在chart上的右下角加描述
         mChart.setDescription("曲线图");
+        mChart.setNoDataTextDescription("没有数据");
         //设置Y轴上的单位
 //        mChart.setUnit("元/吨");
         //设置透明度
@@ -191,7 +189,6 @@ public class MarketChartActivity extends AppCompatActivity {
         mChart.setScaleEnabled(true);
         //设置是否能扩大扩小
         mChart.setPinchZoom(true);
-        mChart.setNoDataTextDescription("暂时没有数据");
 
 
         // 设置背景颜色
@@ -215,11 +212,10 @@ public class MarketChartActivity extends AppCompatActivity {
         XLabels xl = mChart.getXLabels();
         xl.setAvoidFirstLastClipping(true);//如果设置为true，则在绘制时会避免“剪掉”在x轴上的图表或屏幕边缘的第一个和最后一个坐标轴标签项。
         xl.setAdjustXLabels(true);
-
         xl.setPosition(XLabels.XLabelPosition.BOTTOM); // 设置X轴的数据在底部显示
         xl.setTypeface(tf); // 设置字体
         xl.setTextSize(10f); // 设置字体大小
-        xl.setSpaceBetweenLabels(0); // 设置数据之间的间距
+        xl.setSpaceBetweenLabels(4); // 设置数据之间的间距
 
         YLabels yl = mChart.getYLabels();
 //        yl.setDrawUnitsInYLabel(false);
@@ -232,14 +228,14 @@ public class MarketChartActivity extends AppCompatActivity {
         setData();
 //        mChart.setData(lineData);
         //从X轴进入的动画
-        mChart.animateX(4000);
-        mChart.animateY(3000);   //从Y轴进入的动画
-        mChart.animateXY(3000, 3000);    //从XY轴一起进入的动画
+        mChart.animateX(1000);
+        mChart.animateY(1000);   //从Y轴进入的动画
+        mChart.animateXY(1000, 1000);    //从XY轴一起进入的动画
 
         //设置最小的缩放
         mChart.setScaleMinima(0.0f, 1f);
         //设置视口
-        // mChart.centerViewPort(10, 50);
+//         mChart.centerViewPort(10, 50);
 
         // get the legend (only possible after setting data)
         Legend l = mChart.getLegend();  //下边显示的文字
@@ -249,9 +245,10 @@ public class MarketChartActivity extends AppCompatActivity {
 //        l.setTextColor(Color.rgb(104, 241, 175));
         l.setTextColor(getResources().getColor(R.color.colorRed));
         l.setFormSize(30f); // set the size of the legend forms/shapes
-
+        l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
         // 刷新图表
         mChart.invalidate();
+        dialog.cancle();
     }
     /**
      * 设置数据
@@ -270,6 +267,7 @@ public class MarketChartActivity extends AppCompatActivity {
         // create a dataset and give it a type
         LineDataSet set1 = new LineDataSet(yVals, area+" "+produceName);
         set1.setDrawCubic(true);  //设置曲线为圆滑的线
+
         set1.setCubicIntensity(0.2f);
         set1.setDrawFilled(false);  //设置包括的范围区域填充颜色
         set1.setDrawCircles(true);  //设置有圆点
@@ -282,7 +280,6 @@ public class MarketChartActivity extends AppCompatActivity {
         LineData data = new LineData(xVals, set1);
         // set data
         mChart.setData(data);
-        dialog.cancle();
     }
 
 

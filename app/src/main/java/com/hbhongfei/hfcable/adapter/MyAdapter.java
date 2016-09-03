@@ -93,9 +93,8 @@ public class MyAdapter extends BaseAdapter {
         int cellCount = distance >= 2? 2:distance;
         final List<Product> itemList = list.subList(position*2,position*2+cellCount);
         if (itemList.size() >0) {
-            vh.prodect_introduce1.setText(itemList.get(0).getProdectName());
+            vh.prodect_introduce1.setText(itemList.get(0).getSpecifications());
             vh.prodect_price1.setText(String.valueOf(itemList.get(0).getPrice()));
-//            Toast.makeText(context,itemList.get(0).getProductImages().size(),Toast.LENGTH_SHORT).show();
             //有图片时加载
             if(itemList.get(0).getProductImages()!=null){
                String url=Url.url(itemList.get(0).getProductImages().get(0));
@@ -120,10 +119,11 @@ public class MyAdapter extends BaseAdapter {
                 vh.prodect_introduce2.setVisibility(View.VISIBLE);
                 vh.prodect_price2.setVisibility(View.VISIBLE);
                 vh.prodect_imgView2.setVisibility(View.VISIBLE);
-                vh.prodect_introduce2.setText(itemList.get(1).getProdectName());
+                vh.prodect_introduce2.setText(itemList.get(1).getSpecifications());
                 vh.prodect_price2.setText(String.valueOf(itemList.get(1).getPrice()));
                 //有图片时加载
-                if(itemList.get(1).getProductImages().size()>0){
+                System.out.println(itemList.get(1).getProductImages().toString());
+                if(itemList.get(1).getProductImages().size()!=0){
                     String url=Url.url(itemList.get(1).getProductImages().get(0));
                     vh.prodect_imgView2.setTag(url);
                     AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();

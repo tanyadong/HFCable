@@ -24,7 +24,6 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     private List<String> group_list;
     private List<List<MarketInfo>> item_list;
     private ExpandableListView expandableListView;
-//    private List<List<String>> item_list2;
     private LayoutInflater inflater;
     public MyExpandableListViewAdapter(Context context,List<String> group_list,List<List<MarketInfo>> item_list,ExpandableListView listView) {
         inflater = LayoutInflater.from(context);
@@ -33,7 +32,6 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
         this.group_list=group_list;
         this.expandableListView=listView;
     }
-
     @Override
     public int getGroupCount() {
         return group_list.size();

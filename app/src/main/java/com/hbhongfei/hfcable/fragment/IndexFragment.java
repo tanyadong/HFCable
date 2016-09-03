@@ -29,8 +29,10 @@ import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.CompanyInfoActivity;
 import com.hbhongfei.hfcable.activity.ProdectListActivity;
+import com.hbhongfei.hfcable.activity.ProjectActivity;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
 import com.hbhongfei.hfcable.pojo.Company;
+import com.hbhongfei.hfcable.pojo.Project;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.ConnectionProduct;
 import com.hbhongfei.hfcable.util.Dialog;
@@ -68,7 +70,9 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     /**
      * 用于存放轮播效果图片
      */
+    private ArrayList<Object> list_obj;
     private List<ImageView> list;
+    private List<ImageView> list_project;
     //    添加小圆点控件，
     private LinearLayout dotLayout;
 
@@ -102,12 +106,20 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         mQueue = Volley.newRequestQueue(this.getActivity());
         dialog=new Dialog(getActivity());
         initView(view);
+        list_obj=new ArrayList<>();
+        list = new ArrayList<ImageView>();
+        list_project=new ArrayList<>();
+        dotViewList = new ArrayList<ImageView>();
+        dotLayout.removeAllViews();
         connInter();
         setDate();
 //        setTypeValue();
         //连接获取公司的服务
         connInterGetCompanyInfo();
+        //获取公司近期项目的服务
+        connInterGetProject();
         onClick();
+        setComAndProImg();
         if (isAutoPlay) {
             startPlay();
         }
@@ -115,15 +127,16 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     }
 
     public void initView(View view) {
+
         inflater = LayoutInflater.from(getActivity());
-//        scaleView= (ScaleView) view.findViewById(R.id.scrollView);
+
         listView = (ListView) view.findViewById(R.id.lv);
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
         dotLayout = (LinearLayout)view.findViewById(R.id.dotLayout);
-        img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
+
         btn_typeName1 = (Button) view.findViewById(R.id.btn_type_name1);
         btn_typeName2 = (Button) view.findViewById(R.id.btn_type_name2);
         btn_typeName3 = (Button) view.findViewById(R.id.btn_type_name3);
@@ -145,7 +158,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * 设置数据
+     * 加载“推荐产品”模块数据
      */
     public void setDate() {
         //首页根据条件查询产品
@@ -155,9 +168,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        list = new ArrayList<ImageView>();
-        dotViewList = new ArrayList<ImageView>();
-        dotLayout.removeAllViews();
+
 
     }
 
@@ -219,7 +230,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
             List<String> type_list=new ArrayList<>();
             try {
                 jsonArray = jsonObject.getJSONArray("list");
-                System.out.println("length"+jsonArray.length());
                 for(int i=0;i<jsonArray.length();i++){
                     JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
                     String typeName=jsonObject1.getString("typeName");
@@ -290,6 +300,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
                         AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
                         asyncBitmapLoader.loadImage(getActivity(),img1,url);
                         list.add(img1);
+                        list_obj.add(company);
                         //给图片添加点击事件。跳转到公司信息界面
                         img1.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -301,16 +312,75 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
                         });
                     }
                     company.setList(list1);
-                //设置小圆点
+                    //设置小圆点
                     setSmallDot(list);
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     };
 
+    /**
+     * 链接公司项目的服务
+     */
+    public void connInterGetProject(){
+        String url = Url.url("/androidProject/list");
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
+                jsonObjectgetProjectListener,errorListener);
+        mQueue.add(jsonObjectRequest);
+    }
+    /**
+     * 获取项目成功的监听
+     */
+    private Response.Listener<JSONObject> jsonObjectgetProjectListener=new Response.Listener<JSONObject>(){
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                JSONArray jsonArray=jsonObject.getJSONArray("project_list");
+                int count=jsonArray.length();
+                for(int i=0;i<count;i++){
+                    final Project project=new Project();
+                    JSONObject jsonObject1= (JSONObject) jsonArray.get(i);
+                    String id=jsonObject1.getString("id");
+                    String projectName=jsonObject1.getString("projectName");
+                    String introduce=jsonObject1.getString("introduce");
+                    String imgurl=jsonObject1.getString("projectImg");
+                    project.setId(id);
+                    project.setIntroduce(introduce);
+                    project.setProjectName(projectName);
+                    project.setProjectImg(imgurl);
+                    String url=Url.url(imgurl);
+                    img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
+                    img1.setTag(url);
+                    AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+                    asyncBitmapLoader.loadImage(getActivity(),img1,url);
+                    list.add(img1);
+                    list_obj.add(project);
+                    //给图片添加点击事件。跳转到项目界面
+                    img1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            intent =new Intent(IndexFragment.this.getActivity(), ProjectActivity.class);
+                            intent.putExtra("project",project);
+                            startActivity(intent);
+                        }
+                    });
+                }
+                setSmallDot(list);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    /**
+     * 将公司图片和项目图片一起轮换
+     */
+    private void setComAndProImg(){
+
+        Toast.makeText(getActivity(),list.toString(),Toast.LENGTH_SHORT).show();
+
+    }
     /**
      * 设置种类名称
      */

@@ -62,14 +62,9 @@ public class getMarketConnection {
 
                     Product product=new Product();
                     product.setId(jsonObject1.getString("id"));
-                    product.setProdectName(jsonObject1.getString("prodectName"));
                     product.setPrice(jsonObject1.getDouble("price"));
-                    product.setDetail(jsonObject1.getString("detail"));
-                    product.setLineCoreType(jsonObject1.getString("lineCoreType"));
                     product.setSpecifications(jsonObject1.getString("specifications"));
-                    product.setModel(jsonObject1.getString("model"));
                     JSONObject jsonObject2=jsonObject1.getJSONObject("type");
-                    product.setTypeName((String) jsonObject2.get("typeName"));
                     JSONArray jsonArray1=jsonObject1.getJSONArray("productImages");
                     //有图片时加入到产品图片集合
                     if(jsonArray1.length()>0){

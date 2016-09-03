@@ -19,11 +19,6 @@ public class SpinnerListAdapter extends BaseAdapter {
     private Activity mActivity;
     private onItemClickListener mListener;
 
-//    public SpinnerListAdapter(MySpinner spinner, Activity activity, ArrayList<Object> arrayList){
-//        this.mActivity=activity;
-//        this.list=arrayList;
-//        this.mSpinner =spinner;
-//    }
     public SpinnerListAdapter(MySpinner spinner, Activity activity, List<String> list){
         this.mActivity=activity;
         this.list=list;

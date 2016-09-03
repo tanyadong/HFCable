@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by dell1 on 2016/8/2.
+ * Created by 谭亚东 on 2016/8/2.
  * 获取种类服务
  */
 public class ConnectionProduct {
@@ -57,19 +57,25 @@ public class ConnectionProduct {
             try {
                 List<Product> list=new ArrayList<>();
                 JSONArray jsonArray=jsonObject.getJSONArray("productList");
-                for(int i=0;i<jsonArray.length();i++){
+                int count=jsonArray.length();
+                for(int i=0;i<count;i++){
                     JSONObject jsonObject1=jsonArray.getJSONObject(i);
-
                     Product product=new Product();
                     product.setId(jsonObject1.getString("id"));
-                    product.setProdectName(jsonObject1.getString("prodectName"));
                     product.setPrice(jsonObject1.getDouble("price"));
-                    product.setDetail(jsonObject1.getString("detail"));
-                    product.setLineCoreType(jsonObject1.getString("lineCoreType"));
+                    product.setApplicationRange(jsonObject1.getString("applicationRange"));
                     product.setSpecifications(jsonObject1.getString("specifications"));
-                    product.setModel(jsonObject1.getString("model"));
-                    JSONObject jsonObject2=jsonObject1.getJSONObject("type");
-                    product.setTypeName((String) jsonObject2.get("typeName"));
+                    product.setConductorMaterial(jsonObject1.getString("conductorMaterial"));
+                    product.setCoreNumber(jsonObject1.getString("coreNumber"));
+                    product.setCrossSection(jsonObject1.getString("crossSection"));
+                    product.setImplementationStandards(jsonObject1.getString("implementationStandards"));
+                    product.setDiameterLimit(jsonObject1.getString("diameterLimit"));
+                    product.setOutsideDiameter(jsonObject1.getString("outsideDiameter"));
+                    product.setSheathMaterial(jsonObject1.getString("sheathMaterial"));
+                    product.setVoltage(jsonObject1.getString("voltage"));
+                    product.setReferenceWeight(jsonObject1.getString("referenceWeight"));
+                    product.setPurpose(jsonObject1.getString("purpose"));
+
                     JSONArray jsonArray1=jsonObject1.getJSONArray("productImages");
                     //有图片时加入到产品图片集合
                     if(jsonArray1.length()>0){
@@ -80,6 +86,7 @@ public class ConnectionProduct {
                         product.setProductImages(list1);
                     }
                     list.add(product);
+
                 }
                 MyAdapter adapter = new MyAdapter(context, R.layout.intentionlayout,list);
                 listView.setDivider(null);

@@ -7,6 +7,7 @@
     <solid android:color="@color/white"></solid>
     <!--stroke 边框宽度 及颜色-->
     <stroke android:color="#b6b2b2" android:width="1px"></stroke>
+
     <padding
         android:left="0dp"
         android:top="0dp"

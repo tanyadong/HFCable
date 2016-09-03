@@ -10,14 +10,25 @@ public class Product implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String id;
-	private String productName;
-	private String typeName;
-	private Double price;
-	private String specifications;
-	private String model;
-	private String lineCoreType;
-	private String detail;
-	private ArrayList<String> productImages;
+	private Double price;//价格
+	private String specifications;//规格
+
+	private TypeTwo typeTwo;//二级种类  型号
+	private String 	voltage; //电压
+	private String crossSection;//横截面
+	private String coreNumber; //芯数
+	private String purpose;//用途
+	private String applicationRange;//应用范围
+	private String outsideDiameter;//平均外径上线
+	private String diameterLimit;//外径下限
+	private String implementationStandards;//执行标准
+	private String conductorMaterial;//导体材质
+	private String sheathMaterial;//护套材质
+	private String referenceWeight;//参考重量
+//	private String length;//长度
+
+
+	private ArrayList<String> productImages=new ArrayList<String>();
 
 	// Constructors
 
@@ -26,15 +37,22 @@ public class Product implements java.io.Serializable {
 	}
 
 
-	public Product(String id, String productName, String typeName, Double price, String specifications, String model, String lineCoreType, String detail, ArrayList<String> productImages) {
+	public Product(String id, Double price, String specifications, TypeTwo typeTwo, String voltage, String crossSection, String coreNumber, String purpose, String applicationRange, String outsideDiameter, String diameterLimit, String implementationStandards, String conductorMaterial, String sheathMaterial, String referenceWeight, ArrayList<String> productImages) {
 		this.id = id;
-		this.productName = productName;
-		this.typeName = typeName;
 		this.price = price;
 		this.specifications = specifications;
-		this.model = model;
-		this.lineCoreType = lineCoreType;
-		this.detail = detail;
+		this.typeTwo = typeTwo;
+		this.voltage = voltage;
+		this.crossSection = crossSection;
+		this.coreNumber = coreNumber;
+		this.purpose = purpose;
+		this.applicationRange = applicationRange;
+		this.outsideDiameter = outsideDiameter;
+		this.diameterLimit = diameterLimit;
+		this.implementationStandards = implementationStandards;
+		this.conductorMaterial = conductorMaterial;
+		this.sheathMaterial = sheathMaterial;
+		this.referenceWeight = referenceWeight;
 		this.productImages = productImages;
 	}
 
@@ -46,23 +64,6 @@ public class Product implements java.io.Serializable {
 	}
 
 
-
-	public String getProdectName() {
-		return this.productName;
-	}
-
-	public void setProdectName(String prodectName) {
-		this.productName = prodectName;
-	}
-
-
-	public String getTypeName() {
-		return typeName;
-	}
-
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
-	}
 
 	public ArrayList<String> getProductImages() {
 		return productImages;
@@ -88,40 +89,121 @@ public class Product implements java.io.Serializable {
 		this.specifications = specifications;
 	}
 
-	public String getModel() {
-		return this.model;
+	public TypeTwo getTypeTwo() {
+		return typeTwo;
 	}
 
-	public void setModel(String model) {
-		this.model = model;
+	public void setTypeTwo(TypeTwo typeTwo) {
+		this.typeTwo = typeTwo;
 	}
 
-	public String getLineCoreType() {
-		return this.lineCoreType;
+	public String getVoltage() {
+		return voltage;
 	}
 
-	public void setLineCoreType(String lineCoreType) {
-		this.lineCoreType = lineCoreType;
+	public void setVoltage(String voltage) {
+		this.voltage = voltage;
 	}
 
-	public String getDetail() {
-		return detail;
+	public String getCrossSection() {
+		return crossSection;
 	}
 
-	public void setDetail(String detail) {
-		this.detail = detail;
+	public void setCrossSection(String crossSection) {
+		this.crossSection = crossSection;
+	}
+
+	public String getCoreNumber() {
+		return coreNumber;
+	}
+
+	public void setCoreNumber(String coreNumber) {
+		this.coreNumber = coreNumber;
+	}
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+
+	public String getApplicationRange() {
+		return applicationRange;
+	}
+
+	public void setApplicationRange(String applicationRange) {
+		this.applicationRange = applicationRange;
+	}
+
+	public String getOutsideDiameter() {
+		return outsideDiameter;
+	}
+
+	public void setOutsideDiameter(String outsideDiameter) {
+		this.outsideDiameter = outsideDiameter;
+	}
+
+	public String getDiameterLimit() {
+		return diameterLimit;
+	}
+
+	public void setDiameterLimit(String diameterLimit) {
+		this.diameterLimit = diameterLimit;
+	}
+
+	public String getImplementationStandards() {
+		return implementationStandards;
+	}
+
+	public void setImplementationStandards(String implementationStandards) {
+		this.implementationStandards = implementationStandards;
+	}
+
+	public String getConductorMaterial() {
+		return conductorMaterial;
+	}
+
+	public void setConductorMaterial(String conductorMaterial) {
+		this.conductorMaterial = conductorMaterial;
+	}
+
+	public String getSheathMaterial() {
+		return sheathMaterial;
+	}
+
+	public void setSheathMaterial(String sheathMaterial) {
+		this.sheathMaterial = sheathMaterial;
+	}
+
+	public String getReferenceWeight() {
+		return referenceWeight;
+	}
+
+	public void setReferenceWeight(String referenceWeight) {
+		this.referenceWeight = referenceWeight;
 	}
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", type=" + ", productName="
-				+ productName + ", price=" + price + ", specifications="
-				+ specifications + ", model=" + model + ", lineCoreType="
-				+ lineCoreType + ", detail=" + detail + ", productImages="
-				+ productImages + "]";
+		return "Product{" +
+				"id='" + id + '\'' +
+				", price=" + price +
+				", specifications='" + specifications + '\'' +
+				", typeTwo=" + typeTwo +
+				", voltage='" + voltage + '\'' +
+				", crossSection='" + crossSection + '\'' +
+				", coreNumber='" + coreNumber + '\'' +
+				", purpose='" + purpose + '\'' +
+				", applicationRange='" + applicationRange + '\'' +
+				", outsideDiameter='" + outsideDiameter + '\'' +
+				", diameterLimit='" + diameterLimit + '\'' +
+				", implementationStandards='" + implementationStandards + '\'' +
+				", conductorMaterial='" + conductorMaterial + '\'' +
+				", sheathMaterial='" + sheathMaterial + '\'' +
+				", referenceWeight='" + referenceWeight + '\'' +
+				", productImages=" + productImages +
+				'}';
 	}
-
-
-
-
 }

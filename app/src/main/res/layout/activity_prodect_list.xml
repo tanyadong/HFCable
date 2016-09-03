@@ -34,41 +34,38 @@
                 android:src="@mipmap/arrow_down"/>
         </LinearLayout>
 
-        <ImageView
-            android:src="@drawable/vertical_line"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <LinearLayout
-            android:id="@+id/prodectGeneral_spinner"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <TextView
-                android:id="@+id/prodectGeneral_textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/prodectType_textView"
-                android:layout_gravity="center"
-                android:src="@mipmap/arrow_down"/>
-        </LinearLayout>
+        <!--<ImageView-->
+            <!--android:src="@drawable/vertical_line"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+        <!--<LinearLayout-->
+            <!--android:id="@+id/prodectGeneral_spinner"-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--&gt;-->
+            <!--<TextView-->
+                <!--android:id="@+id/prodectGeneral_textView"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:singleLine="true"/>-->
+            <!--<ImageView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/prodectType_textView"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:src="@mipmap/arrow_down"/>-->
+        <!--</LinearLayout>-->
     </LinearLayout>
-    <LinearLayout
-
+    <ExpandableListView
+        android:id="@+id/prodectlist_listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ListView
-            android:id="@+id/prodectlist_listView"
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </ListView>
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:childIndicator="@null"
+        android:groupIndicator="@null" >
+    </ExpandableListView>
 
 </LinearLayout>

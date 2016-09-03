@@ -74,13 +74,20 @@
         <activity
             android:name=".activity.OrderPayActivity"
             android:label="@string/title_activity_order_pay"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.ReceiptAddressActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- 添加购物车 -->
+        <activity android:name=".activity.AddRecietAddress"></activity>
+        <!-- 画图 -->
+        <activity android:name=".activity.MarketChartActivity"></activity>
         <activity
             android:name=".activity.ReceiptAddressActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
@@ -96,7 +103,6 @@
             android:name=".activity.MarketChartActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.SplashActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -120,12 +126,6 @@
         <activity
             android:name=".activity.InputMyInfoActivity"
             android:label="@string/title_activity_input_my_info"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity
-            android:name=".activity.InputCompanyInfoActivity"
-            android:label="@string/title_activity_input_company_info"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

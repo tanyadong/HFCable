@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.GridView;
 
+import com.hbhongfei.hfcable.adapter.Product_Adapter;
+
 /**
  * 滑动冲突 
  */  
@@ -35,6 +37,8 @@ public class MyGridView extends GridView {
             return true;  
         }  
         return super.dispatchTouchEvent(ev);  
-    }  
-  
-}  
+    }
+
+    public void setOnItemClickListener(Product_Adapter.onItemClickListener onItemClickListener) {
+    }
+}
