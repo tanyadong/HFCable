@@ -93,6 +93,9 @@
 
         <activity android:name=".activity.CitySelect1Activity"></activity>
         <activity android:name=".activity.GuideActivity" />
+
+        <!--项目-->
+        <activity android:name=".activity.ProjectActivity"></activity>
         <activity
             android:name=".activity.ConfirmOrderActivity"
             android:theme="@style/AppTheme.NoActionBar"

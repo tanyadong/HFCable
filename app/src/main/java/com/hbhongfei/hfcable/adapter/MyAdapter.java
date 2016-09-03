@@ -96,7 +96,7 @@ public class MyAdapter extends BaseAdapter {
             vh.prodect_introduce1.setText(itemList.get(0).getSpecifications());
             vh.prodect_price1.setText(String.valueOf(itemList.get(0).getPrice()));
             //有图片时加载
-            if(itemList.get(0).getProductImages()!=null){
+            if(itemList.get(0).getProductImages().size()!=0){
                String url=Url.url(itemList.get(0).getProductImages().get(0));
             vh.prodect_imgView1.setTag(url);
             AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();

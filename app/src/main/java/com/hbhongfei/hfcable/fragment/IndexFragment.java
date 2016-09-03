@@ -112,14 +112,13 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
         connInter();
+        //加载“新型产品”模块数据
         setDate();
 //        setTypeValue();
         //连接获取公司的服务
         connInterGetCompanyInfo();
-        //获取公司近期项目的服务
-        connInterGetProject();
+
         onClick();
-        setComAndProImg();
         if (isAutoPlay) {
             startPlay();
         }
@@ -164,7 +163,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         //首页根据条件查询产品
         ConnectionProduct connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),listView);
         try {
-            connectionProduct.connInterByType("全部");
+            connectionProduct.connInterByType("是");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -275,7 +274,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
             JSONArray jsonArray;
             List<Company> company_list=new ArrayList<>();
             try {
-                jsonArray = jsonObject.getJSONArray("companyList");
+                    jsonArray = jsonObject.getJSONArray("companyList");
                     final Company company=new Company();
                     JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(0);
                     company.setLogo(jsonObject1.getString("logo"));
@@ -312,39 +311,17 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
                         });
                     }
                     company.setList(list1);
-                    //设置小圆点
-                    setSmallDot(list);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
 
-    /**
-     * 链接公司项目的服务
-     */
-    public void connInterGetProject(){
-        String url = Url.url("/androidProject/list");
-        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
-                jsonObjectgetProjectListener,errorListener);
-        mQueue.add(jsonObjectRequest);
-    }
-    /**
-     * 获取项目成功的监听
-     */
-    private Response.Listener<JSONObject> jsonObjectgetProjectListener=new Response.Listener<JSONObject>(){
-        @Override
-        public void onResponse(JSONObject jsonObject) {
-            try {
-                JSONArray jsonArray=jsonObject.getJSONArray("project_list");
-                int count=jsonArray.length();
+                    /*解析项目信息*/
+                JSONArray array_project=jsonObject.getJSONArray("project_list");
+                int count=array_project.length();
                 for(int i=0;i<count;i++){
                     final Project project=new Project();
-                    JSONObject jsonObject1= (JSONObject) jsonArray.get(i);
-                    String id=jsonObject1.getString("id");
-                    String projectName=jsonObject1.getString("projectName");
-                    String introduce=jsonObject1.getString("introduce");
-                    String imgurl=jsonObject1.getString("projectImg");
+                    JSONObject jsonObject_project= (JSONObject) array_project.get(i);
+                    String id=jsonObject_project.getString("id");
+                    String projectName=jsonObject_project.getString("projectName");
+                    String introduce=jsonObject_project.getString("introduce");
+                    String imgurl=jsonObject_project.getString("projectImg");
                     project.setId(id);
                     project.setIntroduce(introduce);
                     project.setProjectName(projectName);
@@ -366,21 +343,15 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
                         }
                     });
                 }
+                //设置小圆点
                 setSmallDot(list);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     };
 
-    /**
-     * 将公司图片和项目图片一起轮换
-     */
-    private void setComAndProImg(){
-
-        Toast.makeText(getActivity(),list.toString(),Toast.LENGTH_SHORT).show();
-
-    }
     /**
      * 设置种类名称
      */

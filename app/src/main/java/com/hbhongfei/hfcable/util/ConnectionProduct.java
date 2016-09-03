@@ -39,11 +39,11 @@ public class ConnectionProduct {
      * 连接服务
      * 根据种类查询产品
      * */
-    public void connInterByType(String typeName) throws JSONException {
+    public void connInterByType(String newProducts) throws JSONException {
         RequestQueue mQueue = Volley.newRequestQueue(context);
         String url = Url.url("/androidProduct/getProduct");
         Map<String,String> map=new HashMap<>();
-        map.put("typeName",typeName);
+        map.put("newProducts",newProducts);
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
         mQueue.add(normalPostRequest);
     }
@@ -94,7 +94,6 @@ public class ConnectionProduct {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
     };
 
