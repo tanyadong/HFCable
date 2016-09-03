@@ -21,11 +21,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter_myShopping;
-import com.hbhongfei.hfcable.entity.CablesInfo;
-import com.hbhongfei.hfcable.entity.TypeInfo;
+import com.hbhongfei.hfcable.pojo.Bean;
+import com.hbhongfei.hfcable.pojo.CablesInfo;
+import com.hbhongfei.hfcable.pojo.TypeInfo;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
@@ -35,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +64,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     private static final String USER = LoginConnection.USER;
     private Dialog dialog;
     private ArrayList<String> proIds = new ArrayList<>();
-    private ArrayList<Map<String,Object>> proInfos = new ArrayList<>();
+    private ArrayList<Map<String,Object>> proInfos;
+    private Map<String,String> packageMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,17 +111,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
      * 其键是组元素的Id(通常是一个唯一指定组元素身份的值)
      */
     private void initDatas() {
-        /*for (int i = 0; i < 3; i++) {
-            groups.add(new TypeInfo(i + "", "弘飞电缆的第" + (i + 1) + "个种类"));
-            List<CablesInfo> cablesInfos = new ArrayList<CablesInfo>();
-            for (int j = 0; j <= i; j++) {
-                int[] img = {R.mipmap.main_img1, R.mipmap.main_img2, R.mipmap.main_img3, R.mipmap.main_img4, R.mipmap.main_img1, R.mipmap.main_img2};
-                cablesInfos.add(new CablesInfo(j + "", "电缆"+(j+1), groups.get(i)
-                        .getName() + "的第" + (j + 1) + "个电缆","红色","大号", 12.00 + new Random().nextInt(23), new Random().nextInt(5) + 1, img[i * j]));
-            }
-            children.put(groups.get(i).getId(), cablesInfos);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
-        }*/
-
+        shaftConnInter();
         connInter();
 
     }
@@ -163,7 +157,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             JSONObject product= (JSONObject) products.opt(j);
                             int quantity = product.getInt("quantity");
                             String color = product.getString("color");
-                            String specifications = product.getString("specifications");
+                            String specifications = product.getString("packages");//包装
                             String id = product.getString("id");
 
                         /**************产品信息*****************/
@@ -172,16 +166,15 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             String detail = productInfo.getString("detail");//简介
                             Double price = productInfo.getDouble("price");//价格
                             JSONArray images = productInfo.getJSONArray("productImages");
-                            String image = (String) images.get(0);
+                            String image = (String) images.get(0);//存在问题
                             if (image==null){
                                 image = "/images/b3043ec169634ba5a7d2631200723a67.jpeg";
                             }
                             cablesInfos.add(new CablesInfo(id, productName, detail,color,specifications,price, quantity,image));
                         }
                         children.put(groups.get(i).getId(), cablesInfos);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
-                        Toast.makeText(getApplicationContext(),cablesInfos.toString(),Toast.LENGTH_SHORT).show();
                     }
-                    selva = new MyAdapter_myShopping(groups, children, MyShoppingActivity.this);
+                    selva = new MyAdapter_myShopping(groups, children, MyShoppingActivity.this,packageMap);
                     selva.setCheckInterface( MyShoppingActivity.this);// 关键步骤1,设置复选框接口
                     selva.setModifyCountInterface( MyShoppingActivity.this);// 关键步骤2,设置数量增减接口
                     selva.setmListener( MyShoppingActivity.this);//设置监听器接口
@@ -213,7 +206,38 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         }
     };
 
+    /**
+     * 获取产品种类服务
+     */
+    public void shaftConnInter() {
+        String url = Url.url("/androidShaft/list");
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                shaftjsonObjectListener, errorListener);
+        RequestQueue mQueue = Volley.newRequestQueue(this.context);
+        mQueue.add(jsonObjectRequest);
+    }
 
+    /**
+     * 成功的监听器
+     */
+    private Response.Listener<JSONObject> shaftjsonObjectListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            JSONArray jsonArray;
+            packageMap = new HashMap<>();
+            try {
+                jsonArray = jsonObject.getJSONArray("list");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
+                    String shaftName = jsonObject1.getString("shaftName");
+                    String shaftPrice = jsonObject1.getString("shaftPrice");
+                    packageMap.put(shaftName,shaftPrice);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
 
 
@@ -451,6 +475,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     private void calculate() {
         totalCount = 0;
         totalPrice = 0.00;
+        proInfos = new ArrayList<>();
         for (int i = 0; i < groups.size(); i++) {
             TypeInfo group = groups.get(i);
             List<CablesInfo> childs = children.get(group.getId());
@@ -463,8 +488,19 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                     map.put("introduce",cable.getIntroduce());
                     map.put("product_price",cable.getPrice());
                     map.put("product_num",cable.getCount());
+                    map.put("product_package",cable.getSpecifications());
+                    map.put("product_iamge",cable.getGoodsImg());
                     proInfos.add(map);
-                    totalPrice += cable.getPrice() * cable.getCount();
+                    if (cable.getSpecifications().equals("10米")){
+                        //10米价格增长
+                        totalPrice += cable.getPrice() * cable.getCount();//价格
+                    }else if(cable.getSpecifications().equals("1盘")) {
+                        totalPrice+=cable.getPrice()*10*cable.getCount();
+                    }else{
+                        String s = packageMap.get(cable.getSpecifications());
+                        String packagePrice = s.substring(0, s.indexOf("."));
+                        totalPrice +=(Integer.valueOf(cable.getSpecifications())/10*cable.getPrice()+Integer.valueOf(packagePrice))*cable.getCount();
+                    }
                 }
             }
         }
@@ -532,6 +568,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             public void onClick(SweetAlertDialog sDialog) {
                                 Intent intent = new Intent(MyShoppingActivity.this,ConfirmOrderActivity.class);
                                 intent.putExtra("proInfos",proInfos);
+                                intent.putExtra("map", (Serializable) packageMap);
                                 intent.putExtra("price",totalPrice);
                                 startActivity(intent);
                                 sDialog.dismissWithAnimation();

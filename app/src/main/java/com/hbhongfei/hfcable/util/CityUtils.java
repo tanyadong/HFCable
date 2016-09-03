@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.hbhongfei.hfcable.entity.MyRegion;
+import com.hbhongfei.hfcable.pojo.MyRegion;
 
 import java.util.ArrayList;
 

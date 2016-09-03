@@ -75,7 +75,7 @@ public class ConnectionProduct {
                     if(jsonArray1.length()>0){
                         ArrayList<String> list1=new ArrayList<>();
                         for(int j=0;j<jsonArray1.length();j++){
-                            list1.add((String) jsonArray1.get(i));
+                            list1.add((String) jsonArray1.get(j));
                         }
                         product.setProductImages(list1);
                     }

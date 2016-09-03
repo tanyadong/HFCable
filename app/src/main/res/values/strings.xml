@@ -51,8 +51,9 @@
     <string name="prodect_collect">收藏</string>
     <string name="prodect_shoppingCat">购物车</string>
     <string name="product_selectColor">请选择规格,颜色分类</string>
-    <string name="product_specifications">规格</string>
+    <string name="product_specifications">包装方式</string>
     <string name="product_color">颜色</string>
+    <string name="product_warnning">包装方式如需轴，请联系厂家</string>
     <!--mine-->
     <string name="mine_myInfo">个人资料</string>
     <string name="mine_shopping">购物车</string>
@@ -99,7 +100,7 @@
     <string name="item_shopcart_group_edit">编辑</string>
     <string name="myShopping_noyunfei">不含运费</string>
     <string name="myShopping_color">颜色：</string>
-    <string name="myShopping_specifications">规格：</string>
+    <string name="myShopping_specifications">单位：</string>
 
 
     <!--shoppingCart_empty-->
@@ -173,6 +174,7 @@
 
 
     <!--comfirm_order-->
+    <string name="comfirm_order_sure">确认订单</string>
     <string name="comfirm_order_shouhuo">收货人：</string>
     <string name="comfirm_order_location">收获地址：</string>
 

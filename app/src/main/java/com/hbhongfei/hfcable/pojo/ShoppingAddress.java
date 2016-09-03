@@ -1,4 +1,4 @@
-package com.hbhongfei.hfcable.entity;
+package com.hbhongfei.hfcable.pojo;
 
 import java.io.Serializable;
 

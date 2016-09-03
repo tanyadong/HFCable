@@ -116,7 +116,7 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
                 childPosition).getAveragePrice());
         itemHolder.market_fallorise.setText(item_list.get(groupPosition).get(
                 childPosition).getFallOrise());
-        if(Integer.parseInt(item_list.get(groupPosition).get(
+        if(Float.parseFloat(item_list.get(groupPosition).get(
                 childPosition).getFallOrise())>0){
             itemHolder.market_fallorise.setTextColor(context.getResources().getColor(R.color.colorRed));
         }else{

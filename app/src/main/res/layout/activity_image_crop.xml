@@ -8,26 +8,37 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:background="@color/colorRed">
-
-        <TextView
-            android:id="@+id/back"
+        android:orientation="horizontal">
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
+            android:layout_height="50dp"
             android:layout_weight="1"
-            android:text="@string/image_crop_cancel"
-            android:textColor="@color/colorBalck" />
+            android:gravity="center"
+            android:background="@color/colorGray">
+            <TextView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/image_crop_cancel"
+                android:textColor="@color/colorBalck" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/sure"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
+            android:layout_height="50dp"
             android:layout_weight="1"
-            android:text="@string/image_crop_sure"
-            android:textColor="@color/colorBalck"/>
+            android:gravity="center"
+            android:background="@color/colorRed">
+            <TextView
+                android:id="@+id/sure"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/image_crop_sure"
+                android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+
     </LinearLayout>
     <com.hbhongfei.hfcable.util.CropImageView
         android:id="@+id/cropimageview"

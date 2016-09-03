@@ -23,8 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.entity.City;
-import com.hbhongfei.hfcable.entity.MyRegion;
+import com.hbhongfei.hfcable.pojo.City;
+import com.hbhongfei.hfcable.pojo.MyRegion;
 import com.hbhongfei.hfcable.util.CityUtils;
 
 import java.util.ArrayList;

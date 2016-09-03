@@ -282,14 +282,6 @@ public class MainActivity extends AppCompatActivity
             drawable = MainActivity.this.getResources().getDrawable(R.mipmap.man);
             head.setImageDrawable(drawable);
         }
-        /*if (tag==0){
-            String url = Url.url(S_head);
-            head.setTag(url);
-            asyncBitmapLoader = new AsyncBitmapLoader();
-            asyncBitmapLoader.loadImage(this,head,url);
-        }else{
-            head.setImageBitmap(b);
-        }*/
     }
 
     /**

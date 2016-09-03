@@ -1,4 +1,4 @@
-package com.hbhongfei.hfcable.entity;
+package com.hbhongfei.hfcable.pojo;
 
 /**
  * Created by dell1 on 2016/8/11.

@@ -19,7 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.AddRecietAddress;
-import com.hbhongfei.hfcable.entity.ShoppingAddress;
+import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.ShoppingAddress_conn;
 import com.hbhongfei.hfcable.util.Url;

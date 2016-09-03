@@ -63,30 +63,6 @@ public class SkuAdapter extends BaseAdapter {
         } else {  
             holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象  
         }
-//        if(selectedPosition==position){
-////            list.get(position).setStates("0");
-//            switch (list.get(position).getStates()) {
-//                // 选中
-//                case "0":
-//                    holder.layout.setBackgroundResource(R.drawable.shape2);
-//                    holder.title.setTextColor(Color.WHITE);
-//                    break;
-//                // 未选中
-//                case "1":
-//                    holder.layout.setBackgroundResource(R.drawable.shape1);
-//                    holder.title.setTextColor(Color.BLACK);
-//                    break;
-//                // 不可选
-//                case "2":
-//                    holder.layout.setBackgroundResource(R.drawable.shape1);
-//                    holder.title.setTextColor(Color.parseColor("#999999"));
-//                    break;
-//                default:
-//                    break;
-//
-//            }
-//
-//        }
             final Bean bean = list.get(position);
 
             switch (bean.getStates()) {
@@ -113,8 +89,7 @@ public class SkuAdapter extends BaseAdapter {
         holder.title.setText(bean.getName());  
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override  
-            public void onClick(View v) {  
-                // TODO Auto-generated method stub  
+            public void onClick(View v) {
                 if (itemClickListener != null) {  
                     if(!bean.getStates().equals("2")){  
                         itemClickListener.onItemClick(bean, position);  

@@ -1,39 +1,26 @@
 package com.hbhongfei.hfcable.adapter;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Build;
-import android.support.v7.app.AlertDialog;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.StrikethroughSpan;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.activity.MyShoppingActivity;
-import com.hbhongfei.hfcable.entity.CablesInfo;
-import com.hbhongfei.hfcable.entity.TypeInfo;
+import com.hbhongfei.hfcable.pojo.CablesInfo;
+import com.hbhongfei.hfcable.pojo.TypeInfo;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Url;
-import com.iflytek.voiceads.IFLYAdListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -50,6 +37,7 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
     private ModifyCountInterface modifyCountInterface;
     public  int flag = 0;
     private GroupEdtorListener mListener;
+    private Map<String,String> map;
 
     public GroupEdtorListener getmListener() {
         return mListener;
@@ -66,10 +54,11 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
      * @param children 子元素列表
      * @param context
      */
-    public MyAdapter_myShopping(List<TypeInfo> groups, Map<String, List<CablesInfo>> children, Context context) {
+    public MyAdapter_myShopping(List<TypeInfo> groups, Map<String, List<CablesInfo>> children, Context context,Map<String,String> map) {
         this.groups = groups;
         this.children = children;
         this.context = context;
+        this.map = map;
     }
 
     public void setCheckInterface(CheckInterface checkInterface) {
@@ -161,10 +150,12 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
             cholder.cb_check = (CheckBox) convertView.findViewById(R.id.check_box);
             cholder.tv_product_name = (TextView) convertView.findViewById(R.id.tv_name);
             cholder.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
+            cholder.tv_package = (TextView) convertView.findViewById(R.id.tv_package);
             cholder.iv_increase = (TextView) convertView.findViewById(R.id.tv_add);
             cholder.iv_decrease = (TextView) convertView.findViewById(R.id.tv_reduce);
             cholder.tv_count = (TextView) convertView.findViewById(R.id.tv_num);
             cholder.rl_no_edtor = (RelativeLayout) convertView.findViewById(R.id.rl_no_edtor);
+
 
             cholder.tv_introduce = (TextView) convertView.findViewById(R.id.tv_introduce);
             cholder.tv_buy_num = (TextView) convertView.findViewById(R.id.tv_buy_num);
@@ -188,12 +179,38 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
         final CablesInfo cablesInfo = (CablesInfo) getChild(groupPosition, childPosition);
         if (cablesInfo != null) {
             cholder.tv_product_name.setText(cablesInfo.getName());
-            cholder.tv_price.setText("￥" + cablesInfo.getPrice() + "");
+            cholder.tv_price.setText("￥" + cablesInfo.getPrice());
+            if (cablesInfo.getSpecifications().equals("1盘")){
+                //盘的单价
+                cholder.tv_price.setText("￥" + cablesInfo.getPrice()*10);
+                cholder.tv_package.setText("单位:100米/盘");
+            }else if (cablesInfo.getSpecifications().equals("10米")){
+                //10米的单价
+                cholder.tv_price.setText("￥" + cablesInfo.getPrice());
+                cholder.tv_package.setText("单位:10米");
+            }else{
+                String s = map.get(cablesInfo.getSpecifications());
+                String packagePrice = s.substring(0, s.indexOf("."));
+                cholder.tv_price.setText("￥" + (Integer.valueOf(cablesInfo.getSpecifications())/10*cablesInfo.getPrice()+Integer.valueOf(packagePrice)));
+                cholder.tv_package.setText("单位:"+cablesInfo.getSpecifications()+"米/轴");
+            }
             cholder.tv_count.setText(cablesInfo.getCount() + "");
+
+            //加载图片
+            String url = Url.url(cablesInfo.getGoodsImg());
+            Glide.with(context)
+                    .load(url)
+                    .placeholder(R.mipmap.man)
+                    .error(R.mipmap.man)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(cholder.iv_adapter_list_pic);
+/*
+
             String url = Url.url(cablesInfo.getGoodsImg());
             cholder.iv_adapter_list_pic.setTag(url);
             AsyncBitmapLoader asyncBitmapLoader = new AsyncBitmapLoader();
             asyncBitmapLoader.loadImage(context,cholder.iv_adapter_list_pic,url);
+*/
 
 //            cholder.iv_adapter_list_pic.setImageResource(cablesInfo.getGoodsImg());//设置头像
             cholder.tv_introduce.setText(cablesInfo.getIntroduce());
@@ -286,6 +303,7 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
         TextView tv_goods_delete;
         TextView tv_color;//颜色
         TextView tv_specifications;//规格
+        TextView tv_package;//包装方式
     }
 
     /**

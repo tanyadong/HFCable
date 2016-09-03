@@ -12,7 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.adapter.Address_all_Adapter;
-import com.hbhongfei.hfcable.entity.ShoppingAddress;
+import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by dell1 on 2016/8/22.
  */
 public class MarketInfo implements Serializable{
-    private String area;//市场地区
+    private String area;//市场地
     private String productName;
     private String averagePrice;//均价
     private String fallOrise;//跌涨

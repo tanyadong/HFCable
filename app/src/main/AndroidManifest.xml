@@ -85,10 +85,13 @@
             android:name=".activity.ReceiptAddressActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".activity.AddRecietAddress"></activity>
+        <activity android:name=".activity.CitySelect1Activity"></activity>
         <activity android:name=".activity.GuideActivity" />
         <activity
             android:name=".activity.ConfirmOrderActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/comfirm_order_sure"
+            android:parentActivityName=".activity.MyShoppingActivity" />
         <activity
             android:name=".activity.MarketChartActivity"
             android:theme="@style/AppTheme.NoActionBar" />

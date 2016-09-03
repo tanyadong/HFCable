@@ -41,4 +41,5 @@ dependencies {
     compile files('libs/mpchartlib.jar')
     compile files('libs/nineoldandroids-2.4.0.jar')
     compile files('libs/mpandroidchartlibrary-1-7-4.jar')
+    compile files('libs/glide-3.6.1.jar')
 }

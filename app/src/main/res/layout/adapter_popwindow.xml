@@ -30,17 +30,22 @@
                     android:layout_weight="1"
                     android:textColor="#000"
                     android:textSize="20sp" />
-
                 <TextView
                     android:id="@+id/tv_sku"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:layout_weight="1"
-
                     android:text="@string/product_selectColor"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tv_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"  />
                 <!--库存数量-->
                 <!--<TextView-->
                     <!--android:id="@+id/tv_sku_stock"-->
@@ -83,6 +88,7 @@
                     android:orientation="vertical"
                     android:padding="12dp" >
 
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -102,6 +108,13 @@
                         android:padding="5dp"
                         android:scrollbars="none"
                         android:verticalSpacing="10dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:textColor="@color/gray"
+                        android:text="@string/product_warnning"/>
+
                 </LinearLayout>
 
                 <ImageView
@@ -140,6 +153,7 @@
                     android:layout_height="1dp"
                     android:background="#e0e0e0" />
                 <LinearLayout
+                    android:id="@+id/Layout_add"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"

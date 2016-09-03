@@ -28,9 +28,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
@@ -41,10 +43,12 @@ import com.hbhongfei.hfcable.pojo.SkuItme;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.CallTel;
 import com.hbhongfei.hfcable.util.DataUtil;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,49 +62,55 @@ import java.util.concurrent.TimeUnit;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class ProdectInfoActivity extends AppCompatActivity implements View.OnClickListener,PopupWindow.OnDismissListener {
+public class ProdectInfoActivity extends AppCompatActivity implements View.OnClickListener, PopupWindow.OnDismissListener {
     private LayoutInflater inflater;
     private ImageView img1;
     private ViewPager mviewPager;
-    private LinearLayout prodectList_LLayout_phone, prodectList_LLayout_collect, prodectList_LLayout_shoppingCat;
+    private LinearLayout prodectList_LLayout_phone, prodectList_LLayout_collect, prodectList_LLayout_shoppingCat,Layout_add;
     private TextView prodectInto_simpleDeclaration, prodectInfo_price,
-            prodectInfo_intro, prodectInfo_specifications, prodectInfo_model, prodectInfo_coreType,
-            prodectInfo_type, prodectInfo_detail;
+            prodectInfo_intro, prodectInfo_package, prodectInfo_model, prodectInfo_coreType,
+            prodectInfo_type, prodectInfo_detail,prodectInfo_last_price;
     private TextView prodect_addCart;
     private RelativeLayout selectSpec_layout;
     private LinearLayout all_choice_layout, prodect_bottom;
     private View mGrayLayout;
-    private boolean isPopWindowShowing=false;
+    private boolean isPopWindowShowing = false;
     LinearLayout layout;
     private int mnSeclectItem = 0;
     private ArrayList<String> mArrayList = new ArrayList<String>();
     private Product product;
-//    popwindow弹框
-    private TextView prodectInfo_s,prodectInfo_s1,prodectInfo_s2;
+    //    popwindow弹框
+    private TextView prodectInfo_s, prodectInfo_s1, prodectInfo_s2;
     String color;//
-    String specifications;//规格
+    String packages;//包装方式
     List<SkuItme> mList;// sku数据
 
     List<Bean> mColorList;// 颜色列表
-    List<Bean> mSpecificationsList;// 尺码列表
+    List<Bean> mPackageList;// 尺码列表
 
     GridView gvColor;// 颜色
-    GridView gvSpecifications;// 规格
+    GridView gvPackage;// 规格
     SkuAdapter skuColorAdapter;// 颜色适配器
-    SkuAdapter skuSpecificationsAdapter;// 规格适配器
+    SkuAdapter skuPackageAdapter;// 规格适配器
     TextView tvSkuName;// 显示sku
     TextView tv_name;// 显示库存
-    ImageView pop_del,iv_pic,prodectList_img_collect;//关闭图片
+    ImageView pop_del, iv_pic, prodectList_img_collect;//关闭图片
     Button btn_sure;//确定按钮
-    TextView pop_add,pop_reduce,pop_num;
+    TextView pop_add, pop_reduce, pop_num;
     TextView prodectList_tview_collect;
-    private final int ADDORREDUCE=1;
-    boolean isAddCart=false;
-    int color_position=0;
-    int spec_position=0;
-    boolean isFirst=true;
+    private final int ADDORREDUCE = 1;
+    boolean isAddCart = false;
+    int color_position = 0;
+    int spec_position = 0;
+    boolean isFirst = true;
     String S_phoneNumber;
     private static final String USER = LoginConnection.USER;
+    private Dialog dialog;
+    private List<String> package_list;
+    private List<Double> package_list_num;
+    private List<String> package_list_price;
+    private Double D_price,D_beforePrice,D_tagPrice;
+    private int Tag=0;
 
     RequestQueue mQueue;
     /**
@@ -139,6 +149,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         }
 
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,11 +159,16 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         initVIew();
         setDate();
         click();
-//        setDate();
         if (isAutoPlay) {
             startPlay();
         }
     }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
     /**
      * 展示toolbar
      */
@@ -161,7 +177,9 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
+
     public void initVIew() {
+        dialog = new Dialog(this);
         inflater = LayoutInflater.from(this);
         mviewPager = (ViewPager) findViewById(R.id.myviewPager);
         dotLayout = (LinearLayout) findViewById(R.id.dotLayout);
@@ -177,17 +195,17 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodectInfo_intro = (TextView) findViewById(R.id.prodectInfo_intro_textView);
         prodectInfo_model = (TextView) findViewById(R.id.prodectInfo_model_textview);
         prodectInfo_price = (TextView) findViewById(R.id.prodectInfo_price_textView);
-        prodectInfo_specifications = (TextView) findViewById(R.id.prodectInfo_specifications);
+        prodectInfo_package = (TextView) findViewById(R.id.prodectInfo_specifications);
         prodectInfo_type = (TextView) findViewById(R.id.prodectInfo_type_textView);
         prodectInto_simpleDeclaration = (TextView) findViewById(R.id.prodectInto_simpleDeclaration_tview);
         selectSpec_layout = (RelativeLayout) findViewById(R.id.selectSpec_layout);//选择颜色规格
         prodect_bottom = (LinearLayout) findViewById(R.id.prodect_bottom);
-        prodectList_img_collect= (ImageView) findViewById(R.id.prodectList_img_collect);
-        prodectList_tview_collect= (TextView) findViewById(R.id.prodectList_tview_collect);
+        prodectList_img_collect = (ImageView) findViewById(R.id.prodectList_img_collect);
+        prodectList_tview_collect = (TextView) findViewById(R.id.prodectList_tview_collect);
         //选择规格和颜色
-        prodectInfo_s= (TextView) findViewById(R.id.prodectInfo_s);
-        prodectInfo_s1= (TextView) findViewById(R.id.prodectInfo_s1);
-        prodectInfo_s2= (TextView) findViewById(R.id.prodectInfo_s2);
+        prodectInfo_s = (TextView) findViewById(R.id.prodectInfo_s);
+        prodectInfo_s1 = (TextView) findViewById(R.id.prodectInfo_s1);
+        prodectInfo_s2 = (TextView) findViewById(R.id.prodectInfo_s2);
 
         //初始化对话框
 //        popWindow = new BabyPopWindow(ProdectInfoActivity.this);
@@ -197,8 +215,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
      * 设置数据
      */
     public void setDate() {
-        SharedPreferences spf =getSharedPreferences(USER, Context.MODE_PRIVATE);
-        S_phoneNumber = spf.getString("phoneNumber","");
+        SharedPreferences spf = getSharedPreferences(USER, Context.MODE_PRIVATE);
+        S_phoneNumber = spf.getString("phoneNumber", "");
         list = new ArrayList<ImageView>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
@@ -207,19 +225,20 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         product = (Product) intent.getSerializableExtra("product");
         prodectInfo_detail.setText(product.getDetail());
         prodectInfo_coreType.setText(product.getLineCoreType());
+        D_beforePrice = product.getPrice();
         prodectInfo_price.setText(String.valueOf(product.getPrice()));
         prodectInfo_model.setText(product.getModel());
         prodectInfo_type.setText(product.getTypeName());
         prodectInto_simpleDeclaration.setText(product.getProdectName());//产品名称
         //产品图片
-        if(product.getProductImages()!=null){
-            for (String s:product.getProductImages()){
+        if (product.getProductImages() != null) {
+            for (String s : product.getProductImages()) {
                 //获取图片并显示
-                String url= Url.url(s);
+                String url = Url.url(s);
                 img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
                 img1.setTag(url);
-                AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-                asyncBitmapLoader.loadImage(this,img1,url);
+                AsyncBitmapLoader asyncBitmapLoader = new AsyncBitmapLoader();
+                asyncBitmapLoader.loadImage(this, img1, url);
                 list.add(img1);
                 //给图片添加点击事件。查看大图
                 img1.setOnClickListener(new View.OnClickListener() {
@@ -229,13 +248,13 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                         Intent intent = new Intent(ProdectInfoActivity.this,
                                 ShowBigPictrue.class);
                         intent.putExtra("position", position1);
-                        intent.putStringArrayListExtra("image_List",product.getProductImages());
+                        intent.putStringArrayListExtra("image_List", product.getProductImages());
                         startActivity(intent);
                     }
                 });
             }
             setSmallDot(list);
-        }else {
+        } else {
             img1.setImageResource(R.mipmap.main_img1);
         }
         //设置收藏
@@ -245,9 +264,10 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 设置小圆点
+     *
      * @param list
      */
-    public void setSmallDot(List<ImageView>list){
+    public void setSmallDot(List<ImageView> list) {
         //加入小圆点
         for (int i = 0; i < list.size(); i++) {
             ImageView indicator = new ImageView(this);
@@ -285,94 +305,94 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodectList_LLayout_shoppingCat.setOnClickListener(this);
         prodect_addCart.setOnClickListener(this);
         selectSpec_layout.setOnClickListener(this);
-
-
     }
 
     /**
      * 跳转到登录界面
+     *
      * @param
      */
-    private void toLogin(){
-        Intent intent=new Intent(this,LoginActivity.class);
+    private void toLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
-
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             //拨打电话
             case R.id.prodectList_LLayout_phone:
                 SharedPreferences settings = getSharedPreferences("SAVE_PHONE", Activity.MODE_PRIVATE);
-                final String phone=settings.getString("phoneNum","");
+                final String phone = settings.getString("phoneNum", "");
                 //打电话对话框
                 new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("确定要拨打电话？")
-                            .setContentText(phone)
-                            .setConfirmText("确认")
-                            .showCancelButton(true)
-                            .setCancelText("取消")
-                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismiss();
-                                }
-                            })
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    CallTel callTel = new CallTel(ProdectInfoActivity.this);
-                                    callTel.call(phone);
-                                    sDialog.dismiss();
-                                }
-                            })
-                            .show();
+                        .setTitleText("确定要拨打电话？")
+                        .setContentText(phone)
+                        .setConfirmText("确认")
+                        .showCancelButton(true)
+                        .setCancelText("取消")
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                CallTel callTel = new CallTel(ProdectInfoActivity.this);
+                                callTel.call(phone);
+                                sDialog.dismiss();
+                            }
+                        })
+                        .show();
                 break;
             //添加收藏
             case R.id.prodectList_LLayout_collect:
                 //收藏服务
-                if(!TextUtils.isEmpty(S_phoneNumber)) {
+                if (!TextUtils.isEmpty(S_phoneNumber)) {
                     collectionCollect();
-                }else{
+                } else {
                     toLogin();
                 }
                 break;
             //购物车
             case R.id.prodectList_LLayout_shoppingCat:
-                Intent intent=new Intent(this,MyShoppingActivity.class);
+                Intent intent = new Intent(this, MyShoppingActivity.class);
                 startActivity(intent);
                 break;
             //添加购物车
             case R.id.prodect_addCart:
-                if(!TextUtils.isEmpty(S_phoneNumber)) {
-                    if(!TextUtils.isEmpty(color) && !TextUtils.isEmpty(specifications)){
+                if (!TextUtils.isEmpty(S_phoneNumber)) {
+                    if (!TextUtils.isEmpty(color) && !TextUtils.isEmpty(packages)) {
                         //添加到购物车
                         addShoppingCartCoon();
-                    }else{
-                        isAddCart=true;
+                    } else {
+                        isAddCart = true;
                         showPopwindow();
                     }
-                }else{
+                } else {
                     toLogin();
-                 }
+                }
                 break;
             //弹出框中的添加数量
             case R.id.pop_add:
                 if (!pop_num.getText().toString().equals("750")) {
-                    String num_add=Integer.valueOf(pop_num.getText().toString())+ADDORREDUCE+"";
+                    String num_add = Integer.valueOf(pop_num.getText().toString()) + ADDORREDUCE + "";
+                    D_price+=D_tagPrice;
+                    prodectInfo_last_price.setText("金额:"+D_price);
                     pop_num.setText(num_add);
-                }else {
+                } else {
                     Toast.makeText(this, "不能超过最大产品数量", Toast.LENGTH_SHORT).show();
                 }
                 break;
             //弹出框中的减少数量
             case R.id.pop_reduce:
                 if (!pop_num.getText().toString().equals("1")) {
-                    String num_reduce=Integer.valueOf(pop_num.getText().toString())-ADDORREDUCE+"";
+                    String num_reduce = Integer.valueOf(pop_num.getText().toString()) - ADDORREDUCE + "";
                     pop_num.setText(num_reduce);
-                }else {
+                    D_price-=D_tagPrice;
+                    prodectInfo_last_price.setText("金额:"+D_price);
+                } else {
                     Toast.makeText(this, "购买数量不能低于1件", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -384,45 +404,46 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             //弹出框中的删除按钮
             case R.id.pop_del:
                 showColorandSpec();
-//                popWindow.dismiss();
+                D_tagPrice=null;
                 dismiss();
                 break;
             //弹出框的确定按钮
             case R.id.btn_sure:
-                if(!TextUtils.isEmpty(S_phoneNumber)) {
+                if (!TextUtils.isEmpty(S_phoneNumber)) {
                     if (TextUtils.isEmpty(color)) {
                         Toast.makeText(this, "亲，你还没有选择颜色哟~", Toast.LENGTH_SHORT).show();
-                    }else if (TextUtils.isEmpty(specifications)) {
-                        Toast.makeText(this, "亲，你还没有选择规格哟~",Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else if (TextUtils.isEmpty(packages)) {
+                        Toast.makeText(this, "亲，你还没有选择包装方式哟~", Toast.LENGTH_SHORT).show();
+                    } else {
                         showColorandSpec();
-                        if (isAddCart){
+                        if (isAddCart) {
                             //添加到购物车服务
                             addShoppingCartCoon();
                             dismiss();
-                            isAddCart=false;
+                            isAddCart = false;
                         }
                         dismiss();
                     }
-                }else{
+                } else {
                     toLogin();
                 }
 
                 break;
         }
     }
+
     /**
-     *添加购物车服务
+     * 添加购物车服务
      */
-    private void  addShoppingCartCoon(){
+    private void addShoppingCartCoon() {
         String url = Url.url("/androidShoppingCart/sava");
-        Map<String,String> map=new HashMap<>();
-        map.put("productId",product.getId());
-        map.put("color",color);
-        map.put("specifications",specifications);
-        map.put("quantity",pop_num.getText().toString());
-        map.put("userName",S_phoneNumber);
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectAddShoppingListener,errorListener,map);
+        Map<String, String> map = new HashMap<>();
+        map.put("productId", product.getId());
+        map.put("color", color);
+        map.put("packages", packages);
+        map.put("quantity", pop_num.getText().toString());
+        map.put("userName", S_phoneNumber);
+        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectAddShoppingListener, errorListener, map);
         mQueue.add(normalPostRequest);
     }
 
@@ -430,14 +451,15 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     /**
      * 添加收藏服务
      */
-    private void  collectionCollect(){
+    private void collectionCollect() {
         String url = Url.url("/androidCollecton/sava");
-        Map<String,String> map=new HashMap<>();
-        map.put("productId",product.getId());
-        map.put("userName",S_phoneNumber);
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectCollectionListener,errorListener,map);
+        Map<String, String> map = new HashMap<>();
+        map.put("productId", product.getId());
+        map.put("userName", S_phoneNumber);
+        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectCollectionListener, errorListener, map);
         mQueue.add(normalPostRequest);
     }
+
     /**
      * 添加购物车成功的监听器
      * 返回的添加购物车的状态信息
@@ -447,12 +469,12 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         public void onResponse(JSONObject jsonObject) {
             try {
                 String msg = jsonObject.getString("msg");
-                if(TextUtils.equals(msg,"成功")){
-                    new SweetAlertDialog(ProdectInfoActivity.this,SweetAlertDialog.SUCCESS_TYPE)
+                if (TextUtils.equals(msg, "成功")) {
+                    new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.SUCCESS_TYPE)
                             .setTitleText("添加购物车成功")
                             .show();
-                }else{
-                    new SweetAlertDialog(ProdectInfoActivity.this,SweetAlertDialog.ERROR_TYPE)
+                } else {
+                    new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("添加购物车失败")
                             .show();
                 }
@@ -472,23 +494,22 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         public void onResponse(JSONObject jsonObject) {
             try {
                 String msg = jsonObject.getString("msg");
-                if(TextUtils.equals(msg, "收藏成功")){
+                if (TextUtils.equals(msg, "收藏成功")) {
                     prodectList_img_collect.setImageResource(R.mipmap.heart_red);
                     prodectList_tview_collect.setText("已收藏");
-                    new SweetAlertDialog(ProdectInfoActivity.this,SweetAlertDialog.SUCCESS_TYPE)
+                    new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.SUCCESS_TYPE)
                             .setTitleText("添加收藏成功")
                             .show();
-                }
-                else if (TextUtils.equals(msg, "取消收藏")) {
-                    new SweetAlertDialog(ProdectInfoActivity.this,SweetAlertDialog.SUCCESS_TYPE)
+                } else if (TextUtils.equals(msg, "取消收藏")) {
+                    new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.SUCCESS_TYPE)
                             .setTitleText("取消收藏成功")
                             .show();
                     prodectList_img_collect.setImageResource(R.mipmap.heart);
                     prodectList_tview_collect.setText("收藏");
-                } else if(TextUtils.equals(msg, "取消收藏失败")){
+                } else if (TextUtils.equals(msg, "取消收藏失败")) {
                     Toast.makeText(ProdectInfoActivity.this, "取消收藏失败", Toast.LENGTH_SHORT).show();
-                }else {
-                    new SweetAlertDialog(ProdectInfoActivity.this,SweetAlertDialog.ERROR_TYPE)
+                } else {
+                    new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("收藏失败")
                             .show();
                 }
@@ -502,7 +523,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     };
 
     /**
-     *  失败的监听器
+     * 失败的监听器
      */
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
@@ -515,14 +536,15 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     /**
      * 判断是否收藏
      */
-    private void  isOrNotColl(){
+    private void isOrNotColl() {
         String url = Url.url("/androidCollecton/isCollection");
-        Map<String,String> map=new HashMap<>();
-        map.put("productId",product.getId());
-        map.put("userName",S_phoneNumber);
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectIsListener,errorListener,map);
+        Map<String, String> map = new HashMap<>();
+        map.put("productId", product.getId());
+        map.put("userName", S_phoneNumber);
+        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectIsListener, errorListener, map);
         mQueue.add(normalPostRequest);
     }
+
     /**
      * 成功的监听器
      * 返回的手长状态信息
@@ -542,51 +564,59 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             }
 
 
-        };
+        }
+
+        ;
     };
 
     /**
- * 显示颜色规格
- */
-    private void showColorandSpec(){
-        if(!TextUtils.isEmpty(color)|| !TextUtils.isEmpty(specifications)){
-            prodectInfo_specifications.setVisibility(View.GONE);
+     * 显示颜色规格
+     */
+    private void showColorandSpec() {
+        if (!TextUtils.isEmpty(color) || !TextUtils.isEmpty(packages)) {
+            prodectInfo_package.setVisibility(View.GONE);
             prodectInfo_s.setVisibility(View.VISIBLE);
             prodectInfo_s1.setVisibility(View.VISIBLE);
             prodectInfo_s2.setVisibility(View.VISIBLE);
             prodectInfo_s2.setText(color);
-            prodectInfo_s1.setText(specifications);
-        }else {
-            prodectInfo_specifications.setVisibility(View.VISIBLE);
+            prodectInfo_s1.setText(packages);
+        } else {
+            prodectInfo_package.setVisibility(View.VISIBLE);
             prodectInfo_s.setVisibility(View.INVISIBLE);
             prodectInfo_s1.setVisibility(View.INVISIBLE);
             prodectInfo_s2.setVisibility(View.INVISIBLE);
         }
     }
+
     /**
      * 设置popwindow
      */
     private void showPopwindow() {
-        View view=LayoutInflater.from(this).inflate(R.layout.adapter_popwindow, null);
-        gvSpecifications = (GridView) view.findViewById(R.id.gv_specifications);
+        View view = LayoutInflater.from(this).inflate(R.layout.adapter_popwindow, null);
+        gvPackage = (GridView) view.findViewById(R.id.gv_specifications);
         gvColor = (GridView) view.findViewById(R.id.gv_color);
         tvSkuName = (TextView) view.findViewById(R.id.tv_sku);
-        tv_name= (TextView) view.findViewById(R.id.tv_name);
-        iv_pic= (ImageView) view.findViewById(R.id.iv_pic);
-        pop_del= (ImageView) view.findViewById(R.id.pop_del);
-        btn_sure= (Button) view.findViewById(R.id.btn_sure);
-        pop_add=(TextView) view.findViewById(R.id.pop_add);
-        pop_reduce=(TextView) view.findViewById(R.id.pop_reduce);
-        pop_num=(TextView) view.findViewById(R.id.pop_num);
-
+        tv_name = (TextView) view.findViewById(R.id.tv_name);
+        Layout_add = (LinearLayout) view.findViewById(R.id.Layout_add);
+        prodectInfo_last_price = (TextView) view.findViewById(R.id.tv_price);
+        prodectInfo_last_price.setText("金额:"+D_beforePrice);
+        iv_pic = (ImageView) view.findViewById(R.id.iv_pic);
+        pop_del = (ImageView) view.findViewById(R.id.pop_del);
+        btn_sure = (Button) view.findViewById(R.id.btn_sure);
+        pop_add = (TextView) view.findViewById(R.id.pop_add);
+        pop_reduce = (TextView) view.findViewById(R.id.pop_reduce);
+        pop_num = (TextView) view.findViewById(R.id.pop_num);
+        Layout_add.setVisibility(View.GONE);
         tv_name.setText(product.getProdectName());
+        D_price =D_beforePrice;
+        D_tagPrice = D_price;
         //设置弹窗的图片
-        if(product.getProductImages()!=null){
-            String url=Url.url(product.getProductImages().get(0));
+        if (product.getProductImages() != null) {
+            String url = Url.url(product.getProductImages().get(0));
             iv_pic.setTag(url);
-            AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-            asyncBitmapLoader.loadImage(this,iv_pic,url);
-        }else {
+            AsyncBitmapLoader asyncBitmapLoader = new AsyncBitmapLoader();
+            asyncBitmapLoader.loadImage(this, iv_pic, url);
+        } else {
             iv_pic.setImageResource(R.mipmap.ic_launcher);
         }
 
@@ -596,10 +626,11 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         pop_reduce.setOnClickListener(this);
         addData();
         setColorData();
-        setSpecificationsData();
+//        setSpecificationsData();
         pop_num.setText(pop_num.getText().toString());
+        prodectInfo_last_price.setText(prodectInfo_last_price.getText().toString());
         //设置popowindow属性
-        popWindow=new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,false);
+        popWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
         //设置popwindow的动画效果
         popWindow.setAnimationStyle(R.style.popWindow_anim_style);
         //在PopupWindow里面就加上下面代码，让键盘弹出时，不会挡住pop窗口。
@@ -613,8 +644,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         popWindow.getBackground().setAlpha(50);
         popWindow.update();
         //设置activity背景变暗淡
-        WindowManager.LayoutParams params=this.getWindow().getAttributes();
-        params.alpha=0.5f;
+        WindowManager.LayoutParams params = this.getWindow().getAttributes();
+        params.alpha = 0.5f;
         this.getWindow().setAttributes(params);
 
         //点击其他地方消失
@@ -630,51 +661,98 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     /**
      * 设置产品规格
      */
-    public void setSpecificationsData(){
-        skuSpecificationsAdapter = new SkuAdapter(mSpecificationsList, this);
+    public void setSpecificationsData() {
+        skuPackageAdapter = new SkuAdapter(mPackageList, this);
         //设置默认选中的位置
-        skuSpecificationsAdapter.setSelectedPosition(spec_position);
-        gvSpecifications.setAdapter(skuSpecificationsAdapter);
-        skuSpecificationsAdapter.setItemClickListener(new SkuAdapter.onItemClickListener() {
+//        skuSpecificationsAdapter.setSelectedPosition(spec_position);
+        gvPackage.setAdapter(skuPackageAdapter);
+        skuPackageAdapter.setItemClickListener(new SkuAdapter.onItemClickListener() {
             @Override
             public void onItemClick(Bean bean, int position) {
-                // TODO Auto-generated method stub
-                specifications = bean.getName();
+//                packages = bean.getName();
                 switch (Integer.parseInt(bean.getStates())) {
                     case 0:
                         // 清空规格
-                        mSpecificationsList= DataUtil.clearAdapterStates(mSpecificationsList);
-                        skuSpecificationsAdapter.notifyDataSetChanged();
+                        pop_num.setText("1");
+                        mPackageList = DataUtil.clearAdapterStates(mPackageList);
+                        skuPackageAdapter.notifyDataSetChanged();
                         // 清空颜色
-                        mColorList=DataUtil.clearAdapterStates(mColorList);
+                        mColorList = DataUtil.clearAdapterStates(mColorList);
                         skuColorAdapter.notifyDataSetChanged();
-                        specifications = "";
+                        packages = "";
                         if (!TextUtils.isEmpty(color)) {
                             tvSkuName.setText("请选择规格");
-                            mColorList=DataUtil.setAdapterStates(mColorList,color);
+                            mColorList = DataUtil.setAdapterStates(mColorList, color);
                             skuColorAdapter.notifyDataSetChanged();
                         } else {
                             tvSkuName.setText("请选择规格,颜色");
                         }
+                        if (position!=0){
+                            Double price =D_price- Double.parseDouble(package_list_price.get(position-1));
+                            prodectInfo_last_price.setText("金额:"+D_price);
+                        }else{
+                            prodectInfo_last_price.setText("金额:"+D_beforePrice);
+                            Layout_add.setVisibility(View.GONE);
+                        }
                         break;
                     case 1:
                         // 选中规格
-                        mSpecificationsList=DataUtil.updateAdapterStates(mSpecificationsList, "0", position);
-                        skuSpecificationsAdapter.notifyDataSetChanged();
-                        spec_position=position;
+                        mPackageList = DataUtil.updateAdapterStates(mPackageList, "0", position);
+                        skuPackageAdapter.notifyDataSetChanged();
+                        spec_position = position;
                         bean.setStates("0");
-                        gvSpecifications.setSelection(position);
+                        gvPackage.setSelection(position);
+                        Layout_add.setVisibility(View.VISIBLE);
+                        if (position!=0){
+                            D_price =D_beforePrice;
+                            Double price1 = Double.parseDouble(package_list_price.get(position-1))+package_list_num.get(position-1)/10*D_price;
+
+                            prodectInfo_last_price.setText("金额:"+price1);
+                            String  s = String.valueOf(package_list_num.get(position-1));
+                            packages = s.substring(0, s.indexOf("."));
+                            Layout_add.setVisibility(View.GONE);
+                        }else{
+                            //包装方式为盘
+                            pop_num.setText("1");
+                            new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.NORMAL_TYPE)
+                                    .setTitleText("选择计量单位")
+                                    .setConfirmText("10米")
+                                    .setCancelText("1盘")
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            //10米
+                                            D_price = D_beforePrice;
+                                            D_tagPrice =D_price;
+                                            prodectInfo_last_price.setText("金额:"+D_price);
+                                            packages = "10米";
+                                            sweetAlertDialog.dismiss();
+                                        }
+                                    })
+                                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            //1盘-100米
+                                            packages="1盘";
+                                            D_price = D_beforePrice*10;
+                                            D_tagPrice =D_price;
+                                            prodectInfo_last_price.setText("金额:"+D_price);
+                                            sweetAlertDialog.dismiss();
+                                        }
+                                    }).show();
+                        }
                         if (!TextUtils.isEmpty(color)) {
                             // 选择规格的同事选择颜色
-                            tvSkuName.setText("规格:" + color + " " + specifications);
-//
+                            tvSkuName.setText("规格:" + color + " " + packages);
                         } else {
                             tvSkuName.setText("请选择颜色");
                         }
+
                         break;
                     default:
                         break;
                 }
+
             }
         });
     }
@@ -682,7 +760,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     /**
      * 通过颜色适配器设置颜色数据
      */
-    public void setColorData(){
+    public void setColorData() {
         skuColorAdapter = new SkuAdapter(mColorList, this);
         skuColorAdapter.setSelectedPosition(color_position);
         gvColor.setAdapter(skuColorAdapter);
@@ -694,27 +772,27 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                     case 0:
 
                         // 清空颜色
-                        mColorList=DataUtil.clearAdapterStates(mColorList);
+                        mColorList = DataUtil.clearAdapterStates(mColorList);
                         skuColorAdapter.notifyDataSetChanged();
                         color = "";
                         // 判断是否选中了规格
-                        if(TextUtils.isEmpty(specifications)){
+                        if (TextUtils.isEmpty(packages)) {
                             tvSkuName.setText("请选择规格,颜色");
-                        }else {
+                        } else {
                             tvSkuName.setText("请选择颜色");
                         }
                         break;
                     case 1:
                         // 选中颜色
-                        color_position=position;
-                        mColorList=DataUtil.updateAdapterStates(mColorList,"0", color_position);
+                        color_position = position;
+                        mColorList = DataUtil.updateAdapterStates(mColorList, "0", color_position);
 
                         skuColorAdapter.notifyDataSetChanged();
-                        List<String> list = DataUtil.getSizeListByColor(mList,color);
-                        if (!TextUtils.isEmpty(specifications)) {
+                        List<String> list = DataUtil.getSizeListByColor(mList, color);
+                        if (!TextUtils.isEmpty(packages)) {
                             // 计算改颜色与尺码对应的库存
 //                            stock = DataUtil.getStockByColorAndSize(mList,color, specifications);
-                            tvSkuName.setText("规格:" + color + " " + specifications);
+                            tvSkuName.setText("规格:" + color + " " + packages);
                         } else {
                             // 根据颜色计算库存
                             tvSkuName.setText("请选择规格");
@@ -728,36 +806,81 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         });
 
     }
-    public void addData() {
 
+    /**
+     * 添加数据
+     */
+    public void addData() {
         mList = new ArrayList<SkuItme>();
         //颜色规格列表
         mColorList = new ArrayList<Bean>();
-        mSpecificationsList = new ArrayList<Bean>();
-        List<String> color_list=new ArrayList<>();
-        List<String> specifications_list=new ArrayList<>();
-        for(int i=0;i<5;i++){
-            color_list.add("颜色"+i);
-        }
-        for(int i=0;i<5;i++){
-            specifications_list.add("规格"+i);
+        mPackageList = new ArrayList<Bean>();
+        List<String> color_list = new ArrayList<>();
+        package_list = new ArrayList<>();
+        package_list_num = new ArrayList<>();
+        package_list_price = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            color_list.add("颜色" + i);
         }
         //所有的颜色和规格
         //颜色列表
-        for (int i = 0; i <color_list.size(); i++) {
+        for (int i = 0; i < color_list.size(); i++) {
             Bean bean = new Bean();
             bean.setName(color_list.get(i));
             bean.setStates("1");
             mColorList.add(bean);
         }
-        for (int i = 0; i < specifications_list.size(); i++) {
-            Bean bean = new Bean();
-            bean.setName(specifications_list.get(i));
-            bean.setStates("1");
-            mSpecificationsList.add(bean);
-        }
 
+        //轴的连接
+        package_list.add("盘");
+        shaftConnInter();
     }
+
+    /**
+     * 获取产品种类服务
+     */
+    public void shaftConnInter() {
+        dialog.showDialog("正在加载中。。。");
+        String url = Url.url("/androidShaft/list");
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                jsonObjectListener, errorListener);
+        mQueue.add(jsonObjectRequest);
+    }
+
+    /**
+     * 成功的监听器
+     */
+    private Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            JSONArray jsonArray;
+            List<String> type_list = new ArrayList<>();
+            try {
+                jsonArray = jsonObject.getJSONArray("list");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
+                    String shaftName = jsonObject1.getString("shaftName");
+                    String shaftPrice = jsonObject1.getString("shaftPrice");
+                    package_list.add(shaftName+"米轴");
+                    package_list_num.add(Double.parseDouble(shaftName));
+                    package_list_price.add(shaftPrice);
+                }
+                //设置包装方式
+                for (int i = 0; i < package_list.size(); i++) {
+                    Bean bean = new Bean();
+                    bean.setName(package_list.get(i));
+                    bean.setStates("1");
+                    mPackageList.add(bean);
+                }
+                setSpecificationsData();
+                dialog.cancle();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
     @Override
     public void onDismiss() {
 
@@ -766,23 +889,24 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        color="";
-        specifications="";
-        color_position=0;
-        spec_position=0;
+        color = "";
+        packages = "";
+        color_position = 0;
+        spec_position = 0;
         prodectInfo_s1.setText(null);
         prodectInfo_s2.setText(null);
     }
 
-/**
- * 关闭弹框
- */
-    private void dismiss(){
+    /**
+     * 关闭弹框
+     */
+    private void dismiss() {
         popWindow.dismiss();
-        WindowManager.LayoutParams params=this.getWindow().getAttributes();
-        params.alpha=1f;
+        WindowManager.LayoutParams params = this.getWindow().getAttributes();
+        params.alpha = 1f;
         this.getWindow().setAttributes(params);
     }
+
     /**
      * 执行轮播图切换任务
      */

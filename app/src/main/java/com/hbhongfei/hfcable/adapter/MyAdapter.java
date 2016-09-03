@@ -123,8 +123,8 @@ public class MyAdapter extends BaseAdapter {
                 vh.prodect_introduce2.setText(itemList.get(1).getProdectName());
                 vh.prodect_price2.setText(String.valueOf(itemList.get(1).getPrice()));
                 //有图片时加载
-                if(itemList.get(1).getProductImages()!=null){
-                    String url=Url.url(itemList.get(1).getProductImages().get(1));
+                if(itemList.get(1).getProductImages().size()>0){
+                    String url=Url.url(itemList.get(1).getProductImages().get(0));
                     vh.prodect_imgView2.setTag(url);
                     AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
                     asyncBitmapLoader.loadImage(context,vh.prodect_imgView2,url);
