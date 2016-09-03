@@ -38,12 +38,23 @@
     <!--产品信息-->
     <string name="prodect_lable">产品信息</string>
     <string name="prodectList_lable">产品列表</string>
-    <string name="prodect_specifications">选择颜色，规格</string>
+    <string name="prodect_specifications">选择颜色，和包装方式</string>
     <string name="prodect_selected">已选择：</string>
     <string name="prodect_cAnds">完善颜色规格</string>
-    <string name="prodect_model">型号：</string>
-    <string name="prodect_coreType">线芯种类：</string>
-    <string name="prodect_type">产品种类：</string>
+    <string name="prodect_model">型号:</string>
+    <string name="prodect_voltage">电压:</string>
+    <string name="prodect_crossSection">横截面:</string>
+    <string name="prodect_coreNumber">芯数:</string>
+    <string name="prodect_purpose">用途:</string>
+    <string name="prodect_applicationRange">应用范围:</string>
+    <string name="prodect_outsideDiameter">平均外径上线:</string>
+    <string name="prodect_diameterLimit">外径下限:</string>
+    <string name="prodect_implementationStandards">执行标准:</string>
+    <string name="prodect_conductorMaterial">导体材质:</string>
+    <string name="prodect_sheathMaterial">护套材质:</string>
+    <string name="prodect_referenceWeight">参考重量:</string>
+
+
     <string name="prodect_introduce">产品说明</string>
     <string name="prodect_detail">产品详情</string>
     <string name="prodect_detailContent">shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</string>
@@ -53,7 +64,7 @@
     <string name="product_selectColor">请选择规格,颜色分类</string>
     <string name="product_specifications">包装方式</string>
     <string name="product_color">颜色</string>
-    <string name="product_warnning">包装方式如需轴，请联系厂家</string>
+    <string name="product_warnning">100米轴为每轴100米，依次类推，如需其他长度，请联系厂家进行预约</string>
     <!--mine-->
     <string name="mine_myInfo">个人资料</string>
     <string name="mine_shopping">购物车</string>

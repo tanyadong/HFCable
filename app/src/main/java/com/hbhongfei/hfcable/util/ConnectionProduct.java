@@ -12,6 +12,7 @@ import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter;
 import com.hbhongfei.hfcable.pojo.Product;
+import com.hbhongfei.hfcable.pojo.TypeTwo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +48,7 @@ public class ConnectionProduct {
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
         mQueue.add(normalPostRequest);
     }
+
     /**
      * 成功的监听器
      * 返回的是产品种类
@@ -60,7 +62,13 @@ public class ConnectionProduct {
                 int count=jsonArray.length();
                 for(int i=0;i<count;i++){
                     JSONObject jsonObject1=jsonArray.getJSONObject(i);
+                    //typeTwo
+                    JSONObject jsonObject2 = jsonObject1.getJSONObject("typeTwo");
+                    TypeTwo typeTwo = new TypeTwo();
+                    typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
+                    //产品
                     Product product=new Product();
+                    product.setTypeTwo(typeTwo);
                     product.setId(jsonObject1.getString("id"));
                     product.setPrice(jsonObject1.getDouble("price"));
                     product.setApplicationRange(jsonObject1.getString("applicationRange"));

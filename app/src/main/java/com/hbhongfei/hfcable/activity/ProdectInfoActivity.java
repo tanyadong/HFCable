@@ -34,6 +34,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
 import com.hbhongfei.hfcable.adapter.SkuAdapter;
@@ -70,6 +72,10 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     private TextView prodectInto_simpleDeclaration, prodectInfo_price,
             prodectInfo_intro, prodectInfo_package, prodectInfo_model, prodectInfo_coreType,
             prodectInfo_type, prodectInfo_detail,prodectInfo_last_price;
+    private TextView prodectInfo_voltage,prodectInfo_crossSection,prodectInfo_coreNumber,
+            prodectInfo_purpose,prodectInfo_applicationRange,prodectInfo_outsideDiameter,
+            prodectInfo_diameterLimit,prodectInfo_implementationStandards,prodectInfo_conductorMaterial,
+            prodectInfo_sheathMaterial,prodectInfo_referenceWeight;
     private TextView prodect_addCart;
     private RelativeLayout selectSpec_layout;
     private LinearLayout all_choice_layout, prodect_bottom;
@@ -190,14 +196,25 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodect_addCart = (TextView) findViewById(R.id.prodect_addCart);
 //        mGrayLayout=findViewById(R.id.all_choice_layout);
         //产品信息
-        prodectInfo_coreType = (TextView) findViewById(R.id.prodectInfo_coreType_textView);
-        prodectInfo_detail = (TextView) findViewById(R.id.prodectInfo_detail_textView);
-        prodectInfo_intro = (TextView) findViewById(R.id.prodectInfo_intro_textView);
-        prodectInfo_model = (TextView) findViewById(R.id.prodectInfo_model_textview);
-        prodectInfo_price = (TextView) findViewById(R.id.prodectInfo_price_textView);
         prodectInfo_package = (TextView) findViewById(R.id.prodectInfo_specifications);
-        prodectInfo_type = (TextView) findViewById(R.id.prodectInfo_type_textView);
+
         prodectInto_simpleDeclaration = (TextView) findViewById(R.id.prodectInto_simpleDeclaration_tview);
+        prodectInfo_price = (TextView) findViewById(R.id.prodectInfo_price_textView);
+        prodectInfo_model = (TextView) findViewById(R.id.prodectInfo_model_textview);
+        prodectInfo_voltage = (TextView) findViewById(R.id.prodectInfo_voltage_textView);
+        prodectInfo_crossSection = (TextView) findViewById(R.id.prodectInfo_crossSection_textView);
+        prodectInfo_coreNumber = (TextView) findViewById(R.id.prodectInfo_coreNumber_textView);
+        prodectInfo_purpose= (TextView) findViewById(R.id.prodectInfo_purpose_textView);
+        prodectInfo_applicationRange = (TextView) findViewById(R.id.prodectInfo_applicationRange_textView);
+        prodectInfo_outsideDiameter = (TextView) findViewById(R.id.prodectInfo_outsideDiameter_textView);
+        prodectInfo_diameterLimit = (TextView) findViewById(R.id.prodectInfo_diameterLimit_textView);
+        prodectInfo_implementationStandards = (TextView) findViewById(R.id.prodectInfo_implementationStandards_textView);
+        prodectInfo_conductorMaterial = (TextView) findViewById(R.id.prodectInfo_conductorMaterial_textView);
+        prodectInfo_sheathMaterial = (TextView) findViewById(R.id.prodectInfo_sheathMaterial_textView);
+        prodectInfo_referenceWeight = (TextView) findViewById(R.id.prodectInfo_referenceWeight_textView);
+
+
+
         selectSpec_layout = (RelativeLayout) findViewById(R.id.selectSpec_layout);//选择颜色规格
         prodect_bottom = (LinearLayout) findViewById(R.id.prodect_bottom);
         prodectList_img_collect = (ImageView) findViewById(R.id.prodectList_img_collect);
@@ -223,17 +240,42 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         //获取产品列表的详细产品信息
         intent = getIntent();
         product = (Product) intent.getSerializableExtra("product");
+        //规格即名称
+        prodectInto_simpleDeclaration.setText(product.getSpecifications());
+        //价格
         D_beforePrice = product.getPrice();
         prodectInfo_price.setText(String.valueOf(product.getPrice()));
+        //型号
+        prodectInfo_model.setText(product.getTypeTwo().getTypeTwoName());
+        //电压
+        prodectInfo_voltage.setText(product.getVoltage());
+        prodectInfo_crossSection.setText(product.getCrossSection());
+        prodectInfo_coreNumber.setText(product.getCoreNumber());
+        prodectInfo_purpose.setText(product.getPurpose());
+        prodectInfo_applicationRange.setText(product.getApplicationRange());
+        prodectInfo_outsideDiameter.setText(product.getOutsideDiameter());
+        prodectInfo_diameterLimit.setText(product.getDiameterLimit());
+        prodectInfo_implementationStandards.setText(product.getImplementationStandards());
+        prodectInfo_conductorMaterial.setText(product.getConductorMaterial());
+        prodectInfo_sheathMaterial.setText(product.getSheathMaterial());
+        prodectInfo_referenceWeight.setText(product.getReferenceWeight());
+
         //产品图片
         if (product.getProductImages() != null) {
             for (String s : product.getProductImages()) {
                 //获取图片并显示
                 String url = Url.url(s);
                 img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-                img1.setTag(url);
+                /*img1.setTag(url);
                 AsyncBitmapLoader asyncBitmapLoader = new AsyncBitmapLoader();
-                asyncBitmapLoader.loadImage(this, img1, url);
+                asyncBitmapLoader.loadImage(this, img1, url);*/
+
+                Glide.with(this)
+                        .load(url)
+                        .placeholder(R.mipmap.man)
+                        .error(R.mipmap.man)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(img1);
                 list.add(img1);
                 //给图片添加点击事件。查看大图
                 img1.setOnClickListener(new View.OnClickListener() {
@@ -441,7 +483,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectAddShoppingListener, errorListener, map);
         mQueue.add(normalPostRequest);
     }
-
 
     /**
      * 添加收藏服务
@@ -654,7 +695,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     }
 
     /**
-     * 设置产品规格
+     * 设置产品包装方式
      */
     public void setSpecificationsData() {
         skuPackageAdapter = new SkuAdapter(mPackageList, this);

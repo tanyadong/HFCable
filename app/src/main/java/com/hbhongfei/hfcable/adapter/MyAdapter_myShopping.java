@@ -204,19 +204,17 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
                     .error(R.mipmap.man)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(cholder.iv_adapter_list_pic);
-/*
 
-            String url = Url.url(cablesInfo.getGoodsImg());
-            cholder.iv_adapter_list_pic.setTag(url);
-            AsyncBitmapLoader asyncBitmapLoader = new AsyncBitmapLoader();
-            asyncBitmapLoader.loadImage(context,cholder.iv_adapter_list_pic,url);
-*/
-
-//            cholder.iv_adapter_list_pic.setImageResource(cablesInfo.getGoodsImg());//设置头像
-            cholder.tv_introduce.setText(cablesInfo.getIntroduce());
+            cholder.tv_introduce.setText(cablesInfo.getColor());
             cholder.tv_introduce2.setText(cablesInfo.getIntroduce());
             cholder.tv_color.setText(cablesInfo.getColor());
-            cholder.tv_specifications.setText(cablesInfo.getSpecifications());
+            if (cablesInfo.getSpecifications().equals("1盘")){
+                cholder.tv_specifications.setText("单位:100米/盘");
+            }else if (cablesInfo.getSpecifications().equals("10米")){
+                cholder.tv_specifications.setText("单位:10米");
+            }else{
+                cholder.tv_specifications.setText("单位:"+cablesInfo.getSpecifications()+"米/轴");
+            }
             cholder.tv_buy_num.setText("x" + cablesInfo.getCount());
             cholder.cb_check.setChecked(cablesInfo.isChoosed());
             cholder.cb_check.setOnClickListener(new View.OnClickListener() {

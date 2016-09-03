@@ -148,13 +148,15 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                         JSONObject shoppingCart= (JSONObject) shoppingCarts.opt(i);//shoppingCarts的第一组
                         /****************产品种类*******************/
                         JSONObject type = shoppingCart.getJSONObject("type");
-                        groups.add(new TypeInfo(i + "", type.getString("typeName")));//添加组
+                        groups.add(new TypeInfo(i + "", type.getString("typeTwoName")));//添加组
                         /****************产品信息*******************/
                         JSONArray products = shoppingCart.getJSONArray("product");
+                        JSONArray productImages = shoppingCart.getJSONArray("productImage");
                         List<CablesInfo> cablesInfos = new ArrayList<>();
                         for(int j=0;j<products.length();j++){
                         /**************购物车信息*****************/
                             JSONObject product= (JSONObject) products.opt(j);
+                            JSONArray images = productImages.getJSONArray(j);
                             int quantity = product.getInt("quantity");
                             String color = product.getString("color");
                             String specifications = product.getString("packages");//包装
@@ -162,15 +164,17 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
 
                         /**************产品信息*****************/
                             JSONObject productInfo = product.getJSONObject("product");
-                            String productName = productInfo.getString("prodectName");//名
-                            String detail = productInfo.getString("detail");//简介
+                            String productName = productInfo.getString("specifications");//名
+                            String detail = productInfo.getString("voltage");//简介
                             Double price = productInfo.getDouble("price");//价格
-                            JSONArray images = productInfo.getJSONArray("productImages");
-                            String image = (String) images.get(0);//存在问题
-                            if (image==null){
-                                image = "/images/b3043ec169634ba5a7d2631200723a67.jpeg";
+
+//                            JSONArray images = productInfo.getJSONArray("productImages");
+                            JSONObject image = (JSONObject) images.opt(0);
+                            String img = (String) image.getString("image");//存在问题
+                            if (img==null){
+                                img = "/images/b3043ec169634ba5a7d2631200723a67.jpeg";
                             }
-                            cablesInfos.add(new CablesInfo(id, productName, detail,color,specifications,price, quantity,image));
+                            cablesInfos.add(new CablesInfo(id, productName, detail,color,specifications,price, quantity,img));
                         }
                         children.put(groups.get(i).getId(), cablesInfos);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
                     }
@@ -186,6 +190,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                     clearCart();
                 }
 
+                Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
                 dialog.cancle();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -238,20 +243,6 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             }
         }
     };
-
-
-
-    /*private void initEvents() {
-        selva = new MyAdapter_myShopping(groups, children, this);
-        selva.setCheckInterface(this);// 关键步骤1,设置复选框接口
-        selva.setModifyCountInterface(this);// 关键步骤2,设置数量增减接口
-        selva.setmListener(this);//设置监听器接口
-        exListView.setAdapter(selva);
-
-        for (int i = 0; i < selva.getGroupCount(); i++) {
-            exListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
-        }
-    }*/
 
     @Override
     protected void onResume() {

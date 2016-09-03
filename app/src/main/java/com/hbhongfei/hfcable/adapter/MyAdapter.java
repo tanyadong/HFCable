@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.ProdectInfoActivity;
 import com.hbhongfei.hfcable.pojo.Product;
@@ -98,9 +100,16 @@ public class MyAdapter extends BaseAdapter {
             //有图片时加载
             if(itemList.get(0).getProductImages().size()!=0){
                String url=Url.url(itemList.get(0).getProductImages().get(0));
-            vh.prodect_imgView1.setTag(url);
-            AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-            asyncBitmapLoader.loadImage(context,vh.prodect_imgView1,url);
+//            vh.prodect_imgView1.setTag(url);
+//            AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+//            asyncBitmapLoader.loadImage(context,vh.prodect_imgView1,url);
+                //加载图片
+                Glide.with(context)
+                        .load(url)
+                        .placeholder(R.mipmap.man)
+                        .error(R.mipmap.man)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(vh.prodect_imgView1);
             }else {
                 vh.prodect_imgView1.setImageResource(R.drawable.icon_image_default);
             }
@@ -125,9 +134,17 @@ public class MyAdapter extends BaseAdapter {
                 System.out.println(itemList.get(1).getProductImages().toString());
                 if(itemList.get(1).getProductImages().size()!=0){
                     String url=Url.url(itemList.get(1).getProductImages().get(0));
-                    vh.prodect_imgView2.setTag(url);
-                    AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-                    asyncBitmapLoader.loadImage(context,vh.prodect_imgView2,url);
+//                    vh.prodect_imgView2.setTag(url);
+//                    AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+//                    asyncBitmapLoader.loadImage(context,vh.prodect_imgView2,url);
+                    //加载图片
+                    Glide.with(context)
+                            .load(url)
+                            .placeholder(R.mipmap.man)
+                            .error(R.mipmap.man)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(vh.prodect_imgView2);
+
                 }else {
                     vh.prodect_imgView2.setImageResource(R.drawable.icon_image_default);
                 }
