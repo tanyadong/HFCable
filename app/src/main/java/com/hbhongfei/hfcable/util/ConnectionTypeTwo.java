@@ -75,11 +75,11 @@ public class ConnectionTypeTwo {
                     pro_list=new ArrayList<>();
                     int count_product=jsonArray1.length();
                     for(int j=0;j<count_product;j++){
-
                         JSONObject object= (JSONObject) jsonArray1.get(j);
                         Product product=new Product();
                         product.setId(object.getString("id"));
                         product.setPrice(object.getDouble("price"));
+                        product.setTypeTwo(typeTwo);
                         product.setApplicationRange(object.getString("applicationRange"));
                         product.setSpecifications(object.getString("specifications"));
                         product.setConductorMaterial(object.getString("conductorMaterial"));

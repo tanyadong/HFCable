@@ -261,15 +261,11 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodectInfo_referenceWeight.setText(product.getReferenceWeight());
 
         //产品图片
-        if (product.getProductImages() != null) {
+        if (product.getProductImages().size()!=0) {
             for (String s : product.getProductImages()) {
                 //获取图片并显示
                 String url = Url.url(s);
                 img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-                /*img1.setTag(url);
-                AsyncBitmapLoader asyncBitmapLoader = new AsyncBitmapLoader();
-                asyncBitmapLoader.loadImage(this, img1, url);*/
-
                 Glide.with(this)
                         .load(url)
                         .placeholder(R.mipmap.man)
@@ -583,7 +579,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 成功的监听器
-     * 返回的手长状态信息
+     * 返回的收藏状态信息
      */
     private Response.Listener<JSONObject> jsonObjectIsListener = new Response.Listener<JSONObject>() {
         @Override
@@ -647,7 +643,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         D_price =D_beforePrice;
         D_tagPrice = D_price;
         //设置弹窗的图片
-        if (product.getProductImages() != null) {
+        if (product.getProductImages().size()!=0) {
             String url = Url.url(product.getProductImages().get(0));
             iv_pic.setTag(url);
             AsyncBitmapLoader asyncBitmapLoader = new AsyncBitmapLoader();
@@ -661,7 +657,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         pop_add.setOnClickListener(this);
         pop_reduce.setOnClickListener(this);
         addData();
-        setColorData();
 //        setSpecificationsData();
         pop_num.setText(pop_num.getText().toString());
         prodectInfo_last_price.setText(prodectInfo_last_price.getText().toString());
@@ -851,32 +846,21 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         //颜色规格列表
         mColorList = new ArrayList<Bean>();
         mPackageList = new ArrayList<Bean>();
-        List<String> color_list = new ArrayList<>();
+
         package_list = new ArrayList<>();
         package_list_num = new ArrayList<>();
         package_list_price = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            color_list.add("颜色" + i);
-        }
-        //所有的颜色和规格
-        //颜色列表
-        for (int i = 0; i < color_list.size(); i++) {
-            Bean bean = new Bean();
-            bean.setName(color_list.get(i));
-            bean.setStates("1");
-            mColorList.add(bean);
-        }
-
         //轴的连接
         package_list.add("盘");
         shaftConnInter();
+        //颜色的链接
+        colorConnInter();
     }
 
     /**
-     * 获取产品种类服务
+     * 获取产品包装方式服务
      */
     public void shaftConnInter() {
-        dialog.showDialog("正在加载中。。。");
         String url = Url.url("/androidShaft/list");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 jsonObjectListener, errorListener);
@@ -890,10 +874,10 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         @Override
         public void onResponse(JSONObject jsonObject) {
             JSONArray jsonArray;
-            List<String> type_list = new ArrayList<>();
             try {
                 jsonArray = jsonObject.getJSONArray("list");
-                for (int i = 0; i < jsonArray.length(); i++) {
+                int count=jsonArray.length();
+                for (int i = 0; i < count; i++) {
                     JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
                     String shaftName = jsonObject1.getString("shaftName");
                     String shaftPrice = jsonObject1.getString("shaftPrice");
@@ -909,13 +893,51 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                     mPackageList.add(bean);
                 }
                 setSpecificationsData();
-                dialog.cancle();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     };
 
+    /**
+     * 获取产品颜色服务
+     */
+    public void colorConnInter() {
+        dialog.showDialog("正在加载中。。。");
+        String url = Url.url("/androidColor/getColor");
+        Map<String,String> param=new HashMap<>();
+
+        param.put("typeTwoName",product.getTypeTwo().getTypeTwoName());
+        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonColorListener,errorListener,param);
+        mQueue.add(normalPostRequest);
+    }
+
+    /**
+     * 获取产品颜色成功的监听器
+     */
+    private Response.Listener<JSONObject> jsonColorListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            JSONArray jsonArray;
+            try {
+                jsonArray = jsonObject.getJSONArray("colorList");
+                int count=jsonArray.length();
+                for (int i = 0; i < count; i++) {
+                    JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
+                    String colorName = jsonObject1.getString("colorName");
+                    //设置颜色
+                    Bean bean = new Bean();
+                    bean.setName(colorName);
+                    bean.setStates("1");
+                    mColorList.add(bean);
+                }
+                setColorData();
+                dialog.cancle();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     @Override
     public void onDismiss() {

@@ -15,7 +15,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.ProdectInfoActivity;
 import com.hbhongfei.hfcable.pojo.Product;
-import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Url;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import java.util.List;
 
 /**
  * 2列ListView的适配器
- * @author tongleer.com
+ * @author 谭亚东
  *
  */
 public class MyAdapter extends BaseAdapter {
@@ -100,9 +99,6 @@ public class MyAdapter extends BaseAdapter {
             //有图片时加载
             if(itemList.get(0).getProductImages().size()!=0){
                String url=Url.url(itemList.get(0).getProductImages().get(0));
-//            vh.prodect_imgView1.setTag(url);
-//            AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-//            asyncBitmapLoader.loadImage(context,vh.prodect_imgView1,url);
                 //加载图片
                 Glide.with(context)
                         .load(url)
@@ -134,9 +130,6 @@ public class MyAdapter extends BaseAdapter {
                 System.out.println(itemList.get(1).getProductImages().toString());
                 if(itemList.get(1).getProductImages().size()!=0){
                     String url=Url.url(itemList.get(1).getProductImages().get(0));
-//                    vh.prodect_imgView2.setTag(url);
-//                    AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-//                    asyncBitmapLoader.loadImage(context,vh.prodect_imgView2,url);
                     //加载图片
                     Glide.with(context)
                             .load(url)
@@ -148,7 +141,6 @@ public class MyAdapter extends BaseAdapter {
                 }else {
                     vh.prodect_imgView2.setImageResource(R.drawable.icon_image_default);
                 }
-//                vh.prodect_imgView2.setImageResource(R.drawable.icon_image_default);
                 vh.layout2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
