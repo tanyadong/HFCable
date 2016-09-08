@@ -1,88 +1,59 @@
 package com.hbhongfei.hfcable.fragment;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.activity.ImageCropActivity;
-import com.hbhongfei.hfcable.activity.MyFavoriteActivity;
-import com.hbhongfei.hfcable.activity.MyInfoActivity;
-import com.hbhongfei.hfcable.activity.MyOrderActivity;
-import com.hbhongfei.hfcable.activity.MyShoppingActivity;
-import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
-import com.hbhongfei.hfcable.util.Constants;
+import com.hbhongfei.hfcable.adapter.CableRingAdapter;
 import com.hbhongfei.hfcable.util.Dialog;
-import com.hbhongfei.hfcable.util.LoginConnection;
-import com.hbhongfei.hfcable.util.NormalPostRequest;
-import com.hbhongfei.hfcable.util.UpLoadImage;
 import com.hbhongfei.hfcable.util.Url;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MineFragment extends Fragment implements View.OnClickListener {
 
-    private LinearLayout myInfoEdit;
-    private ImageView myhead;
-    private TextView myName;
-    private String S_name,S_phoneNumber,S_head,S_head1;
-    private RelativeLayout shopping,order,favorite;
-    private static final String USER = LoginConnection.USER;
+    private ListView mListView;
+    private List<Map<String, Object>> list;
+    private Map<String, Object> map;
     private Dialog dialog;
-    private AsyncBitmapLoader asyncBitmapLoader;
-    private UpLoadImage upLoadImage;
-    private int tag = 0;
-    private Bitmap b;
-    private Drawable drawable;
+    private CableRingAdapter cableRingAdapter;
 
     public MineFragment() {
-        // Required empty public constructor
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_mine, container, false);
-//        initView(v);
-//        setOnClick();
+        initView(v);
+        setOnClick();
+//        //初始化数据
+        initValues();
         return v;
     }
 
@@ -92,55 +63,40 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         super.onResume();
     }
 
+
     /**
      * 初始化界面
      * 苑雪元
      * 2016/07/21
      */
-   /* public void initView(View v){
-        upLoadImage =new UpLoadImage(this.getActivity());
-        dialog = new Dialog(this.getActivity());
-        myInfoEdit = (LinearLayout) v.findViewById(R.id.mine_edit);
-        myhead = (ImageView) v.findViewById(R.id.Iamge_mine_head);
-        myName = (TextView) v.findViewById(R.id.Tview_mine_myName);
-        shopping = (RelativeLayout) v.findViewById(R.id.Rlayout_mine_shopping);
-        order = (RelativeLayout) v.findViewById(R.id.Rlayout_mine_order);
-        favorite = (RelativeLayout) v.findViewById(R.id.Rlayout_mine_favorite);
-    }*/
+    public void initView(View v) {
+        dialog = new Dialog(MineFragment.this.getActivity());
+        mListView = (ListView) v.findViewById(R.id.ListView_cableZone);
+    }
+
+    /**
+     * 设置数据
+     */
+    private void setValues() {
+
+    }
 
     /**
      * 设置点击事件
      * 苑雪元
      * 2016/07/21
      */
-    private void setOnClick(){
-       /* this.shopping.setOnClickListener(this);
-        this.order.setOnClickListener(this);
-        this.favorite.setOnClickListener(this);
-        this.myInfoEdit.setOnClickListener(this);
-        this.myhead.setOnClickListener(this);*/
+    private void setOnClick() {
     }
+
 
     /**
      * 初始化数据
      * 苑雪元
      * 2016/07/21
      */
-    private void initValues(){
-       /* SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
-        S_name = spf.getString("nickName", null);
-        S_phoneNumber = spf.getString("phoneNumber",null);
-        S_head  =spf.getString("headPortrait",null);
-        this.myName.setText(S_name);
-//        imageHead();
-        if (tag==0){
-            String url = Url.url(S_head);
-            myhead.setTag(url);
-            asyncBitmapLoader = new AsyncBitmapLoader();
-            asyncBitmapLoader.loadImage(MineFragment.this.getContext(),myhead,url);
-        }else{
-            myhead.setImageBitmap(b);
-        }*/
+    private void initValues() {
+        shaftConnInter();
     }
 
     /**
@@ -148,7 +104,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      * 苑雪元
      * 2016/07/21
      */
-    private void intent(Class c){
+    private void intent(Class c) {
         Intent i = new Intent();
         i.setClass(this.getActivity(), c);
         startActivity(i);
@@ -157,30 +113,83 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        /*switch (v.getId()){
-            case R.id.Rlayout_mine_favorite:
-                intent(MyFavoriteActivity.class);
-                break;
-            case R.id.Rlayout_mine_order:
-                intent(MyOrderActivity.class);
-                break;
-            case R.id.Rlayout_mine_shopping:
-                intent(MyShoppingActivity.class);
-                break;
-            case R.id.Iamge_mine_head:
-                //修改头像
-                showDialog();
-                break;
-            case R.id.mine_edit:
-                intent(MyInfoActivity.class);
-                break;
-        }*/
     }
+
+    /**
+     * 获取产品种类服务
+     */
+    public void shaftConnInter() {
+        dialog.showDialog("正在记载中。。。");
+        String url = Url.url("/androidCableRing/list");
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, shaftjsonObjectListener, errorListener);
+        RequestQueue mQueue = Volley.newRequestQueue(MineFragment.this.getActivity());
+        mQueue.add(jsonObjectRequest);
+    }
+
+    /**
+     * 成功的监听器
+     */
+    private Response.Listener<JSONObject> shaftjsonObjectListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            JSONArray jsonArray;
+            list = new ArrayList<>();
+            try {
+                jsonArray = jsonObject.getJSONArray("cableRings");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    map = new HashMap<>();
+                    JSONObject cableRing = (JSONObject) jsonArray.getJSONObject(i);
+                    String id = cableRing.getString("id");
+                    map.put("id", id);
+                    String content = cableRing.getString("content");
+                    map.put("content", content);
+                    String createTime = cableRing.getString("createTime");
+                    map.put("createTime", createTime);
+
+                    //图片
+                    JSONArray ims=cableRing.getJSONArray("cableRingImages");
+                    //有图片时加入到产品图片集合
+                    ArrayList<String> images=new ArrayList<>();
+                    if(ims.length()>0){
+                        for(int j=0;j<ims.length();j++){
+                            images.add((String) ims.get(j));
+                        }
+                    }
+                    map.put("images", images);
+                    JSONObject user = cableRing.getJSONObject("user");
+                    String nickName = user.getString("nickName");
+                    map.put("nickName", nickName);
+                    String headPortrait = user.getString("headPortrait");
+                    map.put("headPortrait", headPortrait);
+                    list.add(map);
+                }
+                cableRingAdapter = new CableRingAdapter(MineFragment.this.getContext(), list);
+                mListView.setAdapter(cableRingAdapter);
+                dialog.cancle();
+            } catch (JSONException e) {
+                e.printStackTrace();
+                dialog.cancle();
+            }
+        }
+    };
+
+    /**
+     * 失败的监听器
+     */
+    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            Toast.makeText(MineFragment.this.getActivity(), "链接网络失败", Toast.LENGTH_SHORT).show();
+            Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
+        }
+    };
+
 
     /**
      * 选择拍照还是相册
      */
-    private void showDialog(){
+    private void showDialog() {
         /*if (tag==0){
             drawable = MineFragment.this.getActivity().getResources().getDrawable(R.mipmap.man);
         }else{

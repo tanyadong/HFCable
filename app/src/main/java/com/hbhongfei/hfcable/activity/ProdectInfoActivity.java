@@ -645,9 +645,17 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         //设置弹窗的图片
         if (product.getProductImages().size()!=0) {
             String url = Url.url(product.getProductImages().get(0));
-            iv_pic.setTag(url);
-            AsyncBitmapLoader asyncBitmapLoader = new AsyncBitmapLoader();
-            asyncBitmapLoader.loadImage(this, iv_pic, url);
+//            iv_pic.setTag(url);
+//            AsyncBitmapLoader asyncBitmapLoader = new AsyncBitmapLoader();
+//            asyncBitmapLoader.loadImage(this, iv_pic, url);
+            //加载图片
+            Glide.with(this)
+                    .load(url)
+                    .placeholder(R.mipmap.man)
+                    .error(R.mipmap.man)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(iv_pic);
+
         } else {
             iv_pic.setImageResource(R.mipmap.ic_launcher);
         }

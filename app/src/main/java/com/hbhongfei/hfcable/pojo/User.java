@@ -29,6 +29,11 @@ public class User {
     public User() {
     }
 
+    public User(String id,String nickName){
+        this.id = id;
+        this.nickName = nickName;
+    }
+
     public String getId() {
         return id;
     }

@@ -95,7 +95,8 @@ public class MarketFragment extends Fragment {
             @Override
             public void onResponse(String s) {
                 //解析界面
-                parse(s);
+//                parse(s);
+                dialog.cancle();
             }
         }, new Response.ErrorListener() {
             @Override

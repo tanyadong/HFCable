@@ -2,7 +2,7 @@
     <string name="app_name">弘飞线缆</string>
     <string name="title_activity_mine">MineActivity</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings1">发布</string>
 
     <!--tabbar_bottoom-->
     <string name="tabbar_bottom_main">首页</string>

@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity
     private Dialog dialog;
     private AsyncBitmapLoader asyncBitmapLoader;
     private Toolbar toolbar;
+    private Menu mMenu;
+    private boolean flag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +116,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        if (flag){
+            hiddenEditMenu();
+        }else{
+            showEditMenu();
+        }
         //初始化数据
         initValues();
     }
@@ -130,22 +137,45 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        mMenu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
+    private void hiddenEditMenu(){
+        if(null != mMenu){
+            Toast.makeText(this,"111111111111",Toast.LENGTH_SHORT).show();
+            for (int i = 0; i < mMenu.size(); i++){
+                mMenu.getItem(i).setVisible(false);
+                mMenu.getItem(i).setEnabled(false);
+                }
+            }else{
+            Toast.makeText(this,"22222222",Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void showEditMenu(){
+        if(null != mMenu){
+            for (int i = 0; i < mMenu.size(); i++){
+                mMenu.getItem(i).setVisible(true);
+                mMenu.getItem(i).setEnabled(true);
+                }
+            }
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        return super.onPrepareOptionsMenu(menu);
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        Intent intent = new Intent();
+        intent.setClass(this,WriteCableRingActivity.class);
+        startActivity(intent);
         return super.onOptionsItemSelected(item);
     }
     /**
@@ -338,6 +368,7 @@ public class MainActivity extends AppCompatActivity
         textView_info.setTextColor(Color.parseColor("#000000"));
         imageView_market.setImageResource(R.mipmap.market);
         textView_market.setTextColor(Color.parseColor("#000000"));
+        flag = false;
     }
 
     //****************************************************************
@@ -503,4 +534,5 @@ public class MainActivity extends AppCompatActivity
     public void onPageScrollStateChanged(int state) {
 
     }
+
 }

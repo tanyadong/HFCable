@@ -682,4 +682,6 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         flag = (flag + 1) % 2;//其余得到循环执行上面2个不同的功能
         return super.onOptionsItemSelected(item);
     }
+
+
 }
