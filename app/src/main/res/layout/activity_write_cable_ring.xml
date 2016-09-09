@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:background="@color/colorGray"
     android:orientation="vertical" >
-
+<!--
     <include
         android:id="@+id/title_bar"
-        layout="@layout/header_titlebar" />
+        layout="@layout/header_titlebar" />-->
     <EditText
         android:id="@+id/Etext_write_cable_ring"
         android:layout_width="fill_parent"

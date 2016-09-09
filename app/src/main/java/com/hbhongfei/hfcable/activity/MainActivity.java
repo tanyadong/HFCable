@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private Menu mMenu;
     private boolean flag = true;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,14 +116,24 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onPostResume() {
-        super.onPostResume();
-        if (flag){
-            hiddenEditMenu();
-        }else{
-            showEditMenu();
-        }
+        id = SplashActivity.ID;
+        hiddenEditMenu();
+            if (id==4){
+                showMine();
+                viewPager.setCurrentItem(3);
+            }else if(id==1){
+                showHome();
+                viewPager.setCurrentItem(0);
+            }else if(id==2){
+                showMarket();
+                viewPager.setCurrentItem(1);
+            }else{
+                showInfo();
+                viewPager.setCurrentItem(2);
+            }
         //初始化数据
         initValues();
+        super.onPostResume();
     }
 
     @Override
@@ -145,13 +156,11 @@ public class MainActivity extends AppCompatActivity
 
     private void hiddenEditMenu(){
         if(null != mMenu){
-            Toast.makeText(this,"111111111111",Toast.LENGTH_SHORT).show();
             for (int i = 0; i < mMenu.size(); i++){
                 mMenu.getItem(i).setVisible(false);
                 mMenu.getItem(i).setEnabled(false);
                 }
             }else{
-            Toast.makeText(this,"22222222",Toast.LENGTH_SHORT).show();
         }
     }
     private void showEditMenu(){
@@ -175,6 +184,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent();
         intent.setClass(this,WriteCableRingActivity.class);
+        intent.putExtra("tag","main");
         startActivity(intent);
         return super.onOptionsItemSelected(item);
     }
@@ -243,7 +253,6 @@ public class MainActivity extends AppCompatActivity
      * 初始化界面
      */
     private void initView() {
-
         //main
         this.layout_index = (LinearLayout) findViewById(R.id.ll_main_page);
         this.layout_info = (LinearLayout) findViewById(R.id.ll_main_find);
@@ -326,6 +335,9 @@ public class MainActivity extends AppCompatActivity
         textView_info.setTextColor(Color.parseColor("#000000"));
         imageView_mine.setImageResource(R.mipmap.my);
         textView_mine.setTextColor(Color.parseColor("#000000"));
+        //隐藏menu
+        hiddenEditMenu();
+        SplashActivity.ID = 1;
     }
 
     /**
@@ -340,6 +352,9 @@ public class MainActivity extends AppCompatActivity
         textView_market.setTextColor(Color.parseColor("#000000"));
         imageView_mine.setImageResource(R.mipmap.my);
         textView_mine.setTextColor(Color.parseColor("#000000"));
+        //隐藏menu
+        hiddenEditMenu();
+        SplashActivity.ID = 3;
     }
 
     /**
@@ -354,6 +369,9 @@ public class MainActivity extends AppCompatActivity
         textView_info.setTextColor(Color.parseColor("#000000"));
         imageView_mine.setImageResource(R.mipmap.my);
         textView_mine.setTextColor(Color.parseColor("#000000"));
+        //隐藏menu
+        hiddenEditMenu();
+        SplashActivity.ID = 2;
     }
 
     /**
@@ -368,7 +386,9 @@ public class MainActivity extends AppCompatActivity
         textView_info.setTextColor(Color.parseColor("#000000"));
         imageView_market.setImageResource(R.mipmap.market);
         textView_market.setTextColor(Color.parseColor("#000000"));
-        flag = false;
+        //隐藏menu
+        showEditMenu();
+        SplashActivity.ID = 4;
     }
 
     //****************************************************************

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/Rlayout_address_list"
+    tools:context="com.hbhongfei.hfcable.activity.AddressListActivity">
+    <LinearLayout
+        android:id="@+id/l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/Rlayout_address_list_titlt"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/textview_address_list_name"
+                android:text="hhh"
+                android:textSize="18dp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/textview_address_list_phoneNumber"
+                android:text="15732158857"
+                android:gravity="center"
+                android:layout_marginLeft="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/textview_address_list_detail_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorRed"
+                android:visibility="gone"
+                android:text="默认"/>
+            <TextView
+                android:id="@+id/textview_address_list_detail"
+                android:text="详细地址啊啊 啊"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/v"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/l"
+        android:background="@color/colorGray"></View>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_toRightOf="@id/v"
+        android:layout_marginLeft="50dp">
+        <ImageView
+            android:id="@+id/Image_address_list"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/acu"/>
+    </LinearLayout>
+</RelativeLayout>

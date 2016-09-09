@@ -90,7 +90,7 @@ public class MarketFragment extends Fragment {
      * 访问网络
      */
     private void netWork(final String url) {
-        Toast.makeText(this.getActivity(),url,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this.getActivity(),url,Toast.LENGTH_SHORT).show();
         StringRequest request = new StringRequest(Request.Method.GET, "http://zhidao.baidu.com/link?url=VohVhU0t2U1J0R5mzHm5j4pOrMb61B-CUgd4RddcAFuAlguxGONQt46IG5aIfLTZHwWwNT97bdEAcWuofytfY705aRkQdkq6tkcp-YtMUi_", new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
@@ -131,7 +131,7 @@ public class MarketFragment extends Fragment {
         }
 //      适配器，加载数据
         setValues();
-        Toast.makeText(this.getActivity(),item_list.toString(),Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this.getActivity(),item_list.toString(),Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -170,9 +170,9 @@ public class MarketFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        group_list.clear();
-        child_list.clear();
-        item_list.clear();
+//        group_list.clear();
+//        child_list.clear();
+//        item_list.clear();
         item_list = null;
         child_list = null;
         group_list = null;

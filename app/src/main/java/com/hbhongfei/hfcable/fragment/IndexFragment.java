@@ -26,6 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.CompanyInfoActivity;
 import com.hbhongfei.hfcable.activity.ProdectListActivity;
@@ -295,9 +297,16 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
                         list1.add(jsonObject2.getString("image"));
                         String url=Url.url(jsonObject2.getString("image"));
                         img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-                        img1.setTag(url);
-                        AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-                        asyncBitmapLoader.loadImage(getActivity(),img1,url);
+//                        img1.setTag(url);
+//                        AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+//                        asyncBitmapLoader.loadImage(getActivity(),img1,url);
+
+                        Glide.with(IndexFragment.this.getContext())
+                                .load(url)
+                                .placeholder(R.mipmap.man)
+                                .error(R.mipmap.man)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into( img1 );
                         list.add(img1);
                         list_obj.add(company);
                         //给图片添加点击事件。跳转到公司信息界面
@@ -328,9 +337,15 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
                     project.setProjectImg(imgurl);
                     String url=Url.url(imgurl);
                     img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-                    img1.setTag(url);
-                    AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-                    asyncBitmapLoader.loadImage(getActivity(),img1,url);
+//                    img1.setTag(url);
+//                    AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+//                    asyncBitmapLoader.loadImage(getActivity(),img1,url);
+                    Glide.with(IndexFragment.this.getContext())
+                            .load(url)
+                            .placeholder(R.mipmap.man)
+                            .error(R.mipmap.man)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into( img1 );
                     list.add(img1);
                     list_obj.add(project);
                     //给图片添加点击事件。跳转到项目界面

@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.CommentActivity;
+import com.hbhongfei.hfcable.util.DateUtils;
 import com.hbhongfei.hfcable.util.GetComment;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.SaveComment;
@@ -120,7 +121,8 @@ public class CableRingAdapter extends BaseAdapter {
         //设置昵称
         holder.nickName.setText((String) map.get("nickName"));
         //设置创建时间
-        holder.time.setText((String) map.get("createTime"));
+        Long date = (Long) map.get("createTime");
+        holder.time.setText(DateUtils.convertTimeToFormat(date));
         //设置头像
         String url = Url.url((String) map.get("headPortrait"));
         Glide.with(mContext)
@@ -129,7 +131,6 @@ public class CableRingAdapter extends BaseAdapter {
                 .error(R.mipmap.man)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.head );
-
 
         //设置点击评论
         WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -224,6 +225,7 @@ public class CableRingAdapter extends BaseAdapter {
 
         //展示评论
         //根据id获取评论
+//        Toast.makeText()
         GetComment getComment = new GetComment(mContext, id[0],holder.listView_comment);
         getComment.connInter();
 

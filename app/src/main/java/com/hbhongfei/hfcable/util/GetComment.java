@@ -52,7 +52,7 @@ public class GetComment {
      */
     public void connInter(){
         Map<String,String> params =new HashMap<>();
-        params.put("id", id);
+        params.put("id", this.id);
         String url = Url.url("/androidComment/getComment");
         System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this.context);
@@ -85,7 +85,7 @@ public class GetComment {
                     //适配器
                     list.add(map);
                 }
-                Toast.makeText(context,list.size()+"",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,list.size()+"---",Toast.LENGTH_SHORT).show();
                 commentAdapter = new CommentAdapter(context,list);
                 listView.setAdapter(commentAdapter);
             } catch (JSONException e) {

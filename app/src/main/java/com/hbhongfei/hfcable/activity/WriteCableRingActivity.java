@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -36,6 +40,7 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.ImagePublishAdapter;
 import com.hbhongfei.hfcable.pojo.ImageItem;
 import com.hbhongfei.hfcable.util.CustomConstants;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.IntentConstants;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
@@ -63,16 +68,18 @@ public class WriteCableRingActivity extends AppCompatActivity{
     private EditText text;
     private ImagePublishAdapter mAdapter;
     private TextView sendTv;
-    public static List<ImageItem> mDataList = new ArrayList<ImageItem>();
+    public static List<ImageItem> mDataList = new ArrayList<>();
     private String S_text,S_phoneNumber;
     private static final String USER = LoginConnection.USER;
+    private Dialog dialog;
+    private String tag;
+    private Map<String, String> map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_cable_ring);
 
-        Toast.makeText(WriteCableRingActivity.this, "WriteCableRingActivity", Toast.LENGTH_SHORT).show();
         //初始化数据
         initData();
         //初始化组件
@@ -80,12 +87,32 @@ public class WriteCableRingActivity extends AppCompatActivity{
     }
 
     /**
+     * 初始化数据
+     */
+    @SuppressWarnings("unchecked")
+    private void initData() {
+        Intent intent = getIntent();
+        if (intent!=null){
+            tag = intent.getStringExtra("tag");
+            if (tag!=null&&!tag.equals("")){
+                mDataList.clear();
+                removeTextTempFromPref();
+            }
+        }
+        SharedPreferences spf = this.getSharedPreferences(USER, Context.MODE_PRIVATE);
+        S_phoneNumber = spf.getString("phoneNumber",null);
+        getTempFromPref();
+        List<ImageItem> incomingDataList = (List<ImageItem>) getIntent().getSerializableExtra(IntentConstants.EXTRA_IMAGE_LIST);
+        if (incomingDataList != null) {
+            mDataList.addAll(incomingDataList);
+        }
+    }
+    /**
      * 初始化界面
      */
     public void initView() {
+        dialog = new Dialog(this);
         text = (EditText) findViewById(R.id.Etext_write_cable_ring);
-        TextView titleTv = (TextView) findViewById(R.id.title_write_cable_ring);
-        titleTv.setText("");
         mGridView = (GridView) findViewById(R.id.gridview_write_cable_ring);
         mGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         mAdapter = new ImagePublishAdapter(this, mDataList);
@@ -102,19 +129,7 @@ public class WriteCableRingActivity extends AppCompatActivity{
                 }
             }
         });
-        sendTv = (TextView) findViewById(R.id.action);
-        sendTv.setText("发送");
-        sendTv.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                Toast.makeText(WriteCableRingActivity.this,"11111111111",Toast.LENGTH_SHORT).show();
-                S_text = text.getText().toString().trim();
-                connect();
-                removeTempFromPref();
-
-                //TODO 这边以mDataList为来源做上传的动作
-            }
-        });
+        getValues();
     }
 
     /**
@@ -122,38 +137,91 @@ public class WriteCableRingActivity extends AppCompatActivity{
      */
     private void setValues(){
         S_text = text.getText().toString().trim();
+        Toast.makeText(this,S_text+"",Toast.LENGTH_SHORT).show();
         SharedPreferences sp = getSharedPreferences(CustomConstants.APPLICATION_NAME, MODE_PRIVATE);
         sp.edit().putString(CustomConstants.PREF_TEMP_TEXT, S_text).commit();
     }
 
     /**
-     * 初始化数据
+     * 展示数据
      */
-    @SuppressWarnings("unchecked")
-    private void initData() {
-        SharedPreferences spf = this.getSharedPreferences(USER, Context.MODE_PRIVATE);
-        S_phoneNumber = spf.getString("phoneNumber",null);
-        getTempFromPref();
-        List<ImageItem> incomingDataList = (List<ImageItem>) getIntent().getSerializableExtra(IntentConstants.EXTRA_IMAGE_LIST);
-        if (incomingDataList != null) {
-            mDataList.addAll(incomingDataList);
+    private void getValues(){
+        SharedPreferences sp = getSharedPreferences(CustomConstants.APPLICATION_NAME, MODE_PRIVATE);
+        String t =  sp.getString(CustomConstants.PREF_TEMP_TEXT,null);
+        if (t!=null){
+            text.setText(t);
         }
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_write_cable_ring, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==R.id.menu_write){
+//            Toast.makeText(this,"发表",Toast.LENGTH_SHORT).show();
+            S_text = text.getText().toString().trim();
+            connect(S_text);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
     /**
      * 保存缆圈信息
      */
-    private void connect() {
-        String url = Url.url("/androidCableRing/save");
+    private void connect(String s) {
+        if (s.equals("")&&mDataList.size()==0){
+            Toast.makeText(this,"内容不能为空",Toast.LENGTH_SHORT).show();
+        }else{
+            dialog.showDialog("正在发表中。。");
+            String url = Url.url("/androidCableRing/save");
+            RequestQueue mQueue = Volley.newRequestQueue(this);
+            map = new HashMap<>();
+            if (s!=null||!s.equals("")){
+                map.put("content", s);
+            }
+            map.put("userName", S_phoneNumber);
+            if (mDataList.size()!=0){
+                String [] images = new String[mDataList.size()-1];
+                /*for (int i=0;i<mDataList.size();i++){
+//                    new Thread()
+                    try {
+                        Bitmap bitmap = BitmapFactory.decodeFile(mDataList.get(i).sourcePath);
+                        //转换字符流
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        //将bitmap一字节流输出 Bitmap.CompressFormat.PNG 压缩格式，100：压缩率，baos：字节流
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        baos.close();
+                        byte[] buffer = baos.toByteArray();
+                        System.out.println("图片的大小："+buffer.length);
+                        //将图片的字节流数据加密成base64字符输出
+                        String photo = Base64.encodeToString(buffer, 0, buffer.length,Base64.DEFAULT);
+                        map.put("image"+i,photo);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }*/
+                new BitmapThread().start();
+            }
+                NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectAddCableRingListener, errorListener, map);
+                mQueue.add(normalPostRequest);
+        }
+    }
 
-        RequestQueue mQueue = Volley.newRequestQueue(this);
-        Map<String, String> map = new HashMap<>();
-        map.put("content", S_text);
-        map.put("userName", S_phoneNumber);
-        if (mDataList.size()!=0){
-            String [] images = new String[mDataList.size()-1];
-            for (int i=0;i<mDataList.size();i++){
+    private static final int TAG = 0x1;
+    class BitmapThread extends Thread{
+        @Override
+        public void run() {
+            for (int i=0;i<mDataList.size();i++) {
                 try {
                     Bitmap bitmap = BitmapFactory.decodeFile(mDataList.get(i).sourcePath);
                     //转换字符流
@@ -162,23 +230,32 @@ public class WriteCableRingActivity extends AppCompatActivity{
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                     baos.close();
                     byte[] buffer = baos.toByteArray();
-                    System.out.println("图片的大小："+buffer.length);
+                    System.out.println("图片的大小：" + buffer.length);
                     //将图片的字节流数据加密成base64字符输出
-                    String photo = Base64.encodeToString(buffer, 0, buffer.length,Base64.DEFAULT);
-                    map.put("image"+i,photo);
+                    String photo = Base64.encodeToString(buffer, 0, buffer.length, Base64.DEFAULT);
+                    map.put("image" + i, photo);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-
-        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectAddCableRingListener, errorListener, map);
-        mQueue.add(normalPostRequest);
     }
+/*
+    private Handler handler =  new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case TAG:
+
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+
+    };*/
 
     /**
-     * 添加购物车成功的监听器
-     * 返回的添加购物车的状态信息
+     * 发表缆圈成功后的状态
      */
     private Response.Listener<JSONObject> jsonObjectAddCableRingListener = new Response.Listener<JSONObject>() {
         @Override
@@ -187,12 +264,19 @@ public class WriteCableRingActivity extends AppCompatActivity{
                 String msg = jsonObject.getString("save");
                 if (TextUtils.equals(msg, "success")) {
                     Toast.makeText(WriteCableRingActivity.this,"success",Toast.LENGTH_SHORT).show();
+                    SplashActivity.ID = 4;
                     removeTempFromPref();
+                    removeTextTempFromPref();
+                    Intent intent = new Intent(WriteCableRingActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    dialog.cancle();
                 } else {
                     Toast.makeText(WriteCableRingActivity.this,"failed",Toast.LENGTH_SHORT).show();
+                    dialog.cancle();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.cancle();
             }
         }
 
@@ -206,26 +290,31 @@ public class WriteCableRingActivity extends AppCompatActivity{
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(WriteCableRingActivity.this, "请求数据失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
         }
     };
 
     protected void onPause() {
         super.onPause();
         saveTempToPref();
+        setValues();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         saveTempToPref();
+        setValues();
     }
     /**
      * 保存照片
      */
     private void saveTempToPref() {
         SharedPreferences sp = getSharedPreferences(CustomConstants.APPLICATION_NAME, MODE_PRIVATE);
-        String prefStr = JSON.toJSONString(mDataList);
-        sp.edit().putString(CustomConstants.PREF_TEMP_IMAGES, prefStr).commit();
+        if (sp!=null){
+            String prefStr = JSON.toJSONString(mDataList);
+            sp.edit().putString(CustomConstants.PREF_TEMP_IMAGES, prefStr).commit();
+        }
 
     }
 
@@ -247,9 +336,22 @@ public class WriteCableRingActivity extends AppCompatActivity{
     private void removeTempFromPref() {
         SharedPreferences sp = getSharedPreferences(CustomConstants.APPLICATION_NAME, MODE_PRIVATE);
         sp.edit().remove(CustomConstants.PREF_TEMP_IMAGES).commit();
+//        sp.edit().remove(CustomConstants.PREF_TEMP_TEXT).commit();
     }
 
+    /**
+     * 清除文字缓存
+     */
+    private void removeTextTempFromPref() {
+        SharedPreferences sp = getSharedPreferences(CustomConstants.APPLICATION_NAME, MODE_PRIVATE);
+        sp.edit().remove(CustomConstants.PREF_TEMP_TEXT).commit();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        removeTempFromPref();
+    }
 
     @Override
     protected void onResume() {

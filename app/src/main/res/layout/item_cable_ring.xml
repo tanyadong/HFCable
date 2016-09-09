@@ -106,12 +106,15 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#cccccc" />
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGray" />
     <com.hbhongfei.hfcable.util.ListViewForScrollView
         android:id="@+id/ListView_comment"
         android:layout_width="wrap_content"
+        android:layout_margin="10dp"
         android:divider="@null"
+        android:background="@color/colorGray"
         android:layout_height="match_parent">
     </com.hbhongfei.hfcable.util.ListViewForScrollView>
 

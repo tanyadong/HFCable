@@ -13,6 +13,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.ImageItem;
@@ -32,6 +33,8 @@ public class ImageZoomActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_zoom);
+
+//        Toast.makeText(ImageZoomActivity.this,mDataList.size(),Toast.LENGTH_SHORT).show();
 
         photo_relativeLayout = (RelativeLayout) findViewById(R.id.photo_relativeLayout);
         photo_relativeLayout.setBackgroundColor(0x70000000);
@@ -69,7 +72,7 @@ public class ImageZoomActivity extends Activity {
 
     private void initData() {
         currentPosition = getIntent().getIntExtra(IntentConstants.EXTRA_CURRENT_IMG_POSITION, 0);
-        mDataList = PublishActivity.mDataList;
+        mDataList = WriteCableRingActivity.mDataList;
     }
 
     private void removeImgs() {
@@ -105,10 +108,8 @@ public class ImageZoomActivity extends Activity {
             int size = dataList.size();
             for (int i = 0; i != size; i++) {
                 ImageView iv = new ImageView(ImageZoomActivity.this);
-                ImageDisplayer.getInstance(ImageZoomActivity.this).displayBmp(
-                        iv, null, dataList.get(i).sourcePath, false);
-                iv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                        LayoutParams.MATCH_PARENT));
+                ImageDisplayer.getInstance(ImageZoomActivity.this).displayBmp(iv, null, dataList.get(i).sourcePath, false);
+                iv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
                 mViews.add(iv);
             }
         }

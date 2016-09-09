@@ -73,7 +73,6 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         setContentView(R.layout.activity_my_shopping);
         context = this;
         initView();
-//        initDatas();
         setOnClick();
 
     }
@@ -267,18 +266,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
      */
     private void setCartNum() {
         int count = 0;
-        /*for (int i = 0; i < groups.size(); i++) {
-            groups.get(i).setChoosed(allChekbox.isChecked());
-            TypeInfo group = groups.get(i);
-            List<CablesInfo> childs = children.get(group.getId());
-            for (CablesInfo cablesInfo : childs) {
-                count += 1;
-            }
-        }*/
-
         //购物车已清空
         if(count==0){
-//            clearCart();
         } else{
         }
     }

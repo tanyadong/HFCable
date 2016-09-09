@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,6 +16,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.ConfirmOrderAdapter;
+import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -43,7 +46,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
 //    private SimpleAdapter simpleAdapter;
     private ConfirmOrderAdapter confirmOrderAdapter;
     private String[] from = { "product_name", "introduce", "product_price", "product_num" ,"product_package","product_iamge"};
-//    private int[] to = { R.id.Tview_confirm_order_product_name, R.id.Tview_confirm_order_product_introduce,R.id.Tview_confirm_order_product_price,R.id.Tview_confirm_order_product_num,R.id.tv_unit_price };
 
     private static final String USER = LoginConnection.USER;
     private ArrayList<Map<String,Object>> proInfos;
@@ -51,6 +53,10 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
 
     private  String S_phoneNumber;
     private Double S_money;
+    private ShoppingAddress shoppingAddress;
+    private int tag= 0;
+    private static final String TEMP_INFO = "temp_info";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +67,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         initView();
 
         setOnClick();
-
 
     }
 
@@ -84,7 +89,9 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         super.onResume();
         initValues();
         setValues();
-        address();
+        if (tag==0){
+            address();
+        }
     }
 
     @Override
@@ -118,15 +125,11 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
      * 初始化数据
      */
     private void initValues(){
-        SharedPreferences spf = this.getSharedPreferences(USER, Context.MODE_PRIVATE);
-        S_phoneNumber = spf.getString("phoneNumber",null);
         Intent intent = getIntent();
         proInfos = (ArrayList<Map<String,Object>>) intent.getSerializableExtra("proInfos");
         S_money = intent.getDoubleExtra("price",0.00);
         packageMap = (Map<String, String>) intent.getSerializableExtra("map");
-        Toast.makeText(this,packageMap.toString(),Toast.LENGTH_SHORT).show();
     }
-
     /**
      * 设置数据
      */
@@ -156,8 +159,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
             list.add(map);
         }
 
-//        simpleAdapter = new SimpleAdapter(this, list, R.layout.content_comfirm_order_products,from,to);
-//        Toast.makeText(ConfirmOrderActivity.this,list.toString(),Toast.LENGTH_SHORT).show();
         confirmOrderAdapter = new ConfirmOrderAdapter(this,list);
         products.setAdapter(confirmOrderAdapter);
 
@@ -173,17 +174,34 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.Layout_confirm_order_location:
                 //转换地址
-//                intent.setClass(ConfirmOrderActivity.this,AddRecietAddress.class);
-//                startActivityForResult(intent,0);
+                Intent intent1 = getIntent();
+                intent.setClass(ConfirmOrderActivity.this,AddressListActivity.class);
+                startActivityForResult(intent,0);
                 break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Toast.makeText(this,"onActivityResult",Toast.LENGTH_SHORT).show();
+        if (requestCode==0&&resultCode==0){
+            shoppingAddress = (ShoppingAddress) data.getSerializableExtra("shoppingAddress");
+            name.setText(shoppingAddress.getConsignee());
+            telphone.setText(shoppingAddress.getPhone());
+            location.setText(shoppingAddress.getLocalArea()+shoppingAddress.getDetailAddress());
+            tag = 1;
+        }else{
+            tag = 0;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     /**
-     * 连接服务
+     * 连接地址服务
      */
     public void address(){
+        SharedPreferences spf = this.getSharedPreferences(USER, Context.MODE_PRIVATE);
+        S_phoneNumber = spf.getString("phoneNumber",null);
         String url = Url.url("/androidAddress/getDefauleAddress");
         Map<String,String> params =new HashMap<>();
         params.put("phoneNumber", S_phoneNumber);

@@ -14,6 +14,8 @@ import com.hbhongfei.hfcable.util.LoginConnection;
 
 public class SplashActivity extends Activity {
 
+    public static int ID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +87,13 @@ public class SplashActivity extends Activity {
                     SplashActivity.this.finish();
                     break;
                 case SWITCH_MAINACTIVITY:
+                    ID = 1;
                     mIntent = new Intent();
                     mIntent.setClass(SplashActivity.this, MainActivity.class);
+//                    mIntent.putExtra("id",1);
                     SplashActivity.this.startActivity(mIntent);
                     SplashActivity.this.finish();
+
                     break;
             }
             super.handleMessage(msg);

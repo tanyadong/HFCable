@@ -36,9 +36,9 @@
         tools:replace="android:icon, android:theme">
         <activity
             android:name=".activity.MainActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".activity.MyFavoriteActivity"
             android:parentActivityName=".activity.MainActivity" />
@@ -104,6 +104,7 @@
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -122,13 +123,17 @@
             android:name=".activity.InputMyInfoActivity"
             android:label="@string/title_activity_input_my_info"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.WriteCableRingActivity">
-        </activity>
+        <activity
+            android:name=".activity.WriteCableRingActivity"
+            android:parentActivityName=".activity.MainActivity"></activity>
         <activity android:name=".activity.ImageBucketChooseActivity" />
         <activity android:name=".activity.ImageChooseActivity" />
         <activity android:name=".activity.ImageZoomActivity" />
         <activity android:name=".activity.PublishActivity" />
-        <activity android:name=".activity.CommentActivity"></activity>
+        <activity android:name=".activity.CommentActivity" />
+        <activity android:name=".activity.AddressListActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".activity.ConfirmOrderActivity"></activity>
     </application>
 
 </manifest>

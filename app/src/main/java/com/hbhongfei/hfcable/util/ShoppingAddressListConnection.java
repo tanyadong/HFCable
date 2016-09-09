@@ -1,5 +1,6 @@
 package com.hbhongfei.hfcable.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.hbhongfei.hfcable.adapter.AddressListAdapter;
 import com.hbhongfei.hfcable.adapter.Address_all_Adapter;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 
@@ -24,16 +26,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by dell1 on 2016/8/11.
+ * Created by 苑雪元 on 2016/8/11.
  */
-public class ShoppingAddress_conn {
+public class ShoppingAddressListConnection {
     String phoneNum;
     private Context context;
     private  Dialog dialog;
     private ListView listView;
     private LinearLayout linearLayout;
-    public ShoppingAddress_conn(String phoneNum,Context context,ListView listView,LinearLayout linearLayout) {
+    private Activity activity;
+    public ShoppingAddressListConnection(Activity activity,String phoneNum, Context context, ListView listView, LinearLayout linearLayout) {
         this.phoneNum = phoneNum;
+        this.activity = activity;
         this.context=context;
         this.listView=listView;
         this.linearLayout=linearLayout;
@@ -78,14 +82,13 @@ public class ShoppingAddress_conn {
                         list.add(shoppingAddress);
                     }
                     //给listview添加数据
-                    Address_all_Adapter address_all_adapter = new Address_all_Adapter(context, list, phoneNum, listView, linearLayout);
-                    listView.setAdapter(address_all_adapter);
+                    AddressListAdapter addressListAdapter = new AddressListAdapter(activity,context, list, phoneNum, listView, linearLayout);
+                    listView.setAdapter(addressListAdapter);
                     listView.setDivider(null);
                     listView.setDividerHeight(30);
                     dialog.cancle();
                 }else{
                     dialog.cancle();
-//                    Toast.makeText(context,"k"+jsonObject.toString(),Toast.LENGTH_SHORT).show();
                     linearLayout.setVisibility(View.VISIBLE);
                 }
 
