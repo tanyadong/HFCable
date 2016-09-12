@@ -13,11 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -38,15 +38,18 @@ import com.hbhongfei.hfcable.pojo.Project;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.ConnectionProduct;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.NoScrollListView;
+import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
-import com.hbhongfei.hfcable.util.showbigpictude.ScaleView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -54,17 +57,17 @@ import java.util.concurrent.TimeUnit;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IndexFragment extends Fragment implements View.OnClickListener {
+public class IndexFragment extends Fragment implements View.OnClickListener,AbsListView.OnScrollListener{
     private View view;
-    private ScaleView scaleView;
     private String typeName;
     private LayoutInflater inflater;
     private ViewPager mviewPager;
     private ListView listView;
     private ImageView img1;
-    private TextView textView1, textView2;
     private Button btn_typeName1, btn_typeName2, btn_typeName3, btn_typeName4, btn_typeName5, btn_typeName6;
     private RequestQueue mQueue;
+    ConnectionProduct connectionProduct;
+    private int count;
     /**
      * 用于小圆点图片
      */
@@ -81,19 +84,42 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     private int currentItem = 0;//当前页面
 
     boolean isAutoPlay = true;//是否自动轮播
-
+    private int pageNo=1;//当前页数
     private ScheduledExecutorService scheduledExecutorService;
     Intent intent;
     private Dialog dialog;
+    private int visableLastIndex;//用来可显示的最后一条数据的索引
+    //底部footer
+    View footer;
+
+    //当前页数
+    int page = 1;
+    //是否加载数据中
+    boolean isLoading = false;
+    //判断是否为最后一行
+    boolean isLastRow=false;
+    //Toast显示状态
+    private int index = 0;
     private Handler handler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             super.handleMessage(msg);
-            if (msg.what == 100) {
-                mviewPager.setCurrentItem(currentItem);
+            switch (msg.what){
+                case 1:
+//                    //移除底部footer
+//                    listView.removeFooterView(footer);
+                    count=msg.arg1;
+                    Toast.makeText(getActivity(),count+"  000",Toast.LENGTH_SHORT).show();
+                    break;
+                case 100:
+                    mviewPager.setCurrentItem(currentItem);
+                    break;
+                default:
+                    break;
             }
+
         }
 
     };
@@ -105,6 +131,9 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_index, container, false);
+//        view.setFocusable(true);
+//        view.setFocusableInTouchMode(true);
+//        view.requestFocus();
         mQueue = Volley.newRequestQueue(this.getActivity());
         dialog=new Dialog(getActivity());
         initView(view);
@@ -114,12 +143,13 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
         connInter();
+        //获得最新产品的总数
+        getNewProduct();
         //加载“新型产品”模块数据
         setDate();
 //        setTypeValue();
         //连接获取公司的服务
         connInterGetCompanyInfo();
-
         onClick();
         if (isAutoPlay) {
             startPlay();
@@ -127,16 +157,47 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public void initView(View view) {
+    /**
+     * 获得最新的产品数
+     */
+    private void getNewProduct() {
+        String url = Url.url("/androidProduct/getTotalRecord");
+        Map<String,String> map=new HashMap<>();
+        map.put("newProducts","是");
+        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
+        mQueue.add(normalPostRequest);
+    }
+    /**
+     * 成功的监听器
+     * 返回的是产品种类
+     */
+    private Response.Listener<JSONObject> jsonObjectProductListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                JSONObject object=jsonObject.getJSONObject("page");
+                Message message=new Message();
+                message.what=1;
+                message.arg1=object.getInt("totalPages");
 
+                handler.sendMessage(message);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+    public void initView(View view) {
         inflater = LayoutInflater.from(getActivity());
 
-        listView = (ListView) view.findViewById(R.id.lv);
-        view.setFocusable(true);
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
+        listView = (NoScrollListView) view.findViewById(R.id.lv);
+        footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer, null);
+        listView.addFooterView(footer);
+        connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),listView,footer);
+
         mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
         dotLayout = (LinearLayout)view.findViewById(R.id.dotLayout);
+        //底部加载提示
+//        footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer, null);
 
         btn_typeName1 = (Button) view.findViewById(R.id.btn_type_name1);
         btn_typeName2 = (Button) view.findViewById(R.id.btn_type_name2);
@@ -156,6 +217,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         btn_typeName4.setOnClickListener(this);
         btn_typeName5.setOnClickListener(this);
         btn_typeName6.setOnClickListener(this);
+        listView.setOnScrollListener(this);
     }
 
     /**
@@ -163,9 +225,8 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
      */
     public void setDate() {
         //首页根据条件查询产品
-        ConnectionProduct connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),listView);
         try {
-            connectionProduct.connInterByType("是");
+            connectionProduct.connInterByType("是",pageNo);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -390,6 +451,10 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         editor.putString("phoneNum", phoneNum);
         editor.commit();
     }
+
+
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -432,6 +497,53 @@ public class IndexFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if(isLastRow && scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE ){
+            //动态加载数据
+            Toast.makeText(getActivity(),"aaaa",Toast.LENGTH_SHORT).show();
+            listView.addFooterView(footer);
+            pageNo++;
+            new LoadDataThread().start();
+        }
+        isLastRow=false;
+    }
+
+    /**
+     * 监听移动滚动条
+     */
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem,
+                         int visibleItemCount, int totalItemCount) {
+        if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount > 0) {
+            isLastRow = true;
+        }
+    }
+
+    /**
+     * 动态加载数据
+     */
+    private class LoadDataThread extends Thread{
+        @Override
+        public void run() {
+            super.run();
+
+                try {
+                     connectionProduct.connInterByType("是", pageNo);
+                        Thread.sleep(1000);
+                        return;
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+        }
+    }
     /**
      * 执行轮播图切换任务
      */

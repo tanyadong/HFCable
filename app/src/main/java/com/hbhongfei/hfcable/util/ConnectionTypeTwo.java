@@ -1,6 +1,8 @@
 package com.hbhongfei.hfcable.util;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
@@ -29,27 +31,49 @@ import java.util.Map;
 public class ConnectionTypeTwo {
     private Context context;
     private ExpandableListView listView;
-    List<TypeTwo> typeTwo_list=new ArrayList<>();
+    List<TypeTwo> typeTwo_list;
     ArrayList<Product> pro_list;
     ArrayList<ArrayList<Product>> list;
+    int page=1;
     Dialog dialog;
     private MyAdapter_typeTwo myAdapter_typeTwo;
     public ConnectionTypeTwo(Context context, ExpandableListView listView) {
         this.context = context;
         this.listView=listView;
     }
-
+    Handler mMandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what==0){
+                myAdapter_typeTwo.notifyDataSetChanged();
+            }
+//            if(msg.what==1){
+//                typeTwo_list.addAll((List<TypeTwo>) msg.obj);
+//                list.addAll((ArrayList<ArrayList<Product>>) msg.obj);
+//
+//                myAdapter_typeTwo = new MyAdapter_typeTwo(typeTwo_list, list, context);
+//                myAdapter_typeTwo.notifyDataSetChanged();
+//                    listView.setAdapter(myAdapter_typeTwo);
+//                for (int i = 0; i < myAdapter_typeTwo.getGroupCount(); i++) {
+//                    listView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
+//                }
+//            }
+        }
+    };
     /**
      * 连接服务
      * 根据种类查询二级种类
      * */
-    public void connInterByType(String typeName) throws JSONException {
+    public void connInterByType(String typeName,int pageNo) throws JSONException {
+        page=pageNo;
         RequestQueue mQueue = Volley.newRequestQueue(context);
         dialog=new Dialog(context);
-        dialog.showDialog("正在加载中。。。");
+//        dialog.showDialog("正在加载中。。。");
         String url = Url.url("/androidTypeTwo/getTypeTwo");
         Map<String,String> map=new HashMap<>();
         map.put("typeName",typeName);
+        map.put("pageNo",String.valueOf(pageNo));
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectTypeTwoListener,errorListener,map);
         mQueue.add(normalPostRequest);
     }
@@ -62,6 +86,7 @@ public class ConnectionTypeTwo {
         public void onResponse(JSONObject jsonObject) {
             try {
                 list=new ArrayList<>();
+                typeTwo_list=new ArrayList<>();
                 JSONArray jsonArray=jsonObject.getJSONArray("typeTwolist");
                 int count=jsonArray.length();
                 for(int i=0;i<count;i++){
@@ -98,7 +123,7 @@ public class ConnectionTypeTwo {
                         if(array.length()>0){
                             ArrayList<String> list1=new ArrayList<>();
                             for(int k=0;k<array.length();k++){
-                                list1.add((String) array.get(i));
+                                list1.add((String) array.get(k));
                             }
                             product.setProductImages(list1);
                         }
@@ -106,13 +131,25 @@ public class ConnectionTypeTwo {
                     }
                     list.add(pro_list);
                 }
-
-                myAdapter_typeTwo = new MyAdapter_typeTwo(typeTwo_list, list, context);
-                listView.setAdapter(myAdapter_typeTwo);
+//                Message msg=new Message();
+//                msg.what=1;
+//                msg.obj=typeTwo_list;
+//                msg.obj=list;
+//                mMandler.sendMessage(msg);
+                if(page==1) {
+                    myAdapter_typeTwo = new MyAdapter_typeTwo(typeTwo_list, list, context);
+                    listView.setAdapter(myAdapter_typeTwo);
+                }else{
+                    myAdapter_typeTwo.addGroup(typeTwo_list);
+                    myAdapter_typeTwo.addChild(list);
+                    mMandler.sendEmptyMessage(0);
+//                    listView.setAdapter(myAdapter_typeTwo);
+//                    mMandler.sendEmptyMessage(0);
+                }
                 for (int i = 0; i < myAdapter_typeTwo.getGroupCount(); i++) {
                     listView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
                 }
-                dialog.cancle();
+//                dialog.cancle();
             } catch (JSONException e) {
                 e.printStackTrace();
             }

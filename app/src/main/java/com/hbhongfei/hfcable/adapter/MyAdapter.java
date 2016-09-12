@@ -53,7 +53,11 @@ public class MyAdapter extends BaseAdapter {
         }
         this.tag = tag;
     }
-
+    public void addItem(Product product)
+    {
+        list.add(product);
+        notifyDataSetChanged();
+    }
     @Override
     public int getCount() {
         if(list.size()%2>0) {

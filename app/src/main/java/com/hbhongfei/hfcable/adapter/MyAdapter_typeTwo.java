@@ -8,6 +8,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.ProdectInfoActivity;
@@ -52,14 +53,17 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
         this.children = children;
         this.context = context;
     }
-
-    public void setCheckInterface(CheckInterface checkInterface) {
-        this.checkInterface = checkInterface;
+    public List<TypeTwo> addGroup(List<TypeTwo> list){
+        groups.addAll(list);
+        this.notifyDataSetChanged();
+        return groups;
+    }
+    public ArrayList<ArrayList<Product>> addChild(ArrayList<ArrayList<Product>> list){
+        children.addAll(list);
+        this.notifyDataSetChanged();
+        return children;
     }
 
-    public void setModifyCountInterface(ModifyCountInterface modifyCountInterface) {
-        this.modifyCountInterface = modifyCountInterface;
-    }
 
     @Override
     public int getGroupCount() {
@@ -111,7 +115,7 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
         }
         final TypeTwo group = (TypeTwo) getGroup(groupPosition);
         gholder.tv_group_name.setText(group.getTypeTwoName());
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
         return convertView;
     }
 
@@ -126,17 +130,20 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
         } else {
             cholder = (ChildViewHolder) convertView.getTag();
         }
-        Product_Adapter adapter=new Product_Adapter(children.get(groupPosition),context);
-        cholder.gridView.setAdapter(adapter);
-        adapter.setItemClickListener(new Product_Adapter.onItemClickListener() {
-            @Override
-            public void onItemClick(Product product, int position) {
-                Intent intent=new Intent(context, ProdectInfoActivity.class);
-                intent.putExtra("product",product);
-                context.startActivity(intent);
-            }
-        });
-        notifyDataSetChanged();
+
+        if(children.get(groupPosition)!=null) {
+            Product_Adapter adapter = new Product_Adapter(children.get(groupPosition), context);
+            cholder.gridView.setAdapter(adapter);
+            adapter.setItemClickListener(new Product_Adapter.onItemClickListener() {
+                @Override
+                public void onItemClick(Product product, int position) {
+                    Intent intent = new Intent(context, ProdectInfoActivity.class);
+                    intent.putExtra("product", product);
+                    context.startActivity(intent);
+                }
+            });
+        }
+//        notifyDataSetChanged();
         return convertView;
     }
 

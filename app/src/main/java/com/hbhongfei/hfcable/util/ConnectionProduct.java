@@ -1,7 +1,10 @@
 package com.hbhongfei.hfcable.util;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,21 +33,45 @@ import java.util.Map;
 public class ConnectionProduct {
     private Context context;
     private ListView listView;
+    private MyAdapter adapter;
+    private View view;
+    private ArrayList<Product> list_pro=new ArrayList<>();
+    private List<Product> list;
+    private int page=1;
     List<String> type_list=new ArrayList<>();
-    public ConnectionProduct(Context context,ListView listView) {
+    public ConnectionProduct(Context context,ListView listView,View view) {
         this.context = context;
         this.listView=listView;
-    }
+        this.view=view;
 
+    }
+    Handler mHandler = new Handler(){
+        @SuppressWarnings("unchecked")
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    list_pro.addAll((ArrayList<Product>) msg.obj);
+                    //告诉适配器，数据变化了，从新加载listview
+                    adapter.notifyDataSetChanged();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     /**
      * 连接服务
      * 根据种类查询产品
      * */
-    public void connInterByType(String newProducts) throws JSONException {
+    public void connInterByType(String newProducts,int pageNo) throws JSONException {
+        page=pageNo;
         RequestQueue mQueue = Volley.newRequestQueue(context);
         String url = Url.url("/androidProduct/getProduct");
         Map<String,String> map=new HashMap<>();
         map.put("newProducts",newProducts);
+        map.put("pageNo",String.valueOf(pageNo));
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
         mQueue.add(normalPostRequest);
     }
@@ -57,9 +84,11 @@ public class ConnectionProduct {
         @Override
         public void onResponse(JSONObject jsonObject) {
             try {
-                List<Product> list=new ArrayList<>();
+
+                list=new ArrayList<>();
                 JSONArray jsonArray=jsonObject.getJSONArray("productList");
                 int count=jsonArray.length();
+                Toast.makeText(context,count+"ount",Toast.LENGTH_SHORT).show();
                 for(int i=0;i<count;i++){
                     JSONObject jsonObject1=jsonArray.getJSONObject(i);
                     //typeTwo
@@ -93,12 +122,27 @@ public class ConnectionProduct {
                         }
                         product.setProductImages(list1);
                     }
+//                    if(page==1) {
+//                        list.add(product);
+//                    }else {
+//                        adapter.addItem(product);
+//                    }
                     list.add(product);
-
                 }
-                MyAdapter adapter = new MyAdapter(context, R.layout.intentionlayout,list);
-                listView.setDivider(null);
-                listView.setAdapter(adapter);
+                Message message=new Message();
+                message.what=1;
+                message.obj=list;
+                mHandler.sendMessage(message);
+
+                    adapter = new MyAdapter(context, R.layout.intentionlayout, list_pro);
+                    listView.setDivider(null);
+                    listView.setAdapter(adapter);
+
+//                if(page==1) {
+//                    adapter = new MyAdapter(context, R.layout.intentionlayout, list);
+//                    listView.setDivider(null);
+//                    listView.setAdapter(adapter);
+//                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -115,4 +159,6 @@ public class ConnectionProduct {
             Log.e("TAG", volleyError.getMessage(), volleyError);
         }
     };
+
+
 }

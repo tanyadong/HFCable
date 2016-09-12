@@ -38,9 +38,9 @@
     <!--产品信息-->
     <string name="prodect_lable">产品信息</string>
     <string name="prodectList_lable">产品列表</string>
-    <string name="prodect_specifications">选择颜色，和包装方式</string>
+    <string name="prodect_specifications">选择颜色和包装方式</string>
     <string name="prodect_selected">已选择：</string>
-    <string name="prodect_cAnds">完善颜色规格</string>
+    <string name="prodect_cAnds">完善颜色包装方式</string>
     <string name="prodect_model">型号:</string>
     <string name="prodect_voltage">电压:</string>
     <string name="prodect_crossSection">横截面:</string>

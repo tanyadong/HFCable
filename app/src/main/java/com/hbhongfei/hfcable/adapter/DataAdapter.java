@@ -56,7 +56,6 @@ public class DataAdapter extends BaseAdapter {
 			hView = (HolderView) convertView.getTag();
 		}
 		hView.title.setText(newsData.get(position).getTitle());
-
 		hView.brief.setText(newsData.get(position).getBrief());
 		hView.time.setText(newsData.get(position).getTime());
 

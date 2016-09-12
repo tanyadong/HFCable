@@ -1,18 +1,19 @@
 package com.hbhongfei.hfcable.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
+import com.hbhongfei.hfcable.util.Dialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,16 +23,29 @@ import java.util.List;
 public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> group_list;
-    private List<List<MarketInfo>> item_list;
+    private ArrayList<List<MarketInfo>> item_list;
+    private ArrayList<MarketInfo> child_list;
     private ExpandableListView expandableListView;
     private LayoutInflater inflater;
-    public MyExpandableListViewAdapter(Context context,List<String> group_list,List<List<MarketInfo>> item_list,ExpandableListView listView) {
+    private RequestQueue queue;
+    private Dialog dialog;
+    private ArrayList<String> url_list;
+    public MyExpandableListViewAdapter(Context context,List<String> group_list,ArrayList<List<MarketInfo>> item_list,ExpandableListView listView,RequestQueue queue,Dialog d
+                                       ) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.item_list=item_list;
         this.group_list=group_list;
         this.expandableListView=listView;
+        this.queue=queue;
+        this.dialog=d;
+
+
     }
+
+
+
+
     @Override
     public int getGroupCount() {
         return group_list.size();
@@ -42,7 +56,10 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     @Override
     public int getChildrenCount(int groupPosition) {
 //        Toast.makeText()
-        return item_list.get(groupPosition).size();
+        if(item_list.size()!=0) {
+            return item_list.get(groupPosition).size();
+        }
+        return 0;
     }
 
     @Override
@@ -52,7 +69,10 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return item_list.get(groupPosition).get(childPosition);
+        if(item_list.get(groupPosition)!=null) {
+            return item_list.get(groupPosition).get(childPosition);
+        }
+        return  null;
     }
 
     @Override
@@ -62,12 +82,12 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
+        return 0;
     }
 
     @Override
     public boolean hasStableIds() {
-        return true;
+        return false;
     }
 
     @Override
@@ -87,10 +107,10 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition,
+    public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         ItemHolder itemHolder = null;
-//        Toast.makeText(context,item_list.toString(),Toast.LENGTH_SHORT).show();
+
         if (convertView == null) {
             convertView=inflater.inflate(R.layout.market_childlist_layout, null);
             itemHolder = new ItemHolder();
@@ -133,20 +153,10 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
+        return false;
     }
 
-    @Override
-    public void notifyDataSetChanged() {
 
-        int groupCount = expandableListView.getCount();
-        Toast.makeText(context,groupCount+"",Toast.LENGTH_SHORT).show();
-        Log.i("-------", "groupCount="+groupCount);
-        super.notifyDataSetChanged();
-        for (int i=0; i<groupCount; i++) {
-            expandableListView.expandGroup(i);
-        };
-    }
     class GroupHolder {
         public TextView txt;
     }

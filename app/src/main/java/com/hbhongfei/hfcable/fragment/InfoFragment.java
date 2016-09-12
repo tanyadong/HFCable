@@ -9,11 +9,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -37,7 +39,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InfoFragment extends Fragment {
+public class InfoFragment extends Fragment implements AbsListView.OnScrollListener {
     RequestQueue queue=null;
     private View view;
     private ListView info_listView;
@@ -48,7 +50,18 @@ public class InfoFragment extends Fragment {
     Button reload = null;
     LinearLayout loadLayout = null;
     TextView loading = null;
+    String total = null;
+    //底部footer
+    View footer;
 
+    //是否加载数据中
+    boolean isLoading = false;
+    boolean isLastRow=false;
+    //Toast显示状态
+    boolean isToast = false;
+    private int index = 0;
+    private int count;
+    private ArrayList<String> strings;
     public InfoFragment() {
         // Required empty public constructor
     }
@@ -59,9 +72,9 @@ public class InfoFragment extends Fragment {
         //声明一个队列
         queue= Volley.newRequestQueue(getActivity());
         initView(view);
-
+        //获取最大数量
         setValues();
-//        click();
+        click();
         return view;
     }
 
@@ -73,7 +86,7 @@ public class InfoFragment extends Fragment {
             mHandler.sendEmptyMessage(0);
             if(isFirst){
                 isFirst = false;
-                loadData();
+                loadData(index);
             }
         } else {
 
@@ -86,17 +99,26 @@ public class InfoFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mAdapter.notifyDataSetChanged();
+                    isToast = false;
                     break;
                 case 1:
-                    info_list.clear();
+//                   info_list.clear();
                     //添加数据
                     info_list.addAll((List<Information>) msg.obj);
+                    //告诉适配器，数据变化了，从新加载listview
                     mAdapter.notifyDataSetChanged();
+//                    //移除底部footer
+//                    info_listView.removeFooterView(footer);
+                    //设置加载中为false
+                    isLoading = false;
+                    count=msg.arg1;
+//                    while (index<count) {
+//                        index++;
+//                        return;
+//                    }
                     loadLayout.setVisibility(View.GONE);
                     info_listView.setVisibility(View.VISIBLE);
                     mAdapter.notifyDataSetChanged();
-
                     break;
                 case 2:
                     reload.setVisibility(View.VISIBLE);
@@ -104,11 +126,11 @@ public class InfoFragment extends Fragment {
                         loading.setText(getString(R.string.tip_text_data_fail));
                     }
                     break;
+
                 default:
                     break;
             }
         }
-
     };
     /**
      * 初始化组件
@@ -118,17 +140,15 @@ public class InfoFragment extends Fragment {
         loadLayout= (LinearLayout) view.findViewById(R.id.fragment_load_layout);
         loading = (TextView) view.findViewById(R.id.fragment_loading);
         reload = (Button)view.findViewById(R.id.fragment_reload);
-
-
+        footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer, null);
     }
+
     /**
      * 初始化数据
      */
     private  void setValues(){
         mAdapter = new DataAdapter(getActivity(), info_list);
         //添加头和尾
-//        info_listView.addHeaderView(new View(getActivity()));
-//        info_listView.addFooterView(new View(getActivity()));
         info_listView.setAdapter(mAdapter);
         info_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -145,64 +165,79 @@ public class InfoFragment extends Fragment {
             public void onClick(View v) {
                 loading.setText(getString(R.string.tip_text_data_loading));
                 reload.setVisibility(View.GONE);
-                loadData();
+                loadData(index);
             }
         });
     }
 /***
  * 点击事件
  */
-//    private void click(){
-//        reload.setOnClickListener(this);
-//    }
+    private void click(){
+        info_listView.setOnScrollListener(this);
+    }
     /**
      * 加载数据
      */
-    private void loadData(){
+    private void loadData( final int index){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String url="http://news.cableabc.com/gc_0.html";
-                StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        parse(s);
-                        loading.setVisibility(View.GONE);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //请求失败
-                        isFirst = true;
-                        Message msg = new Message();
-                        msg.what = 2;
-                        mHandler.sendMessage(msg);
-                        System.out.println(volleyError);
-                    }
-                });
-                queue.add(request);
-            }
+                String url="http://news.cableabc.com/gc_"+index+".html";
+                    StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String s) {
+                            parse(s);
+                            loading.setVisibility(View.GONE);
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            //请求失败
+                            isFirst = true;
+                        }
+                    });
+                    queue.add(request);
+                }
         }).start();
+
     }
 
     /**
      * 解析html
-     * @param html
+     * @param
      */
     protected void parse(String html) {
         list=new ArrayList<>();
         Document doc = Jsoup.parse(html);
+            Elements a = doc.getElementById("main_cont_ContentPlaceHolder1_pager").getElementsByTag("a");
+            String s_url=a.last().attr("href");
+            total=s_url.substring(s_url.indexOf("_")+1,s_url.lastIndexOf("."));
         //Elements
         Elements topnews = doc.getElementsByClass("list31_newlist1");
-        for (Element link : topnews) {
-            Information information=new Information();
-            information.setTitle(link.getElementsByClass("list31_title1").text());
-            information.setBrief(link.getElementsByClass("list31_text1").text());
-            information.setImgUrl(link.getElementsByTag("img").attr("src"));
-            information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
-            loadContentData(information.getContentUrl(),information);
-            list.add(information);
+        int count = mAdapter.getCount();
+        //如果所有的记录选项等于数据集的条数，则移除列表底部视图
+        if(count == topnews.size()*Integer.parseInt(total)){
+            info_listView.removeFooterView(footer);
+            Toast.makeText(getActivity(), "已是全部数据!", Toast.LENGTH_LONG).show();
+        }else {
+//            for (int i = count; i < count + pageSize; i++) {
+             for (Element link : topnews) {
+                    Information information = new Information();
+                    information.setTitle(link.getElementsByClass("list31_title1").text());
+                    information.setBrief(link.getElementsByClass("list31_text1").text());
+                    information.setImgUrl(link.getElementsByTag("img").attr("src"));
+                    information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
+                    loadContentData(information.getContentUrl(), information);
+                    list.add(information);
+                }
+                Message msg = new Message();
+                msg.what = 1;
+                msg.arg1=Integer.parseInt(total);
+                msg.obj = list;
+                mHandler.sendMessage(msg);
         }
+
+
     }
 
     /**
@@ -210,7 +245,6 @@ public class InfoFragment extends Fragment {
      * @param url
      */
     private void loadContentData(String url, final Information information){
-
         StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
@@ -223,7 +257,6 @@ public class InfoFragment extends Fragment {
             }
         });
         queue.add(request);
-//                return s;
     }
     /**
      * 解析html
@@ -247,10 +280,85 @@ public class InfoFragment extends Fragment {
         }
         information.setTime(s_time+s_source);
         information.setDetailContent(content);
-        Message msg = new Message();
-        msg.what = 1;
-        msg.obj = list;
-        mHandler.sendMessage(msg);
     }
 
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if(isLastRow && scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && index<count){
+            //动态加载数据
+            Toast.makeText(getActivity(),"aaaa"+count+"",Toast.LENGTH_SHORT).show();
+            info_listView.addFooterView(footer);
+            index++;
+            loadData(index);
+
+//            new LoadDataThread().start();
+            mAdapter.notifyDataSetChanged();
+            isLastRow=false;
+        }
+
+    }
+    /**
+     * 动态加载数据
+     */
+    private class LoadDataThread extends Thread{
+        @Override
+        public void run() {
+            super.run();
+            try {
+                Thread.sleep(1000);
+                loadData(index);
+
+                return;
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+//    /**
+//     * 监听移动滚动条
+//     */
+//    @Override
+//    public void onScroll(AbsListView view, int firstVisibleItem,
+//                         int visibleItemCount, int totalItemCount) {
+//        // 如果正在加载，就return，防止加载多次
+//        if(isLoading)
+//            return;
+//        // 得到listview中显示在界面底部的id
+//        int lastItemid = info_listView.getLastVisiblePosition();
+//        // 如果是listview中显示在界面底部的id=滚动条中Item总数，说明滑动到底部了，并且当前页<=总页数
+//        if((lastItemid+1) == totalItemCount){
+//            //设置正在加载中
+//            isLoading = true;
+//            if(totalItemCount > 0){
+//                //现在底部footer
+//                info_listView.addFooterView(footer);
+//                new Thread(){
+//                    @Override
+//                    public void run() {
+//                        // TODO Auto-generated method stub
+//                        try {
+//                            Thread.sleep(600);
+//                            loadData(index);
+//                        } catch (InterruptedException e) {
+//                            // TODO Auto-generated catch block
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }.start();
+//            }
+//        }
+//  }
+
+    /**
+     * 监听移动滚动条
+     */
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem,
+                         int visibleItemCount, int totalItemCount) {
+        if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount > 0) {
+            isLastRow = true;
+        }
+    }
 }

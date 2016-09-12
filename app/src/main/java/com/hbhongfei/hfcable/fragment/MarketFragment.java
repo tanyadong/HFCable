@@ -3,12 +3,13 @@ package com.hbhongfei.hfcable.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,17 +34,20 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MarketFragment extends Fragment {
+public class MarketFragment extends Fragment  {
     private ExpandableListView expandableListView;
-    private ArrayList<String> url_list = null;
-    //    private TreeSet<String> url_list;
+    private ArrayList<String> url_list = new ArrayList<>();;
     private ArrayList<String> group_list = null;
-    private ArrayList<MarketInfo> child_list = null;
-    private ArrayList<List<MarketInfo>> item_list = null;
+    private ArrayList<MarketInfo> child_list;
+    private ArrayList<List<MarketInfo>> item_list= new ArrayList<List<MarketInfo>>();;
+    private ArrayList<List<MarketInfo>> item_list1=new ArrayList<>();
+    private ArrayList<Integer> groups=new ArrayList<>();
     private View view;
     private RequestQueue queue;
     private Dialog dialog;
-
+    boolean isFirst = true;
+    private MyExpandableListViewAdapter myExpandableListViewAdapter=null;
+    int j=0;
     public MarketFragment() {
     }
 
@@ -90,13 +94,12 @@ public class MarketFragment extends Fragment {
      * 访问网络
      */
     private void netWork(final String url) {
-//        Toast.makeText(this.getActivity(),url,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getActivity(),url,Toast.LENGTH_SHORT).show();
         StringRequest request = new StringRequest(Request.Method.GET, "http://zhidao.baidu.com/link?url=VohVhU0t2U1J0R5mzHm5j4pOrMb61B-CUgd4RddcAFuAlguxGONQt46IG5aIfLTZHwWwNT97bdEAcWuofytfY705aRkQdkq6tkcp-YtMUi_", new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 //解析界面
-//                parse(s);
-                dialog.cancle();
+                parse(s);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -131,7 +134,7 @@ public class MarketFragment extends Fragment {
         }
 //      适配器，加载数据
         setValues();
-//        Toast.makeText(this.getActivity(),item_list.toString(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getActivity(),item_list.toString(),Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -170,9 +173,9 @@ public class MarketFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-//        group_list.clear();
-//        child_list.clear();
-//        item_list.clear();
+        group_list.clear();
+        child_list.clear();
+        item_list.clear();
         item_list = null;
         child_list = null;
         group_list = null;

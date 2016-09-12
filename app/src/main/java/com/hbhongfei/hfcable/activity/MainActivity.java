@@ -1,6 +1,7 @@
 package com.hbhongfei.hfcable.activity;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,21 +15,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -76,9 +74,6 @@ public class MainActivity extends AppCompatActivity
     private Dialog dialog;
     private AsyncBitmapLoader asyncBitmapLoader;
     private Toolbar toolbar;
-    private Menu mMenu;
-    private boolean flag = true;
-    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,24 +111,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onPostResume() {
-        id = SplashActivity.ID;
-        hiddenEditMenu();
-            if (id==4){
-                showMine();
-                viewPager.setCurrentItem(3);
-            }else if(id==1){
-                showHome();
-                viewPager.setCurrentItem(0);
-            }else if(id==2){
-                showMarket();
-                viewPager.setCurrentItem(1);
-            }else{
-                showInfo();
-                viewPager.setCurrentItem(2);
-            }
+        super.onPostResume();
         //初始化数据
         initValues();
-        super.onPostResume();
     }
 
     @Override
@@ -148,44 +128,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        mMenu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
-    private void hiddenEditMenu(){
-        if(null != mMenu){
-            for (int i = 0; i < mMenu.size(); i++){
-                mMenu.getItem(i).setVisible(false);
-                mMenu.getItem(i).setEnabled(false);
-                }
-            }else{
-        }
-    }
-    private void showEditMenu(){
-        if(null != mMenu){
-            for (int i = 0; i < mMenu.size(); i++){
-                mMenu.getItem(i).setVisible(true);
-                mMenu.getItem(i).setEnabled(true);
-                }
-            }
-    }
-
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        return super.onPrepareOptionsMenu(menu);
-
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent();
-        intent.setClass(this,WriteCableRingActivity.class);
-        intent.putExtra("tag","main");
-        startActivity(intent);
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
     /**
@@ -253,6 +211,7 @@ public class MainActivity extends AppCompatActivity
      * 初始化界面
      */
     private void initView() {
+
         //main
         this.layout_index = (LinearLayout) findViewById(R.id.ll_main_page);
         this.layout_info = (LinearLayout) findViewById(R.id.ll_main_find);
@@ -335,9 +294,6 @@ public class MainActivity extends AppCompatActivity
         textView_info.setTextColor(Color.parseColor("#000000"));
         imageView_mine.setImageResource(R.mipmap.my);
         textView_mine.setTextColor(Color.parseColor("#000000"));
-        //隐藏menu
-        hiddenEditMenu();
-        SplashActivity.ID = 1;
     }
 
     /**
@@ -352,9 +308,6 @@ public class MainActivity extends AppCompatActivity
         textView_market.setTextColor(Color.parseColor("#000000"));
         imageView_mine.setImageResource(R.mipmap.my);
         textView_mine.setTextColor(Color.parseColor("#000000"));
-        //隐藏menu
-        hiddenEditMenu();
-        SplashActivity.ID = 3;
     }
 
     /**
@@ -369,9 +322,6 @@ public class MainActivity extends AppCompatActivity
         textView_info.setTextColor(Color.parseColor("#000000"));
         imageView_mine.setImageResource(R.mipmap.my);
         textView_mine.setTextColor(Color.parseColor("#000000"));
-        //隐藏menu
-        hiddenEditMenu();
-        SplashActivity.ID = 2;
     }
 
     /**
@@ -386,9 +336,6 @@ public class MainActivity extends AppCompatActivity
         textView_info.setTextColor(Color.parseColor("#000000"));
         imageView_market.setImageResource(R.mipmap.market);
         textView_market.setTextColor(Color.parseColor("#000000"));
-        //隐藏menu
-        showEditMenu();
-        SplashActivity.ID = 4;
     }
 
     //****************************************************************
@@ -554,5 +501,4 @@ public class MainActivity extends AppCompatActivity
     public void onPageScrollStateChanged(int state) {
 
     }
-
 }
