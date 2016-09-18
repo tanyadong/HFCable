@@ -2,6 +2,7 @@ package com.hbhongfei.hfcable.fragment;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,13 +10,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -28,6 +27,7 @@ import com.hbhongfei.hfcable.activity.InfoDetailActivity;
 import com.hbhongfei.hfcable.adapter.DataAdapter;
 import com.hbhongfei.hfcable.util.Information;
 
+import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -36,11 +36,18 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
+import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
+import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InfoFragment extends Fragment implements AbsListView.OnScrollListener {
+public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
     RequestQueue queue=null;
+    //下拉和分页框架
+    private static final String TAG = IndexFragment.class.getSimpleName();
+    private BGARefreshLayout mRefreshLayout;
     private View view;
     private ListView info_listView;
     private DataAdapter mAdapter = null;
@@ -51,29 +58,28 @@ public class InfoFragment extends Fragment implements AbsListView.OnScrollListen
     LinearLayout loadLayout = null;
     TextView loading = null;
     String total = null;
-    //底部footer
-    View footer;
-
     //是否加载数据中
     boolean isLoading = false;
-    boolean isLastRow=false;
     //Toast显示状态
     boolean isToast = false;
     private int index = 0;
-    private int count;
+    private int count=1;
     private ArrayList<String> strings;
     public InfoFragment() {
-        // Required empty public constructor
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view= inflater.inflate(R.layout.fragment_info, container, false);
         //声明一个队列
+        setHasOptionsMenu(true);
         queue= Volley.newRequestQueue(getActivity());
+        initRefreshLayout();
+
         initView(view);
-        //获取最大数量
-        setValues();
+
+//        //获取最大数量
+//        loadData(index);
         click();
         return view;
     }
@@ -88,8 +94,6 @@ public class InfoFragment extends Fragment implements AbsListView.OnScrollListen
                 isFirst = false;
                 loadData(index);
             }
-        } else {
-
         }
     }
     Handler mHandler = new Handler(){
@@ -100,25 +104,15 @@ public class InfoFragment extends Fragment implements AbsListView.OnScrollListen
             switch (msg.what) {
                 case 0:
                     isToast = false;
+                    count=msg.arg1;
                     break;
                 case 1:
-//                   info_list.clear();
-                    //添加数据
-                    info_list.addAll((List<Information>) msg.obj);
                     //告诉适配器，数据变化了，从新加载listview
                     mAdapter.notifyDataSetChanged();
-//                    //移除底部footer
-//                    info_listView.removeFooterView(footer);
                     //设置加载中为false
                     isLoading = false;
-                    count=msg.arg1;
-//                    while (index<count) {
-//                        index++;
-//                        return;
-//                    }
                     loadLayout.setVisibility(View.GONE);
                     info_listView.setVisibility(View.VISIBLE);
-                    mAdapter.notifyDataSetChanged();
                     break;
                 case 2:
                     reload.setVisibility(View.VISIBLE);
@@ -140,14 +134,23 @@ public class InfoFragment extends Fragment implements AbsListView.OnScrollListen
         loadLayout= (LinearLayout) view.findViewById(R.id.fragment_load_layout);
         loading = (TextView) view.findViewById(R.id.fragment_loading);
         reload = (Button)view.findViewById(R.id.fragment_reload);
-        footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer, null);
     }
+    private void initRefreshLayout() {
+        mRefreshLayout = (BGARefreshLayout)view.findViewById(R.id.rl_listview_refresh);
+        // 为BGARefreshLayout设置代理
+        mRefreshLayout.setDelegate(this);
+        // 设置下拉刷新和上拉加载更多的风格     参数1：应用程序上下文，参数2：是否具有上拉加载更多功能
+        BGARefreshViewHolder stickinessRefreshViewHolder = new BGANormalRefreshViewHolder(getActivity(), true);
+        // 设置正在加载更多时的文本
+        stickinessRefreshViewHolder.setLoadingMoreText("正在加载中");
+        mRefreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
 
+    }
     /**
      * 初始化数据
      */
-    private  void setValues(){
-        mAdapter = new DataAdapter(getActivity(), info_list);
+    private  void setValues(final List<Information> list){
+        mAdapter = new DataAdapter(getActivity(), list);
         //添加头和尾
         info_listView.setAdapter(mAdapter);
         info_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -155,7 +158,7 @@ public class InfoFragment extends Fragment implements AbsListView.OnScrollListen
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(getActivity(), InfoDetailActivity.class);
-                intent.putExtra("data", info_list.get(position));
+                intent.putExtra("data", list.get(position));
                 getActivity().startActivity(intent);
             }
 
@@ -173,7 +176,6 @@ public class InfoFragment extends Fragment implements AbsListView.OnScrollListen
  * 点击事件
  */
     private void click(){
-        info_listView.setOnScrollListener(this);
     }
     /**
      * 加载数据
@@ -186,7 +188,7 @@ public class InfoFragment extends Fragment implements AbsListView.OnScrollListen
                     StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String s) {
-                            parse(s);
+                            parse(s,index);
                             loading.setVisibility(View.GONE);
                         }
                     }, new Response.ErrorListener() {
@@ -206,40 +208,34 @@ public class InfoFragment extends Fragment implements AbsListView.OnScrollListen
      * 解析html
      * @param
      */
-    protected void parse(String html) {
+    protected void parse(String html,int index) {
         list=new ArrayList<>();
         Document doc = Jsoup.parse(html);
             Elements a = doc.getElementById("main_cont_ContentPlaceHolder1_pager").getElementsByTag("a");
             String s_url=a.last().attr("href");
             total=s_url.substring(s_url.indexOf("_")+1,s_url.lastIndexOf("."));
-        //Elements
-        Elements topnews = doc.getElementsByClass("list31_newlist1");
-        int count = mAdapter.getCount();
-        //如果所有的记录选项等于数据集的条数，则移除列表底部视图
-        if(count == topnews.size()*Integer.parseInt(total)){
-            info_listView.removeFooterView(footer);
-            Toast.makeText(getActivity(), "已是全部数据!", Toast.LENGTH_LONG).show();
-        }else {
-//            for (int i = count; i < count + pageSize; i++) {
-             for (Element link : topnews) {
-                    Information information = new Information();
-                    information.setTitle(link.getElementsByClass("list31_title1").text());
-                    information.setBrief(link.getElementsByClass("list31_text1").text());
-                    information.setImgUrl(link.getElementsByTag("img").attr("src"));
-                    information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
-                    loadContentData(information.getContentUrl(), information);
-                    list.add(information);
-                }
-                Message msg = new Message();
-                msg.what = 1;
-                msg.arg1=Integer.parseInt(total);
-                msg.obj = list;
-                mHandler.sendMessage(msg);
-        }
-
-
+            Message message=new Message();
+            message.what=0;
+            message.arg1=Integer.parseInt(total);
+            mHandler.sendMessage(message);
+            //Elements
+            Elements topnews = doc.getElementsByClass("list31_newlist1");
+                 for (Element link : topnews) {
+                        Information information = new Information();
+                        information.setTitle(link.getElementsByClass("list31_title1").text());
+                        information.setBrief(link.getElementsByClass("list31_text1").text());
+                        information.setImgUrl(link.getElementsByTag("img").attr("src"));
+                        information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
+                        loadContentData(information.getContentUrl(), information);
+                        list.add(information);
+                    }
+            if(index==0){
+                setValues(list);
+            }else{
+                mAdapter.addItems(list);
+                mHandler.sendEmptyMessage(1);
+            }
     }
-
     /**
      * 解析资讯详情
      * @param url
@@ -263,7 +259,6 @@ public class InfoFragment extends Fragment implements AbsListView.OnScrollListen
      * @param html
      */
     protected void parseContent(String html,Information information) {
-//        list=new ArrayList<>();
         Document doc = Jsoup.parse(html);
         //获取资讯时间
         Elements time = doc.getElementsByClass("contentspage");
@@ -282,83 +277,51 @@ public class InfoFragment extends Fragment implements AbsListView.OnScrollListen
         information.setDetailContent(content);
     }
 
+
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if(isLastRow && scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && index<count){
-            //动态加载数据
-            Toast.makeText(getActivity(),"aaaa"+count+"",Toast.LENGTH_SHORT).show();
-            info_listView.addFooterView(footer);
+    public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
+        index=0;
+        new MyAsyncTack().execute();
+    }
+
+    @Override
+    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
+        if(index<count) {
             index++;
-            loadData(index);
-
-//            new LoadDataThread().start();
-            mAdapter.notifyDataSetChanged();
-            isLastRow=false;
+            // 如果网络可用，则加载网络数据
+            new MyAsyncTack().execute();
+        }else{
+            mRefreshLayout.endLoadingMore();
+            return false;
         }
-
+        return true;
     }
+
     /**
-     * 动态加载数据
+     * 异步执行加载
      */
-    private class LoadDataThread extends Thread{
+    class MyAsyncTack extends AsyncTask<Void,Void,Void> {
         @Override
-        public void run() {
-            super.run();
-            try {
-                Thread.sleep(1000);
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
                 loadData(index);
+            return null;
+        }
 
-                return;
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mRefreshLayout.endLoadingMore();
+            mRefreshLayout.endRefreshing();
+            super.onPostExecute(aVoid);
         }
     }
-//    /**
-//     * 监听移动滚动条
-//     */
-//    @Override
-//    public void onScroll(AbsListView view, int firstVisibleItem,
-//                         int visibleItemCount, int totalItemCount) {
-//        // 如果正在加载，就return，防止加载多次
-//        if(isLoading)
-//            return;
-//        // 得到listview中显示在界面底部的id
-//        int lastItemid = info_listView.getLastVisiblePosition();
-//        // 如果是listview中显示在界面底部的id=滚动条中Item总数，说明滑动到底部了，并且当前页<=总页数
-//        if((lastItemid+1) == totalItemCount){
-//            //设置正在加载中
-//            isLoading = true;
-//            if(totalItemCount > 0){
-//                //现在底部footer
-//                info_listView.addFooterView(footer);
-//                new Thread(){
-//                    @Override
-//                    public void run() {
-//                        // TODO Auto-generated method stub
-//                        try {
-//                            Thread.sleep(600);
-//                            loadData(index);
-//                        } catch (InterruptedException e) {
-//                            // TODO Auto-generated catch block
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }.start();
-//            }
-//        }
-//  }
-
-    /**
-     * 监听移动滚动条
-     */
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem,
-                         int visibleItemCount, int totalItemCount) {
-        if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount > 0) {
-            isLastRow = true;
-        }
+    public void onDestroy() {
+        super.onDestroy();
+        //防止handler引起的内存泄露
+        mHandler.removeCallbacksAndMessages(null);
     }
 }

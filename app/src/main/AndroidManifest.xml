@@ -131,6 +131,7 @@
         <activity android:name=".activity.ImageZoomActivity" />
         <activity android:name=".activity.PublishActivity" />
         <activity android:name=".activity.CommentActivity" />
+        <!--地址列表-->
         <activity android:name=".activity.AddressListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".activity.ConfirmOrderActivity"></activity>

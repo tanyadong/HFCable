@@ -25,7 +25,10 @@ public class DataAdapter extends BaseAdapter {
 		inflater = LayoutInflater.from(context);
 		newsData = nList;
 	}
-
+public List<Information> addItems(List<Information> list){
+	newsData.addAll(list);
+	return newsData;
+}
 	@Override
 	public int getCount() {
 		return newsData.size();
@@ -48,7 +51,7 @@ public class DataAdapter extends BaseAdapter {
 			hView = new HolderView();
 			convertView = inflater.inflate(R.layout.list_item_card, null);
 			hView.image = (ImageView) convertView.findViewById(R.id.info_img);
-			hView.title = (TextView) convertView.findViewById(R.id.info_title_textView);
+			hView.title = (TextView) convertView.findViewById(R.id.info_titlecard_textView);
 			hView.brief = (TextView)convertView.findViewById(R.id.info_content_textVeiw);
 			hView.time= (TextView) convertView.findViewById(R.id.info_time_textView);
 			convertView.setTag(hView);

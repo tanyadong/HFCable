@@ -51,7 +51,10 @@ public class Address_all_Adapter extends BaseAdapter {
 		this.phoneNum=S_phone;
 		this.linearLayout=linearLayout;
 	}
-
+	public List<ShoppingAddress> addItems(List<ShoppingAddress> list){
+		this.list.addAll(list);
+		return this.list;
+	}
 	@Override
 	public int getCount() {
 		return list.size();
@@ -97,6 +100,7 @@ public class Address_all_Adapter extends BaseAdapter {
 			hView.llayout_defaule_address.setClickable(false);
 		} else {
 			hView.img_defaule_address.setImageResource(R.mipmap.select);
+			hView.textview_defaule_address.setTextColor(mContext.getResources().getColor(R.color.common_signin_btn_light_text_default));
 		}
 		//删除地址事件
 		hView.llayout_delete_address.setOnClickListener(new View.OnClickListener() {

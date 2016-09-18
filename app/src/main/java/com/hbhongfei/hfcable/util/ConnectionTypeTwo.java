@@ -131,11 +131,6 @@ public class ConnectionTypeTwo {
                     }
                     list.add(pro_list);
                 }
-//                Message msg=new Message();
-//                msg.what=1;
-//                msg.obj=typeTwo_list;
-//                msg.obj=list;
-//                mMandler.sendMessage(msg);
                 if(page==1) {
                     myAdapter_typeTwo = new MyAdapter_typeTwo(typeTwo_list, list, context);
                     listView.setAdapter(myAdapter_typeTwo);
@@ -143,8 +138,7 @@ public class ConnectionTypeTwo {
                     myAdapter_typeTwo.addGroup(typeTwo_list);
                     myAdapter_typeTwo.addChild(list);
                     mMandler.sendEmptyMessage(0);
-//                    listView.setAdapter(myAdapter_typeTwo);
-//                    mMandler.sendEmptyMessage(0);
+
                 }
                 for (int i = 0; i < myAdapter_typeTwo.getGroupCount(); i++) {
                     listView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现

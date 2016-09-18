@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,15 +33,13 @@ public class ConnectionProduct {
     private Context context;
     private ListView listView;
     private MyAdapter adapter;
-    private View view;
     private ArrayList<Product> list_pro=new ArrayList<>();
     private List<Product> list;
     private int page=1;
     List<String> type_list=new ArrayList<>();
-    public ConnectionProduct(Context context,ListView listView,View view) {
+    public ConnectionProduct(Context context,ListView listView) {
         this.context = context;
         this.listView=listView;
-        this.view=view;
 
     }
     Handler mHandler = new Handler(){
@@ -52,7 +49,6 @@ public class ConnectionProduct {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-                    list_pro.addAll((ArrayList<Product>) msg.obj);
                     //告诉适配器，数据变化了，从新加载listview
                     adapter.notifyDataSetChanged();
                     break;
@@ -84,11 +80,10 @@ public class ConnectionProduct {
         @Override
         public void onResponse(JSONObject jsonObject) {
             try {
-
                 list=new ArrayList<>();
                 JSONArray jsonArray=jsonObject.getJSONArray("productList");
                 int count=jsonArray.length();
-                Toast.makeText(context,count+"ount",Toast.LENGTH_SHORT).show();
+
                 for(int i=0;i<count;i++){
                     JSONObject jsonObject1=jsonArray.getJSONObject(i);
                     //typeTwo
@@ -122,27 +117,18 @@ public class ConnectionProduct {
                         }
                         product.setProductImages(list1);
                     }
-//                    if(page==1) {
-//                        list.add(product);
-//                    }else {
-//                        adapter.addItem(product);
-//                    }
                     list.add(product);
                 }
-                Message message=new Message();
-                message.what=1;
-                message.obj=list;
-                mHandler.sendMessage(message);
-
-                    adapter = new MyAdapter(context, R.layout.intentionlayout, list_pro);
+                if(page==1) {
+                    adapter = new MyAdapter(context, R.layout.intentionlayout, list);
                     listView.setDivider(null);
                     listView.setAdapter(adapter);
 
-//                if(page==1) {
-//                    adapter = new MyAdapter(context, R.layout.intentionlayout, list);
-//                    listView.setDivider(null);
-//                    listView.setAdapter(adapter);
-//                }
+                }else{
+                    adapter.addItem(list);
+                    mHandler.sendEmptyMessage(1);
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -159,6 +145,5 @@ public class ConnectionProduct {
             Log.e("TAG", volleyError.getMessage(), volleyError);
         }
     };
-
 
 }

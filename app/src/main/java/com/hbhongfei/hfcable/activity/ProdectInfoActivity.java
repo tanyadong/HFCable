@@ -42,7 +42,6 @@ import com.hbhongfei.hfcable.adapter.SkuAdapter;
 import com.hbhongfei.hfcable.pojo.Bean;
 import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.pojo.SkuItme;
-import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.CallTel;
 import com.hbhongfei.hfcable.util.DataUtil;
 import com.hbhongfei.hfcable.util.Dialog;
@@ -961,6 +960,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         spec_position = 0;
         prodectInfo_s1.setText(null);
         prodectInfo_s2.setText(null);
+        handler.removeCallbacksAndMessages(null);
+
     }
 
     /**
@@ -1053,4 +1054,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

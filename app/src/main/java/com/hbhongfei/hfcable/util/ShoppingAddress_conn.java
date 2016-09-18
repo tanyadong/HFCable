@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by dell1 on 2016/8/11.
+ * Created by 谭亚东 on 2016/8/11.
  */
 public class ShoppingAddress_conn {
     String phoneNum;
@@ -44,8 +44,9 @@ public class ShoppingAddress_conn {
      * @param
      */
     public void addressListConnection(){
-        dialog=new Dialog(context);
-        dialog.showDialog("正在加载中。。。");
+
+            dialog = new Dialog(context);
+            dialog.showDialog("正在加载中。。。");
         RequestQueue queue= Volley.newRequestQueue(context);
         String url= Url.url("/androidAddress/getAddress");
         Map<String,String> map=new HashMap<>();
@@ -62,7 +63,6 @@ public class ShoppingAddress_conn {
         @Override
         public void onResponse(JSONObject jsonObject) {
             try {
-
                     List<ShoppingAddress> list = new ArrayList<>();
                     JSONArray jsonArray = jsonObject.getJSONArray("address_list");
                 if(jsonArray.length()>0){
@@ -85,7 +85,6 @@ public class ShoppingAddress_conn {
                     dialog.cancle();
                 }else{
                     dialog.cancle();
-//                    Toast.makeText(context,"k"+jsonObject.toString(),Toast.LENGTH_SHORT).show();
                     linearLayout.setVisibility(View.VISIBLE);
                 }
 
@@ -94,6 +93,54 @@ public class ShoppingAddress_conn {
             }
         }
     };
+
+
+    /**
+     * 获取收货地址成功的监听器
+     */
+//    public Response.Listener<JSONObject> getSuccessListener = new Response.Listener<JSONObject>() {
+//        @Override
+//        public void onResponse(JSONObject jsonObject) {
+//            try {
+//                List<ShoppingAddress> list = new ArrayList<>();
+//                JSONArray jsonArray = jsonObject.getJSONArray("address_list");
+//                if(jsonArray.length()>0){
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+//                        ShoppingAddress shoppingAddress = new ShoppingAddress();
+//                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+//                        shoppingAddress.setId(jsonObject1.getString("id"));
+//                        shoppingAddress.setConsignee(jsonObject1.getString("consignee"));
+//                        shoppingAddress.setDetailAddress(jsonObject1.getString("detailAddress"));
+//                        shoppingAddress.setLocalArea(jsonObject1.getString("localArea"));
+//                        shoppingAddress.setPhone(jsonObject1.getString("phone"));
+//                        shoppingAddress.setTag(jsonObject1.getInt("tag"));
+//                        list.add(shoppingAddress);
+//                    }
+//                    //给listview添加数据
+//                    if(page==1) {
+//                        addressListAdapter = new Address_all_Adapter(context, list, phoneNum, listView, linearLayout);
+//                        listView.setAdapter(addressListAdapter);
+//                        listView.setDivider(null);
+//                        listView.setDividerHeight(30);
+////                        dialog.cancle();
+//                    }else{
+//                        addressListAdapter.addItems(list);
+//                        myHandler.sendEmptyMessage(0);
+//                        listView.setAdapter(addressListAdapter);
+//                    }
+//
+//                }else{
+//                    if(page==1){
+////                        dialog.cancle();
+//                    }
+//                    linearLayout.setVisibility(View.VISIBLE);
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    };
     /**
      *  失败的监听器
      */

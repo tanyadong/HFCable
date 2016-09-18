@@ -1,15 +1,14 @@
 package com.hbhongfei.hfcable.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.SpinnerListAdapter;
+import com.hbhongfei.hfcable.fragment.IndexFragment;
 import com.hbhongfei.hfcable.util.ConnectionTypeTwo;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.MySpinner;
@@ -38,10 +38,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProdectListActivity extends AppCompatActivity implements View.OnClickListener,AbsListView.OnScrollListener {
+import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
+import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
+import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
+
+public class ProdectListActivity extends AppCompatActivity implements View.OnClickListener,BGARefreshLayout.BGARefreshLayoutDelegate {
     private LinearLayout prodectType_spinner;
     private TextView prodectType_textView;
     private ExpandableListView prodectList_listView;
+    //下拉和分页框架
+    private static final String TAG = IndexFragment.class.getSimpleName();
+    private BGARefreshLayout mRefreshLayout;
     private String typeName;
     private int width;
     private RequestQueue mQueue;
@@ -62,6 +69,7 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         actionbar.setDisplayHomeAsUpEnabled(true);
         //初始化
         initView();
+        initRefreshLayout();
         setValues();
         connInter();
         getTotolCount();//总页数
@@ -82,8 +90,18 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         prodectType_spinner = (LinearLayout) findViewById(R.id.prodectType_spinner);
         prodectType_textView = (TextView) findViewById(R.id.prodectType_textView);
         prodectList_listView= (ExpandableListView) findViewById(R.id.prodectlist_listView);
-        footer= LayoutInflater.from(this).inflate(R.layout.footer,null);
-        loading= (TextView) footer.findViewById(R.id.id);
+    }
+
+    private void initRefreshLayout() {
+        mRefreshLayout = (BGARefreshLayout)findViewById(R.id.rl_expandable_refresh);
+        // 为BGARefreshLayout设置代理
+        mRefreshLayout.setDelegate(this);
+        // 设置下拉刷新和上拉加载更多的风格     参数1：应用程序上下文，参数2：是否具有上拉加载更多功能
+        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getApplication(),true);
+        // 设置下拉刷新和上拉加载更多的风格
+        mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
+        // 设置正在加载更多时的文本
+        refreshViewHolder.setLoadingMoreText("正在加载中");
     }
     /**
      * 获得总页数
@@ -116,8 +134,6 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         }
     };
     public void click(){
-//        prodectList_listView.setOnPageLoadListener(this);
-        prodectList_listView.setOnScrollListener(this);
     }
 
     /**
@@ -214,57 +230,50 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-//
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if(isLastRow && scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE &&pageNo<count){
-            //动态加载数据
-            Toast.makeText(this,"aaaa"+count,Toast.LENGTH_SHORT).show();
-            loading.setVisibility(View.VISIBLE);
-            new LoadDataThread().start();
-            prodectList_listView.addFooterView(footer);
-        }
-//        isLastRow=false;
+    public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
+        pageNo=1;
+        new MyAsyncTack().execute();
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount > 0) {
-            isLastRow = true;
+    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
+        if(pageNo<count){
+            pageNo++;
+           new MyAsyncTack().execute();
+        }else{
+            mRefreshLayout.endLoadingMore();
+            return false;
         }
+        return true;
     }
-
-//    @Override
-//    public void onPageChanging(int pageIndex) {
-//        //            typtTwoConnection.connInterByType(typeName,pageNo);
-//        new LoadDataThread().start();
-//    }
-//
-//    @Override
-//    public boolean canLoadData() {
-//        return true;
-//    }
-
-
-    /**
-     * 动态加载数据
-     */
-    private class LoadDataThread extends Thread{
+    class MyAsyncTack extends AsyncTask<Void,Void,Void> {
         @Override
-        public void run() {
-            super.run();
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
             try {
-                pageNo++;
                 typtTwoConnection.connInterByType(typeName,pageNo);
-                prodectList_listView.removeFooterView(footer);
-                Thread.sleep(1000);
-                return;
             } catch (JSONException e) {
                 e.printStackTrace();
-            }catch (InterruptedException e) {
-                e.printStackTrace();
             }
+            return null;
+        }
 
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mRefreshLayout.endLoadingMore();
+            mRefreshLayout.endRefreshing();
+            super.onPostExecute(aVoid);
         }
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //防止handler引起的内存泄露
+        mMandler.removeCallbacksAndMessages(null);
+    }
+
 }

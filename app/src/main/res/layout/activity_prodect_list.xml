@@ -59,13 +59,20 @@
                 <!--android:src="@mipmap/arrow_down"/>-->
         <!--</LinearLayout>-->
     </LinearLayout>
-    <ExpandableListView
-        android:id="@+id/prodectlist_listView"
+    <cn.bingoogolapple.refreshlayout.BGARefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/rl_expandable_refresh"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:childIndicator="@null"
-        android:groupIndicator="@null" >
-    </ExpandableListView>
+        android:layout_height="match_parent">
+        <ExpandableListView
+            android:id="@+id/prodectlist_listView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:childIndicator="@null"
+            android:groupIndicator="@null" >
+        </ExpandableListView>
+    </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
+
 
 </LinearLayout>

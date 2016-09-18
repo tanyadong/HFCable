@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/info_title_textView"
+            android:id="@+id/info_titlecard_textView"
             android:text=""
             android:layout_weight="1"
             android:paddingTop="10dp"
@@ -52,12 +52,7 @@
             android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <!--<TextView-->
-                <!--android:id="@+id/info_time_textView"-->
-                <!--android:gravity="right"-->
-                <!--android:text="asdasd "-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content" />-->
+
         </LinearLayout>
     </LinearLayout>
 

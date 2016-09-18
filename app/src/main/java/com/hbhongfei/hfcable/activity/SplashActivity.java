@@ -3,13 +3,11 @@ package com.hbhongfei.hfcable.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.util.LoginConnection;
 
 
 public class SplashActivity extends Activity {
@@ -99,4 +97,11 @@ public class SplashActivity extends Activity {
             super.handleMessage(msg);
         }
     };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //防止handler引起的内存泄露
+        mHandler.removeCallbacksAndMessages(null);
+    }
 }

@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.ProdectInfoActivity;
 import com.hbhongfei.hfcable.pojo.Product;
-import com.hbhongfei.hfcable.pojo.TypeInfo;
 import com.hbhongfei.hfcable.pojo.TypeTwo;
 
 import java.util.ArrayList;
@@ -28,18 +25,18 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
     private List<TypeTwo> groups;
     private ArrayList<ArrayList<Product>> children;
     private Context context;
-    private CheckInterface checkInterface;
-    private ModifyCountInterface modifyCountInterface;
+//    private CheckInterface checkInterface;
+//    private ModifyCountInterface modifyCountInterface;
     public  int flag = 0;
-    private GroupEdtorListener mListener;
-
-    public GroupEdtorListener getmListener() {
-        return mListener;
-    }
-
-    public void setmListener(GroupEdtorListener mListener) {
-        this.mListener = mListener;
-    }
+//    private GroupEdtorListener mListener;
+//
+//    public GroupEdtorListener getmListener() {
+//        return mListener;
+//    }
+//
+//    public void setmListener(GroupEdtorListener mListener) {
+//        this.mListener = mListener;
+//    }
 
     /**
      * 构造函数
@@ -115,7 +112,7 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
         }
         final TypeTwo group = (TypeTwo) getGroup(groupPosition);
         gholder.tv_group_name.setText(group.getTypeTwoName());
-//        notifyDataSetChanged();
+        notifyDataSetChanged();
         return convertView;
     }
 
@@ -143,7 +140,7 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
                 }
             });
         }
-//        notifyDataSetChanged();
+        notifyDataSetChanged();
         return convertView;
     }
 
@@ -172,84 +169,84 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
         GridView gridView;
     }
 
-    /**
-     * 复选框接口
-     */
-    public interface CheckInterface {
-        /**
-         * 组选框状态改变触发的事件
-         *
-         * @param groupPosition 组元素位置
-         * @param isChecked     组元素选中与否
-         */
-        void checkGroup(int groupPosition, boolean isChecked);
-
-        /**
-         * 子选框状态改变时触发的事件
-         *
-         * @param groupPosition 组元素位置
-         * @param childPosition 子元素位置
-         * @param isChecked     子元素选中与否
-         */
-        void checkChild(int groupPosition, int childPosition, boolean isChecked);
-    }
-
-    /**
-     * 改变数量的接口
-     */
-    public interface ModifyCountInterface {
-        /**
-         * 增加操作
-         *
-         * @param groupPosition 组元素位置
-         * @param childPosition 子元素位置
-         * @param showCountView 用于展示变化后数量的View
-         * @param isChecked     子元素选中与否
-         */
-        void doIncrease(int groupPosition, int childPosition, View showCountView, boolean isChecked);
-
-        /**
-         * 删减操作
-         *
-         * @param groupPosition 组元素位置
-         * @param childPosition 子元素位置
-         * @param showCountView 用于展示变化后数量的View
-         * @param isChecked     子元素选中与否
-         */
-        void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked);
-
-        /**
-         * 删除子item
-         * @param groupPosition
-         * @param childPosition
-         */
-        void childDelete(int groupPosition, int childPosition);
-    }
-
-    /**
-     * 监听编辑状态
-     */
-    public interface GroupEdtorListener{
-        void groupEdit(int groupPosition);
-    }
-    /**
-     * 使某个组处于编辑状态
-     * <p>
-     * groupPosition组的位置
-     */
-    class GroupViewClick implements View.OnClickListener {
-        private int groupPosition;
-        private Button edtor;
-
-        public GroupViewClick(int groupPosition, Button edtor, TypeInfo group) {
-            this.groupPosition = groupPosition;
-            this.edtor = edtor;
-        }
-
-
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
+//    /**
+//     * 复选框接口
+//     */
+//    public interface CheckInterface {
+//        /**
+//         * 组选框状态改变触发的事件
+//         *
+//         * @param groupPosition 组元素位置
+//         * @param isChecked     组元素选中与否
+//         */
+//        void checkGroup(int groupPosition, boolean isChecked);
+//
+//        /**
+//         * 子选框状态改变时触发的事件
+//         *
+//         * @param groupPosition 组元素位置
+//         * @param childPosition 子元素位置
+//         * @param isChecked     子元素选中与否
+//         */
+//        void checkChild(int groupPosition, int childPosition, boolean isChecked);
+//    }
+//
+//    /**
+//     * 改变数量的接口
+//     */
+//    public interface ModifyCountInterface {
+//        /**
+//         * 增加操作
+//         *
+//         * @param groupPosition 组元素位置
+//         * @param childPosition 子元素位置
+//         * @param showCountView 用于展示变化后数量的View
+//         * @param isChecked     子元素选中与否
+//         */
+//        void doIncrease(int groupPosition, int childPosition, View showCountView, boolean isChecked);
+//
+//        /**
+//         * 删减操作
+//         *
+//         * @param groupPosition 组元素位置
+//         * @param childPosition 子元素位置
+//         * @param showCountView 用于展示变化后数量的View
+//         * @param isChecked     子元素选中与否
+//         */
+//        void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked);
+//
+//        /**
+//         * 删除子item
+//         * @param groupPosition
+//         * @param childPosition
+//         */
+//        void childDelete(int groupPosition, int childPosition);
+//    }
+//
+//    /**
+//     * 监听编辑状态
+//     */
+//    public interface GroupEdtorListener{
+//        void groupEdit(int groupPosition);
+//    }
+//    /**
+//     * 使某个组处于编辑状态
+//     * <p>
+//     * groupPosition组的位置
+//     */
+//    class GroupViewClick implements View.OnClickListener {
+//        private int groupPosition;
+//        private Button edtor;
+//
+//        public GroupViewClick(int groupPosition, Button edtor, TypeInfo group) {
+//            this.groupPosition = groupPosition;
+//            this.edtor = edtor;
+//        }
+//
+//
+//        @Override
+//        public void onClick(View v) {
+//
+//        }
+//    }
 }

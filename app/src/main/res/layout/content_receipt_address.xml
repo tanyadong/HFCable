@@ -25,12 +25,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
-<ListView
-    android:id="@+id/lview_recriptAddress"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-</ListView>
+    <cn.bingoogolapple.refreshlayout.BGARefreshLayout
+        android:id="@+id/layout_address_listview"
+        android:layout_below="@id/layout_address_emity"
+        android:layout_above="@+id/add_recriptAddress_tview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ListView
+        android:id="@+id/lview_recriptAddress"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    </ListView>
+    </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
     <TextView
         android:id="@+id/add_recriptAddress_tview"
         android:text="@string/add_receiptAddress"

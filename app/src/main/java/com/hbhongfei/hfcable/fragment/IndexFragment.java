@@ -4,6 +4,7 @@ package com.hbhongfei.hfcable.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,11 +14,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -35,7 +35,6 @@ import com.hbhongfei.hfcable.activity.ProjectActivity;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
 import com.hbhongfei.hfcable.pojo.Company;
 import com.hbhongfei.hfcable.pojo.Project;
-import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.ConnectionProduct;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.NoScrollListView;
@@ -54,15 +53,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
+import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
+import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IndexFragment extends Fragment implements View.OnClickListener,AbsListView.OnScrollListener{
+public class IndexFragment extends Fragment implements View.OnClickListener ,BGARefreshLayout.BGARefreshLayoutDelegate{
+    //下拉和分页框架
+    private static final String TAG = IndexFragment.class.getSimpleName();
+    private BGARefreshLayout mRefreshLayout;
+
     private View view;
     private String typeName;
     private LayoutInflater inflater;
+    private ScrollView scrollView;
     private ViewPager mviewPager;
-    private ListView listView;
+    private NoScrollListView listView;
     private ImageView img1;
     private Button btn_typeName1, btn_typeName2, btn_typeName3, btn_typeName4, btn_typeName5, btn_typeName6;
     private RequestQueue mQueue;
@@ -88,18 +96,8 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
     private ScheduledExecutorService scheduledExecutorService;
     Intent intent;
     private Dialog dialog;
-    private int visableLastIndex;//用来可显示的最后一条数据的索引
-    //底部footer
-    View footer;
-
-    //当前页数
-    int page = 1;
-    //是否加载数据中
-    boolean isLoading = false;
-    //判断是否为最后一行
-    boolean isLastRow=false;
     //Toast显示状态
-    private int index = 0;
+    private View mLoadMoreFooterView;
     private Handler handler = new Handler() {
 
         @Override
@@ -108,10 +106,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-//                    //移除底部footer
-//                    listView.removeFooterView(footer);
                     count=msg.arg1;
-                    Toast.makeText(getActivity(),count+"  000",Toast.LENGTH_SHORT).show();
                     break;
                 case 100:
                     mviewPager.setCurrentItem(currentItem);
@@ -125,18 +120,17 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
     };
 
     public IndexFragment() {
-        // Required empty public constructor
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_index, container, false);
-//        view.setFocusable(true);
-//        view.setFocusableInTouchMode(true);
-//        view.requestFocus();
+
         mQueue = Volley.newRequestQueue(this.getActivity());
         dialog=new Dialog(getActivity());
+
         initView(view);
+        initRefreshLayout();
         list_obj=new ArrayList<>();
         list = new ArrayList<ImageView>();
         list_project=new ArrayList<>();
@@ -147,7 +141,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
         getNewProduct();
         //加载“新型产品”模块数据
         setDate();
-//        setTypeValue();
         //连接获取公司的服务
         connInterGetCompanyInfo();
         onClick();
@@ -157,6 +150,19 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
         return view;
     }
 
+    private void initRefreshLayout() {
+        mRefreshLayout = (BGARefreshLayout)view.findViewById(R.id.index_modulename_refresh);
+        // 为BGARefreshLayout设置代理
+        mRefreshLayout.setDelegate(this);
+        // 设置下拉刷新和上拉加载更多的风格     参数1：应用程序上下文，参数2：是否具有上拉加载更多功能
+        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity().getApplication(),true);
+        // 设置正在加载更多时的文本
+        refreshViewHolder.setLoadingMoreText("正在加载中");
+        // 设置下拉刷新和上拉加载更多的风
+        mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
+        // 为了增加下拉刷新头部和加载更多的通用性，提供了以下可选配置选项  -------------START
+        mRefreshLayout.setPullDownRefreshEnable(false);
+    }
     /**
      * 获得最新的产品数
      */
@@ -179,7 +185,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
                 Message message=new Message();
                 message.what=1;
                 message.arg1=object.getInt("totalPages");
-
                 handler.sendMessage(message);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -187,17 +192,18 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
         }
     };
     public void initView(View view) {
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
         inflater = LayoutInflater.from(getActivity());
-
+        scrollView= (ScrollView) view.findViewById(R.id.scrollView_index);
         listView = (NoScrollListView) view.findViewById(R.id.lv);
-        footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer, null);
-        listView.addFooterView(footer);
-        connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),listView,footer);
+        //底部加载提示
+        connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),listView);
 
         mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
         dotLayout = (LinearLayout)view.findViewById(R.id.dotLayout);
-        //底部加载提示
-//        footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer, null);
+
 
         btn_typeName1 = (Button) view.findViewById(R.id.btn_type_name1);
         btn_typeName2 = (Button) view.findViewById(R.id.btn_type_name2);
@@ -216,8 +222,8 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
         btn_typeName3.setOnClickListener(this);
         btn_typeName4.setOnClickListener(this);
         btn_typeName5.setOnClickListener(this);
-        btn_typeName6.setOnClickListener(this);
-        listView.setOnScrollListener(this);
+        btn_typeName6.setOnClickListener(this);;
+
     }
 
     /**
@@ -304,7 +310,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
             }
         }
     };
-
     /**
      *  失败的监听器
      */
@@ -358,9 +363,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
                         list1.add(jsonObject2.getString("image"));
                         String url=Url.url(jsonObject2.getString("image"));
                         img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-//                        img1.setTag(url);
-//                        AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-//                        asyncBitmapLoader.loadImage(getActivity(),img1,url);
 
                         Glide.with(IndexFragment.this.getContext())
                                 .load(url)
@@ -496,54 +498,71 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
                 break;
         }
     }
-
-
-
+    //下拉刷新
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if(isLastRow && scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE ){
-            //动态加载数据
-            Toast.makeText(getActivity(),"aaaa",Toast.LENGTH_SHORT).show();
-            listView.addFooterView(footer);
-            pageNo++;
-            new LoadDataThread().start();
-        }
-        isLastRow=false;
-    }
-
-    /**
-     * 监听移动滚动条
-     */
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem,
-                         int visibleItemCount, int totalItemCount) {
-        if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount > 0) {
-            isLastRow = true;
-        }
-    }
-
-    /**
-     * 动态加载数据
-     */
-    private class LoadDataThread extends Thread{
-        @Override
-        public void run() {
-            super.run();
-
+    public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
+//        // 如果网络可用，则加载网络数据
+//            pageNo=1;
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
                 try {
-                     connectionProduct.connInterByType("是", pageNo);
-                        Thread.sleep(1000);
-                        return;
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }catch (InterruptedException e) {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                return null;
+            }
 
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                // 加载完毕后在UI线程结束下拉刷新
+                try {
+                    connectionProduct.connInterByType("是",1);
+                    mRefreshLayout.endRefreshing();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
         }
+    @Override
+    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
+        if(pageNo<count) {
+            pageNo++;
+            // 如果网络可用，则加载网络数据
+             new MyAsyncTack().execute();
+        }else{
+            mRefreshLayout.endLoadingMore();
+            return false;
+        }
+        return true;
     }
+
+
+
+   class MyAsyncTack extends AsyncTask<Void,Void,Void>{
+       @Override
+       protected void onPreExecute() {
+           super.onPreExecute();
+       }
+       @Override
+       protected Void doInBackground(Void... params) {
+           try {
+               connectionProduct.connInterByType("是",pageNo);
+           } catch (JSONException e) {
+               e.printStackTrace();
+           }
+           return null;
+       }
+
+       @Override
+       protected void onPostExecute(Void aVoid) {
+           mRefreshLayout.endLoadingMore();
+           super.onPostExecute(aVoid);
+
+       }
+   }
     /**
      * 执行轮播图切换任务
      */
@@ -605,5 +624,12 @@ public class IndexFragment extends Fragment implements View.OnClickListener,AbsL
             dotViewList.get(position).setImageResource(R.mipmap.point_pressed);
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //防止handler引起的内存泄露
+        handler.removeCallbacksAndMessages(null);
     }
 }

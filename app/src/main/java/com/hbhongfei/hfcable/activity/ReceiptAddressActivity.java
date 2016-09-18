@@ -8,44 +8,53 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.ShoppingAddress_conn;
 
+import org.json.JSONException;
+
+import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
+import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
+import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
+
 /**
  * 收货地址管理
  */
-public class ReceiptAddressActivity extends AppCompatActivity implements View.OnClickListener{
+public class ReceiptAddressActivity extends AppCompatActivity implements View.OnClickListener,BGARefreshLayout.BGARefreshLayoutDelegate{
     private ListView lview_recriptAddress;
+    BGARefreshLayout mRefreshLayout;
     private TextView add_recriptAddress;
     private LinearLayout layout_address_emity;
     private static final String USER = LoginConnection.USER;
     private String S_phoneNumber;//用户名
     private  Dialog dialog;
+
+    RequestQueue queue;
+    ShoppingAddress_conn shoppingAddressListConnection;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receipt_address);
         toolbar();
+        queue= Volley.newRequestQueue(this);
         initView();
+        initRefreshLayout();
+        //开始加载数据
         setValue();
         //获取地址
-        ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(S_phoneNumber,this,lview_recriptAddress,layout_address_emity);
-        shoppingAddress_conn.addressListConnection();
+
         click();
     }
-
     /**
      * 设置toolbar
      */
@@ -61,29 +70,38 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
     }
 
     private void initView(){
+        mRefreshLayout= (BGARefreshLayout) findViewById(R.id.layout_address_listview);
         lview_recriptAddress= (ListView) findViewById(R.id.lview_recriptAddress);
         add_recriptAddress= (TextView) findViewById(R.id.add_recriptAddress_tview);
         layout_address_emity= (LinearLayout) findViewById(R.id.layout_address_emity);
     }
 
+    /**
+     * 初始化下拉刷新组件
+     */
+    private void initRefreshLayout() {
+        mRefreshLayout = (BGARefreshLayout)findViewById(R.id.layout_address_listview);
+        // 为BGARefreshLayout设置代理
+        mRefreshLayout.setDelegate(this);
+        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getApplication(),true);
+        // 设置下拉刷新和上拉加载更多的风格
+        mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
+        // 设置正在加载更多时的文本
+        refreshViewHolder.setLoadingMoreText("正在加载中");
+    }
     private void setValue(){
         SharedPreferences spf =getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber",null);
+        shoppingAddressListConnection=new ShoppingAddress_conn(S_phoneNumber,this,lview_recriptAddress,layout_address_emity);
+        shoppingAddressListConnection.addressListConnection();
     }
+
+
     private void click(){
         add_recriptAddress.setOnClickListener(this);
     }
 
-    /**
-     *  失败的监听器
-     */
-    private Response.ErrorListener errorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(ReceiptAddressActivity.this,"链接网络失败", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
-        }
-    };
+
 
     @Override
     public void onClick(View v) {
@@ -96,6 +114,8 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
         }
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -104,5 +124,16 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
+        shoppingAddressListConnection.addressListConnection();
+        mRefreshLayout.endRefreshing();
+    }
+
+    @Override
+    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
+        return false;
     }
 }

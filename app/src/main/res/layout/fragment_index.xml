@@ -1,175 +1,178 @@
-<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.bingoogolapple.refreshlayout.BGARefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/index_modulename_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hbhongfei.hfcable.fragment.IndexFragment">
-<ScrollView
-    android:id="@+id/scrollView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <!-- TODO: Update blank fragment layout -->
-  <LinearLayout
-      android:orientation="vertical"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
-    <RelativeLayout
-        android:id="@+id/slideView"
-        android:layout_width="match_parent"
-        android:layout_height="160.0dip" >
-        <android.support.v4.view.ViewPager
-            android:id="@+id/myviewPager"
+        <ScrollView
+            android:id="@+id/scrollView_index"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <!--小圆点-->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:id="@+id/dotLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:paddingLeft="10dp"
-            android:layout_marginLeft="20dp"
-            />
-    </RelativeLayout>
-    <LinearLayout
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <View  android:layout_height="1px"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <!-- TODO: Update blank fragment layout -->
+          <LinearLayout
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+            <RelativeLayout
+                android:id="@+id/slideView"
                 android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:background="#6d6d6e"
-                />
-            <TextView
-                android:text="@string/recommended_species"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <View  android:layout_height="1px"
+                android:layout_height="160.0dip" >
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/myviewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <!--小圆点-->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:id="@+id/dotLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"
+                    android:paddingLeft="10dp"
+                    android:layout_marginLeft="20dp"
+                    />
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:background="#6d6d6e"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
-            <Button
-            android:id="@+id/btn_type_name1"
-            android:text="特种电缆"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/text_background"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
-             />
-            <Button
-                android:id="@+id/btn_type_name2"
-                android:text="特种电缆"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_background1"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <View  android:layout_height="1px"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:background="#6d6d6e"
+                        />
+                    <TextView
+                        android:text="@string/recommended_species"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <View  android:layout_height="1px"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:background="#6d6d6e"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp">
+                    <Button
+                    android:id="@+id/btn_type_name1"
+                    android:text="特种电缆"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_background"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10dp"
+                     />
+                    <Button
+                        android:id="@+id/btn_type_name2"
+                        android:text="特种电缆"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/text_background1"
 
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-            />
-            <Button
-                android:id="@+id/btn_type_name3"
-                android:text="特种电缆222"
-                android:layout_weight="1"
-                android:background="@drawable/text_background2"
-                android:layout_marginRight="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                    />
+                    <Button
+                        android:id="@+id/btn_type_name3"
+                        android:text="特种电缆222"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_background2"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
-            <Button
-                android:id="@+id/btn_type_name4"
-                android:text="特种电缆"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/text_background3"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp">
-            </Button>
-            <Button
-                android:id="@+id/btn_type_name5"
-                android:text="特种电缆"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_background4"
-                android:layout_weight="1"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="16dp"
-             />
-            <Button
-                android:id="@+id/btn_type_name6"
-                android:text="更多。。。"
-                android:background="@drawable/text_background5"
-                android:layout_weight="1"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="15dp"
-                android:maxLength="4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp">
+                    <Button
+                        android:id="@+id/btn_type_name4"
+                        android:text="特种电缆"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_background3"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="15dp">
+                    </Button>
+                    <Button
+                        android:id="@+id/btn_type_name5"
+                        android:text="特种电缆"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/text_background4"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="16dp"
+                     />
+                    <Button
+                        android:id="@+id/btn_type_name6"
+                        android:text="更多。。。"
+                        android:background="@drawable/text_background5"
+                        android:layout_weight="1"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="15dp"
+                        android:maxLength="4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_marginTop="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <View  android:layout_height="1px"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:background="#6d6d6e"
-                />
-            <TextView
-                android:text="@string/recommended_products"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <View  android:layout_height="1px"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:background="#6d6d6e"
-                />
-        </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <View  android:layout_height="1px"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:background="#6d6d6e"
+                        />
+                    <TextView
+                        android:text="@string/recommended_products"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <View  android:layout_height="1px"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:background="#6d6d6e"
+                        />
+                </LinearLayout>
 
-    </LinearLayout>
-      <com.hbhongfei.hfcable.util.NoScrollListView
-          android:id="@+id/lv"
-          android:background="@null"
-          android:fadeScrollbars="false"
-          android:layout_marginTop="15dp"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent" >
-      </com.hbhongfei.hfcable.util.NoScrollListView>
-  </LinearLayout>
-</ScrollView>
-</FrameLayout >
+            </LinearLayout>
+              <com.hbhongfei.hfcable.util.NoScrollListView
+                  android:id="@+id/lv"
+                  android:background="@null"
+                  android:fadeScrollbars="false"
+                  android:layout_marginTop="15dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content" >
+              </com.hbhongfei.hfcable.util.NoScrollListView>
+          </LinearLayout>
+        </ScrollView>
+</cn.bingoogolapple.refreshlayout.BGARefreshLayout >

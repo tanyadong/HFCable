@@ -2,12 +2,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:orientation="horizontal" >
+    <ProgressBar
+     style="?android:attr/progressBarStyleSmall"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+        android:layout_gravity="center"
+     android:id="@+id/progressBar"
+     />
+
     <TextView
-        android:id="@+id/id"
-        android:layout_width="0dp"
+        android:id="@+id/loading_textview"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_weight="1"
         android:gravity="center"
         android:text="正在加载中..." />
 </LinearLayout>

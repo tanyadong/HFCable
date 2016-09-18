@@ -1,7 +1,6 @@
 package com.hbhongfei.hfcable.fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -149,7 +148,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      * 获取产品种类服务
      */
     public void shaftConnInter() {
-//        dialog.showDialog("正在记载中。。。");
         String url = Url.url("/androidCableRing/list");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, shaftjsonObjectListener, errorListener);
         RequestQueue mQueue = Volley.newRequestQueue(MineFragment.this.getActivity());
@@ -195,10 +193,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 }
                 cableRingAdapter = new CableRingAdapter(MineFragment.this.getContext(), list);
                 mListView.setAdapter(cableRingAdapter);
-//                dialog.cancle();
             } catch (JSONException e) {
                 e.printStackTrace();
-//                dialog.cancle();
             }
         }
     };
@@ -215,5 +211,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         }
     };
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
+    }
 }

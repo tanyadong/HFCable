@@ -54,7 +54,6 @@ public class CitySelect1Activity extends AppCompatActivity implements OnClickLis
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_city2);//������ѡ��ҳ��
 		ActionBar actionBar=getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);

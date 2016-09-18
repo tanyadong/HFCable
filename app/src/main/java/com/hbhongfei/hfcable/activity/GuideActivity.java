@@ -229,6 +229,11 @@ public class GuideActivity extends AppCompatActivity {
     }
 
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //防止handler引起的内存泄露
+        mMyHandler.removeCallbacksAndMessages(null);
+    }
 
 }

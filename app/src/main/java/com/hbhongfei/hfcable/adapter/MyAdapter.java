@@ -53,9 +53,9 @@ public class MyAdapter extends BaseAdapter {
         }
         this.tag = tag;
     }
-    public void addItem(Product product)
+    public void addItem(List<Product> product)
     {
-        list.add(product);
+        list.addAll(product);
         notifyDataSetChanged();
     }
     @Override

@@ -1,13 +1,11 @@
 package com.hbhongfei.hfcable.activity;
 
 import android.content.Intent;
-import android.net.Uri;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +21,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.CheckPhoneNumber;
-import com.hbhongfei.hfcable.util.Constants;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
@@ -32,7 +29,6 @@ import com.hbhongfei.hfcable.util.Url;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,9 +48,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private boolean SMSTag = false;
     private TimeCount time;
 
-    private static final String APPKEY = "1395ca88614b6";
+    private static final String APPKEY = "15b45ded52e12";
     // 填写从短信SDK应用后台注册得到的APPSECRET
-    private static final String APPSECRET = "8d76cf7037f4800ba0649619dd25ee06";
+    private static final String APPSECRET = "e312e69815af432c8def29ed47a1c382";
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -68,13 +64,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 // 短信验证成功后，操作
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {// 提交验证码成功
                     //进行注册操作
-//                    Toast.makeText(getApplicationContext(), "提交验证码成功", Toast.LENGTH_SHORT).show();
                     SMSTag = true;
                     checkPhone();
                 } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                     // 验证码发送成功
                     Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
-//                    dialog.cancle();
                     //计时
                     time.start();
                 }
@@ -446,6 +440,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 //            btnGetcode.setBackgroundColor(Color.parseColor("#4EB84A"));
 
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //防止handler引起的内存泄露
+        handler.removeCallbacksAndMessages(null);
     }
 
 }

@@ -44,7 +44,11 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     }
 
 
-
+    public ArrayList<List<MarketInfo>> addItems(ArrayList<List<MarketInfo>> list){
+        this.item_list.addAll(list);
+        notifyDataSetChanged();
+        return item_list;
+    }
 
     @Override
     public int getGroupCount() {

@@ -3,7 +3,6 @@ package com.hbhongfei.hfcable.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,28 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.AddRecietAddress;
-import com.hbhongfei.hfcable.activity.MyOrderActivity;
-import com.hbhongfei.hfcable.activity.MyShoppingActivity;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
-import com.hbhongfei.hfcable.util.NormalPostRequest;
-import com.hbhongfei.hfcable.util.ShoppingAddress_conn;
-import com.hbhongfei.hfcable.util.Url;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -58,7 +42,10 @@ public class AddressListAdapter extends BaseAdapter {
 		this.phoneNum=S_phone;
 		this.linearLayout=linearLayout;
 	}
-
+	public List<ShoppingAddress> addItems(List<ShoppingAddress> list){
+		list.addAll(list);
+		return list;
+	}
 	@Override
 	public int getCount() {
 		return list.size();
