@@ -83,7 +83,6 @@ public class AddressListActivity extends AppCompatActivity implements View.OnCli
         SharedPreferences spf =getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber",null);
         //获取地址
-        Toast.makeText(this,S_phoneNumber+"aasd",Toast.LENGTH_SHORT).show();
         shoppingAddressListConnection=new ShoppingAddressListConnection(this,S_phoneNumber,this,lview_recriptAddress,layout_address_emity);
         shoppingAddressListConnection.addressListConnection(pageNo);
     }

@@ -115,7 +115,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 case 1:
                     swipeRefreshLayout.setRefreshing(false);
                     cableRingAdapter.notifyDataSetChanged();
-                    //swipeRefreshLayout.setEnabled(false);
                     break;
                 default:
                     break;
@@ -207,13 +206,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(MineFragment.this.getActivity(), "链接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
-//            dialog.cancle();
         }
     };
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mHandler.removeCallbacksAndMessages(null);
-    }
 }
