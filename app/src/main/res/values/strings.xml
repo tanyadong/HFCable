@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">弘飞线缆</string>
+    <string name="app_name">线易购</string>
     <string name="title_activity_mine">MineActivity</string>
 
     <string name="action_settings1">发布</string>
@@ -216,4 +216,8 @@
     <string name="input_company_info_tel">填写公司联系电话</string>
 
 
+    <!--album_select_dialog-->
+    <string name="dialog_selectFromAlbum">从相册中选择</string>
+    <string name="dialog_photo">拍照</string>
+    <string name="dialog_album_cancel">取消</string>
 </resources>

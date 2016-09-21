@@ -48,8 +48,6 @@ public class ImageChooseActivity extends Activity {
 
         setContentView(R.layout.act_image_choose);
 
-        Toast.makeText(ImageChooseActivity.this, "ImageChooseActivity", Toast.LENGTH_SHORT).show();
-
         mDataList = (List<ImageItem>) getIntent().getSerializableExtra(IntentConstants.EXTRA_IMAGE_LIST);
         if (mDataList == null) mDataList = new ArrayList<ImageItem>();
         mBucketName = getIntent().getStringExtra(IntentConstants.EXTRA_BUCKET_NAME);
@@ -81,11 +79,11 @@ public class ImageChooseActivity extends Activity {
 
     private void initListener() {
         mFinishBtn.setOnClickListener(new OnClickListener() {
-
             public void onClick(View v) {
                 Intent intent = new Intent(ImageChooseActivity.this,WriteCableRingActivity.class);
                 intent.putExtra( IntentConstants.EXTRA_IMAGE_LIST,(Serializable) new ArrayList<ImageItem>(selectedImgs.values()));
                 startActivity(intent);
+//                setResult(1, intent);
                 finish();
             }
 
@@ -122,6 +120,7 @@ public class ImageChooseActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(ImageChooseActivity.this,WriteCableRingActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

@@ -23,6 +23,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +39,9 @@ import com.hbhongfei.hfcable.fragment.MarketFragment;
 import com.hbhongfei.hfcable.fragment.MineFragment;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Constants;
+import com.hbhongfei.hfcable.util.CustomDialog;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.IAlertDialogListener;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.UpLoadImage;
 import com.hbhongfei.hfcable.util.Url;
@@ -50,7 +53,7 @@ import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,ViewPager.OnPageChangeListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,ViewPager.OnPageChangeListener,IAlertDialogListener {
 
     private ViewPager viewPager;
     private List<Fragment> list_fragment;
@@ -280,7 +283,8 @@ public class MainActivity extends AppCompatActivity
         MainFragmentAdapter m1 = new MainFragmentAdapter(getSupportFragmentManager(),list_fragment);
 
         viewPager.setAdapter(m1);
-
+        //关闭预加载，默认一次只加载一个Fragment
+        viewPager.setOffscreenPageLimit(1);
         //mine
         headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         head = (ImageView) headerLayout.findViewById(R.id.Iamge_mine_head);
@@ -451,41 +455,12 @@ public class MainActivity extends AppCompatActivity
      * 选择拍照还是相册
      */
     private void showDialog(){
-        if (tag==0){
+        /*if (tag==0){
             drawable = MainActivity.this.getResources().getDrawable(R.mipmap.man);
         }else{
             drawable =new BitmapDrawable(b);
-        }
-        new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText("选择途径")
-                .setContentText("一张美美的头像")
-                .setCancelText("拍照")
-                .setConfirmText("相册")
-                //设置标题图片
-                .setCustomImage(drawable)
-                .showCancelButton(true)
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
-                        //拍照
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        // 下面这句指定调用相机拍照后的照片存储的路径
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Constants.PHOTONAME)));
-                        startActivityForResult(intent, Constants.TAKE_PHOTO);
-                        sDialog.cancel();
-                    }
-                })
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
-                        //相册中选择
-                        Intent intent = new Intent(Intent.ACTION_PICK, null);
-                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                        startActivityForResult(intent, Constants.PICK_PHOTO);
-                        sDialog.cancel();
-                    }
-                })
-                .show();
+        }*/
+        CustomDialog.selectHead(this,this);
     }
     @Override
     public   void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -551,4 +526,42 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            CustomDialog.showOkOrCancleDialog(this,"您确定要退出么？",this);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 退出应用时的确定按钮
+     */
+    @Override
+    public void onSureClick() {
+        finish();
+    }
+
+    /**
+     * 选择照片点击事件
+     */
+    @Override
+    public void selectFromAlbumClick() {
+        //相册中选择
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, Constants.PICK_PHOTO);
+    }
+
+    /**
+     * 拍照的点击事件
+     */
+    @Override
+    public void photoClick() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // 下面这句指定调用相机拍照后的照片存储的路径
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Constants.PHOTONAME)));
+        startActivityForResult(intent, Constants.TAKE_PHOTO);
+    }
 }

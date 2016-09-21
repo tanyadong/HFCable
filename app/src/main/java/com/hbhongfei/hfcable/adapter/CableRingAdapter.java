@@ -22,9 +22,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.CommentActivity;
+import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.util.DateUtils;
 import com.hbhongfei.hfcable.util.GetComment;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.NineGridTestLayout;
 import com.hbhongfei.hfcable.util.SaveComment;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -52,7 +54,11 @@ public class CableRingAdapter extends BaseAdapter {
         mList = list;
         mContext = context;
     }
-
+    public void addItem(List<Map<String,Object>> list)
+    {
+        mList.addAll(list);
+        notifyDataSetChanged();
+    }
     @Override
     public int getViewTypeCount() {
         return 2;
@@ -94,16 +100,7 @@ public class CableRingAdapter extends BaseAdapter {
             holder.linear = (LinearLayout) convertView.findViewById(R.id.emo_linear);
             holder.commentContent = (EditText) convertView.findViewById(R.id.et_our_comment);
             holder.cableLinear = (LinearLayout) convertView.findViewById(R.id.item_cable_ring_linear);
-
-            holder.imageView1 = (ImageView) convertView.findViewById(R.id.Image_cableRing_1);
-            holder.imageView2 = (ImageView) convertView.findViewById(R.id.Image_cableRing_2);
-            holder.imageView3 = (ImageView) convertView.findViewById(R.id.Image_cableRing_3);
-            holder.imageView4 = (ImageView) convertView.findViewById(R.id.Image_cableRing_4);
-            holder.imageView5 = (ImageView) convertView.findViewById(R.id.Image_cableRing_5);
-            holder.imageView6 = (ImageView) convertView.findViewById(R.id.Image_cableRing_6);
-            holder.imageView7 = (ImageView) convertView.findViewById(R.id.Image_cableRing_7);
-            holder.imageView8 = (ImageView) convertView.findViewById(R.id.Image_cableRing_8);
-            holder.imageView9 = (ImageView) convertView.findViewById(R.id.Image_cableRing_9);
+            holder.nineGridTestLayout = (NineGridTestLayout) convertView.findViewById(R.id.layout_nine_grid);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
@@ -127,11 +124,10 @@ public class CableRingAdapter extends BaseAdapter {
         String url = Url.url((String) map.get("headPortrait"));
         Glide.with(mContext)
                 .load(url)
-                .placeholder(R.mipmap.man)
-                .error(R.mipmap.man)
+                .placeholder(R.mipmap.img_loading)
+                .error(R.mipmap.img_error)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.head );
-
         //设置点击评论
         WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         final int width = manager.getDefaultDisplay().getWidth();
@@ -207,412 +203,41 @@ public class CableRingAdapter extends BaseAdapter {
                     SaveComment saveComment = new SaveComment(mContext,id[0],S_phoneNumber,commentText);
                     saveComment.connInter();
                     finalHolder.commentContent.setText("");
-
                     // 点击后通知适配器数据发生了变化
+//                    CommentAdapter commentAdapter = new CommentAdapter(mContext,null);
+//                    commentAdapter.notifyDataSetChanged();
                     notifyDataSetChanged();
-
                 }else{
-                    Toast.makeText(mContext, "请输入内容" + "", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "请输入内容", Toast.LENGTH_SHORT).show();
                 }
                 // 关闭软键盘
                 imm.hideSoftInputFromWindow(finalHolder.commentContent.getWindowToken(), 0);
                 finalHolder.linear.setVisibility(View.GONE);
                 finalHolder.comment.setVisibility(View.VISIBLE);
-
             }
         });
 
 
         //展示评论
         //根据id获取评论
-//        Toast.makeText()
         GetComment getComment = new GetComment(mContext, id[0],holder.listView_comment);
         getComment.connInter();
 
         //设置图片
         ArrayList<String> images= (ArrayList<String>) map.get("images");
-
-        if (images.size()==0){
-            holder.imageView1.setVisibility(View.GONE);
-            holder.imageView2.setVisibility(View.GONE);
-            holder.imageView3.setVisibility(View.GONE);
-            holder.imageView4.setVisibility(View.GONE);
-            holder.imageView5.setVisibility(View.GONE);
-            holder.imageView6.setVisibility(View.GONE);
-            holder.imageView7.setVisibility(View.GONE);
-            holder.imageView8.setVisibility(View.GONE);
-            holder.imageView9.setVisibility(View.GONE);
-        }else if(images.size()==1){
-            String url1 = Url.url(images.get(0));
-            System.out.println(url1);
-            Glide.with(mContext)
-                    .load(url1)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView1 );
-            holder.imageView2.setVisibility(View.GONE);
-            holder.imageView3.setVisibility(View.GONE);
-            holder.imageView4.setVisibility(View.GONE);
-            holder.imageView5.setVisibility(View.GONE);
-            holder.imageView6.setVisibility(View.GONE);
-            holder.imageView7.setVisibility(View.GONE);
-            holder.imageView8.setVisibility(View.GONE);
-            holder.imageView9.setVisibility(View.GONE);
-        }else if (images.size()==2){
-            url = Url.url(images.get(0));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView1 );
-            url = Url.url(images.get(1));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView2 );
-            holder.imageView3.setVisibility(View.GONE);
-            holder.imageView4.setVisibility(View.GONE);
-            holder.imageView5.setVisibility(View.GONE);
-            holder.imageView6.setVisibility(View.GONE);
-            holder.imageView7.setVisibility(View.GONE);
-            holder.imageView8.setVisibility(View.GONE);
-            holder.imageView9.setVisibility(View.GONE);
-        }else if (images.size()==3){
-            url = Url.url(images.get(0));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView1 );
-            url = Url.url(images.get(1));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView2 );
-            url = Url.url(images.get(2));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView3 );
-            holder.imageView4.setVisibility(View.GONE);
-            holder.imageView5.setVisibility(View.GONE);
-            holder.imageView6.setVisibility(View.GONE);
-            holder.imageView7.setVisibility(View.GONE);
-            holder.imageView8.setVisibility(View.GONE);
-            holder.imageView9.setVisibility(View.GONE);
-        }else if (images.size()==4){
-            url = Url.url(images.get(0));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView1 );
-            url = Url.url(images.get(1));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView2 );
-            url = Url.url(images.get(2));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView3 );
-            url = Url.url(images.get(3));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView4 );
-            holder.imageView5.setVisibility(View.GONE);
-            holder.imageView6.setVisibility(View.GONE);
-            holder.imageView7.setVisibility(View.GONE);
-            holder.imageView8.setVisibility(View.GONE);
-            holder.imageView9.setVisibility(View.GONE);
-        }else if (images.size()==5){
-            url = Url.url(images.get(0));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView1 );
-            url = Url.url(images.get(1));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView2 );
-            url = Url.url(images.get(2));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView3 );
-            url = Url.url(images.get(3));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView4 );
-            url = Url.url(images.get(4));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView5 );
-            holder.imageView6.setVisibility(View.GONE);
-            holder.imageView7.setVisibility(View.GONE);
-            holder.imageView8.setVisibility(View.GONE);
-            holder.imageView9.setVisibility(View.GONE);
-        }else if (images.size()==6){
-            url = Url.url(images.get(0));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView1 );
-            url = Url.url(images.get(1));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView2 );
-            url = Url.url(images.get(2));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView3 );
-            url = Url.url(images.get(3));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView4 );
-            url = Url.url(images.get(4));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView5 );
-            url = Url.url(images.get(5));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView6 );
-            holder.imageView7.setVisibility(View.GONE);
-            holder.imageView8.setVisibility(View.GONE);
-            holder.imageView9.setVisibility(View.GONE);
-        }else if (images.size()==7){
-            url = Url.url(images.get(0));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView1 );
-            url = Url.url(images.get(1));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView2 );
-            url = Url.url(images.get(2));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView3 );
-            url = Url.url(images.get(3));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView4 );
-            url = Url.url(images.get(4));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView5 );
-            url = Url.url(images.get(5));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView6 );
-            url = Url.url(images.get(6));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView7 );
-            holder.imageView8.setVisibility(View.GONE);
-            holder.imageView9.setVisibility(View.GONE);
-        }else if (images.size()==8){
-            url = Url.url(images.get(0));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView1 );
-            url = Url.url(images.get(1));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView2 );
-            url = Url.url(images.get(2));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView3 );
-            url = Url.url(images.get(3));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView4 );
-            url = Url.url(images.get(4));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView5 );
-            url = Url.url(images.get(5));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView6 );
-            url = Url.url(images.get(6));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView7 );
-            url = Url.url(images.get(7));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView8 );
-            holder.imageView9.setVisibility(View.GONE);
-        }else if (images.size()==9){
-            url = Url.url(images.get(0));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView1 );
-            url = Url.url(images.get(1));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView2 );
-            url = Url.url(images.get(2));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView3 );
-            url = Url.url(images.get(3));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView4 );
-            url = Url.url(images.get(4));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView5 );
-            url = Url.url(images.get(5));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView6 );
-            url = Url.url(images.get(6));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView7 );
-            url = Url.url(images.get(7));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView8 );
-            url = Url.url(images.get(8));
-            Glide.with(mContext)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into( holder.imageView9 );
-        }
+        holder.nineGridTestLayout.setIsShowAll(false); //当传入的图片数超过9张时，是否全部显示
+        holder.nineGridTestLayout.setSpacing(10); //动态设置图片之间的间隔
+        holder.nineGridTestLayout.setUrlList(images); //最后再设置图片url
         return convertView;
     }
 
     private static class ViewHolder {
         TextView mContent,nickName,time,tComment;
         RelativeLayout comment;
-        ImageView head,imageView1,imageView2,imageView3,imageView4,imageView5,imageView6,imageView7,imageView8,imageView9;
+        ImageView head;
         ListView listView_comment;
         LinearLayout linear,cableLinear;
         EditText commentContent;
+        NineGridTestLayout nineGridTestLayout;
     }
 }

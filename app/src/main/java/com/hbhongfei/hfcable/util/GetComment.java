@@ -13,6 +13,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ClearCacheRequest;
+import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.activity.InputMyInfoActivity;
 import com.hbhongfei.hfcable.activity.MainActivity;
@@ -22,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,11 +44,24 @@ public class GetComment {
     private List<Map<String,Object>> list;
     private Map<String, Object> map;
     private CommentAdapter commentAdapter;
+    RequestQueue mQueue;
 
     public GetComment(Context context,String id,ListView view){
         this.context = context;
         this.id = id;
         this.listView = view;
+    }
+    private RequestQueue getRequestQueue() {
+        if (mQueue == null) {
+            mQueue = Volley.newRequestQueue(context);
+        }
+        File cacheDir = new File(context.getCacheDir(),"volley");
+        DiskBasedCache cache = new DiskBasedCache(cacheDir);
+        mQueue.start();
+
+        // clear all volley caches.
+        mQueue.add(new ClearCacheRequest(cache, null));
+        return mQueue;
     }
     /**
      * 连接服务
@@ -55,10 +71,13 @@ public class GetComment {
         params.put("id", this.id);
         String url = Url.url("/androidComment/getComment");
         System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this.context);
+        if (mQueue == null) {
+            mQueue = Volley.newRequestQueue(context);
+        }
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
         mQueue.add(request);
+
     }
 
     /**
@@ -69,25 +88,27 @@ public class GetComment {
         public void onResponse(JSONObject jsonObject) {
             list = new ArrayList<>();
             try {
-                JSONArray jsonArray = jsonObject.getJSONArray("comments");
-                for (int i=0;i<jsonArray.length();i++){
-                    map = new HashMap<>();
-                    JSONObject comment = (JSONObject) jsonArray.get(i);
-                    //用户
-                    JSONObject user = comment.getJSONObject("user");
-                    //昵称
-                    String nickName = user.getString("nickName");
-                    map.put("nickName",nickName);
+                if(jsonObject.getJSONArray("comments")!=null||!jsonObject.getJSONArray("comments").equals("null")){
+                    JSONArray jsonArray = jsonObject.getJSONArray("comments");
+                    for (int i=0;i<jsonArray.length();i++){
+                        map = new HashMap<>();
+                        JSONObject comment = jsonArray.getJSONObject(i);
+                        //用户
+                        JSONObject user = comment.getJSONObject("user");
+                        //昵称
+                        String nickName = user.getString("nickName");
+                        map.put("nickName",nickName);
 
-                    //评论
-                    String commentContent = comment.getString("commentContent");
-                    map.put("commentContent",commentContent);
-                    //适配器
-                    list.add(map);
+                        //评论
+                        String commentContent = comment.getString("commentContent");
+                        map.put("commentContent",commentContent);
+                        //适配器
+                        list.add(map);
+                    }
+                    commentAdapter = new CommentAdapter(context,list);
+                    listView.setAdapter(commentAdapter);
                 }
-                Toast.makeText(context,list.size()+"---",Toast.LENGTH_SHORT).show();
-                commentAdapter = new CommentAdapter(context,list);
-                listView.setAdapter(commentAdapter);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -104,7 +125,6 @@ public class GetComment {
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
-            //dialog消失
         }
     };
 

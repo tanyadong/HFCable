@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_cable_ring_linear"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -46,64 +47,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:text="评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容"
+        android:text="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
         android:textColor="#000000" />
-
-    <GridLayout
-        android:id="@+id/GLayout_images"
-        android:layout_width="wrap_content"
+    <com.hbhongfei.hfcable.util.NineGridTestLayout
+        android:id="@+id/layout_nine_grid"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:rowCount="3"
-        android:columnCount="3">
-        <ImageView
-            android:id="@+id/Image_cableRing_1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/man"/>
-        <ImageView
-            android:id="@+id/Image_cableRing_2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/man" />
-        <ImageView
-            android:id="@+id/Image_cableRing_3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/woman"/>
-        <ImageView
-            android:id="@+id/Image_cableRing_4"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/man"/>
-        <ImageView
-            android:id="@+id/Image_cableRing_5"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/man"/>
-        <ImageView
-            android:id="@+id/Image_cableRing_6"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/man"/>
-        <ImageView
-            android:id="@+id/Image_cableRing_7"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/man"/>
-        <ImageView
-            android:id="@+id/Image_cableRing_8"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/man"/>
-        <ImageView
-            android:id="@+id/Image_cableRing_9"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/man"/>
-    </GridLayout>
-
+        android:layout_marginTop="8dp"
+        app:sapcing="4dp" />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -114,7 +65,6 @@
         android:layout_width="wrap_content"
         android:layout_margin="10dp"
         android:divider="@null"
-        android:background="@color/colorGray"
         android:layout_height="match_parent">
     </com.hbhongfei.hfcable.util.ListViewForScrollView>
 

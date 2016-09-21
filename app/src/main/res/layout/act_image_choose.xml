@@ -25,7 +25,7 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/btn"
         android:text="完成"
-        android:textColor="@color/deep_gray"
+        android:textColor="@color/colorWhite"
         android:textSize="20sp" />
 
     <include

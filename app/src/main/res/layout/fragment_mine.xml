@@ -4,18 +4,19 @@
     android:layout_height="match_parent"
     tools:context="com.hbhongfei.hfcable.fragment.MineFragment">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/SWRefresh_cableCZone"
+    <cn.bingoogolapple.refreshlayout.BGARefreshLayout
+        android:id="@+id/Refresh_cableCZone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="#00000000"
+        android:dividerHeight="15dp"
         android:orientation="vertical">
 
         <ListView
             android:id="@+id/ListView_cableZone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:dividerHeight="10dp"
-            android:divider="@null"/>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textIsSelectable="true"/>
+    </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
 </FrameLayout>

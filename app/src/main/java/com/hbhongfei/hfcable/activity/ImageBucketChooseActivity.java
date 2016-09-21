@@ -59,14 +59,13 @@ public class ImageBucketChooseActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-
                 selectOne(position);
-
                 Intent intent = new Intent(ImageBucketChooseActivity.this,ImageChooseActivity.class);
                 intent.putExtra(IntentConstants.EXTRA_IMAGE_LIST,(Serializable) mDataList.get(position).imageList);
                 intent.putExtra(IntentConstants.EXTRA_BUCKET_NAME,mDataList.get(position).bucketName);
                 intent.putExtra(IntentConstants.EXTRA_CAN_ADD_IMAGE_SIZE,availableSize);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -77,6 +76,7 @@ public class ImageBucketChooseActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(ImageBucketChooseActivity.this,WriteCableRingActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
