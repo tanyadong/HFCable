@@ -17,12 +17,14 @@
             android:id="@+id/img_main"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginTop="3dp"
             android:src="@mipmap/home_red"/>
         <TextView
             android:id="@+id/txt_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
+            android:layout_marginBottom="3dp"
             android:text="@string/tabbar_bottom_main"/>
     </LinearLayout>
 
@@ -38,12 +40,14 @@
             android:id="@+id/img_mess"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/info_black"/>
+            android:layout_marginTop="3dp"
+            android:src="@mipmap/info_grey"/>
         <TextView
             android:id="@+id/txt_mess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
+            android:layout_marginBottom="3dp"
             android:text="@string/tabbar_bottom_info"/>
     </LinearLayout>
 
@@ -59,12 +63,14 @@
             android:id="@+id/img_find"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/market"/>
+            android:layout_marginTop="3dp"
+            android:src="@mipmap/market_grey"/>
         <TextView
             android:id="@+id/txt_find"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
+            android:layout_marginBottom="3dp"
             android:text="@string/tabbar_bottom_market"/>
     </LinearLayout>
 
@@ -80,12 +86,14 @@
             android:id="@+id/img_mine"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/my"/>
+            android:layout_marginTop="3dp"
+            android:src="@mipmap/cable_grey"/>
         <TextView
             android:id="@+id/txt_mine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
+            android:layout_marginBottom="3dp"
             android:text="@string/tabbar_bottom_mine"/>
     </LinearLayout>
 </LinearLayout>

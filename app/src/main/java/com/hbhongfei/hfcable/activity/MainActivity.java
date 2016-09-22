@@ -329,11 +329,11 @@ public class MainActivity extends AppCompatActivity
     private void showHome(){
         imageView_index.setImageResource(R.mipmap.home_red);
         textView_index.setTextColor(Color.parseColor("#ff0000"));
-        imageView_market.setImageResource(R.mipmap.market);
+        imageView_market.setImageResource(R.mipmap.market_grey);
         textView_market.setTextColor(Color.parseColor("#000000"));
-        imageView_info.setImageResource(R.mipmap.info_black);
+        imageView_info.setImageResource(R.mipmap.info_grey);
         textView_info.setTextColor(Color.parseColor("#000000"));
-        imageView_mine.setImageResource(R.mipmap.my);
+        imageView_mine.setImageResource(R.mipmap.cable_grey);
         textView_mine.setTextColor(Color.parseColor("#000000"));
         //隐藏menu
         hiddenEditMenu();
@@ -346,11 +346,11 @@ public class MainActivity extends AppCompatActivity
     private void showInfo(){
         imageView_info.setImageResource(R.mipmap.info_red);
         textView_info.setTextColor(Color.parseColor("#ff0000"));
-        imageView_index.setImageResource(R.mipmap.home);
+        imageView_index.setImageResource(R.mipmap.home_grey);
         textView_index.setTextColor(Color.parseColor("#000000"));
-        imageView_market.setImageResource(R.mipmap.market);
+        imageView_market.setImageResource(R.mipmap.market_grey);
         textView_market.setTextColor(Color.parseColor("#000000"));
-        imageView_mine.setImageResource(R.mipmap.my);
+        imageView_mine.setImageResource(R.mipmap.cable_grey);
         textView_mine.setTextColor(Color.parseColor("#000000"));
         //隐藏menu
         hiddenEditMenu();
@@ -363,11 +363,11 @@ public class MainActivity extends AppCompatActivity
     private void showMarket(){
         imageView_market.setImageResource(R.mipmap.market_red);
         textView_market.setTextColor(Color.parseColor("#ff0000"));
-        imageView_index.setImageResource(R.mipmap.home);
+        imageView_index.setImageResource(R.mipmap.home_grey);
         textView_index.setTextColor(Color.parseColor("#000000"));
-        imageView_info.setImageResource(R.mipmap.info_black);
+        imageView_info.setImageResource(R.mipmap.info_grey);
         textView_info.setTextColor(Color.parseColor("#000000"));
-        imageView_mine.setImageResource(R.mipmap.my);
+        imageView_mine.setImageResource(R.mipmap.cable_grey);
         textView_mine.setTextColor(Color.parseColor("#000000"));
         //隐藏menu
         hiddenEditMenu();
@@ -378,13 +378,13 @@ public class MainActivity extends AppCompatActivity
      * 点击我的时显示
      */
     private void showMine(){
-        imageView_mine.setImageResource(R.mipmap.my_red);
+        imageView_mine.setImageResource(R.mipmap.cable_red);
         textView_mine.setTextColor(Color.parseColor("#ff0000"));
-        imageView_index.setImageResource(R.mipmap.home);
+        imageView_index.setImageResource(R.mipmap.home_grey);
         textView_index.setTextColor(Color.parseColor("#000000"));
-        imageView_info.setImageResource(R.mipmap.info_black);
+        imageView_info.setImageResource(R.mipmap.info_grey);
         textView_info.setTextColor(Color.parseColor("#000000"));
-        imageView_market.setImageResource(R.mipmap.market);
+        imageView_market.setImageResource(R.mipmap.market_grey);
         textView_market.setTextColor(Color.parseColor("#000000"));
         //隐藏menu
         showEditMenu();

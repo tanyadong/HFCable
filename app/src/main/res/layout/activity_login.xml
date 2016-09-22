@@ -10,7 +10,7 @@
         android:id="@+id/Img_login_head"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@mipmap/ic_launcher"
+        android:src="@mipmap/app_logo"
         android:layout_marginTop="45dp"
         android:layout_centerHorizontal="true"/>
 
