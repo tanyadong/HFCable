@@ -60,18 +60,14 @@ public class ShoppingAddressListConnection {
      * 获取地址服务
      * @param
      */
-    public void addressListConnection(int pageNo){
+    public void addressListConnection(){
         RequestQueue queue= Volley.newRequestQueue(context);
-        page=pageNo;
         dialog=new Dialog(context);
         dialog.showDialog("正在加载中。。。");
 
         String url= Url.url("/androidAddress/getAddress");
         Map<String,String> map=new HashMap<>();
-        System.out.println(phoneNum);
-
         map.put("userName",phoneNum);
-        map.put("pageNo",String.valueOf(pageNo));
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,getSuccessListener,errorListener,map);
         queue.add(normalPostRequest);
     }
@@ -98,14 +94,9 @@ public class ShoppingAddressListConnection {
                         shoppingAddress.setTag(jsonObject1.getInt("tag"));
                         list.add(shoppingAddress);
                     }
-                    //给listview添加数据
-                    if(page==1) {
+
                         addressListAdapter = new AddressListAdapter(activity, context, list, phoneNum, listView, linearLayout);
                         listView.setAdapter(addressListAdapter);
-                    }else{
-                        addressListAdapter.addItems(list);
-                        myHandler.sendEmptyMessage(0);
-                    }
                         listView.setDivider(null);
                         listView.setDividerHeight(30);
                         dialog.cancle();
@@ -114,7 +105,6 @@ public class ShoppingAddressListConnection {
                     dialog.cancle();
                     linearLayout.setVisibility(View.VISIBLE);
                 }
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }

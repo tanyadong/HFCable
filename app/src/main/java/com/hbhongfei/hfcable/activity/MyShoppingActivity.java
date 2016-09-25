@@ -25,9 +25,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter_myShopping;
-import com.hbhongfei.hfcable.pojo.Bean;
 import com.hbhongfei.hfcable.pojo.CablesInfo;
+import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.pojo.TypeInfo;
+import com.hbhongfei.hfcable.pojo.TypeTwo;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
@@ -58,6 +59,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     private int totalCount = 0;// 购买的商品总数量
     private MyAdapter_myShopping selva;
     private List<TypeInfo> groups = new ArrayList<TypeInfo>();// 组元素数据列表
+    private Map<String, List<Product>> child = new HashMap<>();
     private Map<String, List<CablesInfo>> children = new HashMap<String, List<CablesInfo>>();// 子元素数据列表
     private int flag = 0;
     private String S_phoneNumber;
@@ -126,9 +128,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         Map<String,String> params =new HashMap<>();
         params.put("phoneNumber", S_phoneNumber);
         String url = Url.url("/androidShoppingCart/list");
-        System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this.context);
-
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
         mQueue.add(request);
@@ -152,6 +152,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                         JSONArray products = shoppingCart.getJSONArray("product");
                         JSONArray productImages = shoppingCart.getJSONArray("productImage");
                         List<CablesInfo> cablesInfos = new ArrayList<>();
+                        List<Product> list_product = new ArrayList<>();
                         for(int j=0;j<products.length();j++){
                         /**************购物车信息*****************/
                             JSONObject product= (JSONObject) products.opt(j);
@@ -160,21 +161,55 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             String color = product.getString("color");
                             String specifications = product.getString("packages");//包装
                             String id = product.getString("id");
+                            Double unit_price=product.getDouble("unitPrice");
 
                         /**************产品信息*****************/
                             JSONObject productInfo = product.getJSONObject("product");
                             String productName = productInfo.getString("specifications");//名
                             String detail = productInfo.getString("voltage");//简介
-                            Double price = productInfo.getDouble("price");//价格
 
-//                            JSONArray images = productInfo.getJSONArray("productImages");
+                            //typeTwo  所有的产品信息
+                            JSONObject jsonObject2 = productInfo.getJSONObject("typeTwo");
+                            TypeTwo typeTwo = new TypeTwo();
+                            typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
+                            //产品
+                            Product product1=new Product();
+                            product1.setTypeTwo(typeTwo);
+                            product1.setId(productInfo.getString("id"));
+                            product1.setPrice(productInfo.getDouble("price"));
+                            product1.setApplicationRange(productInfo.getString("applicationRange"));
+                            product1.setSpecifications(productInfo.getString("specifications"));
+                            product1.setConductorMaterial(productInfo.getString("conductorMaterial"));
+                            product1.setCoreNumber(productInfo.getString("coreNumber"));
+                            product1.setCrossSection(productInfo.getString("crossSection"));
+                            product1.setImplementationStandards(productInfo.getString("implementationStandards"));
+                            product1.setDiameterLimit(productInfo.getString("diameterLimit"));
+                            product1.setOutsideDiameter(productInfo.getString("outsideDiameter"));
+                            product1.setSheathMaterial(productInfo.getString("sheathMaterial"));
+                            product1.setVoltage(productInfo.getString("voltage"));
+                            product1.setReferenceWeight(productInfo.getString("referenceWeight"));
+                            product1.setPurpose(productInfo.getString("purpose"));
+
+                            JSONArray jsonArray1=productInfo.getJSONArray("productImages");
+                            //有图片时加入到产品图片集合
+                            if(jsonArray1.length()>0){
+                                ArrayList<String> list1=new ArrayList<>();
+                                for(int k=0;k<jsonArray1.length();k++){
+                                    list1.add((String) jsonArray1.get(k));
+                                }
+                                product1.setProductImages(list1);
+                            }
                             JSONObject image = (JSONObject) images.opt(0);
-                            String img = (String) image.getString("image");//存在问题
-                            if (img==null){
+                            String img;
+                            if(image!=null){
+                                img = (String) image.getString("image");//存在问题
+                            }else{
                                 img = "/images/b3043ec169634ba5a7d2631200723a67.jpeg";
                             }
-                            cablesInfos.add(new CablesInfo(id, productName, detail,color,specifications,price, quantity,img));
+                            list_product.add(product1);
+                            cablesInfos.add(new CablesInfo(id, productName, detail,color,specifications,unit_price, quantity,img));
                         }
+                        child.put(groups.get(i).getId(),list_product);
                         children.put(groups.get(i).getId(), cablesInfos);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
                     }
                     selva = new MyAdapter_myShopping(groups, children, MyShoppingActivity.this,packageMap);
@@ -185,11 +220,18 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                     for (int i = 0; i < selva.getGroupCount(); i++) {
                         exListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
                     }
+                    exListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                        @Override
+                        public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                            Intent intent=new Intent(MyShoppingActivity.this,ProdectInfoActivity.class);
+                            intent.putExtra("product", child.get(groups.get(groupPosition).getId()).get(childPosition));
+                            startActivity(intent);
+                            return true;
+                        }
+                    });
                 }else{
                     clearCart();
                 }
-
-                Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
                 dialog.cancle();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -285,7 +327,6 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
      * @return
      */
     private boolean isAllCheck() {
-
         for (TypeInfo group : groups) {
             if (!group.isChoosed())
                 return false;
@@ -354,7 +395,6 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         String url = Url.url("/androidShoppingCart/quantity");
         System.out.println(url);
         RequestQueue mQueue = Volley.newRequestQueue(this.context);
-
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,updateListener,errorListener, params);
         mQueue.add(request);
@@ -464,6 +504,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                 CablesInfo cable = childs.get(j);
                 if (cable.isChoosed()) {
                     totalCount++;
+                    map.put("id",cable.getId());
                     map.put("product_name",cable.getName());
                     map.put("introduce",cable.getIntroduce());
                     map.put("product_price",cable.getPrice());
@@ -475,11 +516,11 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                         //10米价格增长
                         totalPrice += cable.getPrice() * cable.getCount();//价格
                     }else if(cable.getSpecifications().equals("1盘")) {
-                        totalPrice+=cable.getPrice()*10*cable.getCount();
+                        totalPrice+=cable.getPrice()*cable.getCount();
                     }else{
                         String s = packageMap.get(cable.getSpecifications());
                         String packagePrice = s.substring(0, s.indexOf("."));
-                        totalPrice +=(Integer.valueOf(cable.getSpecifications())/10*cable.getPrice()+Integer.valueOf(packagePrice))*cable.getCount();
+                        totalPrice +=cable.getPrice()*cable.getCount();
                     }
                 }
             }
@@ -671,6 +712,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         flag = (flag + 1) % 2;//其余得到循环执行上面2个不同的功能
         return super.onOptionsItemSelected(item);
     }
+
 
 
 }

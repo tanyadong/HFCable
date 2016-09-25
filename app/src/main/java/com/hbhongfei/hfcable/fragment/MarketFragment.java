@@ -40,7 +40,7 @@ public class MarketFragment extends Fragment  {
     private ArrayList<String> url_list = new ArrayList<>();;
     private ArrayList<String> group_list = null;
     private ArrayList<MarketInfo> child_list;
-    private ArrayList<List<MarketInfo>> item_list= new ArrayList<List<MarketInfo>>();;
+    private ArrayList<List<MarketInfo>> item_list=new ArrayList<>();;;
     private ArrayList<List<MarketInfo>> item_list1=new ArrayList<>();
     private ArrayList<Integer> groups=new ArrayList<>();
     private View view;
@@ -63,7 +63,7 @@ public class MarketFragment extends Fragment  {
 
      // 初始化数据
         initValues();
-        setValues();
+//        setValues();
         return view;
     }
 
@@ -100,12 +100,12 @@ public class MarketFragment extends Fragment  {
             switch (msg.what) {
                 case 0:
                     myExpandableListViewAdapter.notifyDataSetChanged();
-                    break;
-                case 1:
-                    //添加数据
-                    item_list1.addAll((ArrayList<ArrayList<MarketInfo>>) msg.obj);
-                    myExpandableListViewAdapter.notifyDataSetChanged();
-                    break;
+//                    break;
+//                case 1:
+//                    //添加数据
+//                    item_list1.addAll((ArrayList<ArrayList<MarketInfo>>) msg.obj);
+//                    myExpandableListViewAdapter.notifyDataSetChanged();
+//                    break;
                 default:
                     break;
             }
@@ -119,8 +119,6 @@ public class MarketFragment extends Fragment  {
      * 动态加载数据
      */
     private void setValues() {
-
-
         myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list1, expandableListView,queue,dialog);
         expandableListView.setAdapter(myExpandableListViewAdapter);
         //为ExpandableListView的子列表单击事件设置监听器
@@ -208,6 +206,7 @@ public class MarketFragment extends Fragment  {
         Element table = doc.getElementsByTag("table").first();
         Elements lists = table.getElementsByTag("tr");
         child_list = new ArrayList<>();
+
         for (int j = 1; j < lists.size(); j++) {
             Element item = lists.get(j);
             Elements els = item.getElementsByTag("td");
@@ -228,17 +227,19 @@ public class MarketFragment extends Fragment  {
         //父列表添加子列表
         item_list.add(child_list);
         if(i==1){
-            myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list1, expandableListView,queue,dialog);
+            myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list, expandableListView,queue,dialog);
             expandableListView.setAdapter(myExpandableListViewAdapter);
-        }else{
-            myExpandableListViewAdapter.addItems(item_list);
         }
+// else{
+//            myExpandableListViewAdapter.addItems(item_list);
+//            mHandler.sendEmptyMessage(0);
+//        }
 
-            Message message=new Message();
-            message.what=1;
-            message.arg1=index;
-            message.obj=item_list;
-            mHandler.sendMessage(message);
+//            Message message=new Message();
+//            message.what=1;
+//            message.arg1=index;
+//            message.obj=item_list;
+//            mHandler.sendMessage(message);
 
 //        dialog.cancle();
     }

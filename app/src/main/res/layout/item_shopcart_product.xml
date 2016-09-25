@@ -14,6 +14,7 @@
         android:orientation="horizontal" >
         <CheckBox
             android:id="@+id/check_box"
+            android:focusable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -196,7 +197,7 @@
                     android:id="@+id/tv_introduce2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="很好很好的货很好很好的货很好很好的货很好很好的货很好很好的货很好很好的货"
+                    android:text=""
                     android:maxEms="10"
                     android:singleLine="true"
                     android:ellipsize="end"

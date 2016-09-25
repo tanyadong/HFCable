@@ -7,12 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Url;
 
 import java.util.List;
@@ -69,7 +67,6 @@ public class ConfirmOrderAdapter extends BaseAdapter {
         //设置数据
         if (list.size()>0){
             map = list.get(position);//(String) map.get("product_name")
-//        Toast.makeText(context,holder.product_name.getText().toString().trim(),Toast.LENGTH_SHORT).show();
         holder.product_name.setText((String) map.get("product_name"));
         holder.introduce.setText((String)map.get("introduce"));
         holder.product_price.setText((Double)map.get("product_price")+"");

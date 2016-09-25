@@ -3,7 +3,7 @@ package com.hbhongfei.hfcable.pojo;
 import java.io.Serializable;
 
 /**
- * Created by dell1 on 2016/8/22.
+ * Created by 谭亚东 on 2016/8/22.
  */
 public class MarketInfo implements Serializable{
     private String area;//市场地

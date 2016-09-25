@@ -21,11 +21,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.InfoDetailActivity;
 import com.hbhongfei.hfcable.adapter.DataAdapter;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Information;
+import com.hbhongfei.hfcable.util.MySingleton;
 
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -58,13 +59,9 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
     LinearLayout loadLayout = null;
     TextView loading = null;
     String total = null;
-    //是否加载数据中
-    boolean isLoading = false;
-    //Toast显示状态
-    boolean isToast = false;
     private int index = 0;
     private int count=1;
-    private ArrayList<String> strings;
+    private Dialog dialog=null;
     public InfoFragment() {
     }
     @Override
@@ -73,7 +70,7 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
         view= inflater.inflate(R.layout.fragment_info, container, false);
         //声明一个队列
         setHasOptionsMenu(true);
-        queue= Volley.newRequestQueue(getActivity());
+//        queue= Volley.newRequestQueue(getActivity());
         initRefreshLayout();
 
         initView(view);
@@ -103,15 +100,12 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    isToast = false;
                     count=msg.arg1;
                     break;
                 case 1:
                     //告诉适配器，数据变化了，从新加载listview
                     mAdapter.notifyDataSetChanged();
                     //设置加载中为false
-                    isLoading = false;
-                    loadLayout.setVisibility(View.GONE);
                     info_listView.setVisibility(View.VISIBLE);
                     break;
                 case 2:
@@ -134,6 +128,7 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
         loadLayout= (LinearLayout) view.findViewById(R.id.fragment_load_layout);
         loading = (TextView) view.findViewById(R.id.fragment_loading);
         reload = (Button)view.findViewById(R.id.fragment_reload);
+//        dialog=new Dialog(getActivity().getApplicationContext());
     }
     private void initRefreshLayout() {
         mRefreshLayout = (BGARefreshLayout)view.findViewById(R.id.rl_listview_refresh);
@@ -166,9 +161,9 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loading.setText(getString(R.string.tip_text_data_loading));
+//                loading.setText(getString(R.string.tip_text_data_loading));
                 reload.setVisibility(View.GONE);
-                loadData(index);
+                loadData(0);
             }
         });
     }
@@ -189,16 +184,17 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
                         @Override
                         public void onResponse(String s) {
                             parse(s,index);
-                            loading.setVisibility(View.GONE);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
                             //请求失败
                             isFirst = true;
+                            loadLayout.setVisibility(View.VISIBLE);
                         }
                     });
-                    queue.add(request);
+//                queue=MySingleton.getInstance(getActivity().getApplication()).getRuquestQueue();
+                MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
                 }
         }).start();
 
@@ -252,7 +248,7 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
                 System.out.println(volleyError);
             }
         });
-        queue.add(request);
+        MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
     /**
      * 解析html
@@ -307,7 +303,7 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
         }
         @Override
         protected Void doInBackground(Void... params) {
-                loadData(index);
+            loadData(index);
             return null;
         }
 

@@ -197,7 +197,6 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
                     map.put("content", content);
                     Long createTime = cableRing.getLong("createTime");
                     map.put("createTime", createTime);
-
                     //图片
                     JSONArray ims=cableRing.getJSONArray("cableRingImages");
                     ArrayList<String> images=new ArrayList<>();

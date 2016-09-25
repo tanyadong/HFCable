@@ -25,36 +25,25 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     private List<String> group_list;
     private ArrayList<List<MarketInfo>> item_list;
     private ArrayList<MarketInfo> child_list;
-    private ExpandableListView expandableListView;
     private LayoutInflater inflater;
-    private RequestQueue queue;
     private Dialog dialog;
-    private ArrayList<String> url_list;
     public MyExpandableListViewAdapter(Context context,List<String> group_list,ArrayList<List<MarketInfo>> item_list,ExpandableListView listView,RequestQueue queue,Dialog d
                                        ) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.item_list=item_list;
         this.group_list=group_list;
-        this.expandableListView=listView;
-        this.queue=queue;
         this.dialog=d;
-
-
     }
-
-
     public ArrayList<List<MarketInfo>> addItems(ArrayList<List<MarketInfo>> list){
         this.item_list.addAll(list);
         notifyDataSetChanged();
         return item_list;
     }
-
     @Override
     public int getGroupCount() {
         return group_list.size();
     }
-
 
 
     @Override

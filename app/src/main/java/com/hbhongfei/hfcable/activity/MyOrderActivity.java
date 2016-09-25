@@ -11,7 +11,9 @@ import android.os.Bundle;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyOrder_tab_Adapter;
 import com.hbhongfei.hfcable.fragment.MyOrderAllFragment;
+import com.hbhongfei.hfcable.fragment.MyOrderUnDeliveryFragment;
 import com.hbhongfei.hfcable.fragment.MyOrderUnPaymenFragment;
+import com.hbhongfei.hfcable.fragment.MyOrderUnSendFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,8 @@ public class MyOrderActivity extends AppCompatActivity {
     private List<String> list_title; //tab名称列表
     private MyOrderAllFragment myOrderAllFragment; //全部订单的fragment
     private MyOrderUnPaymenFragment myOrderUnPaymenFragment; //未付款的订单fragment
-
+    private MyOrderUnDeliveryFragment myOrderUnDeliveryFragment;//未收货订单
+    private MyOrderUnSendFragment myOrderUnSendFragment;//待发货订单
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,23 +44,33 @@ public class MyOrderActivity extends AppCompatActivity {
      */
     private void initControls() {
         tab_FindFragment_title = (TabLayout)findViewById(R.id.tab_FindFragment_title);
+
         vp_FindFragment_pager = (ViewPager)findViewById(R.id.vp_FindFragment_pager);
         //初始化各fragment
         myOrderAllFragment = new MyOrderAllFragment();
         myOrderUnPaymenFragment = new MyOrderUnPaymenFragment();
+        myOrderUnSendFragment=new MyOrderUnSendFragment();
+        myOrderUnDeliveryFragment=new MyOrderUnDeliveryFragment();
         //将fragment装进列表中
         list_fragment = new ArrayList<>();
         list_fragment.add(myOrderAllFragment);
         list_fragment.add(myOrderUnPaymenFragment);
+        list_fragment.add(myOrderUnSendFragment);
+        list_fragment.add(myOrderUnDeliveryFragment);
         //将名称加载tab名字列表，正常情况下，我们应该在values/arrays.xml中进行定义然后调用
         list_title = new ArrayList<>();
         list_title.add("全部");
-        list_title.add("未付款");
+        list_title.add("待付款");
+        list_title.add("待发货");
+        list_title.add("待收货");
         //设置TabLayout的模式
         tab_FindFragment_title.setTabMode(TabLayout.MODE_FIXED);
         //为TabLayout添加tab名称
         tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(0)));
+
         tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(1)));
+        tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(2)));
+        tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(3)));
         fAdapter = new MyOrder_tab_Adapter(getSupportFragmentManager(),list_fragment,list_title);
         //viewpager加载adapter
         vp_FindFragment_pager.setAdapter(fAdapter);

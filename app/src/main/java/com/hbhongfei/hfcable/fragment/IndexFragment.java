@@ -99,7 +99,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
     //Toast显示状态
     private View mLoadMoreFooterView;
     private Handler handler = new Handler() {
-
         @Override
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
@@ -172,6 +171,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
         map.put("newProducts","是");
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
         mQueue.add(normalPostRequest);
+//        MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(normalPostRequest);
     }
     /**
      * 成功的监听器
@@ -560,7 +560,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
        protected void onPostExecute(Void aVoid) {
            mRefreshLayout.endLoadingMore();
            super.onPostExecute(aVoid);
-
        }
    }
     /**
@@ -569,7 +568,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
     private class SlideShowTask implements Runnable {
         @Override
         public void run() {
-            // TODO Auto-generated method stub
             synchronized (mviewPager) {
                 currentItem = (currentItem + 1) % list.size();
                 handler.sendEmptyMessage(100);
@@ -612,7 +610,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
-            // TODO Auto-generated method stub
         }
 
         @Override

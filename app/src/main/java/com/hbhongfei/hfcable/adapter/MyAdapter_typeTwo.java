@@ -25,18 +25,9 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
     private List<TypeTwo> groups;
     private ArrayList<ArrayList<Product>> children;
     private Context context;
-//    private CheckInterface checkInterface;
-//    private ModifyCountInterface modifyCountInterface;
+
     public  int flag = 0;
-//    private GroupEdtorListener mListener;
-//
-//    public GroupEdtorListener getmListener() {
-//        return mListener;
-//    }
-//
-//    public void setmListener(GroupEdtorListener mListener) {
-//        this.mListener = mListener;
-//    }
+
 
     /**
      * 构造函数
@@ -143,7 +134,6 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
         notifyDataSetChanged();
         return convertView;
     }
-
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
@@ -168,85 +158,4 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
     private class ChildViewHolder {
         GridView gridView;
     }
-
-//    /**
-//     * 复选框接口
-//     */
-//    public interface CheckInterface {
-//        /**
-//         * 组选框状态改变触发的事件
-//         *
-//         * @param groupPosition 组元素位置
-//         * @param isChecked     组元素选中与否
-//         */
-//        void checkGroup(int groupPosition, boolean isChecked);
-//
-//        /**
-//         * 子选框状态改变时触发的事件
-//         *
-//         * @param groupPosition 组元素位置
-//         * @param childPosition 子元素位置
-//         * @param isChecked     子元素选中与否
-//         */
-//        void checkChild(int groupPosition, int childPosition, boolean isChecked);
-//    }
-//
-//    /**
-//     * 改变数量的接口
-//     */
-//    public interface ModifyCountInterface {
-//        /**
-//         * 增加操作
-//         *
-//         * @param groupPosition 组元素位置
-//         * @param childPosition 子元素位置
-//         * @param showCountView 用于展示变化后数量的View
-//         * @param isChecked     子元素选中与否
-//         */
-//        void doIncrease(int groupPosition, int childPosition, View showCountView, boolean isChecked);
-//
-//        /**
-//         * 删减操作
-//         *
-//         * @param groupPosition 组元素位置
-//         * @param childPosition 子元素位置
-//         * @param showCountView 用于展示变化后数量的View
-//         * @param isChecked     子元素选中与否
-//         */
-//        void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked);
-//
-//        /**
-//         * 删除子item
-//         * @param groupPosition
-//         * @param childPosition
-//         */
-//        void childDelete(int groupPosition, int childPosition);
-//    }
-//
-//    /**
-//     * 监听编辑状态
-//     */
-//    public interface GroupEdtorListener{
-//        void groupEdit(int groupPosition);
-//    }
-//    /**
-//     * 使某个组处于编辑状态
-//     * <p>
-//     * groupPosition组的位置
-//     */
-//    class GroupViewClick implements View.OnClickListener {
-//        private int groupPosition;
-//        private Button edtor;
-//
-//        public GroupViewClick(int groupPosition, Button edtor, TypeInfo group) {
-//            this.groupPosition = groupPosition;
-//            this.edtor = edtor;
-//        }
-//
-//
-//        @Override
-//        public void onClick(View v) {
-//
-//        }
-//    }
 }

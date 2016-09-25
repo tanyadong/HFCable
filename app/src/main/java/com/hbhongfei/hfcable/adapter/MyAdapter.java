@@ -65,7 +65,6 @@ public class MyAdapter extends BaseAdapter {
         } else {
             return list.size()/2;
         }
-//        if(list == null){ return 0; }else{ return list.size()/2 + list.size()%2; }
     }
     @Override
     public Object getItem(int position) {

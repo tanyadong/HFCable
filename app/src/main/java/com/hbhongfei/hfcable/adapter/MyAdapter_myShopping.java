@@ -16,7 +16,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.CablesInfo;
 import com.hbhongfei.hfcable.pojo.TypeInfo;
-import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Url;
 
 import java.util.List;
@@ -103,7 +102,7 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
     @Override
@@ -182,20 +181,14 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
             cholder.tv_price.setText("￥" + cablesInfo.getPrice());
             if (cablesInfo.getSpecifications().equals("1盘")){
                 //盘的单价
-                cholder.tv_price.setText("￥" + cablesInfo.getPrice()*10);
                 cholder.tv_package.setText("单位:100米/盘");
             }else if (cablesInfo.getSpecifications().equals("10米")){
                 //10米的单价
-                cholder.tv_price.setText("￥" + cablesInfo.getPrice());
                 cholder.tv_package.setText("单位:10米");
             }else{
-                String s = map.get(cablesInfo.getSpecifications());
-                String packagePrice = s.substring(0, s.indexOf("."));
-                cholder.tv_price.setText("￥" + (Integer.valueOf(cablesInfo.getSpecifications())/10*cablesInfo.getPrice()+Integer.valueOf(packagePrice)));
                 cholder.tv_package.setText("单位:"+cablesInfo.getSpecifications()+"米/轴");
             }
             cholder.tv_count.setText(cablesInfo.getCount() + "");
-
             //加载图片
             String url = Url.url(cablesInfo.getGoodsImg());
             Glide.with(context)
@@ -266,13 +259,10 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
         }
         return convertView;
     }
-
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
-
+        return true;
     }
-
     /**
      * 组元素绑定器
      */

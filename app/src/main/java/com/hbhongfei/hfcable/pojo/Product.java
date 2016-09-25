@@ -12,6 +12,7 @@ public class Product implements java.io.Serializable {
 	private String id;
 	private Double price;//价格
 	private String specifications;//规格
+	public String introduce;//产品简介
 
 	private TypeTwo typeTwo;//二级种类  型号
 	private String 	voltage; //电压
@@ -41,6 +42,7 @@ public class Product implements java.io.Serializable {
 		this.id = id;
 		this.price = price;
 		this.specifications = specifications;
+
 		this.typeTwo = typeTwo;
 		this.voltage = voltage;
 		this.crossSection = crossSection;

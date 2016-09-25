@@ -178,7 +178,7 @@ public class ImageScaleView extends ImageView implements ViewTreeObserver.OnGlob
         }
         setImageMatrix(mMatrx);
         return true;
-//        return super.onTouchEvent(event);
+
     }
 
     /**

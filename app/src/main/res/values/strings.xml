@@ -138,6 +138,8 @@
     <string name="selectPay">支付方式</string>
     <string name="confirmPayment">确认支付</string>
     <string name="orderPay">订单支付</string>
+    <string name="orderCancle">取消订单</string>
+    <string name="goPay">去支付</string>
     <!--支付方式-->
     <string name="alipay">支付宝</string>
     <string name="weixin">微信</string>

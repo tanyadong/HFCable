@@ -2,39 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
         <RelativeLayout
             android:layout_width="match_parent"
+            android:gravity="center_vertical"
             android:layout_height="50dp">
             <TextView
                 android:id="@+id/Tview_myOrder_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
-                android:gravity="center_vertical"
+                android:textColor="@color/black"
                 android:text="种类名"
                 android:textSize="@dimen/text_size" />
-            <ImageView
-                android:id="@+id/Image_myOrder_delete"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16dp"
-                android:src="@mipmap/delete" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/Tview_myOrder_stage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:text="sss"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/colorBalck"
+                        />
+                    <ImageView
+                        android:id="@+id/Image_myOrder_delete"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginRight="16dp"
+                        android:src="@mipmap/delete" />
+            </LinearLayout>
         </RelativeLayout>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:background="#E8E8E8">
-
             <ImageView
                 android:id="@+id/image_myOrder"
                 android:layout_width="70dp"
@@ -43,30 +53,47 @@
                 android:scaleType="fitXY"
                 android:src="@mipmap/main_img1" />
             <TextView
-                android:id="@+id/Tview_myOrder_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:textSize="@dimen/text_size"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/colorRed"
-                android:layout_toRightOf="@id/image_myOrder"
-                android:text="电缆名"/>
-            <TextView
                 android:id="@+id/Tview_myOrder_introduce"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="16dp"
+                android:textColor="@color/black"
                 android:layout_toRightOf="@id/image_myOrder"
                 android:ellipsize="end"
                 android:maxEms="11"
                 android:maxLines="2"
-                android:textSize="@dimen/text_size"
                 android:text="魔帝（MUNDUS）OTG数据转接线USB接口/用于小米盒子OTG线，U盘/鼠标 黑色" />
-        </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/Tview_myOrder_introduce"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/image_myOrder"
+                >
+                <TextView
+                    android:id="@+id/tv_package"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="100米/盘"
+                    android:textColor="@color/gray"
+                    />
+                <TextView
+                    android:id="@+id/tv_buy_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="X 1"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="16dp"
+                    android:textColor="@color/colorRed"
+                    />
+            </RelativeLayout>
+        </RelativeLayout>
         <ImageView
+            android:id="@+id/image_success"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginRight="40dp"
@@ -81,20 +108,24 @@
         android:clickable="false"
         android:layout_marginBottom="10dp">
         <TextView
-            android:id="@+id/shi"
+            android:id="@+id/Tview_myOrder_pay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_toLeftOf="@+id/Tview_myOrder_money"
             android:textSize="18sp"
+            android:textColor="@color/black"
             android:text="实付款："/>
         <TextView
             android:id="@+id/Tview_myOrder_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:textColor="@color/colorRed"
             android:textSize="18sp"
             android:gravity="end"
             android:text="12.00"/>
     </RelativeLayout>
+    <include layout="@layout/order_bottom_btn">
+    </include>
 </LinearLayout>

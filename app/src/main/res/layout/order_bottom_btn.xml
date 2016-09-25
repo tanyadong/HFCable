@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_gravity="right"
+    android:layout_marginBottom="10dp"
+    android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/btn_order_cancle"
+        android:text="@string/orderCancle"
+        android:textColor="@color/black"
+        android:background="@drawable/order_botton_btn_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btn_order_goPay"
+        android:text="@string/goPay"
+        android:textColor="@color/colorRed"
+        android:background="@drawable/order_botton_btn_red"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

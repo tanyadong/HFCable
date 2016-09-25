@@ -1,5 +1,6 @@
 package com.hbhongfei.hfcable.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
@@ -16,14 +18,18 @@ public class OrderPayActivity extends AppCompatActivity  {
     private MyRadioGroup radioGroup;
     private RadioButton radioButton_apliy,radioButton_weixin,radioButton_yinlian;
     LinearLayout appliy_layout,weixin_layout,yinlian_layout;
+    private TextView order_payMoney_textview;
     Button btn_confimgPay;
     String tag="";
+    String S_money;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_pay);
         toolBar();
         initView();
+        //初始化数据
+        initValue();
         onClick();
 
     }
@@ -37,6 +43,7 @@ public class OrderPayActivity extends AppCompatActivity  {
     }
     //初始化
     private void initView(){
+        order_payMoney_textview= (TextView) findViewById(R.id.order_payMoney_textview);
         radioGroup= (MyRadioGroup) findViewById(R.id.radio_group);
         radioButton_apliy= (RadioButton) findViewById(R.id.order_pay_alipay_radioBtn);
         radioButton_weixin= (RadioButton) findViewById(R.id.order_pay_weixin_radioBtn);
@@ -45,6 +52,10 @@ public class OrderPayActivity extends AppCompatActivity  {
         appliy_layout= (LinearLayout) findViewById(R.id.order_pay_alipay_LLayout);
         yinlian_layout= (LinearLayout) findViewById(R.id.order_pay_yinlian_LLayout);
         btn_confimgPay= (Button) findViewById(R.id.btn_orderPay);
+    }
+    private void initValue(){
+        Intent intent=getIntent();
+        order_payMoney_textview.setText(intent.getStringExtra("money")+"￥");
     }
     private void onClick(){
         //绑定一个匿名监听器

@@ -109,6 +109,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     int spec_position = 0;
     boolean isFirst = true;
     String S_phoneNumber;
+    Double unitPrice;
     private static final String USER = LoginConnection.USER;
     private Dialog dialog;
     private List<String> package_list;
@@ -116,6 +117,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     private List<String> package_list_price;
     private Double D_price,D_beforePrice,D_tagPrice;
     private int Tag=0;
+    private Map<String,String> price_map;
 
     RequestQueue mQueue;
     /**
@@ -150,6 +152,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             super.handleMessage(msg);
             if (msg.what == 100) {
                 mviewPager.setCurrentItem(currentItem);
+            }else if(msg.what==1){
+                price_map= (Map<String, String>) msg.obj;
             }
         }
 
@@ -321,7 +325,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         mviewPager.setOnPageChangeListener(new MyPageChangeListener());
     }
 
-
     /**
      * 开始轮播图切换
      */
@@ -475,6 +478,17 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         map.put("packages", packages);
         map.put("quantity", pop_num.getText().toString());
         map.put("userName", S_phoneNumber);
+        Toast.makeText(this,packages,Toast.LENGTH_SHORT).show();
+        if (packages.equals("10米")){
+            //10米价格增长
+            unitPrice=product.getPrice();  //价格
+        }else if(packages.equals("1盘")) {
+            unitPrice=product.getPrice()*10;
+        }else{
+            String shaftPrice=price_map.get(packages);
+            unitPrice=Double.parseDouble(packages)/10*product.getPrice()+Double.parseDouble(shaftPrice);
+        }
+        map.put("shoppingPrice", String.valueOf(unitPrice));
         NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectAddShoppingListener, errorListener, map);
         mQueue.add(normalPostRequest);
     }
@@ -744,7 +758,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                         if (position!=0){
                             D_price =D_beforePrice;
                             Double price1 = Double.parseDouble(package_list_price.get(position-1))+package_list_num.get(position-1)/10*D_price;
-
                             prodectInfo_last_price.setText("金额:"+price1);
                             String  s = String.valueOf(package_list_num.get(position-1));
                             packages = s.substring(0, s.indexOf("."));
@@ -808,7 +821,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 color = bean.getName();
                 switch (Integer.parseInt(bean.getStates())) {
                     case 0:
-
                         // 清空颜色
                         mColorList = DataUtil.clearAdapterStates(mColorList);
                         skuColorAdapter.notifyDataSetChanged();
@@ -882,6 +894,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         public void onResponse(JSONObject jsonObject) {
             JSONArray jsonArray;
             try {
+                price_map=new HashMap();
                 jsonArray = jsonObject.getJSONArray("list");
                 int count=jsonArray.length();
                 for (int i = 0; i < count; i++) {
@@ -891,7 +904,13 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                     package_list.add(shaftName+"米轴");
                     package_list_num.add(Double.parseDouble(shaftName));
                     package_list_price.add(shaftPrice);
+                    price_map.put(shaftName,shaftPrice);
+
                 }
+                Message message=new Message();
+                message.what=1;
+                message.obj=price_map;
+                handler.sendMessage(message);
                 //设置包装方式
                 for (int i = 0; i < package_list.size(); i++) {
                     Bean bean = new Bean();

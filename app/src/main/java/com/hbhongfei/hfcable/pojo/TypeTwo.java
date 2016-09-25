@@ -12,8 +12,8 @@ public class TypeTwo implements java.io.Serializable {
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	private String id;
-	private String typeTwoName;
+	public String id;
+	public String typeTwoName;
 
 	// Constructors
 
@@ -21,10 +21,7 @@ public class TypeTwo implements java.io.Serializable {
 	public TypeTwo() {
 	}
 
-	public TypeTwo(String id, String typeTwoName) {
-		this.id = id;
-		this.typeTwoName = typeTwoName;
-	}
+
 
 	public String getId() {
 		return id;

@@ -3,13 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hbhongfei.hfcable.fragment.MyOrderAllFragment">
-
-
     <ListView
         android:id="@+id/ListView_myOrderAll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:dividerHeight="10dp">
     </ListView>
-
 </FrameLayout>

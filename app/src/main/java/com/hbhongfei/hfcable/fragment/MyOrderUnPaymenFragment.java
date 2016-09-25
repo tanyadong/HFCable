@@ -1,17 +1,21 @@
 package com.hbhongfei.hfcable.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.adapter.MyOrder_all_Adapter;
+import com.hbhongfei.hfcable.util.ConnectionOrder;
+import com.hbhongfei.hfcable.util.LoginConnection;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.json.JSONException;
+
 import java.util.List;
 import java.util.Map;
 
@@ -19,11 +23,14 @@ import java.util.Map;
  * 没有付款的订单
  */
 public class MyOrderUnPaymenFragment extends Fragment {
-
+    private static final String USER = LoginConnection.USER;
     private ListView ListView_myOrderUnPayment;
     private List<Map<String,String>> list;
     private Map<String,String> map;
-
+    private String S_phoneNumber;
+    private int pageNo=1;
+    private int countPage;
+    ConnectionOrder connectionOrder=null;
     public MyOrderUnPaymenFragment() {
     }
 
@@ -45,8 +52,6 @@ public class MyOrderUnPaymenFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_my_order_un_paymen, container, false);
         initView(v);
         getValues();
-        MyOrder_all_Adapter adapter = new MyOrder_all_Adapter(getActivity(),R.layout.item_my_order,list);
-        ListView_myOrderUnPayment.setAdapter(adapter);
         return v;
     }
     /**
@@ -59,17 +64,16 @@ public class MyOrderUnPaymenFragment extends Fragment {
     /**
      * 获取数据
      */
-    private void getValues(){
-        //暂时模拟
-        list = new ArrayList<>();
-        for (int i =0;i<10;i++){
-            map = new HashMap<>();
-            map.put("name","电缆"+i);
-            map.put("type","种类"+i);
-            map.put("introduce","很好的电缆");
-            map.put("money","14.00");
-            list.add(map);
+    private void getValues() {
+        SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
+        S_phoneNumber = spf.getString("phoneNumber", null);
+        try {
+            connectionOrder = new ConnectionOrder(getActivity().getApplicationContext(), ListView_myOrderUnPayment);
+            connectionOrder.connInterUnPay(pageNo,S_phoneNumber,1,0);
+            countPage=connectionOrder.getTotalPage();
+            Toast.makeText(getActivity(),countPage+"",Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
-
 }
