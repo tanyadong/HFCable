@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.activity.OrderDetailActivity;
 import com.hbhongfei.hfcable.activity.OrderPayActivity;
 import com.hbhongfei.hfcable.pojo.Order;
 import com.hbhongfei.hfcable.util.MySingleton;
@@ -68,13 +69,15 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
         if (convertView == null) {
             convertView = inflater.inflate(resource,null);
             vh = new MyOrderViewHolder();
-            vh.Tview_myOrder_stage= (TextView) convertView.findViewById(R.id.Tview_myOrder_stage);
-            vh.Tview_myOrder_type = (TextView) convertView.findViewById(R.id.Tview_myOrder_type);
-            vh.Tview_myOrder_introduce = (TextView) convertView.findViewById(R.id.Tview_myOrder_introduce);
+            vh.rl_myorder_item= convertView.findViewById(R.id.rl_myorder_item);
+            vh.Tview_myOrder_stage= (TextView) vh.rl_myorder_item.findViewById(R.id.Tview_myOrder_stage);
+            vh.Tview_myOrder_type = (TextView) vh.rl_myorder_item.findViewById(R.id.Tview_myOrder_type);
+            vh.Tview_myOrder_introduce = (TextView) vh.rl_myorder_item.findViewById(R.id.Tview_myOrder_introduce);
+            vh.Tview_myOrder_price= (TextView) vh.rl_myorder_item.findViewById(R.id.Tview_myOrder_price);
             vh.Tview_myOrder_money = (TextView) convertView.findViewById(R.id.Tview_myOrder_money);
-            vh.image_myOrder = (ImageView) convertView.findViewById(R.id.image_myOrder);
+            vh.image_myOrder = (ImageView) vh.rl_myorder_item.findViewById(R.id.image_myOrder);
             vh.image_success= (ImageView) convertView.findViewById(R.id.image_success);
-            vh.Image_myOrder_delete = (ImageView) convertView.findViewById(R.id.Image_myOrder_delete);
+            vh.Image_myOrder_delete = (ImageView) vh.rl_myorder_item.findViewById(R.id.Image_myOrder_delete);
             vh.btn_order_cancle= (Button) convertView.findViewById(R.id.btn_order_cancle);
             vh.btn_order_pay= (Button) convertView.findViewById(R.id.btn_order_goPay);
             convertView.setTag(vh);
@@ -86,6 +89,8 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
         vh.Tview_myOrder_type.setText(typeTwoName);
         String introduce=list.get(position).getShoppingCart().getProduct().introduce;
         vh.Tview_myOrder_introduce.setText(introduce);
+        String unit_money=String.valueOf(list.get(position).shoppingCart.unitPrice);
+        vh.Tview_myOrder_price.setText(unit_money);
         vh.Tview_myOrder_money.setText(String.valueOf(list.get(position).getMoney()));
         //设置图片
         ArrayList<String> imgs=list.get(position).getShoppingCart().getProduct().getProductImages();
@@ -117,6 +122,7 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
                     @Override
                     public void onClick(View v) {
                         Intent intent=new Intent(context, OrderPayActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     }
                 });
@@ -152,6 +158,16 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
             vh.btn_order_pay.setText("确认收货");
         }
 
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context.getApplicationContext(), OrderDetailActivity.class);
+                intent.putExtra("order",list.get(position));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
         return convertView;
     }
 
@@ -183,6 +199,7 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
     }
 
     public static class MyOrderViewHolder{
+        View rl_myorder_item;
         TextView Tview_myOrder_type;
         ImageView image_myOrder;
         ImageView Image_myOrder_delete,image_success;
@@ -190,6 +207,7 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
         TextView Tview_myOrder_stage;
         TextView Tview_myOrder_introduce;
         TextView Tview_myOrder_pay;
+        TextView Tview_myOrder_price;
         TextView Tview_myOrder_money;
         Button btn_order_cancle,btn_order_pay;
 

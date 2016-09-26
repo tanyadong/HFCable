@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.ConnectionOrder;
@@ -70,8 +69,6 @@ public class MyOrderUnPaymenFragment extends Fragment {
         try {
             connectionOrder = new ConnectionOrder(getActivity().getApplicationContext(), ListView_myOrderUnPayment);
             connectionOrder.connInterUnPay(pageNo,S_phoneNumber,1,0);
-            countPage=connectionOrder.getTotalPage();
-            Toast.makeText(getActivity(),countPage+"",Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }

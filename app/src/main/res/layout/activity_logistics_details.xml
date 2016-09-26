@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.hbhongfei.hfcable.activity.LogisticsDetailsActivity">
+    <RelativeLayout
+        android:id="@+id/rl_logistics"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img_logistics_proimg"
+            android:scaleType="fitXY"
+            android:src="@mipmap/main_img1"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+        <TextView
+            android:id="@+id/tview_logistics_state0"
+            android:layout_toRightOf="@+id/img_logistics_proimg"
+            android:layout_marginLeft="6dp"
+            android:gravity="center_vertical"
+            android:text="@string/logisticsState"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+        <TextView
+            android:id="@+id/tview_logistics_state"
+            android:text="@string/logistics_company"
+            android:textColor="@color/colorRed"
+            android:layout_toRightOf="@id/tview_logistics_state0"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+        <!--物流公司-->
+        <TextView
+            android:id="@+id/tview_logistics_company0"
+            android:text="@string/logistics_company"
+            android:layout_marginLeft="6dp"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@+id/img_logistics_proimg"
+            android:layout_below="@+id/tview_logistics_state0"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
+        <TextView
+            android:id="@+id/tview_logistics_company"
+            android:text="@string/logistics_company"
+            android:layout_toRightOf="@id/tview_logistics_company0"
+            android:layout_below="@+id/tview_logistics_state"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
+        <!--运单编号-->
+        <TextView
+            android:id="@+id/tview_logistics_num0"
+            android:text="@string/logistics_num"
+            android:layout_marginLeft="6dp"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@+id/img_logistics_proimg"
+            android:layout_below="@id/tview_logistics_company0"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
+        <TextView
+            android:id="@+id/tview_logistics_num"
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_below="@id/tview_logistics_company"
+            android:layout_height="30dp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scroview_logistics"
+        android:layout_below="@+id/rl_logistics"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.hbhongfei.hfcable.util.NodeProgressView
+            android:id="@+id/npv_NodeProgressView"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:width="2dp"
+            app:nodeRadius="5dp"
+            />
+
+    </ScrollView>
+</RelativeLayout>

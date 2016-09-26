@@ -43,7 +43,7 @@ public class DateUtils {
      */
     public static String timeStampToStr(long timeStamp) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String date = sdf.format(timeStamp * 1000);
+        String date = sdf.format(timeStamp);
         return date;
     }
 
@@ -53,8 +53,9 @@ public class DateUtils {
      * @return 得到格式化的时间日期 yyyy-MM-dd 24小时制
      */
     public static String formatDate(long timeStamp) {
+//        Timestamp timestamp
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String date = sdf.format(timeStamp*1000);
+        String date = sdf.format(timeStamp);
         return date;
     }
 

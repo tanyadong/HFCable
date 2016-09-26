@@ -7,4 +7,9 @@
     <declare-styleable name="NineGridLayout">
         <attr name="sapcing" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="NodeProgressView">
+        <attr name="width" format="dimension"/>
+        <attr name="nodeRadius" format="dimension"/>
+    </declare-styleable>
 </resources>

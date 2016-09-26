@@ -13,10 +13,10 @@ public class Logistics implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String id;
-	private String logisticsCompanyName;// 物流公司名称
-	private String logisticsNumber; // 物流单号
-	private Date logisticsTime;// 发货日期
+	public String id;
+	public String logisticsCompanyName;// 物流公司名称
+	public String logisticsNumber; // 物流单号
+	public Date logisticsTime;// 发货日期
 
 	public Logistics() {
 		super();

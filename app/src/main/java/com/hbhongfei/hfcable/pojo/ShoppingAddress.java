@@ -18,7 +18,7 @@ public class ShoppingAddress implements Serializable {
 	private String id;
 	private User user;
 	private String consignee;//收货人
-	private String phone;//收货人
+	private String phone;//收货人dianhua
 	private String localArea; //所在地区
 	private String detailAddress;//详细地址
 	private int tag;//是否为默认地址   0表示不是默认地址，1表示默认地址

@@ -140,6 +140,14 @@
     <string name="orderPay">订单支付</string>
     <string name="orderCancle">取消订单</string>
     <string name="goPay">去支付</string>
+    <string name="orderState">订单状态：</string>
+    <string name="orderTime">下单时间：</string>
+    <string name="orderFreight">运费：</string>
+    <string name="orderTotalMoney">订单总额：</string>
+    <!--物流-->
+    <string name="logisticsState">物流状态</string>
+    <string name="logistics_company">承运公司：</string>
+    <string name="logistics_num">运单编号：</string>
     <!--支付方式-->
     <string name="alipay">支付宝</string>
     <string name="weixin">微信</string>

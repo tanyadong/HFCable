@@ -11,8 +11,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyOrder_all_Adapter;
+import com.hbhongfei.hfcable.pojo.Logistics;
 import com.hbhongfei.hfcable.pojo.Order;
 import com.hbhongfei.hfcable.pojo.Product;
+import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 import com.hbhongfei.hfcable.pojo.ShoppingCart;
 import com.hbhongfei.hfcable.pojo.TypeTwo;
 
@@ -135,6 +137,7 @@ public class ConnectionOrder {
                 for(int i=0;i<count;i++){
                     JSONObject json_order=jsonArray.getJSONObject(i);
                     JSONObject json_shCart=json_order.getJSONObject("shoppingCart");
+                    JSONObject json_address=json_order.getJSONObject("shoppingAddress");
                     TypeTwo typeTwo=new TypeTwo();
                     /**  *******订单信息*********/
                     Order order=new Order();
@@ -145,6 +148,9 @@ public class ConnectionOrder {
                     order.money=json_order.getDouble("money");
                     order.completeOrNot=json_order.getInt("completeOrNot");
                     order.cancleOrNot=json_order.getInt("cancleOrNot");
+                    order.orderTime=json_order.getLong("orderTime");
+                    System.out.println(json_order.getLong("orderTime"));
+                    order.deleteOrNot=json_order.getInt("deleteOrNot");
                     /**  *******购物车信息*********/
                     ShoppingCart shoppingCart=new ShoppingCart();
                     shoppingCart.id=json_shCart.getString("id");
@@ -152,6 +158,20 @@ public class ConnectionOrder {
                     shoppingCart.packages=json_shCart.getString("packages");
                     shoppingCart.color=json_shCart.getString("color");
                     shoppingCart.unitPrice=json_shCart.getDouble("unitPrice");
+                    /**  *******收获地址*********/
+                    ShoppingAddress address=new ShoppingAddress();
+                    address.setConsignee(json_address.getString("consignee"));
+                    address.setPhone(json_address.getString("phone"));
+                    address.setLocalArea(json_address.getString("localArea"));
+                    address.setDetailAddress(json_address.getString("detailAddress"));
+                    /**  *******物流信息*********/
+                    Logistics logistics=new Logistics();
+//                    if(json_order.getJSONObject("logistics")!=null){
+//                        JSONObject json_logistics=json_order.getJSONObject("logistics");
+//                        logistics.logisticsCompanyName=json_logistics.getString("logisticsCompanyName");
+//                        logistics.logisticsNumber=json_logistics.getString("logisticsNumber");
+//                    }
+
                     /**  *******产品信息*********/
                     JSONObject json_pro=json_shCart.getJSONObject("product");
                     Product product=new Product();
@@ -182,6 +202,8 @@ public class ConnectionOrder {
                     }
                     shoppingCart.product=product;
                     order.shoppingCart=shoppingCart;
+                    order.logistics=logistics;
+                    order.shoppingAddress=address;
                     list.add(order);
                 }
                 if(page==1) {

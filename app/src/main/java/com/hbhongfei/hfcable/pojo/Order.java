@@ -1,7 +1,6 @@
 package com.hbhongfei.hfcable.pojo;
 
 import java.io.Serializable;
-import java.util.Date;
 
 
 /**
@@ -27,8 +26,8 @@ public class Order implements Serializable {
 
 	//yxy
 	public int completeOrNot;//此订单是否完成，0表示未完成，1表示已完成
-	public Date orderTime;//下单时间
-	public Date cancleTime;//取消订单时间
+	public Long orderTime;//下单时间
+	public Long cancleTime;//取消订单时间
 	public int cancleOrNot;//是否取消订单，0表示未取消，1表示已经取消
 	public ShoppingAddress shoppingAddress;// 收获地址
 	public Logistics logistics;//物流信息

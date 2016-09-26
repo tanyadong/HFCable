@@ -126,15 +126,18 @@
         <activity
             android:name=".activity.WriteCableRingActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".activity.MainActivity"></activity>
+            android:parentActivityName=".activity.MainActivity" />
         <activity android:name=".activity.ImageBucketChooseActivity" />
         <activity android:name=".activity.ImageChooseActivity" />
         <activity android:name=".activity.ImageZoomActivity" />
         <activity android:name=".activity.CommentActivity" />
-        <!--地址列表-->
-        <activity android:name=".activity.AddressListActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".activity.ConfirmOrderActivity"></activity>
+        <!-- 地址列表 -->
+        <activity
+            android:name=".activity.AddressListActivity"
+            android:parentActivityName=".activity.ConfirmOrderActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.OrderDetailActivity" />
+        <activity android:name=".activity.LogisticsDetailsActivity"></activity>
     </application>
 
 </manifest>

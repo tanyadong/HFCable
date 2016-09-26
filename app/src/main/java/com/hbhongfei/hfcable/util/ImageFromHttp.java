@@ -17,10 +17,7 @@ import java.io.InputStream;
 public class ImageFromHttp {
     Context context;
     String url;
-//    public ImageFromHttp(Context context,String url){
-//        this.context=context;
-//        this.url=url;
-//    }
+
     public static void getImg(final Context context, final String url, final ImageView imageView){
         RequestQueue queue = Volley.newRequestQueue(context);
         ImageRequest request=new ImageRequest(url, new Response.Listener<Bitmap>() {
