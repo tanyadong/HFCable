@@ -44,4 +44,8 @@ dependencies {
     compile files('libs/fastjson-1.1.40.jar')
     compile project(':library')
     compile files('libs/commons-lang3-3.1.jar')
+    compile project(':lib:bdwallet_pay_sdk')
+    compile project(':lib:pingpp')
+    compile project(':lib:pingpp_one')
+    compile files('libs/okhttp-2.0.0-RC1.jar')
 }

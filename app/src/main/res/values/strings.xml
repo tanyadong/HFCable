@@ -230,4 +230,7 @@
     <string name="dialog_selectFromAlbum">从相册中选择</string>
     <string name="dialog_photo">拍照</string>
     <string name="dialog_album_cancel">取消</string>
+
+    <!--PaySuccessActivity-->
+    <string name="title_activity_pay_success">支付完成</string>
 </resources>

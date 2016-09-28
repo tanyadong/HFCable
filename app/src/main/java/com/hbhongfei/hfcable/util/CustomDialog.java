@@ -118,6 +118,51 @@ public class CustomDialog {
         dialog.show();
     }
 
+    /**
+     * 支付后弹出的
+     * @param context
+     */
+    public static void payDialog(Context context,String result) {
+        View dialogView = null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.Dialog_FS);
+        dialogView = LayoutInflater.from(context).inflate(R.layout.pay_dialog, null);
+
+
+        TextView dialog_message = (TextView) dialogView.findViewById(R.id.dialog_message);
+        TextView dialog_comfire = (TextView) dialogView.findViewById(R.id.dialog_comfire);
+
+
+        //分别处理展示信息
+        if (result.equals("fail")){
+            //支付失败
+            dialog_message.setText("很抱歉，支付失败，请重新支付");
+        }else if(result.equals("cancel")){
+            //支付取消
+            dialog_message.setText("取消支付");
+        }else if(result.equals("invalid")){
+            //没有安装支付插件
+            dialog_message.setText("没有安装支付插件");
+        }
+        dialog_comfire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+
+        /*为dialog设置View*/
+        builder.setView(dialogView);
+        dialog = builder.create();
+
+        /*显示对话框*/
+        dialog.show();
+    }
+
+
+
 //
 //    public static void showSelectDialog(Context context, String message, String message2, String message3,
 //                                        final IAlertDialogListener listener1, final IAlertDialogListener listener2,

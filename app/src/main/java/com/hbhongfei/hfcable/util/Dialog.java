@@ -8,7 +8,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by 苑雪元 on 2016/8/6.
- * dialog
+ * dialog sweet_alert-dialog
  */
 public class Dialog {
 

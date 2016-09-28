@@ -39,10 +39,12 @@
     <style name="Theme.Foo" parent="android:style/Theme.Light">
         <item name="android:windowContentOverlay">@null</item>
     </style>
+
     <style name="Comment" parent="android:TextAppearance">
         <item name="android:textSize">14dp</item>
     </style>
-    <style name="Dialog_FS" >
+
+    <style name="Dialog_FS">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFrame">@null</item>
