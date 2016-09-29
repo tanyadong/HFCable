@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MarketFragment extends Fragment  {
+public class MarketFragment extends Fragment {
     private ExpandableListView expandableListView;
     private ArrayList<String> url_list = new ArrayList<>();;
     private ArrayList<String> group_list = null;
