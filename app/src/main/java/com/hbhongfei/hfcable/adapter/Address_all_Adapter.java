@@ -13,13 +13,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.AddRecietAddress;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.ShoppingAddress_conn;
 import com.hbhongfei.hfcable.util.Url;
@@ -168,12 +167,12 @@ public class Address_all_Adapter extends BaseAdapter {
 	 * 删除地址的服务
 	 */
 	private void deleteConnection(String id){
-		RequestQueue queue= Volley.newRequestQueue(mContext);
+
 		String url= Url.url("/androidAddress/deleteAddress");
 		Map<String,String> map=new HashMap<>();
 		map.put("addressId",id);
 		NormalPostRequest normalPostRequest=new NormalPostRequest(url,deleteSuccessListener,errorListener,map);
-		queue.add(normalPostRequest);
+		MySingleton.getInstance(mContext).addToRequestQueue(normalPostRequest);
 	}
 
 	/**
@@ -212,13 +211,12 @@ public class Address_all_Adapter extends BaseAdapter {
 	 * 设置默认地址的服务
 	 */
 	private void setDefauleConnection(String id){
-		RequestQueue queue= Volley.newRequestQueue(mContext);
 		String url= Url.url("/androidAddress/setDefauleAddress");
 		Map<String,String> map=new HashMap<>();
 		map.put("addressId",id);
 		map.put("userName",phoneNum);
 		NormalPostRequest normalPostRequest=new NormalPostRequest(url,setDefauleSuccessListener,errorListener,map);
-		queue.add(normalPostRequest);
+		MySingleton.getInstance(mContext).addToRequestQueue(normalPostRequest);
 	}
 
 	/**

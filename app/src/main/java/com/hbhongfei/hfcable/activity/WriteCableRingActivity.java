@@ -8,36 +8,26 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.ImagePublishAdapter;
 import com.hbhongfei.hfcable.pojo.ImageItem;
@@ -47,6 +37,7 @@ import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.IAlertDialogListener;
 import com.hbhongfei.hfcable.util.IntentConstants;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -61,8 +52,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /*
 发表说说
@@ -196,7 +185,6 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
             Toast.makeText(this,"内容不能为空",Toast.LENGTH_SHORT).show();
         }else{
             String url = Url.url("/androidCableRing/save");
-            RequestQueue mQueue = Volley.newRequestQueue(this);
             map = new HashMap<>();
             if (s!=null||!s.equals("")){
                 map.put("content", s);
@@ -227,7 +215,7 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
                 }
             }
             NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectAddCableRingListener, errorListener, map);
-            mQueue.add(normalPostRequest);
+            MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
         }
     }
 

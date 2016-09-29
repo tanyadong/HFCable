@@ -3,12 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hbhongfei.hfcable.fragment.MyOrderUnPaymenFragment">
-
     <ListView
         android:id="@+id/ListView_myOrderUnPayment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:dividerHeight="10dp">
     </ListView>
-
-</FrameLayout>
+    <include
+android:id="@+id/layout_unpayorder_empty"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+layout="@layout/shoppingcart_empty"
+android:visibility="gone"/>
+    </FrameLayout>

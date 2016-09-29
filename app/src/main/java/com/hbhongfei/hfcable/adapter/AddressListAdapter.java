@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.activity.AddRecietAddress;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class AddressListAdapter extends BaseAdapter {
 			hView.phoneNumber = (TextView) convertView.findViewById(R.id.textview_address_list_phoneNumber);
 			hView.address = (TextView) convertView.findViewById(R.id.textview_address_list_detail);
 			hView.addressDefault = (TextView) convertView.findViewById(R.id.textview_address_list_detail_default);
-			hView.edit = (ImageView) convertView.findViewById(R.id.Image_address_list);
+//			hView.edit = (ImageView) convertView.findViewById(R.id.Image_address_list);
 			hView.addressList = (RelativeLayout) convertView.findViewById(R.id.Rlayout_address_list);
 			convertView.setTag(hView);
 		} else {
@@ -85,16 +84,6 @@ public class AddressListAdapter extends BaseAdapter {
 		} else {
 			hView.addressDefault.setVisibility(View.GONE);
 		}
-		//编辑地址事件
-		hView.edit.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent=new Intent(mContext.getApplicationContext(), AddRecietAddress.class);
-				intent.putExtra("shoppingAddress",list.get(position));
-				intent.putExtra("tag","edit");
-				mContext.startActivity(intent);
-			}
-		});
 		hView.addressList.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

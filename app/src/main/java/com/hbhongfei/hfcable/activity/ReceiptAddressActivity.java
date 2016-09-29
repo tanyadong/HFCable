@@ -14,8 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
@@ -39,14 +37,12 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
     private String S_phoneNumber;//用户名
     private  Dialog dialog;
 
-    RequestQueue queue;
     ShoppingAddress_conn shoppingAddressListConnection;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receipt_address);
         toolbar();
-        queue= Volley.newRequestQueue(this);
         initView();
         initRefreshLayout();
         //开始加载数据

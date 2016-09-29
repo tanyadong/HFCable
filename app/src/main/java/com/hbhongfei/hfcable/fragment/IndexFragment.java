@@ -21,11 +21,9 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
@@ -37,6 +35,7 @@ import com.hbhongfei.hfcable.pojo.Company;
 import com.hbhongfei.hfcable.pojo.Project;
 import com.hbhongfei.hfcable.util.ConnectionProduct;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NoScrollListView;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -73,7 +72,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
     private NoScrollListView listView;
     private ImageView img1;
     private Button btn_typeName1, btn_typeName2, btn_typeName3, btn_typeName4, btn_typeName5, btn_typeName6;
-    private RequestQueue mQueue;
     ConnectionProduct connectionProduct;
     private int count;
     /**
@@ -124,10 +122,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_index, container, false);
-
-        mQueue = Volley.newRequestQueue(this.getActivity());
         dialog=new Dialog(getActivity());
-
         initView(view);
         initRefreshLayout();
         list_obj=new ArrayList<>();
@@ -170,8 +165,8 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
         Map<String,String> map=new HashMap<>();
         map.put("newProducts","是");
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
-        mQueue.add(normalPostRequest);
-//        MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(normalPostRequest);
+
+        MySingleton.getInstance(getActivity()).addToRequestQueue(normalPostRequest);
     }
     /**
      * 成功的监听器
@@ -282,7 +277,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
         String url = Url.url("/androidType/getType");
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
                 jsonObjectListener,errorListener);
-                mQueue.add(jsonObjectRequest);
+        MySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjectRequest);
     }
 
 
@@ -330,7 +325,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
         String url = Url.url("/androidCompany/getCompanyInfo");
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
                 jsonObjectCompanyListener,errorListener);
-        mQueue.add(jsonObjectRequest);
+        MySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjectRequest);
     }
 
     /**

@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -45,7 +44,6 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
  * A simple {@link Fragment} subclass.
  */
 public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
-    RequestQueue queue=null;
     //下拉和分页框架
     private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
@@ -70,7 +68,6 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
         view= inflater.inflate(R.layout.fragment_info, container, false);
         //声明一个队列
         setHasOptionsMenu(true);
-//        queue= Volley.newRequestQueue(getActivity());
         initRefreshLayout();
 
         initView(view);
@@ -161,7 +158,6 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                loading.setText(getString(R.string.tip_text_data_loading));
                 reload.setVisibility(View.GONE);
                 loadData(0);
             }
@@ -193,8 +189,7 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
                             loadLayout.setVisibility(View.VISIBLE);
                         }
                     });
-//                queue=MySingleton.getInstance(getActivity().getApplication()).getRuquestQueue();
-                MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
+                MySingleton.getInstance(getActivity()).addToRequestQueue(request);
                 }
         }).start();
 

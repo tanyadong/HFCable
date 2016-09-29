@@ -13,16 +13,15 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.MarketChartActivity;
 import com.hbhongfei.hfcable.adapter.MyExpandableListViewAdapter;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.MySingleton;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -44,7 +43,6 @@ public class MarketFragment extends Fragment  {
     private ArrayList<List<MarketInfo>> item_list1=new ArrayList<>();
     private ArrayList<Integer> groups=new ArrayList<>();
     private View view;
-    private RequestQueue queue;
     private Dialog dialog;
     boolean isFirst = true;
     private MyExpandableListViewAdapter myExpandableListViewAdapter=null;
@@ -57,7 +55,6 @@ public class MarketFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_market, container, false);
-        queue = Volley.newRequestQueue(getContext().getApplicationContext());
 
         initView(view);
 
@@ -119,7 +116,7 @@ public class MarketFragment extends Fragment  {
      * 动态加载数据
      */
     private void setValues() {
-        myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list1, expandableListView,queue,dialog);
+        myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list1, expandableListView,dialog);
         expandableListView.setAdapter(myExpandableListViewAdapter);
         //为ExpandableListView的子列表单击事件设置监听器
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -160,7 +157,7 @@ public class MarketFragment extends Fragment  {
                         dialog.cancle();
                     }
                 });
-                queue.add(request);
+        MySingleton.getInstance(getActivity()).addToRequestQueue(request);
     }
 
     /**
@@ -227,7 +224,7 @@ public class MarketFragment extends Fragment  {
         //父列表添加子列表
         item_list.add(child_list);
         if(i==1){
-            myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list, expandableListView,queue,dialog);
+            myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list, expandableListView,dialog);
             expandableListView.setAdapter(myExpandableListViewAdapter);
         }
 // else{

@@ -7,15 +7,12 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -32,15 +29,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Constants;
 import com.hbhongfei.hfcable.util.DatepickerFragment;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 import com.hbhongfei.hfcable.utils.WheelView;
@@ -391,10 +387,9 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
         params.put("birthday",S_birthday);
         String url = Url.url("/androidUser/addPersonInfo");
         System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this);
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(this).addToRequestQueue(request);
     }
 
     /**

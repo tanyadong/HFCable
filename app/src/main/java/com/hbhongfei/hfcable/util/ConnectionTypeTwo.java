@@ -7,10 +7,8 @@ import android.util.Log;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.adapter.MyAdapter_typeTwo;
 import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.pojo.TypeTwo;
@@ -67,7 +65,6 @@ public class ConnectionTypeTwo {
      * */
     public void connInterByType(String typeName,int pageNo) throws JSONException {
         page=pageNo;
-        RequestQueue mQueue = Volley.newRequestQueue(context);
         dialog=new Dialog(context);
 //        dialog.showDialog("正在加载中。。。");
         String url = Url.url("/androidTypeTwo/getTypeTwo");
@@ -75,7 +72,7 @@ public class ConnectionTypeTwo {
         map.put("typeName",typeName);
         map.put("pageNo",String.valueOf(pageNo));
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectTypeTwoListener,errorListener,map);
-        mQueue.add(normalPostRequest);
+        MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
     /**
      * 成功的监听器
@@ -107,6 +104,7 @@ public class ConnectionTypeTwo {
                         product.setTypeTwo(typeTwo);
                         product.setApplicationRange(object.getString("applicationRange"));
                         product.setSpecifications(object.getString("specifications"));
+                        product.introduce=object.getString("introduce");
                         product.setConductorMaterial(object.getString("conductorMaterial"));
                         product.setCoreNumber(object.getString("coreNumber"));
                         product.setCrossSection(object.getString("crossSection"));

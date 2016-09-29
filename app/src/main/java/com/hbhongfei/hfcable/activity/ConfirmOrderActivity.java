@@ -17,16 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.ConfirmOrderAdapter;
 import com.hbhongfei.hfcable.pojo.Order;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -47,7 +46,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     private  ArrayList<Order> list_order;
     private JSONObject json;
     private ConfirmOrderAdapter confirmOrderAdapter;
-    private String[] from = { "product_name", "introduce", "product_price", "product_num" ,"product_package","product_iamge"};
+    private String[] from = { "product_name", "color", "product_price", "product_num" ,"product_package","product_iamge"};
     private String addressId;
     private static final String USER = LoginConnection.USER;
     private ArrayList<Map<String,Object>> proInfos;
@@ -57,9 +56,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     private Double S_money;
     private ShoppingAddress shoppingAddress;
     private int tag= 0;
-    private RequestQueue mQueue;
     private static final String TEMP_INFO = "temp_info";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +117,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
      * 初始化界面
      */
     private void initView(){
-        if(mQueue==null) {
-            mQueue = Volley.newRequestQueue(this.getApplicationContext());
-        }
         this.name = (TextView) findViewById(R.id.Tview_confirm_order_name);
         this.location = (TextView) findViewById(R.id.Tview_confirm_order_location);
         this.telphone = (TextView) findViewById(R.id.Tview_confirm_order_tel);
@@ -204,7 +198,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     public void saveOrder()  {
         String url = Url.url("/androidOrder/save");
         JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST,url,json,jsonSuccessListener,errorListener);
-        mQueue.add(request);
+        MySingleton.getInstance(this).addToRequestQueue(request);
         //使用自己书写的NormalPostRequest类，
 
     }
@@ -253,7 +247,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         params.put("phoneNumber", S_phoneNumber);
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(this).addToRequestQueue(request);
     }
 
     /**

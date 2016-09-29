@@ -1,7 +1,6 @@
 package com.hbhongfei.hfcable.pojo;
 
 import java.io.Serializable;
-import java.util.Date;
 
 
 /**
@@ -16,7 +15,7 @@ public class Logistics implements Serializable {
 	public String id;
 	public String logisticsCompanyName;// 物流公司名称
 	public String logisticsNumber; // 物流单号
-	public Date logisticsTime;// 发货日期
+	public Long logisticsTime;// 发货日期
 
 	public Logistics() {
 		super();
@@ -47,13 +46,7 @@ public class Logistics implements Serializable {
 		this.logisticsNumber = logisticsNumber;
 	}
 
-	public Date getLogisticsTime() {
-		return logisticsTime;
-	}
 
-	public void setLogisticsTime(Date logisticsTime) {
-		this.logisticsTime = logisticsTime;
-	}
 
 	@Override
 	public String toString() {

@@ -1,11 +1,17 @@
 package com.hbhongfei.hfcable.pojo;
 
-public class LogisticsData {
+import java.io.Serializable;
+
+public class LogisticsData implements Serializable{
 
 
     private String context;//内容
     private String ftime;
     private String time;//时间
+
+
+
+
 
     public String getContext() {
         return context;
@@ -44,4 +50,6 @@ public class LogisticsData {
                 ", time='" + time + '\'' +
                 '}';
     }
+
+
 }

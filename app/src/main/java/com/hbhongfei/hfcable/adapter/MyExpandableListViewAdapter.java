@@ -8,7 +8,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
 import com.hbhongfei.hfcable.util.Dialog;
@@ -27,7 +26,7 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     private ArrayList<MarketInfo> child_list;
     private LayoutInflater inflater;
     private Dialog dialog;
-    public MyExpandableListViewAdapter(Context context,List<String> group_list,ArrayList<List<MarketInfo>> item_list,ExpandableListView listView,RequestQueue queue,Dialog d
+    public MyExpandableListViewAdapter(Context context,List<String> group_list,ArrayList<List<MarketInfo>> item_list,ExpandableListView listView,Dialog d
                                        ) {
         inflater = LayoutInflater.from(context);
         this.context = context;

@@ -5,10 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Information;
@@ -16,7 +13,6 @@ import com.hbhongfei.hfcable.util.Information;
 import java.io.IOException;
 
 public class InfoDetailActivity extends AppCompatActivity {
-    private RequestQueue queue;
     private ImageView infoDetail_img;
     private TextView infoDetail_title;
     private TextView infoDetail_content,infoDetail_time;
@@ -28,8 +24,6 @@ public class InfoDetailActivity extends AppCompatActivity {
         //返回键
         android.support.v7.app.ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
-        //声明一个队列
-        queue= Volley.newRequestQueue(this);
         initView();
         try {
             setValues();
@@ -54,7 +48,6 @@ public class InfoDetailActivity extends AppCompatActivity {
         Intent intent=getIntent();
         Information information= (Information) intent.getSerializableExtra("data");
         infoDetail_title.setText(information.getTitle());
-//        ImageLoader1.getInstance(this).loadImage(information.getImgUrl(),infoDetail_img);
         AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
         infoDetail_img.setTag(information.getImgUrl());
         asyncBitmapLoader.loadImage(this,infoDetail_img,information.getImgUrl());

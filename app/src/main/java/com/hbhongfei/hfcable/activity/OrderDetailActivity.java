@@ -2,8 +2,11 @@ package com.hbhongfei.hfcable.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.pojo.LogisticsData;
 import com.hbhongfei.hfcable.pojo.Order;
 import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.util.DateUtils;
@@ -23,6 +27,7 @@ import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,16 +46,33 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     private Button btn_order_cancle,btn_order_pay;
 //    KdniaoTrackQueryAPI api;
     private Order order;
+    private  Product product;
+    private ArrayList<LogisticsData> list;
+    private String state;//物流状态
+    Intent intent=new Intent();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
         initview();
+
         //数据
         setValues();
         onClick();
     }
-
+    public Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 0:
+                    SparseArray<Object> array= (SparseArray<Object>) msg.obj;
+                    list= (ArrayList<LogisticsData>) array.get(0);
+                    state= (String) array.get(1);
+                    break;
+            }
+        }
+    };
     public void initview(){
         //订单
         textview_order_num= (TextView) findViewById(R.id.textview_order_num);
@@ -82,36 +104,45 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     }
     public void setValues(){
         Intent intent=getIntent();
-        order= (Order) intent.getSerializableExtra("order");
-        //顶部订单信息
-        String orderTime= DateUtils.timeStampToStr(order.orderTime);
-        Toast.makeText(this,orderTime,Toast.LENGTH_SHORT).show();
-        textview_order_num.setText(order.orderNumber);
-        textview_order_time.setText(orderTime);
-        if(order.cancleOrNot==1){
-            textview_order_state.setText("订单已取消");
-        }else if(order.cancleOrNot==0&&order.tag==1){
-            textview_order_state.setText("待付款");
-        }else if(order.cancleOrNot==0&&order.shipOrNot==2&&order.tag==2){
-            textview_order_state.setText("待发货");
-        }else if(order.cancleOrNot==0&&order.shipOrNot==1){
-            textview_order_state.setText("待收货");
-
-        }else if(order.cancleOrNot==0&&order.completeOrNot==1){
-            textview_order_state.setText("已完成，欢迎您再次购买");
-        }
-        //收货地址
-        name.setText(order.shoppingAddress.getConsignee());
-        telphone.setText(order.shoppingAddress.getPhone());
-        location.setText(order.shoppingAddress.getLocalArea()+order.shoppingAddress.getDetailAddress());
-        //物流
         try {
             getLogitis();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        order= (Order) intent.getSerializableExtra("order");
+        //顶部订单信息
+        String orderTime= DateUtils.timeStampToStr(order.orderTime);
+        textview_order_num.setText(order.orderNumber);
+        textview_order_time.setText(orderTime);
+        if(order.cancleOrNot==1){
+            textview_order_state.setText("订单已取消");
+            btn_order_cancle.setVisibility(View.GONE);
+            if(order.shipOrNot==1){
+                btn_order_pay.setText("查看物流");
+            }else{
+                btn_order_pay.setVisibility(View.GONE);
+            }
+        }else if(order.cancleOrNot==0&&order.tag==1){
+            textview_order_state.setText("待付款");
+
+        }else if(order.cancleOrNot==0&&order.shipOrNot==2&&order.tag==2){
+            textview_order_state.setText("待发货");
+            btn_order_pay.setVisibility(View.GONE);
+        }else if(order.cancleOrNot==0&&order.shipOrNot==1){
+            textview_order_state.setText("待收货");
+            btn_order_pay.setText("查看物流");
+        }else if(order.cancleOrNot==0&&order.completeOrNot==1){
+            textview_order_state.setText("已完成，欢迎您再次购买");
+            btn_order_cancle.setVisibility(View.GONE);
+            btn_order_pay.setText("查看物流");
+        }
+        //收货地址
+        name.setText(order.shoppingAddress.getConsignee());
+        telphone.setText(order.shoppingAddress.getPhone());
+        location.setText(order.shoppingAddress.getLocalArea()+order.shoppingAddress.getDetailAddress());
+
         //产品信息
-        Product product=order.shoppingCart.product;
+        product=order.shoppingCart.product;
         Tview_myOrder_type.setText(product.getTypeTwo().typeTwoName);
         String introduce=order.getShoppingCart().getProduct().introduce;
         Tview_myOrder_introduce.setText(introduce);
@@ -129,7 +160,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(image_myOrder);
         }
-
         tview_order_freight.setText("￥0");
         tview_order_totalmoney.setText(String.valueOf(order.money));
     }
@@ -147,18 +177,40 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     }
     public void onClick(){
         rl_order_logistics.setOnClickListener(this);
+        btn_order_pay.setOnClickListener(this);
+        rl_order_product.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.rl_order_logistics:
-                Intent intent=new Intent(this,LogisticsDetailsActivity.class);
+                toLogisticsActivity();
+                break;
+            case R.id.btn_order_goPay:
+                toLogisticsActivity();
+                break;
+            case R.id.rl_order_product:
+                intent.setClass(this,ProdectInfoActivity.class);
+                intent.putExtra("product",order.shoppingCart.product);
                 startActivity(intent);
                 break;
         }
     }
-
+    public void toLogisticsActivity(){
+//        Intent intent=new Intent(this,LogisticsDetailsActivity.class);
+        intent.setClass(this,LogisticsDetailsActivity.class);
+        Bundle bundle = new Bundle();//该类用作携带数据
+        if(product.getProductImages().size()!=0){
+            String img=product.getProductImages().get(0);
+            bundle.putString("image",img);
+        }
+        bundle.putString("state",state);
+        bundle.putSerializable("logistics",order.logistics);
+        bundle.putSerializable("list",list);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 
     /**
      * 成功的监听器
@@ -168,10 +220,32 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         @Override
         public void onResponse(JSONObject jsonObject) {
             try {
-
-                JSONObject traces=jsonObject.getJSONObject("Traces");
-                if(traces!=null){
-
+                JSONArray traces=jsonObject.getJSONArray("Traces");
+                if(traces==null){
+                    tview_order_logistics.setText("等待快递公司览件");
+                    Long time=order.logistics.logisticsTime;
+                    String logisticsTime=DateUtils.timeStampToStr(time);
+                    tview_order_logistics_time.setText(logisticsTime);
+                }else {
+                    ArrayList<LogisticsData> list=new ArrayList<>();
+                    int count=traces.length();
+                    JSONObject logitis=traces.getJSONObject(count-1);
+                    tview_order_logistics.setText(logitis.getString("AcceptStation"));
+                    tview_order_logistics_time.setText(logitis.getString("AcceptTime"));
+                    for(int i=count-1;i>=0;i--){
+                        LogisticsData logisticsData=new LogisticsData();
+                        JSONObject logitis1=traces.getJSONObject(i);
+                        logisticsData.setTime(logitis1.getString("AcceptTime"));
+                        logisticsData.setContext(logitis1.getString("AcceptStation"));
+                        list.add(logisticsData);
+                    }
+                    SparseArray<Object> sparseArray=new SparseArray();
+                    sparseArray.put(0,list);
+                    sparseArray.put(1,jsonObject.getString("State"));
+                    Message message=new Message();
+                    message.what=0;
+                    message.obj=sparseArray;
+                    handler.sendMessage(message);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

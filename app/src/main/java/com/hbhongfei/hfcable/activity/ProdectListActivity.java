@@ -15,16 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.SpinnerListAdapter;
 import com.hbhongfei.hfcable.fragment.IndexFragment;
 import com.hbhongfei.hfcable.util.ConnectionTypeTwo;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.MySpinner;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -51,7 +50,6 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
     private BGARefreshLayout mRefreshLayout;
     private String typeName;
     private int width;
-    private RequestQueue mQueue;
     private Dialog dialog;
     private boolean isLastRow=false;
     private View footer;
@@ -63,7 +61,6 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prodect_list);
-        mQueue = Volley.newRequestQueue(this);
         //返回键
         android.support.v7.app.ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -111,7 +108,7 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         Map<String,String> map=new HashMap<>();
         map.put("typeName",typeName);
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
-        mQueue.add(normalPostRequest);
+        MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
     }
 
     /**
@@ -126,7 +123,6 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
                 Message message=new Message();
                 message.what=0;
                 message.arg1=object.getInt("totalPages");
-
                 mMandler.sendMessage(message);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -145,7 +141,7 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         String url = Url.url("/androidType/getType");
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
                 jsonObjectListener,errorListener);
-        mQueue.add(jsonObjectRequest);
+        MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
     }
 
     /**

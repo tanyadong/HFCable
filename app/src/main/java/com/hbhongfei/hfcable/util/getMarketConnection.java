@@ -5,10 +5,8 @@ import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter;
 import com.hbhongfei.hfcable.pojo.Product;
@@ -40,12 +38,12 @@ public class getMarketConnection {
      * 根据种类查询产品
      * */
     public void connInterByType(String typeName) throws JSONException {
-        RequestQueue mQueue = Volley.newRequestQueue(context);
+
         String url = Url.url("/androidProduct/getProduct");
         Map<String,String> map=new HashMap<>();
         map.put("typeName",typeName);
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
-        mQueue.add(normalPostRequest);
+       MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
     /**
      * 成功的监听器

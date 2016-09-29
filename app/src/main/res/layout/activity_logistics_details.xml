@@ -30,7 +30,6 @@
             android:layout_height="40dp" />
         <TextView
             android:id="@+id/tview_logistics_state"
-            android:text="@string/logistics_company"
             android:textColor="@color/colorRed"
             android:layout_toRightOf="@id/tview_logistics_state0"
             android:layout_marginLeft="10dp"
@@ -49,7 +48,6 @@
             android:layout_height="30dp" />
         <TextView
             android:id="@+id/tview_logistics_company"
-            android:text="@string/logistics_company"
             android:layout_toRightOf="@id/tview_logistics_company0"
             android:layout_below="@+id/tview_logistics_state"
             android:layout_marginLeft="10dp"
@@ -77,6 +75,7 @@
     <ScrollView
         android:id="@+id/scroview_logistics"
         android:layout_below="@+id/rl_logistics"
+        android:fillViewport="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -84,6 +83,8 @@
             android:id="@+id/npv_NodeProgressView"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:width="2dp"

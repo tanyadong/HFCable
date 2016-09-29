@@ -7,11 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -24,6 +22,7 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.MyMarkerView;
+import com.hbhongfei.hfcable.util.MySingleton;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -40,7 +39,6 @@ public class MarketChartActivity extends AppCompatActivity {
     private List<String> data_list;
     private MarketInfo marketInfo;
     private LineChart mChart ;
-    private RequestQueue queue;
     ArrayList<String> xVals;
     ArrayList<Entry> yVals;
     private Dialog dialog;
@@ -50,7 +48,6 @@ public class MarketChartActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_market_chart);
-        queue= Volley.newRequestQueue(this);
         //初始化组件
         initView();
         //初始化数据
@@ -94,7 +91,7 @@ public class MarketChartActivity extends AppCompatActivity {
                             System.out.println(volleyError);
                         }
                     });
-                    queue.add(request);
+                MySingleton.getInstance(MarketChartActivity.this).addToRequestQueue(request);
                 }
         }).start();
     }
@@ -132,7 +129,7 @@ public class MarketChartActivity extends AppCompatActivity {
                         System.out.println(volleyError);
                     }
                 });
-                queue.add(request);
+                MySingleton.getInstance(MarketChartActivity.this).addToRequestQueue(request);
             }
         }).start();
     }

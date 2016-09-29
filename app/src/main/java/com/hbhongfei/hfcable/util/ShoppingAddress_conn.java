@@ -7,10 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.adapter.Address_all_Adapter;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 
@@ -47,12 +45,11 @@ public class ShoppingAddress_conn {
 
             dialog = new Dialog(context);
             dialog.showDialog("正在加载中。。。");
-        RequestQueue queue= Volley.newRequestQueue(context);
         String url= Url.url("/androidAddress/getAddress");
         Map<String,String> map=new HashMap<>();
         map.put("userName",phoneNum);
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,getSuccessListener,errorListener,map);
-        queue.add(normalPostRequest);
+        MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
 
 

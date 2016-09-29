@@ -6,10 +6,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 
 import org.json.JSONObject;
@@ -42,12 +41,11 @@ public class UpLoadImage {
             String photo = Base64.encodeToString(buffer, 0, buffer.length,Base64.DEFAULT);
 //            photo=URLEncoder.encode(photo,"UTF-8");
             String url = "http://192.168.1.105:8080/HFCable/androidUser/getUserInfo";
-            RequestQueue queue = Volley.newRequestQueue(context);
             Map<String, String> map = new HashMap<>();
             map.put("photo", photo);
 //            map.put("name", "woshishishi");
             NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectProductListener, errorListener, map);
-            queue.add(normalPostRequest);
+            MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
         } catch (Exception e) {
             e.printStackTrace();
         }

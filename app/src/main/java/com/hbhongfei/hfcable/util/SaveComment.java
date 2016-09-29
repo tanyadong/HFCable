@@ -2,23 +2,16 @@ package com.hbhongfei.hfcable.util;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
-import com.hbhongfei.hfcable.adapter.CommentAdapter;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,10 +41,9 @@ public class SaveComment {
         params.put("phoneNumber", this.phone);
         params.put("commentContent",this.commentContent);
         String url = Url.url("/androidComment/saveComment");
-        RequestQueue mQueue = Volley.newRequestQueue(this.context);
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(context).addToRequestQueue(request);
     }
 
     /**

@@ -2,7 +2,7 @@ package com.hbhongfei.hfcable.adapter;
 
 import com.hbhongfei.hfcable.pojo.LogisticsData;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * User: Daidingkang(ddk19941017@Gmail.com)
@@ -24,6 +24,6 @@ public interface NodeProgressAdapter {
      *
      * @return
      */
-    List<LogisticsData> getData();
+    ArrayList<LogisticsData> getData();
 
 }

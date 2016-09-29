@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +71,7 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
             convertView = inflater.inflate(resource,null);
             vh = new MyOrderViewHolder();
             vh.rl_myorder_item= convertView.findViewById(R.id.rl_myorder_item);
+            vh.ll_order_bottom= (LinearLayout) convertView.findViewById(R.id.ll_order_bottom);
             vh.Tview_myOrder_stage= (TextView) vh.rl_myorder_item.findViewById(R.id.Tview_myOrder_stage);
             vh.Tview_myOrder_type = (TextView) vh.rl_myorder_item.findViewById(R.id.Tview_myOrder_type);
             vh.Tview_myOrder_introduce = (TextView) vh.rl_myorder_item.findViewById(R.id.Tview_myOrder_introduce);
@@ -104,17 +106,49 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(vh.image_myOrder);
         }
-
+        final Order order=list.get(position);
         //如果是未付款订单
-        if(list.get(position).getTag()==1){
-            if(list.get(position).cancleOrNot==0) { //未取消订单
+//        if(order.getTag()==1){
+//            if(order.cancleOrNot==0) { //未取消订单
+//                vh.Tview_myOrder_stage.setText("等待付款");
+//                vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
+//                //未取消订单时取消订单
+//                vh.btn_order_cancle.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        cancleOrder(order.getOrderNumber());
+//                    }
+//                });
+//                //去付款
+//                vh.btn_order_pay.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent=new Intent(context, OrderPayActivity.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        context.startActivity(intent);
+//                    }
+//                });
+//                vh.Image_myOrder_delete.setVisibility(View.GONE);
+//            }else if(order.cancleOrNot==1){
+//                vh.Tview_myOrder_stage.setText("已取消");
+//                vh.Image_myOrder_delete.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        deleteOrder(list.get(position).getOrderNumber());
+//                    }
+//                });
+//                vh.ll_order_bottom.setVisibility(View.GONE);
+//            }
+//        }
+        if(order.getTag()==1&& order.cancleOrNot==0){
+             //未取消订单
                 vh.Tview_myOrder_stage.setText("等待付款");
                 vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
                 //未取消订单时取消订单
                 vh.btn_order_cancle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        cancleOrder(list.get(position).getOrderNumber());
+                        cancleOrder(order.getOrderNumber());
                     }
                 });
                 //去付款
@@ -126,36 +160,79 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
                         context.startActivity(intent);
                     }
                 });
-            }
-            vh.Image_myOrder_delete.setVisibility(View.GONE);
-            vh.image_success.setVisibility(View.GONE);
+                vh.Image_myOrder_delete.setVisibility(View.GONE);
         }
-        if(list.get(position).completeOrNot==1){ //已经完成
-                vh.Tview_myOrder_stage.setVisibility(View.GONE);
-                vh.btn_order_cancle.setVisibility(View.GONE);
+        if(order.completeOrNot==1){ //已经完成
+            vh.Tview_myOrder_stage.setVisibility(View.GONE);
+            vh.btn_order_cancle.setVisibility(View.GONE);
+            vh.btn_order_pay.setVisibility(View.GONE);
+            vh.Image_myOrder_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteOrder(order.getOrderNumber());
+                }
+            });
+            vh.image_success.setVisibility(View.VISIBLE);
+        }
+        //已取消
+        if(order.cancleOrNot==1){ //已quxiao
+            vh.Tview_myOrder_stage.setText("已取消");
+//            vh.btn_order_cancle.setVisibility(View.GONE);
+//            vh.btn_order_pay.setVisibility(View.GONE);
+            vh.ll_order_bottom.setVisibility(View.GONE);
+            vh.Image_myOrder_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteOrder(order.getOrderNumber());
+                }
+            });
+        }
+        //未发货
+//        if(order.getTag()==2&&order.shipOrNot==2){
+//            if(order.cancleOrNot==0){
+//                vh.Tview_myOrder_stage.setText("等待出库");
+//                vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
+//                vh.Image_myOrder_delete.setVisibility(View.GONE);
+//                vh.btn_order_pay.setVisibility(View.GONE);
+//                vh.btn_order_cancle.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        cancleOrder(order.orderNumber);
+//                    }
+//                });
+//            }else if(order.cancleOrNot==1){
+//                vh.Tview_myOrder_stage.setText("已取消");
+//                vh.Image_myOrder_delete.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        deleteOrder(list.get(position).getOrderNumber());
+//                    }
+//                });
+//
+//            }
+//        }
+
+        if(order.getTag()==2&&order.shipOrNot==2&&order.cancleOrNot==0){
+                vh.Tview_myOrder_stage.setText("等待出库");
+                vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
+                vh.Image_myOrder_delete.setVisibility(View.GONE);
                 vh.btn_order_pay.setVisibility(View.GONE);
-                vh.Image_myOrder_delete.setOnClickListener(new View.OnClickListener() {
+                vh.btn_order_cancle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deleteOrder(list.get(position).getOrderNumber());
+                        cancleOrder(order.orderNumber);
                     }
                 });
         }
-        //未发货
-        if(list.get(position).getTag()==2&&list.get(position).shipOrNot==2){
-            vh.Tview_myOrder_stage.setText("等待出库");
-            vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
-            vh.Image_myOrder_delete.setVisibility(View.GONE);
-            vh.image_success.setVisibility(View.GONE);
-            vh.btn_order_pay.setVisibility(View.GONE);
-        }
         //未收货
-        if(list.get(position).getTag()==2&&list.get(position).shipOrNot==1&&list.get(position).completeOrNot==0){
-            vh.Tview_myOrder_stage.setText("已发货");
-            vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
-            vh.Image_myOrder_delete.setVisibility(View.GONE);
-            vh.image_success.setVisibility(View.GONE);
-            vh.btn_order_pay.setText("确认收货");
+        if(order.getTag()==2&&order.shipOrNot==1&&order.completeOrNot==0){
+            if(order.cancleOrNot==0){
+                vh.Tview_myOrder_stage.setText("已发货");
+                vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
+                vh.Image_myOrder_delete.setVisibility(View.GONE);
+                vh.btn_order_pay.setText("确认收货");
+            }
+
         }
 
 
@@ -200,6 +277,7 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
 
     public static class MyOrderViewHolder{
         View rl_myorder_item;
+        LinearLayout ll_order_bottom;
         TextView Tview_myOrder_type;
         ImageView image_myOrder;
         ImageView Image_myOrder_delete,image_success;

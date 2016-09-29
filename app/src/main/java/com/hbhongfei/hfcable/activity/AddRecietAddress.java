@@ -16,16 +16,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.City;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 import com.hbhongfei.hfcable.util.CheckPhoneNumber;
 import com.hbhongfei.hfcable.util.HintTestSize;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -48,7 +47,6 @@ public class AddRecietAddress extends AppCompatActivity implements View.OnClickL
     private static final String USER = LoginConnection.USER;
     private String S_phoneNumber;//用户名
     private String consignee,phone,localArea,detailAddress;
-    private RequestQueue mQueue;
     private String tag;  //判断是哪个界面跳转过来的
     private ShoppingAddress shoppingAddress;
     SweetAlertDialog sweetAlertDialog;
@@ -57,7 +55,6 @@ public class AddRecietAddress extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_add_reciet_address);
-        mQueue= Volley.newRequestQueue(this);
         sweetAlertDialog=new SweetAlertDialog(this,SweetAlertDialog.WARNING_TYPE);
 
         initview();
@@ -127,7 +124,7 @@ private void saveConnection(){
     map.put("detailAddress",detailAddress);
     map.put("userName",S_phoneNumber);
     NormalPostRequest normalPostRequest=new NormalPostRequest(url,saveSuccessListener,errorListener,map);
-    mQueue.add(normalPostRequest);
+    MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
 }
 
     /**
@@ -173,7 +170,7 @@ private void saveConnection(){
         map.put("detailAddress",detailAddress);
         map.put("addressId",shoppingAddress.getId());
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,updateSuccessListener,errorListener,map);
-        mQueue.add(normalPostRequest);
+        MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
     }
 
     /**
@@ -254,7 +251,7 @@ private void saveConnection(){
         Map<String,String> map=new HashMap<>();
         map.put("addressId",shoppingAddress.getId());
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,deleteSuccessListener,errorListener,map);
-        mQueue.add(normalPostRequest);
+        MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
     }
 
     /**

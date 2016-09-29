@@ -13,13 +13,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.HintTestSize;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -201,12 +200,10 @@ public class MyPasswordActivity extends AppCompatActivity implements View.OnClic
         params.put("password", S_before);
         params.put("password1", S_update);
         String url = Url.url("/androidUser/updatePassword1");
-        System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this);
 
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,updateListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(this).addToRequestQueue(request);
     }
 
     @Override

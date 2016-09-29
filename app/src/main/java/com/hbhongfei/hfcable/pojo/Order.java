@@ -16,7 +16,7 @@ public class Order implements Serializable {
 	public String id;
 	public String orderNumber;	//订单编号
 	public int tag; //是否购买   1表示未购买，2表示购买
-	public int shipOrNot;//是否发货 1表示发货 2表示未发货
+	public int shipOrNot;//是否发货 1表示yi发货 2表示未发货
 	public ShoppingCart shoppingCart; //购物车
 	public Double money;//订单总金额
 

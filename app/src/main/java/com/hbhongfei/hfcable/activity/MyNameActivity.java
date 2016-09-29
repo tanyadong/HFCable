@@ -18,14 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.HintTestSize;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -211,12 +210,10 @@ public class MyNameActivity extends AppCompatActivity implements View.OnClickLis
         params.put("nickName", S_name);
         params.put("phoneNumber", S_phoneNumber);
         String url = Url.url("/androidUser/updateNickName");
-        System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this);
 
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(this).addToRequestQueue(request);
     }
 
     /**

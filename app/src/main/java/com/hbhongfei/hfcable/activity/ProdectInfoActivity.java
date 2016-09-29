@@ -29,11 +29,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
@@ -46,6 +46,7 @@ import com.hbhongfei.hfcable.util.CallTel;
 import com.hbhongfei.hfcable.util.DataUtil;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -118,8 +119,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     private Double D_price,D_beforePrice,D_tagPrice;
     private int Tag=0;
     private Map<String,String> price_map;
-
-    RequestQueue mQueue;
     /**
      * 弹出商品订单信息详情
      */
@@ -163,7 +162,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prodect_info);
-        mQueue = Volley.newRequestQueue(this);
         toolBar();
         initVIew();
         setDate();
@@ -197,7 +195,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodectList_LLayout_collect = (LinearLayout) findViewById(R.id.prodectList_LLayout_collect);
         prodectList_LLayout_shoppingCat = (LinearLayout) findViewById(R.id.prodectList_LLayout_shoppingCat);
         prodect_addCart = (TextView) findViewById(R.id.prodect_addCart);
-//        mGrayLayout=findViewById(R.id.all_choice_layout);
         //产品信息
         prodectInfo_package = (TextView) findViewById(R.id.prodectInfo_specifications);
 
@@ -244,7 +241,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         intent = getIntent();
         product = (Product) intent.getSerializableExtra("product");
         //规格即名称
-        prodectInto_simpleDeclaration.setText(product.getSpecifications());
+        prodectInto_simpleDeclaration.setText(product.introduce);
         //价格
         D_beforePrice = product.getPrice();
         prodectInfo_price.setText(String.valueOf(product.getPrice()));
@@ -490,7 +487,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         }
         map.put("shoppingPrice", String.valueOf(unitPrice));
         NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectAddShoppingListener, errorListener, map);
-        mQueue.add(normalPostRequest);
+        MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
     }
 
     /**
@@ -502,7 +499,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         map.put("productId", product.getId());
         map.put("userName", S_phoneNumber);
         NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectCollectionListener, errorListener, map);
-        mQueue.add(normalPostRequest);
+        MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
     }
 
     /**
@@ -587,7 +584,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         map.put("productId", product.getId());
         map.put("userName", S_phoneNumber);
         NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectIsListener, errorListener, map);
-        mQueue.add(normalPostRequest);
+        MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
     }
 
     /**
@@ -883,7 +880,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         String url = Url.url("/androidShaft/list");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 jsonObjectListener, errorListener);
-        mQueue.add(jsonObjectRequest);
+        MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
     }
 
     /**
@@ -935,7 +932,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
         param.put("typeTwoName",product.getTypeTwo().getTypeTwoName());
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonColorListener,errorListener,param);
-        mQueue.add(normalPostRequest);
+        MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
     }
 
     /**

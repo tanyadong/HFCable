@@ -15,14 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.CheckPhoneNumber;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -60,7 +59,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Object data = msg.obj;
             Log.e("event", "event=" + event);
             if (result == SMSSDK.RESULT_COMPLETE) {
-                System.out.println("--------result" + result);
                 // 短信验证成功后，操作
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {// 提交验证码成功
                     //进行注册操作
@@ -250,12 +248,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         Map<String,String> params =new HashMap<>();
         params.put("userName", S_user);
         String url = Url.url("/androidUser/exist");
-        System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this);
-
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,checkPhoneListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(this).addToRequestQueue(request);
     }
 
     /**
@@ -302,12 +297,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         params.put("phoneNumber", S_user);
         params.put("password", S_password);
         String url = Url.url("/androidUser/updatePassword");
-        System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this);
-
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,updateListener,errorListener, params);
-        mQueue.add(request);
+      MySingleton.getInstance(this).addToRequestQueue(request);
     }
 
     /**
@@ -341,12 +333,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         params.put("phoneNumber", S_user);
         params.put("password", S_password);
         String url = Url.url("/androidUser/add");
-        System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this);
-
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(this).addToRequestQueue(request);
     }
 
     /**

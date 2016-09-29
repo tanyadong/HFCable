@@ -18,11 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter_myShopping;
 import com.hbhongfei.hfcable.pojo.CablesInfo;
@@ -31,6 +29,7 @@ import com.hbhongfei.hfcable.pojo.TypeInfo;
 import com.hbhongfei.hfcable.pojo.TypeTwo;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -76,8 +75,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         context = this;
         initView();
         setOnClick();
-
     }
+
     /**
      * 初始化界面
      */
@@ -128,10 +127,9 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         Map<String,String> params =new HashMap<>();
         params.put("phoneNumber", S_phoneNumber);
         String url = Url.url("/androidShoppingCart/list");
-        RequestQueue mQueue = Volley.newRequestQueue(this.context);
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(context).addToRequestQueue(request);
     }
 
     /**
@@ -143,7 +141,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             try {
                 JSONArray shoppingCarts = jsonObject.getJSONArray("shoppingCarts");
                 if (shoppingCarts.length()!=0){
-                    for (int i=0;i<shoppingCarts.length();i++){
+                    int count=shoppingCarts.length();
+                    for (int i=0;i<count;i++){
                         JSONObject shoppingCart= (JSONObject) shoppingCarts.opt(i);//shoppingCarts的第一组
                         /****************产品种类*******************/
                         JSONObject type = shoppingCart.getJSONObject("type");
@@ -165,8 +164,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
 
                         /**************产品信息*****************/
                             JSONObject productInfo = product.getJSONObject("product");
-                            String productName = productInfo.getString("specifications");//名
-                            String detail = productInfo.getString("voltage");//简介
+                            String productName = productInfo.getString("introduce");//名
+                            String detail = productInfo.getString("voltage");//电压
 
                             //typeTwo  所有的产品信息
                             JSONObject jsonObject2 = productInfo.getJSONObject("typeTwo");
@@ -178,7 +177,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             product1.setId(productInfo.getString("id"));
                             product1.setPrice(productInfo.getDouble("price"));
                             product1.setApplicationRange(productInfo.getString("applicationRange"));
-                            product1.setSpecifications(productInfo.getString("specifications"));
+//                            product1.setSpecifications(productInfo.getString("specifications"));
+                            product1.introduce=(productInfo.getString("introduce"));
                             product1.setConductorMaterial(productInfo.getString("conductorMaterial"));
                             product1.setCoreNumber(productInfo.getString("coreNumber"));
                             product1.setCrossSection(productInfo.getString("crossSection"));
@@ -259,8 +259,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         String url = Url.url("/androidShaft/list");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 shaftjsonObjectListener, errorListener);
-        RequestQueue mQueue = Volley.newRequestQueue(this.context);
-        mQueue.add(jsonObjectRequest);
+
+        MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
     /**
@@ -288,8 +288,13 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     @Override
     protected void onResume() {
         super.onResume();
+        allChekbox.setChecked(false);
         groups.clear();
         children.clear();
+        totalCount=0;
+        totalPrice=0.00;
+        tvTotalPrice.setText("￥" + totalPrice);
+        tvGoToPay.setText("去支付(" + totalCount + ")");
         initDatas();
 //        setCartNum();
     }
@@ -393,11 +398,9 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         params.put("id",proId);
         params.put("quantity",quantity);
         String url = Url.url("/androidShoppingCart/quantity");
-        System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this.context);
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,updateListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(context).addToRequestQueue(request);
     }
 
     /**
@@ -507,6 +510,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                     map.put("id",cable.getId());
                     map.put("product_name",cable.getName());
                     map.put("introduce",cable.getIntroduce());
+                    map.put("color",cable.getColor());
                     map.put("product_price",cable.getPrice());
                     map.put("product_num",cable.getCount());
                     map.put("product_package",cable.getSpecifications());
@@ -519,7 +523,6 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                         totalPrice+=cable.getPrice()*cable.getCount();
                     }else{
                         String s = packageMap.get(cable.getSpecifications());
-                        String packagePrice = s.substring(0, s.indexOf("."));
                         totalPrice +=cable.getPrice()*cable.getCount();
                     }
                 }
@@ -658,12 +661,9 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         Map<String,String> params =new HashMap<>();
         params.put("id", id);
         String url = Url.url("/androidShoppingCart/delete");
-        System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this.context);
-
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,deleteListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(context).addToRequestQueue(request);
     }
 
     /**

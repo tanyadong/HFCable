@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -38,9 +40,11 @@ public class ConnectionOrder {
     private int countPage=0;
     Dialog dialog;
     private MyOrder_all_Adapter myOrder_all_adapter;
-    public ConnectionOrder(Context context, ListView listView) {
+    private LinearLayout view;
+    public ConnectionOrder(Context context, ListView listView, LinearLayout view) {
         this.context = context;
         this.listView=listView;
+        this.view=view;
     }
     Handler mMandler=new Handler(){
         @Override
@@ -63,8 +67,8 @@ public class ConnectionOrder {
      * 根据用户ID查询订单(查询所有)
      * */
     public void connInterByUserId(String userid,int pageNo) throws JSONException {
-
         dialog=new Dialog(context);
+        Toast.makeText(context,"100",Toast.LENGTH_SHORT).show();
         String url = Url.url("/androidOrder/list");
         Map<String,String> map=new HashMap<>();
         map.put("phoneNum",userid);
@@ -79,6 +83,8 @@ public class ConnectionOrder {
      * */
     public void connInterUnPay(int page,String userid,int tag,int cancleOrNot) throws JSONException {
         dialog=new Dialog(context);
+
+        Toast.makeText(context,"200",Toast.LENGTH_SHORT).show();
         String url = Url.url("/androidOrder/unPayList");
         Map<String,String> map=new HashMap<>();
         map.put("phoneNum",userid);
@@ -95,6 +101,8 @@ public class ConnectionOrder {
      * */
     public void connInterUnSend(int page,String userid) throws JSONException {
         dialog=new Dialog(context);
+
+        Toast.makeText(context,"300",Toast.LENGTH_SHORT).show();
         String url = Url.url("/androidOrder/unSendList");
         Map<String,String> map=new HashMap<>();
         map.put("phoneNum",userid);
@@ -109,6 +117,8 @@ public class ConnectionOrder {
      * */
     public void connInterUnDelivery(int page,String userid) throws JSONException {
         dialog=new Dialog(context);
+
+        Toast.makeText(context,"400",Toast.LENGTH_SHORT).show();
         String url = Url.url("/androidOrder/unDeliveryList");
         Map<String,String> map=new HashMap<>();
         map.put("phoneNum",userid);
@@ -134,84 +144,90 @@ public class ConnectionOrder {
 //                mMandler.sendMessage(msg);
                 JSONArray jsonArray=json_page.getJSONArray("list");
                 int count=jsonArray.length();
-                for(int i=0;i<count;i++){
-                    JSONObject json_order=jsonArray.getJSONObject(i);
-                    JSONObject json_shCart=json_order.getJSONObject("shoppingCart");
-                    JSONObject json_address=json_order.getJSONObject("shoppingAddress");
-                    TypeTwo typeTwo=new TypeTwo();
-                    /**  *******订单信息*********/
-                    Order order=new Order();
-                    order.id=json_order.getString("id");
-                    order.orderNumber=json_order.getString("orderNumber");
-                    order.tag=json_order.getInt("tag");  //是否付款
-                    order.shipOrNot=json_order.getInt("shipOrNot");
-                    order.money=json_order.getDouble("money");
-                    order.completeOrNot=json_order.getInt("completeOrNot");
-                    order.cancleOrNot=json_order.getInt("cancleOrNot");
-                    order.orderTime=json_order.getLong("orderTime");
-                    System.out.println(json_order.getLong("orderTime"));
-                    order.deleteOrNot=json_order.getInt("deleteOrNot");
-                    /**  *******购物车信息*********/
-                    ShoppingCart shoppingCart=new ShoppingCart();
-                    shoppingCart.id=json_shCart.getString("id");
-                    shoppingCart.quantity=json_shCart.getInt("quantity");
-                    shoppingCart.packages=json_shCart.getString("packages");
-                    shoppingCart.color=json_shCart.getString("color");
-                    shoppingCart.unitPrice=json_shCart.getDouble("unitPrice");
-                    /**  *******收获地址*********/
-                    ShoppingAddress address=new ShoppingAddress();
-                    address.setConsignee(json_address.getString("consignee"));
-                    address.setPhone(json_address.getString("phone"));
-                    address.setLocalArea(json_address.getString("localArea"));
-                    address.setDetailAddress(json_address.getString("detailAddress"));
-                    /**  *******物流信息*********/
-                    Logistics logistics=new Logistics();
+                if(count>0) {
+                    for (int i = 0; i < count; i++) {
+                        JSONObject json_order = jsonArray.getJSONObject(i);
+                        JSONObject json_shCart = json_order.getJSONObject("shoppingCart");
+                        JSONObject json_address = json_order.getJSONObject("shoppingAddress");
+                        TypeTwo typeTwo = new TypeTwo();
+                        /**  *******订单信息*********/
+                        Order order = new Order();
+                        order.id = json_order.getString("id");
+                        order.orderNumber = json_order.getString("orderNumber");
+                        order.tag = json_order.getInt("tag");  //是否付款
+                        order.shipOrNot = json_order.getInt("shipOrNot");
+                        order.money = json_order.getDouble("money");
+                        order.completeOrNot = json_order.getInt("completeOrNot");
+                        order.cancleOrNot = json_order.getInt("cancleOrNot");
+                        order.orderTime = json_order.getLong("orderTime");
+                        System.out.println(json_order.getLong("orderTime"));
+                        order.deleteOrNot = json_order.getInt("deleteOrNot");
+                        /**  *******购物车信息*********/
+                        ShoppingCart shoppingCart = new ShoppingCart();
+                        shoppingCart.id = json_shCart.getString("id");
+                        shoppingCart.quantity = json_shCart.getInt("quantity");
+                        shoppingCart.packages = json_shCart.getString("packages");
+                        shoppingCart.color = json_shCart.getString("color");
+                        shoppingCart.unitPrice = json_shCart.getDouble("unitPrice");
+                        /**  *******收获地址*********/
+                        ShoppingAddress address = new ShoppingAddress();
+                        address.setConsignee(json_address.getString("consignee"));
+                        address.setPhone(json_address.getString("phone"));
+                        address.setLocalArea(json_address.getString("localArea"));
+                        address.setDetailAddress(json_address.getString("detailAddress"));
+                        /**  *******物流信息*********/
+                        Logistics logistics = new Logistics();
 //                    if(json_order.getJSONObject("logistics")!=null){
 //                        JSONObject json_logistics=json_order.getJSONObject("logistics");
 //                        logistics.logisticsCompanyName=json_logistics.getString("logisticsCompanyName");
 //                        logistics.logisticsNumber=json_logistics.getString("logisticsNumber");
 //                    }
 
-                    /**  *******产品信息*********/
-                    JSONObject json_pro=json_shCart.getJSONObject("product");
-                    Product product=new Product();
-                    typeTwo.typeTwoName=json_pro.getJSONObject("typeTwo").getString("typeTwoName");
-                    product.setId(json_pro.getString("id"));
-                    product.setPrice(json_pro.getDouble("price"));
-                    product.setTypeTwo(typeTwo);
-                    product.setApplicationRange(json_pro.getString("applicationRange"));
-                    product.setSpecifications(json_pro.getString("specifications"));
-                    product.setConductorMaterial(json_pro.getString("conductorMaterial"));
-                    product.setCoreNumber(json_pro.getString("coreNumber"));
-                    product.setCrossSection(json_pro.getString("crossSection"));
-                    product.setImplementationStandards(json_pro.getString("implementationStandards"));
-                    product.setDiameterLimit(json_pro.getString("diameterLimit"));
-                    product.setOutsideDiameter(json_pro.getString("outsideDiameter"));
-                    product.setSheathMaterial(json_pro.getString("sheathMaterial"));
-                    product.setVoltage(json_pro.getString("voltage"));
-                    product.setReferenceWeight(json_pro.getString("referenceWeight"));
-                    product.setPurpose(json_pro.getString("purpose"));
-                    JSONArray array=json_pro.getJSONArray("productImages");
-                    //有图片时加入到产品图片集合
-                    if(array.length()>0){
-                        ArrayList<String> list1=new ArrayList<>();
-                        for(int k=0;k<array.length();k++){
-                            list1.add((String) array.get(k));
+                        /**  *******产品信息*********/
+                        JSONObject json_pro = json_shCart.getJSONObject("product");
+                        Product product = new Product();
+                        typeTwo.typeTwoName = json_pro.getJSONObject("typeTwo").getString("typeTwoName");
+                        product.setId(json_pro.getString("id"));
+                        product.setPrice(json_pro.getDouble("price"));
+                        product.setTypeTwo(typeTwo);
+                        product.setApplicationRange(json_pro.getString("applicationRange"));
+                        product.setSpecifications(json_pro.getString("specifications"));
+                        product.introduce = json_pro.getString("introduce");
+                        product.setConductorMaterial(json_pro.getString("conductorMaterial"));
+                        product.setCoreNumber(json_pro.getString("coreNumber"));
+                        product.setCrossSection(json_pro.getString("crossSection"));
+                        product.setImplementationStandards(json_pro.getString("implementationStandards"));
+                        product.setDiameterLimit(json_pro.getString("diameterLimit"));
+                        product.setOutsideDiameter(json_pro.getString("outsideDiameter"));
+                        product.setSheathMaterial(json_pro.getString("sheathMaterial"));
+                        product.setVoltage(json_pro.getString("voltage"));
+                        product.setReferenceWeight(json_pro.getString("referenceWeight"));
+                        product.setPurpose(json_pro.getString("purpose"));
+                        JSONArray array = json_pro.getJSONArray("productImages");
+                        //有图片时加入到产品图片集合
+                        if (array.length() > 0) {
+                            ArrayList<String> list1 = new ArrayList<>();
+                            for (int k = 0; k < array.length(); k++) {
+                                list1.add((String) array.get(k));
+                            }
+                            product.setProductImages(list1);
                         }
-                        product.setProductImages(list1);
+                        shoppingCart.product = product;
+                        order.shoppingCart = shoppingCart;
+                        order.logistics = logistics;
+                        order.shoppingAddress = address;
+                        list.add(order);
                     }
-                    shoppingCart.product=product;
-                    order.shoppingCart=shoppingCart;
-                    order.logistics=logistics;
-                    order.shoppingAddress=address;
-                    list.add(order);
-                }
-                if(page==1) {
-                    myOrder_all_adapter = new MyOrder_all_Adapter(context, R.layout.item_my_order,list);
-                    listView.setAdapter(myOrder_all_adapter);
-                }else{
+                    if(page==1) {
+                        myOrder_all_adapter = new MyOrder_all_Adapter(context, R.layout.item_my_order,list);
+                        listView.setAdapter(myOrder_all_adapter);
+                    }else{
 
+                    }
+                }else {//meiyoushuju
+                    view.setVisibility(View.VISIBLE);
                 }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -224,7 +240,7 @@ public class ConnectionOrder {
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(context, "请求数据失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
         }
     };

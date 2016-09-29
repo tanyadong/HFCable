@@ -14,13 +14,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.CableRingAdapter;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -28,7 +27,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -165,11 +163,10 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
         params.put("pageNo",pageNo);
         String url = Url.url("/androidCableRing/listPage");
         System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this.getContext());
         page = Integer.valueOf(pageNo);
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,shaftjsonObjectListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(getActivity()).addToRequestQueue(request);
     }
 
     /**

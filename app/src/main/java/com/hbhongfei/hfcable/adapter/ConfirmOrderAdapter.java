@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -63,12 +64,12 @@ public class ConfirmOrderAdapter extends BaseAdapter {
         }else {
             holder = (viewHolder) convertView.getTag();
         }
-
         //设置数据
         if (list.size()>0){
             map = list.get(position);//(String) map.get("product_name")
         holder.product_name.setText((String) map.get("product_name"));
-        holder.introduce.setText((String)map.get("introduce"));
+        holder.introduce.setText((String)map.get("color"));
+            Toast.makeText(context,map.toString(),Toast.LENGTH_SHORT).show();
         holder.product_price.setText((Double)map.get("product_price")+"");
         holder.product_num.setText((Integer) map.get("product_num")+"");
         holder.product_package.setText("单位:"+(String)map.get("product_package"));
@@ -80,7 +81,6 @@ public class ConfirmOrderAdapter extends BaseAdapter {
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.head);
         }
-
         return convertView;
     }
 

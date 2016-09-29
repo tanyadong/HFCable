@@ -3,14 +3,17 @@ package com.hbhongfei.hfcable.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.ConnectionOrder;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 
 import org.json.JSONException;
@@ -21,7 +24,7 @@ import java.util.Map;
 /**
  * 全部订单的页面
  */
-public class MyOrderAllFragment extends Fragment {
+public class MyOrderAllFragment extends BaseFragment {
     private static final String USER = LoginConnection.USER;
     private ListView ListView_myOrderAll;
     private List<Map<String,String>> list;
@@ -30,6 +33,14 @@ public class MyOrderAllFragment extends Fragment {
     private int pageNo=1;
     private int countPage;
     ConnectionOrder connectionOrder=null;
+    private TextView tview_empty,tview_empty_to;
+    private ImageView image_empty;
+    private LinearLayout empty;
+    /** 标志位，标志已经初始化完成 */
+    private boolean isPrepared;
+    /** 是否已被加载过一次，第二次就不再去请求数据了 */
+    private boolean mHasLoadedOnce;
+    private Dialog dialog;
     public MyOrderAllFragment() {
         // Required empty public constructor
     }
@@ -46,14 +57,20 @@ public class MyOrderAllFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_order_all, container, false);
         initView(v);
-        getValues();
+        initvalue();
+        isPrepared = true;
+//        getValues();
+        lazyLoad();
         return v;
     }
+
+
 
     /**
      * 初始化界面
@@ -61,22 +78,67 @@ public class MyOrderAllFragment extends Fragment {
      */
     private void initView(View v) {
         ListView_myOrderAll = (ListView) v.findViewById(R.id.ListView_myOrderAll);
+        empty= (LinearLayout) v.findViewById(R.id.layout_allorder_empty);
+        tview_empty= (TextView) v.findViewById(R.id.tview_empty);
+        tview_empty_to= (TextView)v.findViewById(R.id.tview_empty_to);
+        image_empty= (ImageView) v.findViewById(R.id.image_empty);
     }
-
+    public void initvalue(){
+        image_empty.setImageResource(R.mipmap.order_empty);
+        tview_empty.setText("您还没有相关订单");
+    }
     /**
      * 获取数据
      */
     private void getValues(){
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
+            connectionOrder = new ConnectionOrder(getActivity().getApplicationContext(),ListView_myOrderAll,empty );
         try {
-            connectionOrder = new ConnectionOrder(getActivity().getApplicationContext(),ListView_myOrderAll );
+            dialog=new Dialog(getActivity());
+            dialog.showDialog("正在加载中");
             connectionOrder.connInterByUserId(S_phoneNumber,pageNo);
-
+            dialog.cancle();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
+
+    @Override
+    protected void lazyLoad() {
+        if (!isPrepared || !isVisible || mHasLoadedOnce) {
+            return;
+        }
+        getValues();
+        mHasLoadedOnce=true;
+    }
+//    class MyAsyncTack extends AsyncTask<Map<String,String>,Void,Void> {
+//        @Override
+//        protected Void doInBackground(Map<String, String>... params) {
+//            try {
+//                connectionOrder.connInterByUserId(S_phoneNumber,pageNo);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            dialog=new Dialog(getActivity());
+//            dialog.showDialog("正在加载中");
+//
+//            super.onPreExecute();
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            dialog.cancle();
+//
+//            super.onPostExecute(aVoid);
+//        }
+//    }
 
 
 }

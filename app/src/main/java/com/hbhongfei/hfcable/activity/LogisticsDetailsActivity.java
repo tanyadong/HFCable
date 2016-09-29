@@ -1,48 +1,88 @@
 package com.hbhongfei.hfcable.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.NodeProgressAdapter;
+import com.hbhongfei.hfcable.pojo.Logistics;
 import com.hbhongfei.hfcable.pojo.LogisticsData;
 import com.hbhongfei.hfcable.util.NodeProgressView;
+import com.hbhongfei.hfcable.util.Url;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LogisticsDetailsActivity extends AppCompatActivity {
+    private TextView tview_logistics_state,tview_logistics_company,tview_logistics_num;
+    private ImageView img_logistics_proimg;
     List<LogisticsData> logisticsDatas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logistics_details);
-
-        logisticsDatas = new ArrayList<>();
-        logisticsDatas.add(new LogisticsData().setTime("2016-6-28 15:13:02").setContext("快件在【相城中转仓】装车,正发往【无锡分拨中心】已签收,签收人是【王漾】,签收网点是【忻州原平】"));
-        logisticsDatas.add(new LogisticsData().setTime("2016-6-28 15:13:02").setContext("快件在【相城中转仓】装车,正发往【无锡分拨中心】"));
-        logisticsDatas.add(new LogisticsData().setTime("2016-6-28 15:13:02").setContext("【北京鸿运良乡站】的【010058.269】正在派件"));
-        logisticsDatas.add(new LogisticsData().setTime("2016-6-28 15:13:02").setContext("快件到达【潍坊市中转部】,上一站是【】"));
-        logisticsDatas.add(new LogisticsData().setTime("2016-6-28 15:13:02").setContext("快件在【潍坊市中转部】装车,正发往【潍坊奎文代派】"));
-        logisticsDatas.add(new LogisticsData().setTime("2016-6-28 15:13:02").setContext("快件到达【潍坊】,上一站是【潍坊市中转部】"));
-        logisticsDatas.add(new LogisticsData().setTime("2016-6-28 15:13:02").setContext("快件在【武汉分拨中心】装车,正发往【晋江分拨中心】"));
-        logisticsDatas.add(new LogisticsData().setTime("2016-6-28 15:13:02").setContext("【北京鸿运良乡站】的【010058.269】正在派件"));
-        logisticsDatas.add(new LogisticsData().setTime("2016-6-28 15:13:02").setContext("【北京鸿运良乡站】的【010058.269】正在派件"));
-        logisticsDatas.add(new LogisticsData().setTime("2016-6-28 15:13:02").setContext("【北京鸿运良乡站】的【010058.269】正在派件"));
-        logisticsDatas.add(new LogisticsData().setTime("2016-6-28 15:13:02").setContext("【北京鸿运良乡站】的【010058.269】正在派件"));
-
-        NodeProgressView nodeProgressView = (NodeProgressView) findViewById(R.id.npv_NodeProgressView);
-        nodeProgressView.setNodeProgressAdapter(new NodeProgressAdapter() {
-
-            @Override
-            public int getCount() {
-                return logisticsDatas.size();
-            }
-
-            @Override
-            public List<LogisticsData> getData() {
-                return logisticsDatas;
-            }
-        });
+        initview();
     }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setValues();
+
+    }
+
+    public void initview(){
+        img_logistics_proimg= (ImageView) findViewById(R.id.img_logistics_proimg);
+        tview_logistics_state= (TextView) findViewById(R.id.tview_logistics_state);
+        tview_logistics_company= (TextView) findViewById(R.id.tview_logistics_company);
+        tview_logistics_num= (TextView) findViewById(R.id.tview_logistics_num);
+    }
+   public void  setValues(){
+       Intent intent=getIntent();
+       Bundle bundle=intent.getExtras();
+       final ArrayList<LogisticsData> logisticsDatas= (ArrayList<LogisticsData>)bundle.getSerializable("list");
+
+       Logistics logistics= (Logistics) bundle.getSerializable("logistics");
+       String image=bundle.getString("image");
+       String state=bundle.getString("state");
+
+       //物流状态
+       String url= Url.url(image);
+       Glide.with(this.getApplicationContext())
+               .load(url)
+               .placeholder(R.mipmap.man)
+               .error(R.mipmap.man)
+               .diskCacheStrategy(DiskCacheStrategy.ALL)
+               .into(img_logistics_proimg);
+       if(state.endsWith("2")){
+           tview_logistics_state.setText("快件在途中");
+       }else if(state.endsWith("3")){
+           tview_logistics_state.setText("快件已签收");
+       }else if(state.endsWith("4")){
+           tview_logistics_state.setText("问题件");
+       }
+       tview_logistics_company.setText(logistics.logisticsCompanyName);
+       tview_logistics_num.setText(logistics.logisticsNumber);
+
+       NodeProgressView nodeProgressView = (NodeProgressView) findViewById(R.id.npv_NodeProgressView);
+       nodeProgressView.setNodeProgressAdapter(new NodeProgressAdapter() {
+
+           @Override
+           public int getCount() {
+               return logisticsDatas.size();
+           }
+
+           @Override
+           public ArrayList<LogisticsData> getData() {
+               return logisticsDatas;
+           }
+       });
+   }
 }

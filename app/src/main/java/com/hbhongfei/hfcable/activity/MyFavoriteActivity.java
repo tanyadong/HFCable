@@ -11,14 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter;
 import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -62,12 +61,11 @@ public class MyFavoriteActivity extends AppCompatActivity {
 
     }
     private void getCollection(){
-        RequestQueue mQueue= Volley.newRequestQueue(this);
         String url = Url.url("/androidCollecton/getCollection");
         Map<String,String> map=new HashMap<>();
         map.put("userName",S_phoneNumber);
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectCollectionListener,errorListener,map);
-        mQueue.add(normalPostRequest);
+        MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
     }
 
 

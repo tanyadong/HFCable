@@ -1,7 +1,6 @@
 package com.hbhongfei.hfcable.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,7 +15,7 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.ShoppingAddressListConnection;
 
-public class AddressListActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddressListActivity extends AppCompatActivity  {
 
     private ListView lview_recriptAddress;
     private TextView add_recriptAddress;
@@ -57,8 +56,9 @@ public class AddressListActivity extends AppCompatActivity implements View.OnCli
      */
     private void  initView(){
         lview_recriptAddress= (ListView) findViewById(R.id.lview_recriptAddress);
-        add_recriptAddress= (TextView) findViewById(R.id.add_recriptAddress_tview);
         layout_address_emity= (LinearLayout) findViewById(R.id.layout_address_emity);
+        add_recriptAddress= (TextView) findViewById(R.id.add_recriptAddress_tview);
+        add_recriptAddress.setVisibility(View.GONE);
     }
 
 
@@ -66,7 +66,7 @@ public class AddressListActivity extends AppCompatActivity implements View.OnCli
      * 设置点击事件
      */
     private void click(){
-        add_recriptAddress.setOnClickListener(this);
+
     }
 
     /**
@@ -81,16 +81,6 @@ public class AddressListActivity extends AppCompatActivity implements View.OnCli
         shoppingAddressListConnection.addressListConnection();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.add_recriptAddress_tview:
-                Intent intent=new Intent(AddressListActivity.this,AddRecietAddress.class);
-                intent.putExtra("tag","add");
-                startActivity(intent);
-                break;
-        }
-    }
 
 
 }

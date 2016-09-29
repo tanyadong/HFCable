@@ -4,15 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.activity.InputMyInfoActivity;
 import com.hbhongfei.hfcable.activity.MainActivity;
 
@@ -67,10 +64,9 @@ public class LoginConnection {
         params.put("password", S_password);
         String url = Url.url("/androidUser/login");
         System.out.println(url);
-        RequestQueue mQueue = Volley.newRequestQueue(this.context);
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
-        mQueue.add(request);
+        MySingleton.getInstance(context).addToRequestQueue(request);
     }
 
     /**

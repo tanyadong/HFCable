@@ -1,18 +1,14 @@
 package com.hbhongfei.hfcable.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
-import com.hbhongfei.hfcable.util.NormalPostRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,12 +44,11 @@ public class UpLoadImage {
             //将图片的字节流数据加密成base64字符输出
             String photo = Base64.encodeToString(buffer, 0, buffer.length,Base64.DEFAULT);
             String url = Url.url("/androidUser/imageUpload");
-            RequestQueue queue = Volley.newRequestQueue(context);
             Map<String, String> map = new HashMap<>();
             map.put("photo", photo);
             map.put("phoneNumber",phone);
             NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectProductListener, errorListener, map);
-            queue.add(normalPostRequest);
+            MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
         } catch (Exception e) {
             e.printStackTrace();
         }
