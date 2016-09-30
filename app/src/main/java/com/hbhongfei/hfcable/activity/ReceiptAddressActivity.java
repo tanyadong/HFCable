@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Dialog;
@@ -32,7 +33,7 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
     private ListView lview_recriptAddress;
     BGARefreshLayout mRefreshLayout;
     private TextView add_recriptAddress;
-    private LinearLayout layout_address_emity;
+    private LinearLayout layout_address_emity,noInternet;
     private static final String USER = LoginConnection.USER;
     private String S_phoneNumber;//用户名
     private  Dialog dialog;
@@ -45,6 +46,7 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
         toolbar();
         initView();
         initRefreshLayout();
+        Toast.makeText(this,"ReceiptAddressActivity",Toast.LENGTH_SHORT).show();
         //开始加载数据
         setValue();
         //获取地址
@@ -70,6 +72,7 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
         lview_recriptAddress= (ListView) findViewById(R.id.lview_recriptAddress);
         add_recriptAddress= (TextView) findViewById(R.id.add_recriptAddress_tview);
         layout_address_emity= (LinearLayout) findViewById(R.id.layout_address_emity);
+        noInternet = (LinearLayout) findViewById(R.id.no_internet_receipt_address);
     }
 
     /**
@@ -85,10 +88,11 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
         // 设置正在加载更多时的文本
         refreshViewHolder.setLoadingMoreText("正在加载中");
     }
+
     private void setValue(){
         SharedPreferences spf =getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber",null);
-        shoppingAddressListConnection=new ShoppingAddress_conn(S_phoneNumber,this,lview_recriptAddress,layout_address_emity);
+        shoppingAddressListConnection=new ShoppingAddress_conn(this,S_phoneNumber,this,lview_recriptAddress,layout_address_emity,noInternet);
         shoppingAddressListConnection.addressListConnection();
     }
 

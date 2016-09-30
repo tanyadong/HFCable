@@ -5,126 +5,157 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.hbhongfei.hfcable.activity.AddRecietAddress">
-<LinearLayout
-    android:orientation="horizontal"
-    android:layout_gravity="center"
-    android:showDividers="end"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_width="match_parent"
-    android:layout_height="50dp">
-    <TextView
-        android:id="@+id/consignee_textview"
-        android:text="@string/add_consignee"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
-    <EditText
-        android:id="@+id/consigne_editview"
-        android:layout_marginLeft="5dp"
-        android:background="@null"
-        android:textSize="15sp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
-    <View
-        android:background="@color/qianGray"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"></View>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <TextView
-            android:id="@+id/add_phone_textview"
-            android:text="@string/add_phone"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-        <EditText
-            android:id="@+id/add_phone_editview"
-            android:layout_marginLeft="5dp"
-            android:background="@null"
-            android:textSize="15sp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-    <View
-        android:background="@color/qianGray"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"></View>
-    <RelativeLayout
-        android:id="@+id/Rlayout_localArea"
-        android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-    <TextView
-        android:id="@+id/add_localArea"
-        android:text="@string/add_localArea"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
-    <TextView
-        android:id="@+id/add_localArea_textview"
-        android:background="@null"
-        android:layout_marginLeft="5dp"
-        android:gravity="center"
-        android:text=""
-        android:textColor="@color/colorBalck"
-        android:layout_toRightOf="@+id/add_localArea"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
-        <ImageView
-            android:src="@mipmap/right_black"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-</RelativeLayout>
-    <View
-        android:background="@color/colorGray"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"></View>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <TextView
-            android:id="@+id/add_addressDetail_textview"
-            android:text="@string/add_addressDetail"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-        <EditText
-            android:id="@+id/add_addressDetail_editview"
-            android:background="@null"
-            android:textSize="15sp"
-            android:hint="@string/hint_addressDetail"
-            android:layout_marginLeft="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-    <View
-        android:background="@color/qianGray"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"></View>
 
-    <Button
-        android:id="@+id/btn_add_address_save"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="@string/add_address_save"
-        android:layout_marginTop="50dp"
-        android:textColor="@color/colorWhite"
-        android:textSize="20dp"
-       android:layout_alignParentBottom="true"
-        android:background="@color/colorRed"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal"
+            android:showDividers="end">
+
+            <TextView
+                android:id="@+id/consignee_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/add_consignee" />
+
+            <EditText
+                android:id="@+id/consigne_editview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:background="@null"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/qianGray"></View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/add_phone_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/add_phone" />
+
+            <EditText
+                android:id="@+id/add_phone_editview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:background="@null"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/qianGray"></View>
+
+        <RelativeLayout
+            android:id="@+id/Rlayout_localArea"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/add_localArea"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/add_localArea" />
+
+            <TextView
+                android:id="@+id/add_localArea_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/add_localArea"
+                android:background="@null"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/colorBalck" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/right_black" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGray"></View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/add_addressDetail_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/add_addressDetail" />
+
+            <EditText
+                android:id="@+id/add_addressDetail_editview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:background="@null"
+                android:hint="@string/hint_addressDetail"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/qianGray"></View>
+
+        <Button
+            android:id="@+id/btn_add_address_save"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="50dp"
+            android:background="@color/colorRed"
+            android:text="@string/add_address_save"
+            android:textColor="@color/colorWhite"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/no_internet_add_reciet"
+        layout="@layout/internet_no"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </LinearLayout>

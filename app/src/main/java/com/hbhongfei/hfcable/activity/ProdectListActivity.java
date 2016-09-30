@@ -14,8 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.hbhongfei.hfcable.R;
@@ -23,8 +27,11 @@ import com.hbhongfei.hfcable.adapter.SpinnerListAdapter;
 import com.hbhongfei.hfcable.fragment.IndexFragment;
 import com.hbhongfei.hfcable.util.ConnectionTypeTwo;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.Error;
+import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.MySpinner;
+import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -41,7 +48,7 @@ import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
-public class ProdectListActivity extends AppCompatActivity implements View.OnClickListener,BGARefreshLayout.BGARefreshLayoutDelegate {
+public class ProdectListActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick {
     private LinearLayout prodectType_spinner;
     private TextView prodectType_textView;
     private ExpandableListView prodectList_listView;
@@ -57,6 +64,8 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
     private int count=0;
     private int pageNo=1;//D当前页数
     ConnectionTypeTwo typtTwoConnection;
+    private LinearLayout noInternet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +79,6 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         setValues();
         connInter();
         getTotolCount();//总页数
-        click();
-
-//        onClickLisener();
     }
     Handler mMandler=new Handler(){
         @Override
@@ -87,6 +93,7 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         prodectType_spinner = (LinearLayout) findViewById(R.id.prodectType_spinner);
         prodectType_textView = (TextView) findViewById(R.id.prodectType_textView);
         prodectList_listView= (ExpandableListView) findViewById(R.id.prodectlist_listView);
+        noInternet = (LinearLayout) findViewById(R.id.no_internet_product_list);
     }
 
     private void initRefreshLayout() {
@@ -129,18 +136,14 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
             }
         }
     };
-    public void click(){
-    }
 
     /**
      * 连接服务
-    /**
      * 展示当前用户管理任务连接服务
      */
     public void connInter(){
         String url = Url.url("/androidType/getType");
-        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
-                jsonObjectListener,errorListener);
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,jsonObjectListener,getTypeErrorListener);
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
     }
 
@@ -154,18 +157,55 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
             List<String> type_list=new ArrayList<>();
             try {
                 jsonArray = jsonObject.getJSONArray("list");
-                for(int i=0;i<jsonArray.length();i++){
-                    JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
-                    String typeName=jsonObject1.getString("typeName");
-                    type_list.add(typeName);
+                if (jsonArray.length()>0){
+                    for(int i=0;i<jsonArray.length();i++){
+                        JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
+                        String typeName=jsonObject1.getString("typeName");
+                        type_list.add(typeName);
+                    }
+                    //点击事件
+                    onClickLisener(type_list);
+                }else{
+                    Error.toSetting(noInternet, R.mipmap.nothing, "暂无数据哦", "换一个试试", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                            Toast.makeText(ProdectListActivity.this,"暂无数据",Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
-                //点击事件
-               onClickLisener(type_list);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     };
+
+    /**
+     *  获取种类失败的监听器
+     */
+    private Response.ErrorListener getTypeErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            if (volleyError instanceof NoConnectionError) {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", ProdectListActivity.this);
+            } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+                        Toast.makeText(ProdectListActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+                        Toast.makeText(ProdectListActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
+    };
+
 
     /**
      *  获取种类失败的监听器
@@ -190,7 +230,7 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         WindowManager wm = this.getWindowManager();
         width = wm.getDefaultDisplay().getWidth();
         try {
-            typtTwoConnection=new ConnectionTypeTwo(ProdectListActivity.this,prodectList_listView);
+            typtTwoConnection=new ConnectionTypeTwo(ProdectListActivity.this,ProdectListActivity.this,prodectList_listView,noInternet);
             typtTwoConnection.connInterByType(typeName,pageNo);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -221,10 +261,6 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
 
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
@@ -243,6 +279,12 @@ public class ProdectListActivity extends AppCompatActivity implements View.OnCli
         }
         return true;
     }
+
+    @Override
+    public void errorClick() {
+        NetUtils.openSetting(this);
+    }
+
     class MyAsyncTack extends AsyncTask<Void,Void,Void> {
         @Override
         protected void onPreExecute() {

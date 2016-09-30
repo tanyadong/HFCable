@@ -3,6 +3,7 @@ package com.hbhongfei.hfcable.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -49,10 +50,12 @@ public class CableRingAdapter extends BaseAdapter {
 
     private List<Map<String,Object>> mList;
     private Context mContext;
+    private FloatingActionButton btn;
 
-    public CableRingAdapter(Context context, List<Map<String,Object>> list) {
+    public CableRingAdapter(Context context, List<Map<String,Object>> list,FloatingActionButton btn) {
         mList = list;
         mContext = context;
+        this.btn = btn;
     }
     public void addItem(List<Map<String,Object>> list)
     {
@@ -143,6 +146,7 @@ public class CableRingAdapter extends BaseAdapter {
                 imm.hideSoftInputFromWindow(finalHolder.commentContent.getWindowToken(), 0);
                 finalHolder.linear.setVisibility(View.GONE);
                 finalHolder.comment.setVisibility(View.VISIBLE);
+                btn.setVisibility(View.VISIBLE);
             }
         });
 
@@ -154,15 +158,13 @@ public class CableRingAdapter extends BaseAdapter {
                 if(finalHolder.linear.isShown()==false){
                     finalHolder.linear.setVisibility(View.VISIBLE);
                     finalHolder.comment.setVisibility(View.GONE);
-                    /**
-                     * 评论图标点击事件
-                     */
                     // 获取编辑框焦点
                     finalHolder.commentContent.setFocusable(true);
                     finalHolder.commentContent.requestFocus();
                     // 打开软键盘
                     imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    btn.setVisibility(View.GONE);
                 }
             }
         });
@@ -204,9 +206,7 @@ public class CableRingAdapter extends BaseAdapter {
                     saveComment.connInter();
                     finalHolder.commentContent.setText("");
                     // 点击后通知适配器数据发生了变化
-//                    CommentAdapter commentAdapter = new CommentAdapter(mContext,null);
-//                    commentAdapter.notifyDataSetChanged();
-                    notifyDataSetChanged();
+
                 }else{
                     Toast.makeText(mContext, "请输入内容", Toast.LENGTH_SHORT).show();
                 }
@@ -214,6 +214,7 @@ public class CableRingAdapter extends BaseAdapter {
                 imm.hideSoftInputFromWindow(finalHolder.commentContent.getWindowToken(), 0);
                 finalHolder.linear.setVisibility(View.GONE);
                 finalHolder.comment.setVisibility(View.VISIBLE);
+                btn.setVisibility(View.VISIBLE);
             }
         });
 
@@ -239,5 +240,9 @@ public class CableRingAdapter extends BaseAdapter {
         LinearLayout linear,cableLinear;
         EditText commentContent;
         NineGridTestLayout nineGridTestLayout;
+    }
+
+    public void update(){
+        notifyDataSetChanged();
     }
 }

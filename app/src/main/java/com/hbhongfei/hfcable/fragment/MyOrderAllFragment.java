@@ -33,9 +33,7 @@ public class MyOrderAllFragment extends BaseFragment {
     private int pageNo=1;
     private int countPage;
     ConnectionOrder connectionOrder=null;
-    private TextView tview_empty,tview_empty_to;
-    private ImageView image_empty;
-    private LinearLayout empty;
+    private LinearLayout noInternet;
     /** 标志位，标志已经初始化完成 */
     private boolean isPrepared;
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
@@ -63,7 +61,6 @@ public class MyOrderAllFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_order_all, container, false);
         initView(v);
-        initvalue();
         isPrepared = true;
 //        getValues();
         lazyLoad();
@@ -78,14 +75,7 @@ public class MyOrderAllFragment extends BaseFragment {
      */
     private void initView(View v) {
         ListView_myOrderAll = (ListView) v.findViewById(R.id.ListView_myOrderAll);
-        empty= (LinearLayout) v.findViewById(R.id.layout_allorder_empty);
-        tview_empty= (TextView) v.findViewById(R.id.tview_empty);
-        tview_empty_to= (TextView)v.findViewById(R.id.tview_empty_to);
-        image_empty= (ImageView) v.findViewById(R.id.image_empty);
-    }
-    public void initvalue(){
-        image_empty.setImageResource(R.mipmap.order_empty);
-        tview_empty.setText("您还没有相关订单");
+        noInternet= (LinearLayout) v.findViewById(R.id.no_internet_my_order_all);
     }
     /**
      * 获取数据
@@ -93,7 +83,7 @@ public class MyOrderAllFragment extends BaseFragment {
     private void getValues(){
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
-            connectionOrder = new ConnectionOrder(getActivity().getApplicationContext(),ListView_myOrderAll,empty );
+            connectionOrder = new ConnectionOrder(MyOrderAllFragment.this.getActivity(),MyOrderAllFragment.this.getContext(),ListView_myOrderAll,noInternet);
         try {
             dialog=new Dialog(getActivity());
             dialog.showDialog("正在加载中");
@@ -102,7 +92,6 @@ public class MyOrderAllFragment extends BaseFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

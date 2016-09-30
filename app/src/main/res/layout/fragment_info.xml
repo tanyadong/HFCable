@@ -47,4 +47,12 @@
         android:dividerHeight="10dp">
     </ListView>
     </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
+
+
+    <include
+        android:id="@+id/no_internet_info"
+        layout="@layout/internet_no"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </FrameLayout>

@@ -18,10 +18,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
@@ -35,7 +38,10 @@ import com.hbhongfei.hfcable.pojo.Company;
 import com.hbhongfei.hfcable.pojo.Project;
 import com.hbhongfei.hfcable.util.ConnectionProduct;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.Error;
+import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.MySingleton;
+import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NoScrollListView;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -59,13 +65,14 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IndexFragment extends Fragment implements View.OnClickListener ,BGARefreshLayout.BGARefreshLayoutDelegate{
+public class IndexFragment extends Fragment implements View.OnClickListener ,BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick{
     //下拉和分页框架
     private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
 
     private View view;
     private String typeName;
+    private LinearLayout noInternet;
     private LayoutInflater inflater;
     private ScrollView scrollView;
     private ViewPager mviewPager;
@@ -99,7 +106,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            // TODO Auto-generated method stub
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
@@ -199,13 +205,14 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
         mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
         dotLayout = (LinearLayout)view.findViewById(R.id.dotLayout);
 
-
         btn_typeName1 = (Button) view.findViewById(R.id.btn_type_name1);
         btn_typeName2 = (Button) view.findViewById(R.id.btn_type_name2);
         btn_typeName3 = (Button) view.findViewById(R.id.btn_type_name3);
         btn_typeName4 = (Button) view.findViewById(R.id.btn_type_name4);
         btn_typeName5 = (Button) view.findViewById(R.id.btn_type_name5);
         btn_typeName6 = (Button) view.findViewById(R.id.btn_type_name6);
+
+        noInternet = (LinearLayout) view.findViewById(R.id.no_internet_index);
     }
 
     /**
@@ -280,9 +287,6 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
         MySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjectRequest);
     }
 
-
-
-
     /**
      * 成功的监听器
      */
@@ -312,8 +316,23 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             dialog.cancle();
-            Toast.makeText(IndexFragment.this.getActivity(), "无法连接服务器", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
+            if (volleyError instanceof NoConnectionError){
+                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",IndexFragment.this);
+            }else if(volleyError instanceof NetworkError ||volleyError instanceof ServerError ||volleyError instanceof TimeoutError){
+                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+
+                    }
+                });
+            }else{
+                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+
+                    }
+                });
+            }
         }
     };
 
@@ -534,6 +553,10 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
         return true;
     }
 
+    @Override
+    public void errorClick() {
+        NetUtils.openSetting(IndexFragment.this.getActivity());
+    }
 
 
    class MyAsyncTack extends AsyncTask<Void,Void,Void>{

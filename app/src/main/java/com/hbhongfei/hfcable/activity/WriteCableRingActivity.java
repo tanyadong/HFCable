@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -181,6 +182,7 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
      * 保存缆圈信息
      */
     private void connect(String s) {
+        dialog.showDialog("正在发布....");
         if (s.equals("")&&mDataList.size()==0){
             Toast.makeText(this,"内容不能为空",Toast.LENGTH_SHORT).show();
         }else{
@@ -195,7 +197,7 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
                 String [] images = new String[mDataList.size()-1];
                 Toast.makeText(WriteCableRingActivity.this,mDataList.size()+"",Toast.LENGTH_SHORT).show();
 //                new BitmapThread().start();
-                for (int i=0;i<mDataList.size();i++) {
+                /*for (int i=0;i<mDataList.size();i++) {
                         Bitmap bitmap = BitmapFactory.decodeFile(mDataList.get(i).sourcePath);
                         //将bitmap一字节流输出 Bitmap.CompressFormat.PNG 压缩格式，100：压缩率，baos：字节流
                         //转换字符流
@@ -212,12 +214,40 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
                         //将图片的字节流数据加密成base64字符输出
                         String photo = Base64.encodeToString(buffer, 0, buffer.length, Base64.DEFAULT);
                         map.put("image" + i, photo);
-                }
+                }*/
+
+                new bitmapTask().execute("");
             }
             NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectAddCableRingListener, errorListener, map);
             MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
         }
     }
+    class bitmapTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            for (int i=0;i<mDataList.size();i++) {
+                Bitmap bitmap = BitmapFactory.decodeFile(mDataList.get(i).sourcePath);
+                //将bitmap一字节流输出 Bitmap.CompressFormat.PNG 压缩格式，100：压缩率，baos：字节流
+                //转换字符流
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                int options = 100;
+                while ( options>0&&baos.toByteArray().length / 1024>100) { //循环判断如果压缩后图片是否大于100kb,大于继续压缩
+                    baos.reset();//重置baos即清空baos
+                    bitmap.compress(Bitmap.CompressFormat.PNG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
+                    options -= 10;//每次都减少10
+                }
+                byte[] buffer = baos.toByteArray();
+                System.out.println("图片的大小：" + buffer.length);
+                //将图片的字节流数据加密成base64字符输出
+                String photo = Base64.encodeToString(buffer, 0, buffer.length, Base64.DEFAULT);
+                map.put("image" + i, photo);
+            }
+            return "success";
+        }
+    }
+
 
     class BitmapThread extends Thread{
         @Override
@@ -257,11 +287,14 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
                     removeTextTempFromPref();
                     Intent intent = new Intent(WriteCableRingActivity.this,MainActivity.class);
                     startActivity(intent);
+                    dialog.cancle();
                 } else {
                     Toast.makeText(WriteCableRingActivity.this,"发布失败",Toast.LENGTH_SHORT).show();
+                    dialog.cancle();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.cancle();
             }
         }
 
@@ -273,9 +306,9 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
+            dialog.cancle();
             Toast.makeText(WriteCableRingActivity.this, "请求数据失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
-//            dialog.cancle();
         }
     };
 

@@ -42,6 +42,7 @@ import com.hbhongfei.hfcable.util.CustomDialog;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.IAlertDialogListener;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.UpLoadImage;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -50,21 +51,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,ViewPager.OnPageChangeListener,IAlertDialogListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ViewPager.OnPageChangeListener, IAlertDialogListener {
 
     private ViewPager viewPager;
     private List<Fragment> list_fragment;
-    private LinearLayout layout_index,layout_info,layout_market,layout_mine;
-    private ImageView imageView_index,imageView_info,imageView_market,imageView_mine;
-    private TextView textView_index,textView_info,textView_market,textView_mine;
+    private LinearLayout layout_index, layout_info, layout_market, layout_mine;
+    private ImageView imageView_index, imageView_info, imageView_market, imageView_mine;
+    private TextView textView_index, textView_info, textView_market, textView_mine;
     private Handler myHandler = new Handler();
 
     private static final String USER = LoginConnection.USER;
     private ImageView head;
     private TextView myName;
-    private String S_name,S_phoneNumber,S_head;
+    private String S_name, S_phoneNumber, S_head;
     private View headerLayout;
-    private  NavigationView navigationView;
+    private NavigationView navigationView;
     private Drawable drawable;
     private Bitmap b;
     private int tag = 0;
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * toolbar
      */
-    private void toolbar(){
+    private void toolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(0);
@@ -112,20 +113,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPostResume() {
         id = SplashActivity.ID;
-        hiddenEditMenu();
-            if (id==4){
-                showMine();
-                viewPager.setCurrentItem(3);
-            }else if(id==1){
-                showHome();
-                viewPager.setCurrentItem(0);
-            }else if(id==2){
-                showMarket();
-                viewPager.setCurrentItem(1);
-            }else{
-                showInfo();
-                viewPager.setCurrentItem(2);
-            }
+        if (id == 4) {
+            showMine();
+            viewPager.setCurrentItem(3);
+        } else if (id == 1) {
+            showHome();
+            viewPager.setCurrentItem(0);
+        } else if (id == 2) {
+            showMarket();
+            viewPager.setCurrentItem(1);
+        } else  if(id == 3){
+            showInfo();
+            viewPager.setCurrentItem(2);
+        }
         //初始化数据
         initValues();
         super.onPostResume();
@@ -141,55 +141,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        mMenu = menu;
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    private void hiddenEditMenu(){
-        if(null != mMenu){
-            for (int i = 0; i < mMenu.size(); i++){
-                mMenu.getItem(i).setVisible(false);
-                mMenu.getItem(i).setEnabled(false);
-                }
-            }else{
-        }
-    }
-    private void showEditMenu(){
-        if(null != mMenu){
-            for (int i = 0; i < mMenu.size(); i++){
-                mMenu.getItem(i).setVisible(true);
-                mMenu.getItem(i).setEnabled(true);
-                }
-            }
-    }
-
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        return super.onPrepareOptionsMenu(menu);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent();
-        intent.setClass(this,WriteCableRingActivity.class);
-        intent.putExtra("tag","main");
-        startActivity(intent);
-        return super.onOptionsItemSelected(item);
-    }
     /**
      * 跳转页面
      * 苑雪元
      * 2016/07/21
+     *
      * @param c 要跳转的页面
      */
-    private void intent(Class c){
+    private void intent(Class c) {
         Intent i = new Intent();
         i.setClass(this, c);
         startActivity(i);
@@ -198,10 +157,10 @@ public class MainActivity extends AppCompatActivity
     /**
      * 判断是否登录
      */
-    private void toLoginOrNot(Class c){
-        if (S_phoneNumber!=null){
+    private void toLoginOrNot(Class c) {
+        if (S_phoneNumber != null) {
             intent(c);
-        }else{
+        } else {
             toLogin();
         }
     }
@@ -211,7 +170,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.Rlayout_mine_favorite:
                 toLoginOrNot(MyFavoriteActivity.class);
                 break;
@@ -276,19 +235,20 @@ public class MainActivity extends AppCompatActivity
         list_fragment.add(marketFragment);
         list_fragment.add(mineFragment);
 
-        MainFragmentAdapter m1 = new MainFragmentAdapter(getSupportFragmentManager(),list_fragment);
+        MainFragmentAdapter m1 = new MainFragmentAdapter(getSupportFragmentManager(), list_fragment);
 
         viewPager.setAdapter(m1);
         //关闭预加载，默认一次只加载一个Fragment
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(3);
         //mine
         headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         head = (ImageView) headerLayout.findViewById(R.id.Iamge_mine_head);
         myName = (TextView) headerLayout.findViewById(R.id.Tview_mine_myName);
 
-        upLoadImage =new UpLoadImage(this);
+        upLoadImage = new UpLoadImage(this);
         dialog = new Dialog(this);
     }
+
     /**
      * 初始化数据
      */
@@ -296,24 +256,24 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences spf = this.getSharedPreferences(USER, Context.MODE_PRIVATE);
         //用户名
         S_name = spf.getString("nickName", null);
-        if (S_name==null){
+        if (S_name == null) {
             S_name = "还未登录哦";
             myName.setText(S_name);
-        }else{
+        } else {
             myName.setText(S_name);
         }
-        S_phoneNumber = spf.getString("phoneNumber",null);
+        S_phoneNumber = spf.getString("phoneNumber", null);
 
         //头像
-        S_head  =spf.getString("headPortrait",null);
-        if(S_head!=null&&tag==0){
+        S_head = spf.getString("headPortrait", null);
+        if (S_head != null && tag == 0) {
             String url = Url.url(S_head);
             head.setTag(url);
             asyncBitmapLoader = new AsyncBitmapLoader();
-            asyncBitmapLoader.loadImage(this,head,url);
-        }else if(tag!=0&&S_head!=null){
+            asyncBitmapLoader.loadImage(this, head, url);
+        } else if (tag != 0 && S_head != null) {
             head.setImageBitmap(b);
-        }else{
+        } else {
             drawable = MainActivity.this.getResources().getDrawable(R.mipmap.man);
             head.setImageDrawable(drawable);
         }
@@ -322,7 +282,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 点击首页时显示
      */
-    private void showHome(){
+    private void showHome() {
         imageView_index.setImageResource(R.mipmap.home_red);
         textView_index.setTextColor(Color.parseColor("#ff0000"));
         imageView_market.setImageResource(R.mipmap.market_grey);
@@ -332,14 +292,13 @@ public class MainActivity extends AppCompatActivity
         imageView_mine.setImageResource(R.mipmap.cable_grey);
         textView_mine.setTextColor(Color.parseColor("#000000"));
         //隐藏menu
-        hiddenEditMenu();
         SplashActivity.ID = 1;
     }
 
     /**
      * 点击资讯时显示
      */
-    private void showInfo(){
+    private void showInfo() {
         imageView_info.setImageResource(R.mipmap.info_red);
         textView_info.setTextColor(Color.parseColor("#ff0000"));
         imageView_index.setImageResource(R.mipmap.home_grey);
@@ -349,14 +308,13 @@ public class MainActivity extends AppCompatActivity
         imageView_mine.setImageResource(R.mipmap.cable_grey);
         textView_mine.setTextColor(Color.parseColor("#000000"));
         //隐藏menu
-        hiddenEditMenu();
         SplashActivity.ID = 3;
     }
 
     /**
      * 点击行情时显示
      */
-    private void showMarket(){
+    private void showMarket() {
         imageView_market.setImageResource(R.mipmap.market_red);
         textView_market.setTextColor(Color.parseColor("#ff0000"));
         imageView_index.setImageResource(R.mipmap.home_grey);
@@ -366,14 +324,13 @@ public class MainActivity extends AppCompatActivity
         imageView_mine.setImageResource(R.mipmap.cable_grey);
         textView_mine.setTextColor(Color.parseColor("#000000"));
         //隐藏menu
-        hiddenEditMenu();
         SplashActivity.ID = 2;
     }
 
     /**
      * 点击我的时显示
      */
-    private void showMine(){
+    private void showMine() {
         imageView_mine.setImageResource(R.mipmap.cable_red);
         textView_mine.setTextColor(Color.parseColor("#ff0000"));
         imageView_index.setImageResource(R.mipmap.home_grey);
@@ -383,7 +340,6 @@ public class MainActivity extends AppCompatActivity
         imageView_market.setImageResource(R.mipmap.market_grey);
         textView_market.setTextColor(Color.parseColor("#000000"));
         //隐藏menu
-        showEditMenu();
         SplashActivity.ID = 4;
     }
 
@@ -391,15 +347,16 @@ public class MainActivity extends AppCompatActivity
     // 判断应用是否进行登录过
     //****************************************************************
     private static final String LOGINORNOT = LoginConnection.USER;
-    private boolean isLogin(Context context,String className){
-        if(context==null || className==null||"".equalsIgnoreCase(className)){
+
+    private boolean isLogin(Context context, String className) {
+        if (context == null || className == null || "".equalsIgnoreCase(className)) {
             return false;
         }
         SharedPreferences spf = context.getSharedPreferences(LOGINORNOT, Context.MODE_PRIVATE);
         String loginOrNot = spf.getString("id", null);
-        if (loginOrNot!=null){
+        if (loginOrNot != null) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -407,15 +364,15 @@ public class MainActivity extends AppCompatActivity
     /**
      * 跳转到登录界面
      */
-    private void toLogin(){
-        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+    private void toLogin() {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onClick(View v) {
-        boolean isLogin = isLogin(MainActivity.this,MainActivity.this.getClass().getName());
-        switch (v.getId()){
+        boolean isLogin = isLogin(MainActivity.this, MainActivity.this.getClass().getName());
+        switch (v.getId()) {
             case R.id.ll_main_page:
                 showHome();
                 viewPager.setCurrentItem(0);
@@ -429,46 +386,42 @@ public class MainActivity extends AppCompatActivity
                 viewPager.setCurrentItem(2);
                 break;
             case R.id.ll_main_mine:
-                if(isLogin) {
+                if (isLogin) {
                     showMine();
                     viewPager.setCurrentItem(3);
-                }
-                else{
+                } else {
                     toLogin();
                 }
                 break;
             case R.id.Iamge_mine_head:
-                if (S_phoneNumber!=null){
+                if (S_phoneNumber != null) {
                     //修改头像
                     showDialog();
-                }else{
+                } else {
                     toLogin();
                 }
                 break;
-            }
+        }
     }
+
     /**
      * 选择拍照还是相册
      */
-    private void showDialog(){
-        /*if (tag==0){
-            drawable = MainActivity.this.getResources().getDrawable(R.mipmap.man);
-        }else{
-            drawable =new BitmapDrawable(b);
-        }*/
-        CustomDialog.selectHead(this,this);
+    private void showDialog() {
+        CustomDialog.selectHead(this, this);
     }
+
     @Override
-    public   void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
             Intent intent = new Intent(MainActivity.this, ImageCropActivity.class);
-            intent.putExtra("PHOTO_PATH",Constants.PHOTONAME);
+            intent.putExtra("PHOTO_PATH", Constants.PHOTONAME);
             startActivityForResult(intent, Constants.CROP_BEAUTY);
         }
         if (requestCode == Constants.PICK_PHOTO && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = MainActivity.this.getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
             cursor.moveToFirst();
@@ -477,18 +430,18 @@ public class MainActivity extends AppCompatActivity
             cursor.close();
 
             Intent intent = new Intent(MainActivity.this, ImageCropActivity.class);
-            intent.putExtra("PHOTO_PATH",picturePath);
+            intent.putExtra("PHOTO_PATH", picturePath);
             startActivityForResult(intent, Constants.CROP_BEAUTY);
         }
         if (requestCode == Constants.CROP_BEAUTY && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 final String path = data.getStringExtra("path");
-                 b = BitmapFactory.decodeFile(path);
+                b = BitmapFactory.decodeFile(path);
                 if (b != null) {
                     tag++;
                     head.setImageBitmap(b);
                     //上传
-                    upLoadImage.load(b,S_phoneNumber);
+                    upLoadImage.load(b, S_phoneNumber);
                 }
             }
         }
@@ -501,7 +454,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPageSelected(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 showHome();
                 break;
@@ -526,7 +479,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            CustomDialog.showOkOrCancleDialog(this,"您确定要退出么？",this);
+            CustomDialog.showOkOrCancleDialog(this, "您确定要退出么？", this);
         }
         return super.onKeyDown(keyCode, event);
     }

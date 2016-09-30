@@ -12,19 +12,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.City;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 import com.hbhongfei.hfcable.util.CheckPhoneNumber;
+import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.HintTestSize;
+import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.MySingleton;
+import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -37,7 +46,7 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class AddRecietAddress extends AppCompatActivity implements View.OnClickListener {
+public class AddRecietAddress extends AppCompatActivity implements View.OnClickListener,IErrorOnclick {
     private RelativeLayout Rlayout_localArea;
     private EditText consigne_editview,add_phone_editview,add_addressDetail_editview;
     private City city ;
@@ -50,6 +59,8 @@ public class AddRecietAddress extends AppCompatActivity implements View.OnClickL
     private String tag;  //判断是哪个界面跳转过来的
     private ShoppingAddress shoppingAddress;
     SweetAlertDialog sweetAlertDialog;
+    private LinearLayout noInternet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +87,7 @@ public class AddRecietAddress extends AppCompatActivity implements View.OnClickL
         hintTestSize.setHintTextSize();
         add_localArea_textview= (TextView) findViewById(R.id.add_localArea_textview);
         btn_address_save= (Button) findViewById(R.id.btn_add_address_save);
+        noInternet = (LinearLayout) findViewById(R.id.no_internet_add_reciet);
     }
 
     /**
@@ -152,8 +164,13 @@ private void saveConnection(){
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(AddRecietAddress.this,"连接网络失败", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
+            if (volleyError instanceof NoConnectionError){
+                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",AddRecietAddress.this);
+            }else if(volleyError instanceof NetworkError ||volleyError instanceof ServerError ||volleyError instanceof TimeoutError){
+                Error.toSetting(noInternet,R.mipmap.internet_no,"不好啦","服务器出错啦",null);
+            }else{
+                Error.toSetting(noInternet,R.mipmap.internet_no,"不好啦","出错啦",null);
+            }
 
         }
     };
@@ -335,5 +352,10 @@ private void saveConnection(){
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void errorClick() {
+        NetUtils.openSetting(AddRecietAddress.this);
     }
 }

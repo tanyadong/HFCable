@@ -1,6 +1,7 @@
 package com.hbhongfei.hfcable.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,10 +13,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.ShoppingAddressListConnection;
 
-public class AddressListActivity extends AppCompatActivity  {
+public class AddressListActivity extends AppCompatActivity {
 
     private ListView lview_recriptAddress;
     private TextView add_recriptAddress;
@@ -23,6 +25,7 @@ public class AddressListActivity extends AppCompatActivity  {
     private static final String USER = LoginConnection.USER;
     private String S_phoneNumber;//用户名
     ShoppingAddressListConnection shoppingAddressListConnection;
+    private LinearLayout noInternet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +38,6 @@ public class AddressListActivity extends AppCompatActivity  {
 
         //初始化数据
         initValues();
-        //设置点击事件
-        click();
     }
     /**
      * 展示toolbar
@@ -59,15 +60,9 @@ public class AddressListActivity extends AppCompatActivity  {
         layout_address_emity= (LinearLayout) findViewById(R.id.layout_address_emity);
         add_recriptAddress= (TextView) findViewById(R.id.add_recriptAddress_tview);
         add_recriptAddress.setVisibility(View.GONE);
+        noInternet = (LinearLayout) findViewById(R.id.no_internet_receipt_address);
     }
 
-
-    /**
-     * 设置点击事件
-     */
-    private void click(){
-
-    }
 
     /**
      * 初始化数据
@@ -77,7 +72,7 @@ public class AddressListActivity extends AppCompatActivity  {
         SharedPreferences spf =getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber",null);
         //获取地址
-        shoppingAddressListConnection=new ShoppingAddressListConnection(this,S_phoneNumber,this,lview_recriptAddress,layout_address_emity);
+        shoppingAddressListConnection=new ShoppingAddressListConnection(this,S_phoneNumber,this,lview_recriptAddress,layout_address_emity,noInternet);
         shoppingAddressListConnection.addressListConnection();
     }
 

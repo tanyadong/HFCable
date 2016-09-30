@@ -1,25 +1,39 @@
 package com.hbhongfei.hfcable.fragment;
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.activity.WriteCableRingActivity;
 import com.hbhongfei.hfcable.adapter.CableRingAdapter;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.Error;
+import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.MySingleton;
+import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -27,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +54,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MineFragment extends Fragment implements View.OnClickListener,BGARefreshLayout.BGARefreshLayoutDelegate {
+public class MineFragment extends Fragment implements View.OnClickListener,BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick {
     private View view;
     private ListView mListView;
     private List<Map<String, Object>> list;
@@ -50,6 +65,8 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
     private int pageNo=1;//当前页数
     private int count;//总页数
     private int page;
+    private LinearLayout noInternet;
+    private FloatingActionButton fab;
 
     public MineFragment() {
     }
@@ -57,7 +74,6 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
 
         @Override
         public void handleMessage(Message msg) {
-            // TODO Auto-generated method stub
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
@@ -100,7 +116,6 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
 
     @Override
     public void onResume() {
-//        initValues();
         super.onResume();
     }
 
@@ -130,6 +145,9 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
         mListView = (ListView) v.findViewById(R.id.ListView_cableZone);
         //下载刷新
         mRefreshLayout = (BGARefreshLayout)view.findViewById(R.id.Refresh_cableCZone);
+        noInternet = (LinearLayout) view.findViewById(R.id.no_internet_mine);
+
+        fab = (FloatingActionButton) v.findViewById(R.id.fab_mine);
     }
 
     /**
@@ -138,7 +156,7 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
      * 2016/07/21
      */
     private void setOnClick() {
-
+        fab.setOnClickListener(this);
     }
 
 
@@ -153,6 +171,14 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.fab_mine:
+                Intent intent = new Intent();
+                intent.setClass(MineFragment.this.getActivity(), WriteCableRingActivity.class);
+                intent.putExtra("tag", "main");
+                startActivity(intent);
+            break;
+        }
     }
 
     /**
@@ -211,7 +237,7 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
                     list.add(map);
                 }
                 if(page==1) {
-                    cableRingAdapter = new CableRingAdapter(MineFragment.this.getContext(), list);
+                    cableRingAdapter = new CableRingAdapter(MineFragment.this.getContext(), list,fab);
                     mListView.setAdapter(cableRingAdapter);
                     mListView.setDivider(null);
                 }else{
@@ -230,8 +256,24 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(MineFragment.this.getActivity(), "链接网络失败", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
+            if (volleyError instanceof NoConnectionError){
+                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MineFragment.this);
+            }else if(volleyError instanceof NetworkError ||volleyError instanceof ServerError ||volleyError instanceof TimeoutError){
+                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+
+                    }
+                });
+            }else{
+                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+
+                    }
+                });
+            }
+
         }
     };
 
@@ -263,6 +305,11 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void errorClick() {
+        NetUtils.openSetting(MineFragment.this.getActivity());
     }
 
     class MyAsyncTack extends AsyncTask<Void,Void,Void>{

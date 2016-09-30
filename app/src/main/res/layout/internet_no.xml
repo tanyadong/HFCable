@@ -13,18 +13,18 @@
             android:id="@+id/img_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/order" />
+            android:src="@mipmap/internet_no" />
         <TextView
             android:id="@+id/text_item1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/shoppingCart_empty_empty" />
+            android:text="@string/internet_no" />
         <TextView
             android:id="@+id/text_item2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/shoppingCart_empty_shopping" />
+            android:text="@string/to_setting" />
     </LinearLayout>
 </LinearLayout>

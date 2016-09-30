@@ -119,6 +119,11 @@
     <string name="shoppingCart_empty_shopping">快去逛逛吧</string>
 
 
+    <!--internet_no-->
+    <string name="internet_no">网络不给力哦</string>
+    <string name="to_setting">请检查网络设置</string>
+
+
     <!--行业资讯-->
     <string name="button_text_reload">重新连接</string>
     <string name="infoDetail_lable">资讯详情</string>
@@ -233,4 +238,5 @@
 
     <!--PaySuccessActivity-->
     <string name="title_activity_pay_success">支付完成</string>
+    <string name="title_activity_test">test</string>
 </resources>

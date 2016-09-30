@@ -5,73 +5,88 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.hbhongfei.hfcable.activity.ProdectListActivity">
+
     <LinearLayout
-        android:orientation="horizontal"
-        android:background="@drawable/prodectlayout_background"
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="50dp"
+        android:background="@drawable/prodectlayout_background"
+        android:orientation="horizontal">
+
         <LinearLayout
             android:id="@+id/prodectType_spinner"
-            android:orientation="vertical"
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+            android:layout_weight="1"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/prodectType_textView"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical|center_horizontal"
-                android:text="hello9"
-                android:textColor="@color/colorOrange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"/>
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:singleLine="true"
+                android:text="hello9"
+                android:textColor="@color/colorOrange" />
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/prodectType_textView"
-               android:layout_gravity="center"
-                android:src="@mipmap/arrow_down"/>
+                android:layout_gravity="center"
+                android:src="@mipmap/arrow_down" />
         </LinearLayout>
 
         <!--<ImageView-->
-            <!--android:src="@drawable/vertical_line"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
+        <!--android:src="@drawable/vertical_line"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
         <!--<LinearLayout-->
-            <!--android:id="@+id/prodectGeneral_spinner"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--&gt;-->
-            <!--<TextView-->
-                <!--android:id="@+id/prodectGeneral_textView"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:singleLine="true"/>-->
-            <!--<ImageView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@+id/prodectType_textView"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:src="@mipmap/arrow_down"/>-->
+        <!--android:id="@+id/prodectGeneral_spinner"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_weight="1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--&gt;-->
+        <!--<TextView-->
+        <!--android:id="@+id/prodectGeneral_textView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:singleLine="true"/>-->
+        <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/prodectType_textView"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:src="@mipmap/arrow_down"/>-->
         <!--</LinearLayout>-->
     </LinearLayout>
-    <cn.bingoogolapple.refreshlayout.BGARefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <cn.bingoogolapple.refreshlayout.BGARefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/rl_expandable_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ExpandableListView
-            android:id="@+id/prodectlist_listView"
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:childIndicator="@null"
-            android:groupIndicator="@null" >
-        </ExpandableListView>
+            android:layout_weight="1">
+
+            <ExpandableListView
+                android:id="@+id/prodectlist_listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:childIndicator="@null"
+                android:groupIndicator="@null"></ExpandableListView>
+
+            <include
+                android:id="@+id/no_internet_product_list"
+                layout="@layout/internet_no"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+        </FrameLayout>
     </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
 
 

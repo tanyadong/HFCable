@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,10 +32,9 @@ public class MyOrderUnDeliveryFragment extends BaseFragment {
     private String S_phoneNumber;
     private int pageNo=1;
     private int countPage;
-    private TextView tview_empty,tview_empty_to;
-    private ImageView image_empty;
-    LinearLayout view;
     ConnectionOrder connectionOrder=null;
+    private LinearLayout noInternet;
+
     private boolean isVisable = false;
     /** 标志位，标志已经初始化完成 */
     private boolean isPrepared;
@@ -60,28 +60,17 @@ public class MyOrderUnDeliveryFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_order_un_paymen, container, false);
         initView(v);
-        initvalue();
         isPrepared = true;
-//        getValues();
         lazyLoad();
         return v;
     }
-
-
     /**
      * 初始化界面
      * @param v
      */
     private void initView(View v) {
         ListView_myOrderUnPayment = (ListView) v.findViewById(R.id.ListView_myOrderUnPayment);
-        view= (LinearLayout) v.findViewById(R.id.layout_unpayorder_empty);
-        tview_empty= (TextView) v.findViewById(R.id.tview_empty);
-        tview_empty_to= (TextView) v.findViewById(R.id.tview_empty_to);
-        image_empty= (ImageView) v.findViewById(R.id.image_empty);
-    }
-    public void initvalue(){
-        image_empty.setImageResource(R.mipmap.order_empty);
-        tview_empty.setText("您还没有相关订单");
+        noInternet = (LinearLayout) v.findViewById(R.id.no_internet_my_order_un_paymen);
     }
     /**
      * 获取数据
@@ -90,7 +79,7 @@ public class MyOrderUnDeliveryFragment extends BaseFragment {
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
         try {
-            connectionOrder = new ConnectionOrder(getActivity().getApplicationContext(), ListView_myOrderUnPayment,view);
+            connectionOrder = new ConnectionOrder(MyOrderUnDeliveryFragment.this.getActivity(),MyOrderUnDeliveryFragment.this.getContext(), ListView_myOrderUnPayment,noInternet);
             connectionOrder.connInterUnDelivery(pageNo,S_phoneNumber);
         } catch (JSONException e) {
             e.printStackTrace();

@@ -74,4 +74,9 @@ public class CommentAdapter extends BaseAdapter{
     private static class ViewHolder {
         TextView nickName,comment;
     }
+
+    public void update(List<Map<String,Object>> list){
+        this.list.addAll(list);
+        notifyDataSetChanged();
+    }
 }

@@ -11,15 +11,26 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter;
 import com.hbhongfei.hfcable.pojo.Product;
+import com.hbhongfei.hfcable.pojo.TypeTwo;
+import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.Error;
+import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.MySingleton;
+import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
+import com.hbhongfei.hfcable.util.UseLoadingDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,11 +41,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyFavoriteActivity extends AppCompatActivity {
+public class MyFavoriteActivity extends AppCompatActivity implements IErrorOnclick {
     private ListView list_myFavorite;
-    private LinearLayout layout_favority_emity;
+    private LinearLayout noInternet;
     String S_phoneNumber;
     private static final String USER = LoginConnection.USER;
+    private Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +61,9 @@ public class MyFavoriteActivity extends AppCompatActivity {
      * 初始化界面
      */
     private void initView(){
+        dialog = new Dialog(this);
         list_myFavorite = (ListView) findViewById(R.id.listView_myFavorite);
-        layout_favority_emity= (LinearLayout) findViewById(R.id.layout_favority_emity);
+        noInternet = (LinearLayout) findViewById(R.id.no_internet_my_favorite);
     }
     private void setValues(){
         List<Product> list = new ArrayList<Product>();
@@ -61,6 +74,7 @@ public class MyFavoriteActivity extends AppCompatActivity {
 
     }
     private void getCollection(){
+        dialog.showDialog("正在加载中....");
         String url = Url.url("/androidCollecton/getCollection");
         Map<String,String> map=new HashMap<>();
         map.put("userName",S_phoneNumber);
@@ -86,7 +100,10 @@ public class MyFavoriteActivity extends AppCompatActivity {
                         product.setId(jsonObject1.getString("id"));
                         product.setPrice(jsonObject1.getDouble("price"));
                         product.setSpecifications(jsonObject1.getString("specifications"));
-                        JSONObject jsonObject2=jsonObject1.getJSONObject("type");
+                        TypeTwo typeTwo = new TypeTwo();
+                        JSONObject jsonObject2=jsonObject1.getJSONObject("typeTwo");
+                        typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
+                        product.setTypeTwo(typeTwo);
                         JSONArray jsonArray1=jsonObject1.getJSONArray("productImages");
                         //有图片时加入到产品图片集合
                         if(jsonArray1.length()>0){
@@ -99,14 +116,20 @@ public class MyFavoriteActivity extends AppCompatActivity {
                         list.add(product);
                     }
                 }else{
-                    layout_favority_emity.setVisibility(View.VISIBLE);
-                    Toast.makeText(MyFavoriteActivity.this,"您还没有收藏",Toast.LENGTH_SHORT).show();
+                    Error.toSetting(noInternet, R.mipmap.nothing, "您还没有收藏宝贝", "快去收藏一个吧!", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                            Toast.makeText(MyFavoriteActivity.this,"您还没有收藏",Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
                 MyAdapter adapter = new MyAdapter(MyFavoriteActivity.this, R.layout.intentionlayout,list);
                 list_myFavorite.setDivider(null);
                 list_myFavorite.setAdapter(adapter);
+                dialog.cancle();
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.cancle();
             }
 
         }
@@ -120,9 +143,29 @@ public class MyFavoriteActivity extends AppCompatActivity {
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(MyFavoriteActivity.this, "请求数据失败", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
+            if (volleyError instanceof NoConnectionError) {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", MyFavoriteActivity.this);
+            } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+                        Toast.makeText(MyFavoriteActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+                        Toast.makeText(MyFavoriteActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     };
 
+    @Override
+    public void errorClick() {
+        NetUtils.openSetting(this);
+    }
 }

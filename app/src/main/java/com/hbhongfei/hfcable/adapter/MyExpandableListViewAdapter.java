@@ -26,8 +26,7 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     private ArrayList<MarketInfo> child_list;
     private LayoutInflater inflater;
     private Dialog dialog;
-    public MyExpandableListViewAdapter(Context context,List<String> group_list,ArrayList<List<MarketInfo>> item_list,ExpandableListView listView,Dialog d
-                                       ) {
+    public MyExpandableListViewAdapter(Context context,List<String> group_list,ArrayList<List<MarketInfo>> item_list,ExpandableListView listView,Dialog d) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.item_list=item_list;

@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.ConnectionOrder;
@@ -32,10 +30,7 @@ public class MyOrderUnSendFragment extends BaseFragment {
     private int pageNo=1;
     private int countPage;
     ConnectionOrder connectionOrder=null;
-    private TextView tview_empty,tview_empty_to;
-    private ImageView image_empty;
-    LinearLayout view;
-    private boolean isVisable=false;
+    private LinearLayout noInternet;
     /** 标志位，标志已经初始化完成 */
     private boolean isPrepared;
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
@@ -60,9 +55,7 @@ public class MyOrderUnSendFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_order_un_paymen, container, false);
         initView(v);
-        initvalue();
         isPrepared = true;
-//        getValues();
         lazyLoad();
         return v;
     }
@@ -74,14 +67,7 @@ public class MyOrderUnSendFragment extends BaseFragment {
      */
     private void initView(View v) {
         ListView_myOrderUnPayment = (ListView) v.findViewById(R.id.ListView_myOrderUnPayment);
-        view= (LinearLayout) v.findViewById(R.id.layout_unpayorder_empty);
-        tview_empty= (TextView) view.findViewById(R.id.tview_empty);
-        tview_empty_to= (TextView) view.findViewById(R.id.tview_empty_to);
-        image_empty= (ImageView) view.findViewById(R.id.image_empty);
-    }
-    public void initvalue(){
-        image_empty.setImageResource(R.mipmap.order_empty);
-        tview_empty.setText("您还没有相关订单");
+        noInternet = (LinearLayout) v.findViewById(R.id.no_internet_my_order_un_paymen);
     }
     /**
      * 获取数据
@@ -90,7 +76,7 @@ public class MyOrderUnSendFragment extends BaseFragment {
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
         try {
-            connectionOrder = new ConnectionOrder(getActivity().getApplicationContext(), ListView_myOrderUnPayment,view);
+            connectionOrder = new ConnectionOrder(MyOrderUnSendFragment.this.getActivity(),MyOrderUnSendFragment.this.getContext(), ListView_myOrderUnPayment,noInternet);
             connectionOrder.connInterUnSend(pageNo,S_phoneNumber);
         } catch (JSONException e) {
             e.printStackTrace();

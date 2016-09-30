@@ -70,14 +70,9 @@ public class GetComment {
         Map<String,String> params =new HashMap<>();
         params.put("id", this.id);
         String url = Url.url("/androidComment/getComment");
-        System.out.println(url);
-        if (mQueue == null) {
-            mQueue = Volley.newRequestQueue(context);
-        }
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
-        mQueue.add(request);
-
+        MySingleton.getInstance(context).addToRequestQueue(request);
     }
 
     /**
@@ -98,7 +93,6 @@ public class GetComment {
                         //昵称
                         String nickName = user.getString("nickName");
                         map.put("nickName",nickName);
-
                         //评论
                         String commentContent = comment.getString("commentContent");
                         map.put("commentContent",commentContent);
@@ -108,7 +102,6 @@ public class GetComment {
                     commentAdapter = new CommentAdapter(context,list);
                     listView.setAdapter(commentAdapter);
                 }
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }

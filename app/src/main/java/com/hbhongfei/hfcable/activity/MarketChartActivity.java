@@ -5,9 +5,15 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.github.mikephil.charting.charts.BarLineChartBase;
@@ -21,8 +27,11 @@ import com.github.mikephil.charting.utils.YLabels;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.Error;
+import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.MyMarkerView;
 import com.hbhongfei.hfcable.util.MySingleton;
+import com.hbhongfei.hfcable.util.NetUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,16 +41,18 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MarketChartActivity extends AppCompatActivity {
-    private String url,week_url;
-    private String area,produceName;
+public class MarketChartActivity extends AppCompatActivity implements IErrorOnclick {
+    private String url, week_url;
+    private String area, produceName;
     private List<String> averagePrice_list;
     private List<String> data_list;
     private MarketInfo marketInfo;
-    private LineChart mChart ;
+    private LineChart mChart;
     ArrayList<String> xVals;
     ArrayList<Entry> yVals;
     private Dialog dialog;
+    private LinearLayout noInternet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,47 +67,65 @@ public class MarketChartActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        dialog=new Dialog(this);
+        dialog = new Dialog(this);
         mChart = (LineChart) findViewById(R.id.chart1);
-        data_list=new ArrayList<>();
-        averagePrice_list=new ArrayList<>();
-        xVals= new ArrayList<String>();
-        yVals=new ArrayList<>();
+        data_list = new ArrayList<>();
+        averagePrice_list = new ArrayList<>();
+        xVals = new ArrayList<String>();
+        yVals = new ArrayList<>();
+        noInternet = (LinearLayout) findViewById(R.id.no_internet_market_chart);
     }
-
 
 
     /**
      * 初始化数据
      */
     public void initvalues() {
-        marketInfo= (MarketInfo) getIntent().getSerializableExtra("marketInfo");
-        url=marketInfo.getTrend();
-        area=marketInfo.getArea();
-        produceName=marketInfo.getProductName();
+        marketInfo = (MarketInfo) getIntent().getSerializableExtra("marketInfo");
+        url = marketInfo.getTrend();
+        area = marketInfo.getArea();
+        produceName = marketInfo.getProductName();
         dialog.showDialog("正在加载中。。。");
         new Thread(new Runnable() {
             @Override
             public void run() {
-                    StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String s) {
-                            parse(s);
+                StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        parse(s);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //请求失败
+                        dialog.cancle();
+                        if (volleyError instanceof NoConnectionError) {
+                            Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", MarketChartActivity.this);
+                        } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                            Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
+                                @Override
+                                public void errorClick() {
+                                    Toast.makeText(MarketChartActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
+                                @Override
+                                public void errorClick() {
+                                    Toast.makeText(MarketChartActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            //请求失败
-                            dialog.cancle();
-                            System.out.println(volleyError);
-                        }
-                    });
+                    }
+                });
                 MySingleton.getInstance(MarketChartActivity.this).addToRequestQueue(request);
-                }
+            }
         }).start();
     }
+
     /**
      * 解析html,获取一周行情的地址
+     *
      * @param html
      */
     protected void parse(String html) {
@@ -104,7 +133,7 @@ public class MarketChartActivity extends AppCompatActivity {
         //Elements
         Element ul = doc.getElementsByClass("scrollUl").first();
         Element li = ul.getElementsByTag("li").first();
-        week_url="http://material.cableabc.com"+li.getElementsByTag("a").attr("href");
+        week_url = "http://material.cableabc.com" + li.getElementsByTag("a").attr("href");
         getOneWeekInfo(week_url);
     }
 
@@ -112,11 +141,11 @@ public class MarketChartActivity extends AppCompatActivity {
      * 获取一周的原材料行情信息
      * 谭亚东
      */
-    private void getOneWeekInfo(final String s){
+    private void getOneWeekInfo(final String s) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                StringRequest request=new StringRequest(Request.Method.GET, s, new Response.Listener<String>() {
+                StringRequest request = new StringRequest(Request.Method.GET, s, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
                         parseWeek(s);
@@ -126,7 +155,23 @@ public class MarketChartActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError volleyError) {
                         //请求失败
                         dialog.cancle();
-                        System.out.println(volleyError);
+                        if (volleyError instanceof NoConnectionError) {
+                            Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", MarketChartActivity.this);
+                        } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                            Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
+                                @Override
+                                public void errorClick() {
+                                    Toast.makeText(MarketChartActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
+                                @Override
+                                public void errorClick() {
+                                    Toast.makeText(MarketChartActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     }
                 });
                 MySingleton.getInstance(MarketChartActivity.this).addToRequestQueue(request);
@@ -136,6 +181,7 @@ public class MarketChartActivity extends AppCompatActivity {
 
     /**
      * 解析html,获取一周行情
+     *
      * @param html
      */
     protected void parseWeek(String html) {
@@ -154,9 +200,9 @@ public class MarketChartActivity extends AppCompatActivity {
     }
 
     /**
-     *曲线图
+     * 曲线图
      */
-    private void showChart(){
+    private void showChart() {
 
         // 设置在Y轴上是否是从0开始显示
         mChart.setStartAtZero(false);
@@ -164,7 +210,7 @@ public class MarketChartActivity extends AppCompatActivity {
         mChart.setDrawYValues(true);
         //设置网格
         mChart.setDrawBorder(true);
-        mChart.setBorderPositions(new BarLineChartBase.BorderPosition[] {
+        mChart.setBorderPositions(new BarLineChartBase.BorderPosition[]{
                 BarLineChartBase.BorderPosition.BOTTOM});
         //在chart上的右下角加描述
         mChart.setDescription("曲线图");
@@ -247,9 +293,10 @@ public class MarketChartActivity extends AppCompatActivity {
         mChart.invalidate();
         dialog.cancle();
     }
+
     /**
      * 设置数据
-
+     *
      * @return
      */
 
@@ -257,12 +304,12 @@ public class MarketChartActivity extends AppCompatActivity {
         for (int i = 0; i < data_list.size(); i++) {
             xVals.add(data_list.get(i));
         }
-        for (int i = 0; i <averagePrice_list.size(); i++) {
+        for (int i = 0; i < averagePrice_list.size(); i++) {
             yVals.add(new Entry(Float.parseFloat(averagePrice_list.get(i)), i));
         }
 
         // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(yVals, area+" "+produceName);
+        LineDataSet set1 = new LineDataSet(yVals, area + " " + produceName);
         set1.setDrawCubic(true);  //设置曲线为圆滑的线
 
         set1.setCubicIntensity(0.2f);
@@ -280,4 +327,8 @@ public class MarketChartActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void errorClick() {
+        NetUtils.openSetting(this);
+    }
 }

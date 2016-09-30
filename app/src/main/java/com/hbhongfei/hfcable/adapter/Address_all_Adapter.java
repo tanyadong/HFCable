@@ -1,5 +1,6 @@
 package com.hbhongfei.hfcable.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -13,8 +14,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.AddRecietAddress;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
@@ -42,13 +45,17 @@ public class Address_all_Adapter extends BaseAdapter {
 	ListView listView;
 	LinearLayout linearLayout;
 	SweetAlertDialog sweetAlertDialog=null;
-	public Address_all_Adapter(Context context, List<ShoppingAddress> nList, String S_phone, ListView listView,LinearLayout linearLayout) {
+	private LinearLayout noInternet;
+	private Activity activity;
+	public Address_all_Adapter(Activity activity,Context context, List<ShoppingAddress> nList, String S_phone, ListView listView, LinearLayout linearLayout,LinearLayout noInternet) {
 		mContext = context;
 		inflater = LayoutInflater.from(context);
 		this.list = nList;
 		this.listView=listView;
 		this.phoneNum=S_phone;
 		this.linearLayout=linearLayout;
+		this.noInternet = noInternet;
+		this.activity = activity;
 	}
 	public List<ShoppingAddress> addItems(List<ShoppingAddress> list){
 		this.list.addAll(list);
@@ -175,69 +182,69 @@ public class Address_all_Adapter extends BaseAdapter {
 		MySingleton.getInstance(mContext).addToRequestQueue(normalPostRequest);
 	}
 
-	/**
-	 * 删除收货地址成功的监听器
-	 */
-	private Response.Listener<JSONObject> deleteSuccessListener = new Response.Listener<JSONObject>() {
-		@Override
-		public void onResponse(JSONObject jsonObject) {
-			try {
-				String msg=jsonObject.getString("msg");
-				if(msg.equals("success")){
-					sweetAlertDialog.dismiss();
-					ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(phoneNum,mContext,listView,linearLayout);
-					shoppingAddress_conn.addressListConnection();
+    /**
+     * 删除收货地址成功的监听器
+     */
+    private Response.Listener<JSONObject> deleteSuccessListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                String msg = jsonObject.getString("msg");
+                if (msg.equals("success")) {
+                    sweetAlertDialog.dismiss();
+                    ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(mContext,phoneNum,activity,listView,linearLayout,noInternet);
+                    shoppingAddress_conn.addressListConnection();
+                    Address_all_Adapter.this.notifyDataSetChanged();
+                    Toast.makeText(mContext, "删除成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "删除失败", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+    /**
+     * 失败的监听器
+     */
+    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            Toast.makeText(mContext, "链接网络失败", Toast.LENGTH_SHORT).show();
+            Log.e("TAG", volleyError.getMessage(), volleyError);
+        }
+    };
 
-					Toast.makeText(mContext,"删除成功",Toast.LENGTH_SHORT).show();
-				}else {
-					Toast.makeText(mContext,"删除失败",Toast.LENGTH_SHORT).show();
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-	};
-	/**
-	 *  失败的监听器
-	 */
-	private Response.ErrorListener errorListener = new Response.ErrorListener() {
-		@Override
-		public void onErrorResponse(VolleyError volleyError) {
-			Toast.makeText(mContext,"链接网络失败", Toast.LENGTH_SHORT).show();
-			Log.e("TAG", volleyError.getMessage(), volleyError);
-		}
-	};
-	/**
-	 * 设置默认地址的服务
-	 */
-	private void setDefauleConnection(String id){
-		String url= Url.url("/androidAddress/setDefauleAddress");
-		Map<String,String> map=new HashMap<>();
-		map.put("addressId",id);
-		map.put("userName",phoneNum);
-		NormalPostRequest normalPostRequest=new NormalPostRequest(url,setDefauleSuccessListener,errorListener,map);
-		MySingleton.getInstance(mContext).addToRequestQueue(normalPostRequest);
-	}
+    /**
+     * 设置默认地址的服务
+     */
+    private void setDefauleConnection(String id) {
+        String url = Url.url("/androidAddress/setDefauleAddress");
+        Map<String, String> map = new HashMap<>();
+        map.put("addressId", id);
+        map.put("userName", phoneNum);
+        NormalPostRequest normalPostRequest = new NormalPostRequest(url, setDefauleSuccessListener, errorListener, map);
+        MySingleton.getInstance(mContext).addToRequestQueue(normalPostRequest);
+    }
 
-	/**
-	 * 设置默认收货地址成功的监听器
-	 */
-	private Response.Listener<JSONObject> setDefauleSuccessListener = new Response.Listener<JSONObject>() {
-		@Override
-		public void onResponse(JSONObject jsonObject) {
-			try {
-				String msg=jsonObject.getString("msg");
-				if(msg.equals("success")){
-//					sweetAlertDialog.dismiss();
-					ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(phoneNum,mContext,listView,linearLayout);
+    /**
+     * 设置默认收货地址成功的监听器
+     */
+    private Response.Listener<JSONObject> setDefauleSuccessListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                String msg = jsonObject.getString("msg");
+                if (msg.equals("success")) {
+					ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(mContext,phoneNum,activity,listView,linearLayout,noInternet);
 					shoppingAddress_conn.addressListConnection();
-					Toast.makeText(mContext,"设置成功",Toast.LENGTH_SHORT).show();
-				}else {
-					Toast.makeText(mContext,"设置失败",Toast.LENGTH_SHORT).show();
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-	};
+                    Toast.makeText(mContext, "设置成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "设置失败", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 }

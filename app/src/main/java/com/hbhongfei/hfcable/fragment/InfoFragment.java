@@ -16,16 +16,24 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.InfoDetailActivity;
+import com.hbhongfei.hfcable.activity.SplashActivity;
 import com.hbhongfei.hfcable.adapter.DataAdapter;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.Information;
 import com.hbhongfei.hfcable.util.MySingleton;
+import com.hbhongfei.hfcable.util.Error;
+import com.hbhongfei.hfcable.util.NetUtils;
 
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -43,7 +51,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
+public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick {
     //下拉和分页框架
     private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
@@ -60,6 +68,9 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
     private int index = 0;
     private int count=1;
     private Dialog dialog=null;
+    private LinearLayout noInternet;
+
+
     public InfoFragment() {
     }
     @Override
@@ -72,9 +83,6 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
 
         initView(view);
 
-//        //获取最大数量
-//        loadData(index);
-        click();
         return view;
     }
 
@@ -125,7 +133,7 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
         loadLayout= (LinearLayout) view.findViewById(R.id.fragment_load_layout);
         loading = (TextView) view.findViewById(R.id.fragment_loading);
         reload = (Button)view.findViewById(R.id.fragment_reload);
-//        dialog=new Dialog(getActivity().getApplicationContext());
+        noInternet = (LinearLayout) view.findViewById(R.id.no_internet_info);
     }
     private void initRefreshLayout() {
         mRefreshLayout = (BGARefreshLayout)view.findViewById(R.id.rl_listview_refresh);
@@ -163,11 +171,6 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
             }
         });
     }
-/***
- * 点击事件
- */
-    private void click(){
-    }
     /**
      * 加载数据
      */
@@ -184,9 +187,23 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-                            //请求失败
-                            isFirst = true;
-                            loadLayout.setVisibility(View.VISIBLE);
+                            if (volleyError instanceof NoConnectionError){
+                                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
+                            }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
+                                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                                    @Override
+                                    public void errorClick() {
+
+                                    }
+                                });
+                            }else{
+                                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                                    @Override
+                                    public void errorClick() {
+
+                                    }
+                                });
+                            }
                         }
                     });
                 MySingleton.getInstance(getActivity()).addToRequestQueue(request);
@@ -240,7 +257,23 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                System.out.println(volleyError);
+                if (volleyError instanceof NoConnectionError){
+                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
+                }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+
+                        }
+                    });
+                }else{
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+
+                        }
+                    });
+                }
             }
         });
         MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
@@ -286,6 +319,11 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void errorClick() {
+        NetUtils.openSetting(InfoFragment.this.getActivity());
     }
 
     /**

@@ -10,8 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.activity.AddressListActivity;
 import com.hbhongfei.hfcable.adapter.AddressListAdapter;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 
@@ -32,16 +39,17 @@ public class ShoppingAddressListConnection {
     private Context context;
     private  Dialog dialog;
     private ListView listView;
-    private LinearLayout linearLayout;
+    private LinearLayout linearLayout,noInternet;
     private Activity activity;
     AddressListAdapter addressListAdapter;
     int page=1;
-    public ShoppingAddressListConnection(Activity activity,String phoneNum, Context context, ListView listView, LinearLayout linearLayout) {
+    public ShoppingAddressListConnection(Activity activity,String phoneNum, Context context, ListView listView, LinearLayout linearLayout,LinearLayout noIternet) {
         this.phoneNum = phoneNum;
         this.activity = activity;
         this.context=context;
         this.listView=listView;
         this.linearLayout=linearLayout;
+        this.noInternet = noIternet;
     }
 
   Handler myHandler=new Handler(){
@@ -114,8 +122,18 @@ public class ShoppingAddressListConnection {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             dialog.cancle();
-            Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
+            if (volleyError instanceof NoConnectionError){
+                Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+                        NetUtils.openSetting(activity);
+                    }
+                });
+            }else if(volleyError instanceof NetworkError ||volleyError instanceof ServerError ||volleyError instanceof TimeoutError){
+                Error.toSetting(noInternet,R.mipmap.internet_no,"不好啦","服务器出错啦",null);
+            }else{
+                Error.toSetting(noInternet,R.mipmap.internet_no,"不好啦","出错啦",null);
+            }
         }
     };
 }

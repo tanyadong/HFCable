@@ -1,15 +1,19 @@
 package com.hbhongfei.hfcable.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyOrder_all_Adapter;
@@ -36,21 +40,25 @@ public class ConnectionOrder {
     private Context context;
     private ListView listView;
     ArrayList<Order> list;
-    int page=1;
-    private int countPage=0;
+    int page = 1;
+    private int countPage = 0;
     Dialog dialog;
     private MyOrder_all_Adapter myOrder_all_adapter;
-    private LinearLayout view;
-    public ConnectionOrder(Context context, ListView listView, LinearLayout view) {
+    private Activity activity;
+    private LinearLayout noInternet;
+
+    public ConnectionOrder(Activity activity, Context context, ListView listView, LinearLayout noInternet) {
         this.context = context;
-        this.listView=listView;
-        this.view=view;
+        this.listView = listView;
+        this.activity = activity;
+        this.noInternet = noInternet;
     }
-    Handler mMandler=new Handler(){
+
+    Handler mMandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what==0){
+            if (msg.what == 0) {
                 myOrder_all_adapter.notifyDataSetChanged();
             }
 // else if (msg.what==1) {
@@ -65,67 +73,66 @@ public class ConnectionOrder {
     /**
      * 连接服务
      * 根据用户ID查询订单(查询所有)
-     * */
-    public void connInterByUserId(String userid,int pageNo) throws JSONException {
-        dialog=new Dialog(context);
-        Toast.makeText(context,"100",Toast.LENGTH_SHORT).show();
+     */
+    public void connInterByUserId(String userid, int pageNo) throws JSONException {
+
+        dialog = new Dialog(context);
+        dialog.showDialog("正在加载");
         String url = Url.url("/androidOrder/list");
-        Map<String,String> map=new HashMap<>();
-        map.put("phoneNum",userid);
-        map.put("pageno",String.valueOf(pageNo));
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectOrderListener,errorListener,map);
+        Map<String, String> map = new HashMap<>();
+        map.put("phoneNum", userid);
+        map.put("pageno", String.valueOf(pageNo));
+        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectOrderListener, errorListener, map);
         MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
 
     /**
      * 连接服务
      * 未付款订单
-     * */
-    public void connInterUnPay(int page,String userid,int tag,int cancleOrNot) throws JSONException {
-        dialog=new Dialog(context);
-
-        Toast.makeText(context,"200",Toast.LENGTH_SHORT).show();
+     */
+    public void connInterUnPay(int page, String userid, int tag, int cancleOrNot) throws JSONException {
+        dialog = new Dialog(context);
+        dialog.showDialog("正在加载");
         String url = Url.url("/androidOrder/unPayList");
-        Map<String,String> map=new HashMap<>();
-        map.put("phoneNum",userid);
-        map.put("tag",String.valueOf(tag));
-        map.put("cancleOrNot",String.valueOf(cancleOrNot));
-        map.put("pageno",String.valueOf(page));
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectOrderListener,errorListener,map);
+        Map<String, String> map = new HashMap<>();
+        map.put("phoneNum", userid);
+        map.put("tag", String.valueOf(tag));
+        map.put("cancleOrNot", String.valueOf(cancleOrNot));
+        map.put("pageno", String.valueOf(page));
+        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectOrderListener, errorListener, map);
         MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
 
     /**
      * 连接服务
      * 未发货
-     * */
-    public void connInterUnSend(int page,String userid) throws JSONException {
-        dialog=new Dialog(context);
-
-        Toast.makeText(context,"300",Toast.LENGTH_SHORT).show();
+     */
+    public void connInterUnSend(int page, String userid) throws JSONException {
+        dialog = new Dialog(context);
+        dialog.showDialog("正在加载");
         String url = Url.url("/androidOrder/unSendList");
-        Map<String,String> map=new HashMap<>();
-        map.put("phoneNum",userid);
-        map.put("pageno",String.valueOf(page));
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectOrderListener,errorListener,map);
+        Map<String, String> map = new HashMap<>();
+        map.put("phoneNum", userid);
+        map.put("pageno", String.valueOf(page));
+        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectOrderListener, errorListener, map);
         MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
 
     /**
      * 连接服务
      * 未发货
-     * */
-    public void connInterUnDelivery(int page,String userid) throws JSONException {
-        dialog=new Dialog(context);
-
-        Toast.makeText(context,"400",Toast.LENGTH_SHORT).show();
+     */
+    public void connInterUnDelivery(int page, String userid) throws JSONException {
+        dialog = new Dialog(context);
+        dialog.showDialog("正在加载");
         String url = Url.url("/androidOrder/unDeliveryList");
-        Map<String,String> map=new HashMap<>();
-        map.put("phoneNum",userid);
-        map.put("pageno",String.valueOf(page));
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectOrderListener,errorListener,map);
+        Map<String, String> map = new HashMap<>();
+        map.put("phoneNum", userid);
+        map.put("pageno", String.valueOf(page));
+        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectOrderListener, errorListener, map);
         MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
+
     /**
      * 成功的监听器
      * 返回的是产品种类
@@ -134,17 +141,17 @@ public class ConnectionOrder {
         @Override
         public void onResponse(JSONObject jsonObject) {
             try {
-                list=new ArrayList<>();
-                JSONObject json_page=jsonObject.getJSONObject("page");
-                countPage=json_page.getInt("totalPages");
+                list = new ArrayList<>();
+                JSONObject json_page = jsonObject.getJSONObject("page");
+                countPage = json_page.getInt("totalPages");
                 getTotalPage();
 //                Message msg=new Message();
 //                msg.what=1;
 //                msg.arg1=pageCount;
 //                mMandler.sendMessage(msg);
-                JSONArray jsonArray=json_page.getJSONArray("list");
-                int count=jsonArray.length();
-                if(count>0) {
+                JSONArray jsonArray = json_page.getJSONArray("list");
+                int count = jsonArray.length();
+                if (count > 0) {
                     for (int i = 0; i < count; i++) {
                         JSONObject json_order = jsonArray.getJSONObject(i);
                         JSONObject json_shCart = json_order.getJSONObject("shoppingCart");
@@ -192,7 +199,6 @@ public class ConnectionOrder {
                         product.setTypeTwo(typeTwo);
                         product.setApplicationRange(json_pro.getString("applicationRange"));
                         product.setSpecifications(json_pro.getString("specifications"));
-                        product.introduce = json_pro.getString("introduce");
                         product.setConductorMaterial(json_pro.getString("conductorMaterial"));
                         product.setCoreNumber(json_pro.getString("coreNumber"));
                         product.setCrossSection(json_pro.getString("crossSection"));
@@ -218,37 +224,67 @@ public class ConnectionOrder {
                         order.shoppingAddress = address;
                         list.add(order);
                     }
-                    if(page==1) {
-                        myOrder_all_adapter = new MyOrder_all_Adapter(context, R.layout.item_my_order,list);
+                    if (page == 1) {
+                        myOrder_all_adapter = new MyOrder_all_Adapter(context, R.layout.item_my_order, list);
                         listView.setAdapter(myOrder_all_adapter);
-                    }else{
+                    } else {
 
                     }
-                }else {//meiyoushuju
-                    view.setVisibility(View.VISIBLE);
-                }
+                    dialog.cancle();
+                } else {
+                    //没有数据
+                    Error.toSetting(noInternet, R.mipmap.order_empty, "没有订单记录哦", "赶紧去下单吧", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
 
+                        }
+                    });
+
+                    dialog.cancle();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
+
             }
         }
     };
 
     /**
-     *  失败的监听器
+     * 失败的监听器
      */
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
+            if (volleyError instanceof NoConnectionError) {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+                        NetUtils.openSetting(activity);
+                    }
+                });
+            } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+//                        Toast.makeText(context, "出错啦", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+//                        Toast.makeText(context, "出错啦", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     };
 
     /**
      * 获取总页数
      */
-    public int getTotalPage(){
+    public int getTotalPage() {
         return countPage;
     }
 }

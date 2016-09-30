@@ -32,9 +32,7 @@ public class MyOrderUnPaymenFragment extends BaseFragment {
     private int pageNo=1;
     private int countPage;
     ConnectionOrder connectionOrder=null;
-    private TextView tview_empty,tview_empty_to;
-    private ImageView image_empty;
-    LinearLayout view;
+    private LinearLayout noInternet;
     /** 标志位，标志已经初始化完成 */
     private boolean isPrepared;
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
@@ -59,8 +57,6 @@ public class MyOrderUnPaymenFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_order_un_paymen, container, false);
         initView(v);
-        initvalue();
-//        getValues();
         isPrepared = true;
         lazyLoad();
         return v;
@@ -72,14 +68,7 @@ public class MyOrderUnPaymenFragment extends BaseFragment {
      */
     private void initView(View v) {
         ListView_myOrderUnPayment = (ListView) v.findViewById(R.id.ListView_myOrderUnPayment);
-        view= (LinearLayout) v.findViewById(R.id.layout_unpayorder_empty);
-        tview_empty= (TextView) v.findViewById(R.id.tview_empty);
-        tview_empty_to= (TextView) v.findViewById(R.id.tview_empty_to);
-        image_empty= (ImageView) v.findViewById(R.id.image_empty);
-    }
-    public void initvalue(){
-        image_empty.setImageResource(R.mipmap.order_empty);
-        tview_empty.setText("您还没有相关订单");
+        noInternet= (LinearLayout) v.findViewById(R.id.no_internet_my_order_un_paymen);
     }
 
 
@@ -90,7 +79,7 @@ public class MyOrderUnPaymenFragment extends BaseFragment {
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
         try {
-            connectionOrder = new ConnectionOrder(getActivity().getApplicationContext(), ListView_myOrderUnPayment,view);
+            connectionOrder = new ConnectionOrder(MyOrderUnPaymenFragment.this.getActivity(),MyOrderUnPaymenFragment.this.getContext(), ListView_myOrderUnPayment,noInternet);
             connectionOrder.connInterUnPay(pageNo,S_phoneNumber,1,0);
         } catch (JSONException e) {
             e.printStackTrace();

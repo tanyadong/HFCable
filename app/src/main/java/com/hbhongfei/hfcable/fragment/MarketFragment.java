@@ -10,10 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.hbhongfei.hfcable.R;
@@ -22,6 +26,9 @@ import com.hbhongfei.hfcable.adapter.MyExpandableListViewAdapter;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.MySingleton;
+import com.hbhongfei.hfcable.util.Error;
+import com.hbhongfei.hfcable.util.IErrorOnclick;
+import com.hbhongfei.hfcable.util.NetUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,7 +41,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MarketFragment extends Fragment {
+public class MarketFragment extends Fragment implements IErrorOnclick {
     private ExpandableListView expandableListView;
     private ArrayList<String> url_list = new ArrayList<>();;
     private ArrayList<String> group_list = null;
@@ -47,6 +54,8 @@ public class MarketFragment extends Fragment {
     boolean isFirst = true;
     private MyExpandableListViewAdapter myExpandableListViewAdapter=null;
     int i=1;
+    private LinearLayout noInternet;
+
     public MarketFragment() {
     }
 
@@ -60,7 +69,7 @@ public class MarketFragment extends Fragment {
 
      // 初始化数据
         initValues();
-//        setValues();
+
         return view;
     }
 
@@ -75,20 +84,6 @@ public class MarketFragment extends Fragment {
         super.onStart();
     }
 
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser) {
-//            mHandler.sendEmptyMessage(0);
-//            if(isFirst){
-//                isFirst = false;
-//                initValues();
-//            }
-//        } else {
-//
-//        }
-//    }
-
     Handler mHandler = new Handler(){
         @SuppressWarnings("unchecked")
         @Override
@@ -97,12 +92,6 @@ public class MarketFragment extends Fragment {
             switch (msg.what) {
                 case 0:
                     myExpandableListViewAdapter.notifyDataSetChanged();
-//                    break;
-//                case 1:
-//                    //添加数据
-//                    item_list1.addAll((ArrayList<ArrayList<MarketInfo>>) msg.obj);
-//                    myExpandableListViewAdapter.notifyDataSetChanged();
-//                    break;
                 default:
                     break;
             }
@@ -135,6 +124,7 @@ public class MarketFragment extends Fragment {
         group_list = new ArrayList<>();
         dialog = new Dialog(getActivity());
         expandableListView = (ExpandableListView) view.findViewById(R.id.market_expendlist);
+        noInternet = (LinearLayout) view.findViewById(R.id.no_internet_market);
     }
 
     /**
@@ -147,14 +137,28 @@ public class MarketFragment extends Fragment {
                     @Override
                     public void onResponse(String s) {
                         //解析界面
-                        Toast.makeText(getActivity(),url,Toast.LENGTH_SHORT).show();
                         parse(s,index);
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        //请求失败
-                        dialog.cancle();
+                        if (volleyError instanceof NoConnectionError){
+                            Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MarketFragment.this);
+                        }else if(volleyError instanceof NetworkError ||volleyError instanceof ServerError ||volleyError instanceof TimeoutError){
+                            Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                                @Override
+                                public void errorClick() {
+
+                                }
+                            });
+                        }else{
+                            Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                                @Override
+                                public void errorClick() {
+
+                                }
+                            });
+                        }
                     }
                 });
         MySingleton.getInstance(getActivity()).addToRequestQueue(request);
@@ -169,26 +173,10 @@ public class MarketFragment extends Fragment {
         group_list.add("铝");
         group_list.add("橡胶");
         group_list.add("塑料");
-//        dialog.showDialog("正在加载中。。。");
-        //遍历地址集合
-//        url_list.add("http://material.cableabc.com/matermarket/spotshow_001.html");
-//        url_list.add("http://material.cableabc.com/matermarket/spotshow_002.html");
-//        url_list.add("http://material.cableabc.com/matermarket/spotshow_003.html");
-//        url_list.add("http://material.cableabc.com/matermarket/spotshow_004.html");
-//      适配器，加载数据
-//        for (int i=1;i<=4;i++){
-//            netWork(i);
-//        }
         while (i<=4){
             netWork(i);
             i++;
         }
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        }).start();
 
     }
 
@@ -255,5 +243,10 @@ public class MarketFragment extends Fragment {
         super.onDestroy();
         //防止handler引起的内存泄露
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    public void errorClick() {
+        NetUtils.openSetting(MarketFragment.this.getActivity());
     }
 }

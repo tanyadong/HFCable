@@ -17,8 +17,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.hbhongfei.hfcable.R;
@@ -28,7 +32,10 @@ import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.pojo.TypeInfo;
 import com.hbhongfei.hfcable.pojo.TypeTwo;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.Error;
+import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -46,9 +53,9 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_myShopping.CheckInterface,
-        MyAdapter_myShopping.ModifyCountInterface, MyAdapter_myShopping.GroupEdtorListener ,View.OnClickListener{
+        MyAdapter_myShopping.ModifyCountInterface, MyAdapter_myShopping.GroupEdtorListener ,View.OnClickListener,IErrorOnclick{
     private TextView  tvTotalPrice,tvDelete,tvGoToPay;
-    private LinearLayout llInfo,llCart,cart_empty;
+    private LinearLayout llInfo,llCart,cart_empty,noInternet;
     private RelativeLayout llShar;
     private ExpandableListView exListView;
     private CheckBox allChekbox;
@@ -95,6 +102,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         allChekbox = (CheckBox) findViewById(R.id.all_chekbox);
         SharedPreferences spf = this.getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber",null);
+
+        noInternet = (LinearLayout) findViewById(R.id.no_internet_my_shopping);
     }
     /**
      * 设置点击事件
@@ -241,14 +250,31 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     };
 
     /**
-     *  失败的监听器
+     *  添加数据失败的监听器
      */
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
+//            Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
+//            Log.e("TAG", volleyError.getMessage(), volleyError);
             dialog.cancle();
+            if (volleyError instanceof NoConnectionError) {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", MyShoppingActivity.this);
+            } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+
+                    }
+                });
+            } else {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+
+                    }
+                });
+            }
         }
     };
 
@@ -389,7 +415,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     }
 
     /**
-     * 连接服务
+     * 修改连接服务
      */
     public void updateQuantity(String proId,String quantity){
         dialog = new Dialog(this.context);
@@ -425,7 +451,15 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             }
         }
     };
+    private Response.ErrorListener updateErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
+            Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
 
+        }
+    };
 
 
     /**
@@ -714,5 +748,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     }
 
 
-
+    @Override
+    public void errorClick() {
+        NetUtils.openSetting(this);
+    }
 }

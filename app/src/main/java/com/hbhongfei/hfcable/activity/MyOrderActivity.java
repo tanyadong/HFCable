@@ -47,7 +47,7 @@ public class MyOrderActivity extends AppCompatActivity {
 
         vp_FindFragment_pager = (ViewPager)findViewById(R.id.vp_FindFragment_pager);
         //关闭预加载，默认一次只加载一个Fragment
-//        vp_FindFragment_pager.setOffscreenPageLimit(3);
+        vp_FindFragment_pager.setOffscreenPageLimit(3);
         //初始化各fragment
         myOrderAllFragment = new MyOrderAllFragment();
         myOrderUnPaymenFragment = new MyOrderUnPaymenFragment();

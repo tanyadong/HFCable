@@ -68,14 +68,14 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     private LayoutInflater inflater;
     private ImageView img1;
     private ViewPager mviewPager;
-    private LinearLayout prodectList_LLayout_phone, prodectList_LLayout_collect, prodectList_LLayout_shoppingCat,Layout_add;
+    private LinearLayout prodectList_LLayout_phone, prodectList_LLayout_collect, prodectList_LLayout_shoppingCat, Layout_add;
     private TextView prodectInto_simpleDeclaration, prodectInfo_price,
             prodectInfo_intro, prodectInfo_package, prodectInfo_model, prodectInfo_coreType,
-            prodectInfo_type, prodectInfo_detail,prodectInfo_last_price;
-    private TextView prodectInfo_voltage,prodectInfo_crossSection,prodectInfo_coreNumber,
-            prodectInfo_purpose,prodectInfo_applicationRange,prodectInfo_outsideDiameter,
-            prodectInfo_diameterLimit,prodectInfo_implementationStandards,prodectInfo_conductorMaterial,
-            prodectInfo_sheathMaterial,prodectInfo_referenceWeight;
+            prodectInfo_type, prodectInfo_detail, prodectInfo_last_price;
+    private TextView prodectInfo_voltage, prodectInfo_crossSection, prodectInfo_coreNumber,
+            prodectInfo_purpose, prodectInfo_applicationRange, prodectInfo_outsideDiameter,
+            prodectInfo_diameterLimit, prodectInfo_implementationStandards, prodectInfo_conductorMaterial,
+            prodectInfo_sheathMaterial, prodectInfo_referenceWeight;
     private TextView prodect_addCart;
     private RelativeLayout selectSpec_layout;
     private LinearLayout all_choice_layout, prodect_bottom;
@@ -116,9 +116,9 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     private List<String> package_list;
     private List<Double> package_list_num;
     private List<String> package_list_price;
-    private Double D_price,D_beforePrice,D_tagPrice;
-    private int Tag=0;
-    private Map<String,String> price_map;
+    private Double D_price, D_beforePrice, D_tagPrice;
+    private int Tag = 0;
+    private Map<String, String> price_map;
     /**
      * 弹出商品订单信息详情
      */
@@ -151,8 +151,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             super.handleMessage(msg);
             if (msg.what == 100) {
                 mviewPager.setCurrentItem(currentItem);
-            }else if(msg.what==1){
-                price_map= (Map<String, String>) msg.obj;
+            } else if (msg.what == 1) {
+                price_map = (Map<String, String>) msg.obj;
             }
         }
 
@@ -204,7 +204,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodectInfo_voltage = (TextView) findViewById(R.id.prodectInfo_voltage_textView);
         prodectInfo_crossSection = (TextView) findViewById(R.id.prodectInfo_crossSection_textView);
         prodectInfo_coreNumber = (TextView) findViewById(R.id.prodectInfo_coreNumber_textView);
-        prodectInfo_purpose= (TextView) findViewById(R.id.prodectInfo_purpose_textView);
+        prodectInfo_purpose = (TextView) findViewById(R.id.prodectInfo_purpose_textView);
         prodectInfo_applicationRange = (TextView) findViewById(R.id.prodectInfo_applicationRange_textView);
         prodectInfo_outsideDiameter = (TextView) findViewById(R.id.prodectInfo_outsideDiameter_textView);
         prodectInfo_diameterLimit = (TextView) findViewById(R.id.prodectInfo_diameterLimit_textView);
@@ -212,7 +212,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodectInfo_conductorMaterial = (TextView) findViewById(R.id.prodectInfo_conductorMaterial_textView);
         prodectInfo_sheathMaterial = (TextView) findViewById(R.id.prodectInfo_sheathMaterial_textView);
         prodectInfo_referenceWeight = (TextView) findViewById(R.id.prodectInfo_referenceWeight_textView);
-
 
 
         selectSpec_layout = (RelativeLayout) findViewById(R.id.selectSpec_layout);//选择颜色规格
@@ -261,7 +260,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodectInfo_referenceWeight.setText(product.getReferenceWeight());
 
         //产品图片
-        if (product.getProductImages().size()!=0) {
+        if (product.getProductImages().size() != 0) {
             for (String s : product.getProductImages()) {
                 //获取图片并显示
                 String url = Url.url(s);
@@ -348,6 +347,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -410,8 +410,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             case R.id.pop_add:
                 if (!pop_num.getText().toString().equals("750")) {
                     String num_add = Integer.valueOf(pop_num.getText().toString()) + ADDORREDUCE + "";
-                    D_price+=D_tagPrice;
-                    prodectInfo_last_price.setText("金额:"+D_price);
+                    D_price += D_tagPrice;
+                    prodectInfo_last_price.setText("金额:" + D_price);
                     pop_num.setText(num_add);
                 } else {
                     Toast.makeText(this, "不能超过最大产品数量", Toast.LENGTH_SHORT).show();
@@ -422,8 +422,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 if (!pop_num.getText().toString().equals("1")) {
                     String num_reduce = Integer.valueOf(pop_num.getText().toString()) - ADDORREDUCE + "";
                     pop_num.setText(num_reduce);
-                    D_price-=D_tagPrice;
-                    prodectInfo_last_price.setText("金额:"+D_price);
+                    D_price -= D_tagPrice;
+                    prodectInfo_last_price.setText("金额:" + D_price);
                 } else {
                     Toast.makeText(this, "购买数量不能低于1件", Toast.LENGTH_SHORT).show();
                 }
@@ -436,7 +436,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             //弹出框中的删除按钮
             case R.id.pop_del:
                 showColorandSpec();
-                D_tagPrice=null;
+                D_tagPrice = null;
                 dismiss();
                 break;
             //弹出框的确定按钮
@@ -475,15 +475,15 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         map.put("packages", packages);
         map.put("quantity", pop_num.getText().toString());
         map.put("userName", S_phoneNumber);
-        Toast.makeText(this,packages,Toast.LENGTH_SHORT).show();
-        if (packages.equals("10米")){
+        Toast.makeText(this, packages, Toast.LENGTH_SHORT).show();
+        if (packages.equals("10米")) {
             //10米价格增长
-            unitPrice=product.getPrice();  //价格
-        }else if(packages.equals("1盘")) {
-            unitPrice=product.getPrice()*10;
-        }else{
-            String shaftPrice=price_map.get(packages);
-            unitPrice=Double.parseDouble(packages)/10*product.getPrice()+Double.parseDouble(shaftPrice);
+            unitPrice = product.getPrice();  //价格
+        } else if (packages.equals("1盘")) {
+            unitPrice = product.getPrice() * 10;
+        } else {
+            String shaftPrice = price_map.get(packages);
+            unitPrice = Double.parseDouble(packages) / 10 * product.getPrice() + Double.parseDouble(shaftPrice);
         }
         map.put("shoppingPrice", String.valueOf(unitPrice));
         NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectAddShoppingListener, errorListener, map);
@@ -572,6 +572,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(ProdectInfoActivity.this, "请求数据失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
+            dialog.cancle();
+            dismiss();
         }
     };
 
@@ -641,7 +643,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         tv_name = (TextView) view.findViewById(R.id.tv_name);
         Layout_add = (LinearLayout) view.findViewById(R.id.Layout_add);
         prodectInfo_last_price = (TextView) view.findViewById(R.id.tv_price);
-        prodectInfo_last_price.setText("金额:"+D_beforePrice);
+        prodectInfo_last_price.setText("金额:" + D_beforePrice);
         iv_pic = (ImageView) view.findViewById(R.id.iv_pic);
         pop_del = (ImageView) view.findViewById(R.id.pop_del);
         btn_sure = (Button) view.findViewById(R.id.btn_sure);
@@ -650,14 +652,11 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         pop_num = (TextView) view.findViewById(R.id.pop_num);
         Layout_add.setVisibility(View.GONE);
         tv_name.setText(product.getSpecifications());
-        D_price =D_beforePrice;
+        D_price = D_beforePrice;
         D_tagPrice = D_price;
         //设置弹窗的图片
-        if (product.getProductImages().size()!=0) {
+        if (product.getProductImages().size() != 0) {
             String url = Url.url(product.getProductImages().get(0));
-//            iv_pic.setTag(url);
-//            AsyncBitmapLoader asyncBitmapLoader = new AsyncBitmapLoader();
-//            asyncBitmapLoader.loadImage(this, iv_pic, url);
             //加载图片
             Glide.with(this)
                     .load(url)
@@ -675,7 +674,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         pop_add.setOnClickListener(this);
         pop_reduce.setOnClickListener(this);
         addData();
-//        setSpecificationsData();
         pop_num.setText(pop_num.getText().toString());
         prodectInfo_last_price.setText(prodectInfo_last_price.getText().toString());
         //设置popowindow属性
@@ -736,11 +734,11 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                         } else {
                             tvSkuName.setText("请选择规格,颜色");
                         }
-                        if (position!=0){
-                            Double price =D_price- Double.parseDouble(package_list_price.get(position-1));
-                            prodectInfo_last_price.setText("金额:"+D_price);
-                        }else{
-                            prodectInfo_last_price.setText("金额:"+D_beforePrice);
+                        if (position != 0) {
+                            Double price = D_price - Double.parseDouble(package_list_price.get(position - 1));
+                            prodectInfo_last_price.setText("金额:" + D_price);
+                        } else {
+                            prodectInfo_last_price.setText("金额:" + D_beforePrice);
                             Layout_add.setVisibility(View.GONE);
                         }
                         break;
@@ -752,14 +750,14 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                         bean.setStates("0");
                         gvPackage.setSelection(position);
                         Layout_add.setVisibility(View.VISIBLE);
-                        if (position!=0){
-                            D_price =D_beforePrice;
-                            Double price1 = Double.parseDouble(package_list_price.get(position-1))+package_list_num.get(position-1)/10*D_price;
-                            prodectInfo_last_price.setText("金额:"+price1);
-                            String  s = String.valueOf(package_list_num.get(position-1));
+                        if (position != 0) {
+                            D_price = D_beforePrice;
+                            Double price1 = Double.parseDouble(package_list_price.get(position - 1)) + package_list_num.get(position - 1) / 10 * D_price;
+                            prodectInfo_last_price.setText("金额:" + price1);
+                            String s = String.valueOf(package_list_num.get(position - 1));
                             packages = s.substring(0, s.indexOf("."));
                             Layout_add.setVisibility(View.GONE);
-                        }else{
+                        } else {
                             //包装方式为盘
                             pop_num.setText("1");
                             new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.NORMAL_TYPE)
@@ -771,8 +769,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                                             //10米
                                             D_price = D_beforePrice;
-                                            D_tagPrice =D_price;
-                                            prodectInfo_last_price.setText("金额:"+D_price);
+                                            D_tagPrice = D_price;
+                                            prodectInfo_last_price.setText("金额:" + D_price);
                                             packages = "10米";
                                             sweetAlertDialog.dismiss();
                                         }
@@ -781,10 +779,10 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                                         @Override
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                                             //1盘-100米
-                                            packages="1盘";
-                                            D_price = D_beforePrice*10;
-                                            D_tagPrice =D_price;
-                                            prodectInfo_last_price.setText("金额:"+D_price);
+                                            packages = "1盘";
+                                            D_price = D_beforePrice * 10;
+                                            D_tagPrice = D_price;
+                                            prodectInfo_last_price.setText("金额:" + D_price);
                                             sweetAlertDialog.dismiss();
                                         }
                                     }).show();
@@ -877,6 +875,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
      * 获取产品包装方式服务
      */
     public void shaftConnInter() {
+        dialog.showDialog("正在加载中。。。");
         String url = Url.url("/androidShaft/list");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 jsonObjectListener, errorListener);
@@ -891,22 +890,23 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         public void onResponse(JSONObject jsonObject) {
             JSONArray jsonArray;
             try {
-                price_map=new HashMap();
+                Toast.makeText(ProdectInfoActivity.this,"包装方式争取",Toast.LENGTH_SHORT).show();
+                price_map = new HashMap();
                 jsonArray = jsonObject.getJSONArray("list");
-                int count=jsonArray.length();
+                int count = jsonArray.length();
                 for (int i = 0; i < count; i++) {
                     JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
                     String shaftName = jsonObject1.getString("shaftName");
                     String shaftPrice = jsonObject1.getString("shaftPrice");
-                    package_list.add(shaftName+"米轴");
+                    package_list.add(shaftName + "米轴");
                     package_list_num.add(Double.parseDouble(shaftName));
                     package_list_price.add(shaftPrice);
-                    price_map.put(shaftName,shaftPrice);
+                    price_map.put(shaftName, shaftPrice);
 
                 }
-                Message message=new Message();
-                message.what=1;
-                message.obj=price_map;
+                Message message = new Message();
+                message.what = 1;
+                message.obj = price_map;
                 handler.sendMessage(message);
                 //设置包装方式
                 for (int i = 0; i < package_list.size(); i++) {
@@ -926,12 +926,11 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
      * 获取产品颜色服务
      */
     public void colorConnInter() {
-        dialog.showDialog("正在加载中。。。");
         String url = Url.url("/androidColor/getColor");
-        Map<String,String> param=new HashMap<>();
+        Map<String, String> param = new HashMap<>();
 
-        param.put("typeTwoName",product.getTypeTwo().getTypeTwoName());
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonColorListener,errorListener,param);
+        param.put("typeTwoName", product.getTypeTwo().getTypeTwoName());
+        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonColorListener, errorListener, param);
         MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
     }
 
@@ -943,8 +942,9 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         public void onResponse(JSONObject jsonObject) {
             JSONArray jsonArray;
             try {
+                Toast.makeText(ProdectInfoActivity.this,"颜色争取",Toast.LENGTH_SHORT).show();
                 jsonArray = jsonObject.getJSONArray("colorList");
-                int count=jsonArray.length();
+                int count = jsonArray.length();
                 for (int i = 0; i < count; i++) {
                     JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
                     String colorName = jsonObject1.getString("colorName");
@@ -958,14 +958,11 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 dialog.cancle();
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.cancle();
             }
         }
     };
 
-    @Override
-    public void onDismiss() {
-
-    }
 
     @Override
     protected void onDestroy() {
@@ -988,6 +985,11 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         WindowManager.LayoutParams params = this.getWindow().getAttributes();
         params.alpha = 1f;
         this.getWindow().setAttributes(params);
+    }
+
+    @Override
+    public void onDismiss() {
+
     }
 
     /**

@@ -120,5 +120,13 @@
             android:layout_height="match_parent"
             layout="@layout/shoppingcart_empty"
             android:visibility="gone"/>
+
+        <include
+            android:id="@+id/no_internet_my_shopping"
+            layout="@layout/internet_no"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
     </FrameLayout>
 </LinearLayout>
