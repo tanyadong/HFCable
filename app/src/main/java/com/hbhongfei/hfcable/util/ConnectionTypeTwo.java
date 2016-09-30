@@ -163,7 +163,6 @@ public class ConnectionTypeTwo {
                 for (int i = 0; i < myAdapter_typeTwo.getGroupCount(); i++) {
                     listView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
                 }
-//                dialog.cancle();
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -36,6 +36,7 @@ public class InfoDetailActivity extends AppCompatActivity {
      * 初始化
      */
     private void initView(){
+        SplashActivity.ID=2;
         infoDetail_content= (TextView) findViewById(R.id.infoDetail_content);
         infoDetail_img= (ImageView) findViewById(R.id.infoDetail_img);
         infoDetail_title= (TextView) findViewById(R.id.infoDetail_title);

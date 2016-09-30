@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
-import com.hbhongfei.hfcable.util.Dialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,19 +24,14 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     private ArrayList<List<MarketInfo>> item_list;
     private ArrayList<MarketInfo> child_list;
     private LayoutInflater inflater;
-    private Dialog dialog;
-    public MyExpandableListViewAdapter(Context context,List<String> group_list,ArrayList<List<MarketInfo>> item_list,ExpandableListView listView,Dialog d) {
+    public MyExpandableListViewAdapter(Context context,List<String> group_list,ArrayList<List<MarketInfo>> item_list,ExpandableListView listView
+                                       ) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.item_list=item_list;
         this.group_list=group_list;
-        this.dialog=d;
     }
-    public ArrayList<List<MarketInfo>> addItems(ArrayList<List<MarketInfo>> list){
-        this.item_list.addAll(list);
-        notifyDataSetChanged();
-        return item_list;
-    }
+
     @Override
     public int getGroupCount() {
         return group_list.size();
@@ -46,7 +40,6 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-//        Toast.makeText()
         if(item_list.size()!=0) {
             return item_list.get(groupPosition).size();
         }
@@ -78,7 +71,7 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
     @Override
@@ -144,7 +137,7 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 
 

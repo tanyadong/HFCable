@@ -54,7 +54,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MineFragment extends Fragment implements View.OnClickListener,BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick {
+public class MineFragment extends BaseFragment implements View.OnClickListener,BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick {
     private View view;
     private ListView mListView;
     private List<Map<String, Object>> list;
@@ -65,6 +65,10 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
     private int pageNo=1;//当前页数
     private int count;//总页数
     private int page;
+    /** 标志位，标志已经初始化完成 */
+    private boolean isPrepared;
+    /** 是否已被加载过一次，第二次就不再去请求数据了 */
+    private boolean mHasLoadedOnce;
     private LinearLayout noInternet;
     private FloatingActionButton fab;
 
@@ -108,9 +112,12 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
         initView(view);
         setOnClick();
 //        //初始化数据
-        initValues();
+//        initValues();
         //初始化刷新
         initRefreshLayout();
+        isPrepared = true;
+//        getValues();
+        lazyLoad();
         return view;
     }
 
@@ -310,6 +317,15 @@ public class MineFragment extends Fragment implements View.OnClickListener,BGARe
     @Override
     public void errorClick() {
         NetUtils.openSetting(MineFragment.this.getActivity());
+    }
+
+    @Override
+    protected void lazyLoad() {
+        if (!isPrepared || !isVisible || mHasLoadedOnce) {
+            return;
+        }
+        initValues();
+        mHasLoadedOnce=true;
     }
 
     class MyAsyncTack extends AsyncTask<Void,Void,Void>{

@@ -42,7 +42,6 @@ import com.hbhongfei.hfcable.util.CustomDialog;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.IAlertDialogListener;
 import com.hbhongfei.hfcable.util.LoginConnection;
-import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.UpLoadImage;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -113,19 +112,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPostResume() {
         id = SplashActivity.ID;
-        if (id == 4) {
-            showMine();
-            viewPager.setCurrentItem(3);
-        } else if (id == 1) {
-            showHome();
-            viewPager.setCurrentItem(0);
-        } else if (id == 2) {
-            showMarket();
-            viewPager.setCurrentItem(1);
-        } else  if(id == 3){
-            showInfo();
-            viewPager.setCurrentItem(2);
-        }
+        hiddenEditMenu();
+            if (id==4){
+                showMine();
+                viewPager.setCurrentItem(3);
+            }else if(id==1){
+                showHome();
+                viewPager.setCurrentItem(0);
+            }else if(id==3){
+                showMarket();
+                viewPager.setCurrentItem(2);
+            }else{
+                showInfo();
+                viewPager.setCurrentItem(1);
+            }
         //初始化数据
         initValues();
         super.onPostResume();
@@ -157,10 +157,10 @@ public class MainActivity extends AppCompatActivity
     /**
      * 判断是否登录
      */
-    private void toLoginOrNot(Class c) {
-        if (S_phoneNumber != null) {
+    private void toLoginOrNot(Class c){
+        if (S_phoneNumber!=null){
             intent(c);
-        } else {
+        }else{
             toLogin();
         }
     }
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        switch (id) {
+        switch (id){
             case R.id.Rlayout_mine_favorite:
                 toLoginOrNot(MyFavoriteActivity.class);
                 break;
@@ -235,11 +235,12 @@ public class MainActivity extends AppCompatActivity
         list_fragment.add(marketFragment);
         list_fragment.add(mineFragment);
 
-        MainFragmentAdapter m1 = new MainFragmentAdapter(getSupportFragmentManager(), list_fragment);
+        MainFragmentAdapter m1 = new MainFragmentAdapter(getSupportFragmentManager(),list_fragment);
 
         viewPager.setAdapter(m1);
         //关闭预加载，默认一次只加载一个Fragment
         viewPager.setOffscreenPageLimit(3);
+        //关闭预加载，默认一次只加载一个Fragment
         //mine
         headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         head = (ImageView) headerLayout.findViewById(R.id.Iamge_mine_head);
@@ -248,7 +249,6 @@ public class MainActivity extends AppCompatActivity
         upLoadImage = new UpLoadImage(this);
         dialog = new Dialog(this);
     }
-
     /**
      * 初始化数据
      */
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 点击首页时显示
      */
-    private void showHome() {
+    private void showHome(){
         imageView_index.setImageResource(R.mipmap.home_red);
         textView_index.setTextColor(Color.parseColor("#ff0000"));
         imageView_market.setImageResource(R.mipmap.market_grey);
@@ -307,14 +307,14 @@ public class MainActivity extends AppCompatActivity
         textView_market.setTextColor(Color.parseColor("#000000"));
         imageView_mine.setImageResource(R.mipmap.cable_grey);
         textView_mine.setTextColor(Color.parseColor("#000000"));
-        //隐藏menu
-        SplashActivity.ID = 3;
+
+        SplashActivity.ID = 2;
     }
 
     /**
      * 点击行情时显示
      */
-    private void showMarket() {
+    private void showMarket(){
         imageView_market.setImageResource(R.mipmap.market_red);
         textView_market.setTextColor(Color.parseColor("#ff0000"));
         imageView_index.setImageResource(R.mipmap.home_grey);
@@ -324,7 +324,7 @@ public class MainActivity extends AppCompatActivity
         imageView_mine.setImageResource(R.mipmap.cable_grey);
         textView_mine.setTextColor(Color.parseColor("#000000"));
         //隐藏menu
-        SplashActivity.ID = 2;
+        SplashActivity.ID =3;
     }
 
     /**
@@ -397,7 +397,7 @@ public class MainActivity extends AppCompatActivity
                 if (S_phoneNumber != null) {
                     //修改头像
                     showDialog();
-                } else {
+                }else{
                     toLogin();
                 }
                 break;
@@ -479,7 +479,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            CustomDialog.showOkOrCancleDialog(this, "您确定要退出么？", this);
+            CustomDialog.showOkOrCancleDialog(this,"您确定要退出么？",this);
         }
         return super.onKeyDown(keyCode, event);
     }

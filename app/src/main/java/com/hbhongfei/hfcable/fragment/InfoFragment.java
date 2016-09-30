@@ -51,7 +51,8 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick {
+
+public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,,IErrorOnclick  {
     //下拉和分页框架
     private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
@@ -59,7 +60,6 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
     private ListView info_listView;
     private DataAdapter mAdapter = null;
     List<Information> info_list = new ArrayList<Information>();
-    List<Information> list ;
     boolean isFirst = true;
     Button reload = null;
     LinearLayout loadLayout = null;
@@ -71,6 +71,11 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
     private LinearLayout noInternet;
 
 
+    /** 标志位，标志已经初始化完成 */
+    private boolean isPrepared;
+    /** 是否已被加载过一次，第二次就不再去请求数据了 */
+    private boolean mHasLoadedOnce;
+    private Dialog dialog;
     public InfoFragment() {
     }
     @Override
@@ -82,21 +87,47 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
         initRefreshLayout();
 
         initView(view);
+        isPrepared = true;
+        lazyLoad();
 
         return view;
     }
 
 
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (isVisibleToUser) {
+//            mHandler.sendEmptyMessage(0);
+//            if(isFirst){
+//                isFirst = false;
+//                loadData(index);
+//            }
+//        }
+//    }
+
+    //设置懒加载
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            mHandler.sendEmptyMessage(0);
-            if(isFirst){
-                isFirst = false;
-                loadData(index);
-            }
+    protected void lazyLoad() {
+        if (!isPrepared || !isVisible || mHasLoadedOnce) {
+            return;
         }
+        dialog=new Dialog(getActivity());
+        mAdapter = new DataAdapter(getActivity(), info_list);
+        info_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Intent intent = new Intent(getActivity(), InfoDetailActivity.class);
+                intent.putExtra("data", info_list.get(position));
+                getActivity().startActivity(intent);
+            }
+        });
+        //添加头和尾
+        info_listView.setAdapter(mAdapter);
+        dialog.showDialog("正在加载中");
+        loadData(index);
+        mHasLoadedOnce=true;
     }
     Handler mHandler = new Handler(){
         @SuppressWarnings("unchecked")
@@ -119,7 +150,6 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
                         loading.setText(getString(R.string.tip_text_data_fail));
                     }
                     break;
-
                 default:
                     break;
             }
@@ -129,6 +159,7 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
      * 初始化组件
      */
     private  void  initView(View view){
+        SplashActivity.ID=2;
         info_listView = (ListView) view.findViewById(R.id.fragment_info_listView);
         loadLayout= (LinearLayout) view.findViewById(R.id.fragment_load_layout);
         loading = (TextView) view.findViewById(R.id.fragment_loading);
@@ -144,7 +175,6 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
         // 设置正在加载更多时的文本
         stickinessRefreshViewHolder.setLoadingMoreText("正在加载中");
         mRefreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
-
     }
     /**
      * 初始化数据
@@ -161,7 +191,6 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
                 intent.putExtra("data", list.get(position));
                 getActivity().startActivity(intent);
             }
-
         });
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +200,7 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
             }
         });
     }
+
     /**
      * 加载数据
      */
@@ -182,7 +212,7 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
                     StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String s) {
-                            parse(s,index);
+                            parse(s);
                         }
                     }, new Response.ErrorListener() {
                         @Override
@@ -216,33 +246,25 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
      * 解析html
      * @param
      */
-    protected void parse(String html,int index) {
-        list=new ArrayList<>();
+    protected void parse(String html) {
         Document doc = Jsoup.parse(html);
-            Elements a = doc.getElementById("main_cont_ContentPlaceHolder1_pager").getElementsByTag("a");
-            String s_url=a.last().attr("href");
-            total=s_url.substring(s_url.indexOf("_")+1,s_url.lastIndexOf("."));
-            Message message=new Message();
-            message.what=0;
-            message.arg1=Integer.parseInt(total);
-            mHandler.sendMessage(message);
-            //Elements
-            Elements topnews = doc.getElementsByClass("list31_newlist1");
-                 for (Element link : topnews) {
-                        Information information = new Information();
-                        information.setTitle(link.getElementsByClass("list31_title1").text());
-                        information.setBrief(link.getElementsByClass("list31_text1").text());
-                        information.setImgUrl(link.getElementsByTag("img").attr("src"));
-                        information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
-                        loadContentData(information.getContentUrl(), information);
-                        list.add(information);
-                    }
-            if(index==0){
-                setValues(list);
-            }else{
-                mAdapter.addItems(list);
-                mHandler.sendEmptyMessage(1);
-            }
+        Elements a = doc.getElementById("main_cont_ContentPlaceHolder1_pager").getElementsByTag("a");
+        String s_url=a.last().attr("href");
+        total=s_url.substring(s_url.indexOf("_")+1,s_url.lastIndexOf("."));
+        Message message=new Message();
+        message.what=0;
+        message.arg1=Integer.parseInt(total);
+        mHandler.sendMessage(message);
+        //Elements
+        Elements topnews = doc.getElementsByClass("list31_newlist1");
+         for (Element link : topnews) {
+            Information information = new Information();
+            information.setTitle(link.getElementsByClass("list31_title1").text());
+            information.setBrief(link.getElementsByClass("list31_text1").text());
+            information.setImgUrl(link.getElementsByTag("img").attr("src"));
+            information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
+            loadContentData(information.getContentUrl(), information);
+         }
     }
     /**
      * 解析资讯详情
@@ -276,13 +298,13 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
                 }
             }
         });
-        MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
+        MySingleton.getInstance(getActivity()).addToRequestQueue(request);
     }
     /**
      * 解析html
      * @param html
      */
-    protected void parseContent(String html,Information information) {
+    protected void parseContent(String html, final Information information) {
         Document doc = Jsoup.parse(html);
         //获取资讯时间
         Elements time = doc.getElementsByClass("contentspage");
@@ -299,6 +321,15 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
         }
         information.setTime(s_time+s_source);
         information.setDetailContent(content);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                dialog.cancle();
+                info_list.add(information);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
 
@@ -332,7 +363,9 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
     class MyAsyncTack extends AsyncTask<Void,Void,Void> {
         @Override
         protected void onPreExecute() {
+            dialog.showDialog("正在加载中");
             super.onPreExecute();
+
         }
         @Override
         protected Void doInBackground(Void... params) {
@@ -342,11 +375,14 @@ public class InfoFragment extends Fragment implements BGARefreshLayout.BGARefres
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            dialog.cancle();
             mRefreshLayout.endLoadingMore();
             mRefreshLayout.endRefreshing();
             super.onPostExecute(aVoid);
         }
     }
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();

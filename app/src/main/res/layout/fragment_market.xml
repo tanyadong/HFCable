@@ -3,84 +3,78 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hbhongfei.hfcable.fragment.MarketFragment">
-
     <LinearLayout
+        android:id="@+id/market_title_llayout"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:divider="@color/gray"
+        android:visibility="gone"
+        android:background="@drawable/list_background"
+        android:layout_height="40dp">
+        <TextView
+            android:text="@string/market_area"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_average_price"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:text="@string/market_fallorise"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_minprice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_maxprice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_factory_area"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/market_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <cn.bingoogolapple.refreshlayout.BGARefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/rl_expandable_refreshview_market_refresh"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/market_title_llayout"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/list_background"
-            android:divider="@color/gray"
-            android:orientation="horizontal">
-
-            <TextView
+        android:layout_width="match_parent">
+            <ExpandableListView
+                android:id="@+id/market_expendlist"
+                android:layout_marginTop="10dp"
+                android:groupIndicator="@null"
+                android:indicatorLeft="16dip"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/market_area" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/market_product_name" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/market_average_price" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/market_fallorise" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/market_minprice" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/market_maxprice" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/market_factory_area" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/market_data" />
-        </LinearLayout>
-
-        <ExpandableListView
-            android:id="@+id/market_expendlist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:groupIndicator="@null"
-            android:indicatorLeft="16dip"></ExpandableListView>
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            </ExpandableListView>
+        </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
     </LinearLayout>
 
     <include

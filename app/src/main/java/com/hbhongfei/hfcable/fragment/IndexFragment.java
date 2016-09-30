@@ -65,7 +65,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IndexFragment extends Fragment implements View.OnClickListener ,BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick{
+public class IndexFragment extends BaseFragment implements View.OnClickListener ,BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick{
     //下拉和分页框架
     private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
@@ -81,6 +81,10 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
     private Button btn_typeName1, btn_typeName2, btn_typeName3, btn_typeName4, btn_typeName5, btn_typeName6;
     ConnectionProduct connectionProduct;
     private int count;
+    /** 标志位，标志已经初始化完成 */
+    private boolean isPrepared;
+    /** 是否已被加载过一次，第二次就不再去请求数据了 */
+    private boolean mHasLoadedOnce;
     /**
      * 用于小圆点图片
      */
@@ -136,13 +140,16 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
         list_project=new ArrayList<>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
-        connInter();
-        //获得最新产品的总数
-        getNewProduct();
-        //加载“新型产品”模块数据
-        setDate();
-        //连接获取公司的服务
-        connInterGetCompanyInfo();
+        isPrepared = true;
+//        getValues();
+        lazyLoad();
+//        connInter();
+//        //获得最新产品的总数
+//        getNewProduct();
+//        //加载“新型产品”模块数据
+//        setDate();
+//        //连接获取公司的服务
+//        connInterGetCompanyInfo();
         onClick();
         if (isAutoPlay) {
             startPlay();
@@ -204,6 +211,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
 
         mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
         dotLayout = (LinearLayout)view.findViewById(R.id.dotLayout);
+
 
         btn_typeName1 = (Button) view.findViewById(R.id.btn_type_name1);
         btn_typeName2 = (Button) view.findViewById(R.id.btn_type_name2);
@@ -554,12 +562,26 @@ public class IndexFragment extends Fragment implements View.OnClickListener ,BGA
     }
 
     @Override
+    protected void lazyLoad() {
+        if (!isPrepared || !isVisible || mHasLoadedOnce) {
+            return;
+        }
+        connInter();
+        //获得最新产品的总数
+        getNewProduct();
+        //加载“新型产品”模块数据
+        setDate();
+        //连接获取公司的服务
+        connInterGetCompanyInfo();
+        mHasLoadedOnce=true;
+    }
+    @Override
     public void errorClick() {
         NetUtils.openSetting(IndexFragment.this.getActivity());
     }
 
 
-   class MyAsyncTack extends AsyncTask<Void,Void,Void>{
+    class MyAsyncTack extends AsyncTask<Void,Void,Void>{
        @Override
        protected void onPreExecute() {
            super.onPreExecute();

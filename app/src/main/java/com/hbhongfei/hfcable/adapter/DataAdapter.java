@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
@@ -25,10 +26,11 @@ public class DataAdapter extends BaseAdapter {
 		inflater = LayoutInflater.from(context);
 		newsData = nList;
 	}
-public List<Information> addItems(List<Information> list){
-	newsData.addAll(list);
-	return newsData;
-}
+	public List<Information> addItems(List<Information> list){
+		newsData.addAll(list);
+		notifyDataSetChanged();
+		return newsData;
+	}
 	@Override
 	public int getCount() {
 		return newsData.size();
@@ -71,7 +73,6 @@ public List<Information> addItems(List<Information> list){
 		} else {
 			hView.image.setImageResource(R.drawable.icon_image_default);
 		}
-		
 		return convertView;
 	}
 

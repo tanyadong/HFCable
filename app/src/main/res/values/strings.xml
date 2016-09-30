@@ -3,7 +3,8 @@
     <string name="title_activity_mine">MineActivity</string>
 
     <string name="action_settings1">发布</string>
-
+    <string name="copyright">Copyright@2016</string>
+    <string name="company">河北弘飞线缆集团有限公司</string>
     <!--tabbar_bottoom-->
     <string name="tabbar_bottom_main">首页</string>
     <string name="tabbar_bottom_info">资讯</string>

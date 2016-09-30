@@ -2,6 +2,7 @@ package com.hbhongfei.hfcable.fragment;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,36 +23,49 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.MarketChartActivity;
+import com.hbhongfei.hfcable.activity.SplashActivity;
 import com.hbhongfei.hfcable.adapter.MyExpandableListViewAdapter;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
 import com.hbhongfei.hfcable.util.Dialog;
-import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
+import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NetUtils;
+import com.squareup.okhttp.OkHttpClient;
 
+import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
+import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
+import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MarketFragment extends Fragment implements IErrorOnclick {
+public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick  {
     private ExpandableListView expandableListView;
-    private ArrayList<String> url_list = new ArrayList<>();;
-    private ArrayList<String> group_list = null;
+    private LinearLayout ll_market_head;
+    private ArrayList<String> group_list;
     private ArrayList<MarketInfo> child_list;
     private ArrayList<List<MarketInfo>> item_list=new ArrayList<>();;;
-    private ArrayList<List<MarketInfo>> item_list1=new ArrayList<>();
-    private ArrayList<Integer> groups=new ArrayList<>();
     private View view;
     private Dialog dialog;
-    boolean isFirst = true;
+    /** 标志位，标志已经初始化完成 */
+    private boolean isPrepared;
+    /** 是否已被加载过一次，第二次就不再去请求数据了 */
+    private boolean mHasLoadedOnce;
+    //下拉和分页框架
+    private static final String TAG = IndexFragment.class.getSimpleName();
+    private BGARefreshLayout mRefreshLayout;
     private MyExpandableListViewAdapter myExpandableListViewAdapter=null;
     int i=1;
     private LinearLayout noInternet;
@@ -64,19 +78,15 @@ public class MarketFragment extends Fragment implements IErrorOnclick {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_market, container, false);
-
         initView(view);
-
-     // 初始化数据
-        initValues();
-
+        initRefreshLayout();
+        isPrepared = true;
+        //懒加载
+        lazyLoad();
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+
 
 
     @Override
@@ -92,20 +102,35 @@ public class MarketFragment extends Fragment implements IErrorOnclick {
             switch (msg.what) {
                 case 0:
                     myExpandableListViewAdapter.notifyDataSetChanged();
+//                    break;
+//                case 1:
+//                    //添加数据
+//                    item_list1.addAll((ArrayList<ArrayList<MarketInfo>>) msg.obj);
+//                    myExpandableListViewAdapter.notifyDataSetChanged();
+//                    break;
                 default:
                     break;
             }
         }
     };
 
-    //kaiqi 一个新的线程，异步处理数据
+    private void initRefreshLayout() {
+        mRefreshLayout = (BGARefreshLayout)view.findViewById(R.id.rl_expandable_refreshview_market_refresh);
+        // 为BGARefreshLayout设置代理
+        mRefreshLayout.setDelegate(this);
+        // 设置下拉刷新和上拉加载更多的风格     参数1：应用程序上下文，参数2：是否具有上拉加载更多功能
+        BGARefreshViewHolder stickinessRefreshViewHolder = new BGANormalRefreshViewHolder(getActivity(), true);
+        // 设置正在加载更多时的文本
+        stickinessRefreshViewHolder.setLoadingMoreText("正在加载中");
+        mRefreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
+    }
 
 
     /**
      * 动态加载数据
      */
-    private void setValues() {
-        myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list1, expandableListView,dialog);
+    private void setValues(final ArrayList<List<MarketInfo>> item_list1) {
+        myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list1, expandableListView);
         expandableListView.setAdapter(myExpandableListViewAdapter);
         //为ExpandableListView的子列表单击事件设置监听器
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -113,16 +138,21 @@ public class MarketFragment extends Fragment implements IErrorOnclick {
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
                 Intent intent = new Intent(getActivity(), MarketChartActivity.class);
-                intent.putExtra("marketInfo", item_list1.get(groupPosition).get(childPosition));
+                intent.putExtra("marketInfo",item_list1.get(groupPosition).get(childPosition));
                 startActivity(intent);
                 return true;
             }
         });
+        for (int i = 0; i < myExpandableListViewAdapter.getGroupCount(); i++) {
+            expandableListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
+        }
     }
 
     private void initView(View view) {
+        SplashActivity.ID=3;
         group_list = new ArrayList<>();
         dialog = new Dialog(getActivity());
+        ll_market_head= (LinearLayout) view.findViewById(R.id.market_title_llayout);
         expandableListView = (ExpandableListView) view.findViewById(R.id.market_expendlist);
         noInternet = (LinearLayout) view.findViewById(R.id.no_internet_market);
     }
@@ -130,9 +160,68 @@ public class MarketFragment extends Fragment implements IErrorOnclick {
     /**
      * 访问网络
      */
-    private void netWork(final int index) {
-            final String url="http://material.cableabc.com/matermarket/spotshow_00"+index+".html";
+    private static String netWork(final int index) {
+        final String url = "http://material.cableabc.com/matermarket/spotshow_00" + index + ".html";
+        com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder().url(url).build();
 
+        OkHttpClient client = new OkHttpClient();
+        com.squareup.okhttp.Response response = null;
+        try {
+            response = client.newCall(request).execute();
+            if (response != null) {
+                return response.body().string();
+            } else {
+                throw new IOException("Unexpected code " + response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    //下拉刷新
+    @Override
+    public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
+        dialog.showDialog("正在加载中");
+        for (int i=1;i<=4;i++){
+                new MarketTask().execute(i);
+            }
+        refreshLayout.endRefreshing();
+        dialog.cancle();
+    }
+
+    @Override
+    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
+        return false;
+    }
+
+    class MarketTask extends AsyncTask<Integer, Void, ArrayList<List<MarketInfo>>> {
+        @Override
+        protected ArrayList<List<MarketInfo>> doInBackground(Integer... params) {
+            index=params[0];
+            String data=netWork(index);
+            return parse(data,index);
+        }
+        @Override
+        protected void onPreExecute() {
+            //请求之前
+        }
+
+        /**
+         * 请求之后的操作
+         * @param data
+         */
+        @Override
+        protected void onPostExecute(final ArrayList<List<MarketInfo>> data) {
+//            group_list1.add(group_list.get(index-1));
+//            item_list.add(child_list);
+//            myExpandableListViewAdapter.notifyDataSetChanged();
+//            setValues(item_list);
+            if(data.size()==4){
+                dialog.cancle();
+                ll_market_head.setVisibility(View.VISIBLE);
+                setValues(data);
+            }
+        }
                 StringRequest request = new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -164,20 +253,20 @@ public class MarketFragment extends Fragment implements IErrorOnclick {
         MySingleton.getInstance(getActivity()).addToRequestQueue(request);
     }
 
+    }
     /**
      * 初始化数据
      */
-    public void initValues() {
+    public void initValues() throws IOException {
         //父列表数据
         group_list.add("铜");
         group_list.add("铝");
         group_list.add("橡胶");
         group_list.add("塑料");
-        while (i<=4){
-            netWork(i);
-            i++;
+        dialog.showDialog("正在加载中");
+        for (int i=1;i<=4;i++){
+            new MarketTask().execute(i);
         }
-
     }
 
     /**
@@ -185,13 +274,12 @@ public class MarketFragment extends Fragment implements IErrorOnclick {
      *
      * @param html
      */
-    protected void parse(String html, final int index) {
+    public ArrayList<List<MarketInfo>> parse(String html, final int index) {
         Document doc = Jsoup.parse(html);
         //Elements
         Element table = doc.getElementsByTag("table").first();
         Elements lists = table.getElementsByTag("tr");
         child_list = new ArrayList<>();
-
         for (int j = 1; j < lists.size(); j++) {
             Element item = lists.get(j);
             Elements els = item.getElementsByTag("td");
@@ -211,38 +299,28 @@ public class MarketFragment extends Fragment implements IErrorOnclick {
         }
         //父列表添加子列表
         item_list.add(child_list);
-        if(i==1){
-            myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list, expandableListView,dialog);
-            expandableListView.setAdapter(myExpandableListViewAdapter);
-        }
-// else{
-//            myExpandableListViewAdapter.addItems(item_list);
-//            mHandler.sendEmptyMessage(0);
-//        }
-
-//            Message message=new Message();
-//            message.what=1;
-//            message.arg1=index;
-//            message.obj=item_list;
-//            mHandler.sendMessage(message);
-
-//        dialog.cancle();
+        return item_list;
     }
-    @Override
-    public void onStop() {
-        super.onStop();
-        item_list.clear();
-    }
-
-
-
-
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         //防止handler引起的内存泄露
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    protected void lazyLoad() {
+        if (!isPrepared || !isVisible || mHasLoadedOnce) {
+            return;
+        }
+        try {
+//            setValues(item_list);
+            initValues();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mHasLoadedOnce=true;
     }
 
     @Override

@@ -68,6 +68,7 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
 
     private void initView() {
         dialog = new Dialog(this);
+        SplashActivity.ID=3;
         mChart = (LineChart) findViewById(R.id.chart1);
         data_list = new ArrayList<>();
         averagePrice_list = new ArrayList<>();
@@ -293,10 +294,9 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
         mChart.invalidate();
         dialog.cancle();
     }
-
     /**
      * 设置数据
-     *
+
      * @return
      */
 

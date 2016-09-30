@@ -3,27 +3,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activity.SplashActivity">
-    <TextView
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginTop="50dp"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:textColor="@color/colorOrange"-->
+        <!--android:textSize="20dp"-->
+        <!--android:text="集项目，阶段，任务与一身"-->
+    <!--/>-->
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:text="天之骄子"-->
+        <!--android:textSize="16dp"-->
+        <!--android:gravity="bottom|right"-->
+        <!--android:textColor="@color/colorOrange"-->
+        <!--android:layout_centerHorizontal="true" />-->
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:scaleType="fitXY"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:src="@mipmap/app_logo"/>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        android:gravity="center_horizontal"
-        android:textColor="@color/colorOrange"
-        android:textSize="20dp"
-        android:text="集项目，阶段，任务与一身"
-    />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="天之骄子"
-        android:textSize="16dp"
-        android:gravity="bottom|right"
-        android:textColor="@color/colorOrange"
-        android:layout_centerHorizontal="true" />
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/copyright"
+            android:text="@string/copyright"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/splash_company"
+            android:text="@string/company"
+            android:layout_marginTop="@dimen/ebpay_line_margin_10"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </RelativeLayout>
