@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
@@ -33,6 +34,7 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.CompanyInfoActivity;
 import com.hbhongfei.hfcable.activity.ProdectListActivity;
 import com.hbhongfei.hfcable.activity.ProjectActivity;
+import com.hbhongfei.hfcable.activity.SplashActivity;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
 import com.hbhongfei.hfcable.pojo.Company;
 import com.hbhongfei.hfcable.pojo.Project;
@@ -40,6 +42,7 @@ import com.hbhongfei.hfcable.util.ConnectionProduct;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
+import com.hbhongfei.hfcable.util.IsNetworkAvailable;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NoScrollListView;
@@ -141,15 +144,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
         isPrepared = true;
-//        getValues();
         lazyLoad();
-//        connInter();
-//        //获得最新产品的总数
-//        getNewProduct();
-//        //加载“新型产品”模块数据
-//        setDate();
-//        //连接获取公司的服务
-//        connInterGetCompanyInfo();
         onClick();
         if (isAutoPlay) {
             startPlay();
@@ -178,7 +173,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         Map<String,String> map=new HashMap<>();
         map.put("newProducts","是");
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
-
         MySingleton.getInstance(getActivity()).addToRequestQueue(normalPostRequest);
     }
     /**
@@ -200,15 +194,14 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         }
     };
     public void initView(View view) {
+        SplashActivity.ID=1;
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         inflater = LayoutInflater.from(getActivity());
         scrollView= (ScrollView) view.findViewById(R.id.scrollView_index);
         listView = (NoScrollListView) view.findViewById(R.id.lv);
-        //底部加载提示
         connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),listView);
-
         mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
         dotLayout = (LinearLayout)view.findViewById(R.id.dotLayout);
 
@@ -550,15 +543,22 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         }
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        if(pageNo<count) {
-            pageNo++;
-            // 如果网络可用，则加载网络数据
-             new MyAsyncTack().execute();
+        if(IsNetworkAvailable.isNetworkAvailable(getActivity())) {
+            if (pageNo < count) {
+                pageNo++;
+                // 如果网络可用，则加载网络数据
+                new MyAsyncTack().execute();
+            } else {
+                mRefreshLayout.endLoadingMore();
+                return false;
+            }
+            return true;
         }else{
+            Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
             mRefreshLayout.endLoadingMore();
             return false;
         }
-        return true;
+
     }
 
     @Override

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
@@ -31,6 +32,7 @@ import com.hbhongfei.hfcable.adapter.DataAdapter;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.Information;
+import com.hbhongfei.hfcable.util.IsNetworkAvailable;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.NetUtils;
@@ -52,7 +54,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
  * A simple {@link Fragment} subclass.
  */
 
-public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,,IErrorOnclick  {
+public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick  {
     //下拉和分页框架
     private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
@@ -67,7 +69,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     String total = null;
     private int index = 0;
     private int count=1;
-    private Dialog dialog=null;
     private LinearLayout noInternet;
 
 
@@ -93,18 +94,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         return view;
     }
 
-
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser) {
-//            mHandler.sendEmptyMessage(0);
-//            if(isFirst){
-//                isFirst = false;
-//                loadData(index);
-//            }
-//        }
-//    }
 
     //设置懒加载
     @Override
@@ -217,13 +206,13 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
+                            dialog.cancle();
                             if (volleyError instanceof NoConnectionError){
                                 Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
                             }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
                                 Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
                                     @Override
                                     public void errorClick() {
-
                                     }
                                 });
                             }else{
@@ -336,15 +325,27 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         index=0;
-        new MyAsyncTack().execute();
+        if(IsNetworkAvailable.isNetworkAvailable(getActivity())){
+            new MyAsyncTack().execute();
+        }else{
+            Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+            mRefreshLayout.endRefreshing();
+        }
     }
 
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
         if(index<count) {
             index++;
-            // 如果网络可用，则加载网络数据
-            new MyAsyncTack().execute();
+            if(IsNetworkAvailable.isNetworkAvailable(getActivity())){
+                // 如果网络可用，则加载网络数据
+                new MyAsyncTack().execute();
+            }else{
+                Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+                mRefreshLayout.endLoadingMore();
+                return false;
+            }
+
         }else{
             mRefreshLayout.endLoadingMore();
             return false;

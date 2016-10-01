@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -168,6 +169,7 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
         } else {
             cholder = (ChildViewHolder) convertView.getTag();
         }
+
         if (groups.get(groupPosition).isEdtor() == true) {
             cholder.ll_edtor.setVisibility(View.VISIBLE);
             cholder.rl_no_edtor.setVisibility(View.GONE);

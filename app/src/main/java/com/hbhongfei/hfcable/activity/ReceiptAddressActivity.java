@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.IsNetworkAvailable;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.ShoppingAddress_conn;
 
@@ -128,8 +129,14 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
-        shoppingAddressListConnection.addressListConnection();
-        mRefreshLayout.endRefreshing();
+        if(IsNetworkAvailable.isNetworkAvailable(this)){
+            shoppingAddressListConnection.addressListConnection();
+            mRefreshLayout.endRefreshing();
+        }else{
+            Toast.makeText(this,"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+            mRefreshLayout.endRefreshing();
+        }
+
     }
 
     @Override

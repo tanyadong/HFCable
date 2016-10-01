@@ -14,10 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.AddRecietAddress;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
@@ -129,7 +127,7 @@ public class Address_all_Adapter extends BaseAdapter {
 							@Override
 							public void onClick(SweetAlertDialog sweetAlertDialog) {
 								deleteConnection(list.get(position).getId());
-//								sweetAlertDialog.dismiss();
+								sweetAlertDialog.dismiss();
 							}
 						})
 						.show();

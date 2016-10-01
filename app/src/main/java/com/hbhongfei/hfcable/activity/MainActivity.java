@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPostResume() {
         id = SplashActivity.ID;
-        hiddenEditMenu();
+
             if (id==4){
                 showMine();
                 viewPager.setCurrentItem(3);

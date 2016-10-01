@@ -26,9 +26,9 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.SpinnerListAdapter;
 import com.hbhongfei.hfcable.fragment.IndexFragment;
 import com.hbhongfei.hfcable.util.ConnectionTypeTwo;
-import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
+import com.hbhongfei.hfcable.util.IsNetworkAvailable;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.MySpinner;
 import com.hbhongfei.hfcable.util.NetUtils;
@@ -57,10 +57,6 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
     private BGARefreshLayout mRefreshLayout;
     private String typeName;
     private int width;
-    private Dialog dialog;
-    private boolean isLastRow=false;
-    private View footer;
-    private TextView loading;
     private int count=0;
     private int pageNo=1;//D当前页数
     ConnectionTypeTwo typtTwoConnection;
@@ -265,16 +261,26 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         pageNo=1;
-        new MyAsyncTack().execute();
+        if(IsNetworkAvailable.isNetworkAvailable(this)){
+            new MyAsyncTack().execute();
+        }else{
+            Toast.makeText(this,"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+            mRefreshLayout.endRefreshing();
+        }
     }
 
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        if(pageNo<count){
-            pageNo++;
-           new MyAsyncTack().execute();
+        if(IsNetworkAvailable.isNetworkAvailable(this)) {
+            if (pageNo < count) {
+                pageNo++;
+                new MyAsyncTack().execute();
+            } else {
+                mRefreshLayout.endLoadingMore();
+                return false;
+            }
         }else{
-            mRefreshLayout.endLoadingMore();
+            Toast.makeText(this,"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

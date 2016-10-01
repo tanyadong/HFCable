@@ -7,26 +7,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.activity.SplashActivity;
 import com.hbhongfei.hfcable.activity.WriteCableRingActivity;
 import com.hbhongfei.hfcable.adapter.CableRingAdapter;
 import com.hbhongfei.hfcable.util.Dialog;
@@ -41,7 +37,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -148,6 +143,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener,B
      * 2016/07/21
      */
     public void initView(View v) {
+        SplashActivity.ID=4;
         dialog = new Dialog(MineFragment.this.getActivity());
         mListView = (ListView) v.findViewById(R.id.ListView_cableZone);
         //下载刷新

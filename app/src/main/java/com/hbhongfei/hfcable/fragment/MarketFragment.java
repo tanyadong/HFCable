@@ -12,15 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.MarketChartActivity;
 import com.hbhongfei.hfcable.activity.SplashActivity;
@@ -29,7 +22,7 @@ import com.hbhongfei.hfcable.pojo.MarketInfo;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
-import com.hbhongfei.hfcable.util.MySingleton;
+import com.hbhongfei.hfcable.util.IsNetworkAvailable;
 import com.hbhongfei.hfcable.util.NetUtils;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -67,7 +60,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
     private MyExpandableListViewAdapter myExpandableListViewAdapter=null;
-    int i=1;
+    int index=1;
     private LinearLayout noInternet;
 
     public MarketFragment() {
@@ -102,12 +95,8 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
             switch (msg.what) {
                 case 0:
                     myExpandableListViewAdapter.notifyDataSetChanged();
-//                    break;
-//                case 1:
-//                    //添加数据
-//                    item_list1.addAll((ArrayList<ArrayList<MarketInfo>>) msg.obj);
-//                    myExpandableListViewAdapter.notifyDataSetChanged();
-//                    break;
+                    break;
+
                 default:
                     break;
             }
@@ -160,7 +149,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     /**
      * 访问网络
      */
-    private static String netWork(final int index) {
+    private  String netWork(final int index) {
         final String url = "http://material.cableabc.com/matermarket/spotshow_00" + index + ".html";
         com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder().url(url).build();
 
@@ -168,7 +157,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         com.squareup.okhttp.Response response = null;
         try {
             response = client.newCall(request).execute();
-            if (response != null) {
+            if (response!=null) {
                 return response.body().string();
             } else {
                 throw new IOException("Unexpected code " + response);
@@ -182,10 +171,16 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         dialog.showDialog("正在加载中");
-        for (int i=1;i<=4;i++){
+        if (IsNetworkAvailable.isNetworkAvailable(getActivity())) {
+            for (int i = 1; i <= 4; i++) {
                 new MarketTask().execute(i);
             }
-        refreshLayout.endRefreshing();
+            mRefreshLayout.endRefreshing();
+        }else{
+            dialog.cancle();
+            Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+            mRefreshLayout.endRefreshing();
+        }
         dialog.cancle();
     }
 
@@ -197,9 +192,10 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     class MarketTask extends AsyncTask<Integer, Void, ArrayList<List<MarketInfo>>> {
         @Override
         protected ArrayList<List<MarketInfo>> doInBackground(Integer... params) {
-            index=params[0];
-            String data=netWork(index);
-            return parse(data,index);
+
+                index = params[0];
+                String data = netWork(index);
+                return parse(data, index);
         }
         @Override
         protected void onPreExecute() {
@@ -212,47 +208,12 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
          */
         @Override
         protected void onPostExecute(final ArrayList<List<MarketInfo>> data) {
-//            group_list1.add(group_list.get(index-1));
-//            item_list.add(child_list);
-//            myExpandableListViewAdapter.notifyDataSetChanged();
-//            setValues(item_list);
             if(data.size()==4){
                 dialog.cancle();
                 ll_market_head.setVisibility(View.VISIBLE);
                 setValues(data);
             }
         }
-                StringRequest request = new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        //解析界面
-                        parse(s,index);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        if (volleyError instanceof NoConnectionError){
-                            Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MarketFragment.this);
-                        }else if(volleyError instanceof NetworkError ||volleyError instanceof ServerError ||volleyError instanceof TimeoutError){
-                            Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
-                                @Override
-                                public void errorClick() {
-
-                                }
-                            });
-                        }else{
-                            Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
-                                @Override
-                                public void errorClick() {
-
-                                }
-                            });
-                        }
-                    }
-                });
-        MySingleton.getInstance(getActivity()).addToRequestQueue(request);
-    }
-
     }
     /**
      * 初始化数据
@@ -264,9 +225,15 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         group_list.add("橡胶");
         group_list.add("塑料");
         dialog.showDialog("正在加载中");
-        for (int i=1;i<=4;i++){
-            new MarketTask().execute(i);
+        if(IsNetworkAvailable.isNetworkAvailable(getActivity())){
+            for (int i=1;i<=4;i++){
+                new MarketTask().execute(i);
+            }
+        }else{
+            dialog.cancle();
+            Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MarketFragment.this);
         }
+
     }
 
     /**
@@ -315,7 +282,6 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
             return;
         }
         try {
-//            setValues(item_list);
             initValues();
         } catch (IOException e) {
             e.printStackTrace();

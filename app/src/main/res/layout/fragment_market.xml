@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     tools:context="com.hbhongfei.hfcable.fragment.MarketFragment">
     <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
         android:id="@+id/market_title_llayout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -76,7 +80,6 @@
             </ExpandableListView>
         </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
     </LinearLayout>
-
     <include
         android:id="@+id/no_internet_market"
         layout="@layout/internet_no"

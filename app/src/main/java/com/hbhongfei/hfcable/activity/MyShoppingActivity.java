@@ -150,6 +150,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             try {
                 JSONArray shoppingCarts = jsonObject.getJSONArray("shoppingCarts");
                 if (shoppingCarts.length()!=0){
+
                     int count=shoppingCarts.length();
                     for (int i=0;i<count;i++){
                         JSONObject shoppingCart= (JSONObject) shoppingCarts.opt(i);//shoppingCarts的第一组
@@ -173,21 +174,21 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
 
                         /**************产品信息*****************/
                             JSONObject productInfo = product.getJSONObject("product");
-                            String productName = productInfo.getString("introduce");//名
-                            String detail = productInfo.getString("voltage");//电压
 
                             //typeTwo  所有的产品信息
                             JSONObject jsonObject2 = productInfo.getJSONObject("typeTwo");
                             TypeTwo typeTwo = new TypeTwo();
                             typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
                             //产品
+
                             Product product1=new Product();
+                            String productName = productInfo.getString("introduce");//名
+                            String voltage = productInfo.getString("voltage");//电压
                             product1.setTypeTwo(typeTwo);
                             product1.setId(productInfo.getString("id"));
                             product1.setPrice(productInfo.getDouble("price"));
                             product1.setApplicationRange(productInfo.getString("applicationRange"));
-//                            product1.setSpecifications(productInfo.getString("specifications"));
-                            product1.introduce=(productInfo.getString("introduce"));
+                            product1.introduce=productName;
                             product1.setConductorMaterial(productInfo.getString("conductorMaterial"));
                             product1.setCoreNumber(productInfo.getString("coreNumber"));
                             product1.setCrossSection(productInfo.getString("crossSection"));
@@ -195,7 +196,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             product1.setDiameterLimit(productInfo.getString("diameterLimit"));
                             product1.setOutsideDiameter(productInfo.getString("outsideDiameter"));
                             product1.setSheathMaterial(productInfo.getString("sheathMaterial"));
-                            product1.setVoltage(productInfo.getString("voltage"));
+                            product1.setVoltage(voltage);
                             product1.setReferenceWeight(productInfo.getString("referenceWeight"));
                             product1.setPurpose(productInfo.getString("purpose"));
 
@@ -216,7 +217,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                                 img = "/images/b3043ec169634ba5a7d2631200723a67.jpeg";
                             }
                             list_product.add(product1);
-                            cablesInfos.add(new CablesInfo(id, productName, detail,color,specifications,unit_price, quantity,img));
+                            cablesInfos.add(new CablesInfo(id, productName, voltage,color,specifications,unit_price, quantity,img));
                         }
                         child.put(groups.get(i).getId(),list_product);
                         children.put(groups.get(i).getId(), cablesInfos);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key

@@ -88,6 +88,4 @@
                 android:visibility="gone" />
         </FrameLayout>
     </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
-
-
 </LinearLayout>

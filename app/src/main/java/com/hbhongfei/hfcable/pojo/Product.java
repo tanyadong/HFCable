@@ -193,6 +193,7 @@ public class Product implements java.io.Serializable {
 				"id='" + id + '\'' +
 				", price=" + price +
 				", specifications='" + specifications + '\'' +
+				", introduce='" + introduce + '\'' +
 				", typeTwo=" + typeTwo +
 				", voltage='" + voltage + '\'' +
 				", crossSection='" + crossSection + '\'' +

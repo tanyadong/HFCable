@@ -4,201 +4,198 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hbhongfei.hfcable.fragment.IndexFragment">
-
     <ScrollView
         android:id="@+id/scrollView_index"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/ll_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/slideView"
+                android:layout_width="match_parent"
+                android:layout_height="160.0dip">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/myviewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <!--小圆点-->
+                <LinearLayout
+                    android:id="@+id/dotLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:orientation="vertical">
-
-                <RelativeLayout
-                    android:id="@+id/slideView"
-                    android:layout_width="match_parent"
-                    android:layout_height="160.0dip">
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/myviewPager"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                    <!--小圆点-->
-                    <LinearLayout
-                        android:id="@+id/dotLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:gravity="center_horizontal"
-                        android:orientation="horizontal"
-                        android:paddingLeft="10dp" />
-                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:orientation="vertical">
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
+                    <View
                         android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="#6d6d6e" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
+                        android:text="@string/recommended_species" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="1"
-                            android:background="#6d6d6e" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/recommended_species" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="1"
-                            android:background="#6d6d6e" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/btn_type_name1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginLeft="10dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/text_background"
-                            android:text="特种电缆" />
-
-                        <Button
-                            android:id="@+id/btn_type_name2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_weight="1"
-
-                            android:background="@drawable/text_background1"
-                            android:text="特种电缆" />
-
-                        <Button
-                            android:id="@+id/btn_type_name3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginRight="10dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/text_background2"
-                            android:text="特种电缆222" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/btn_type_name4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="15dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/text_background3"
-                            android:text="特种电缆"></Button>
-
-                        <Button
-                            android:id="@+id/btn_type_name5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginTop="15dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/text_background4"
-                            android:text="特种电缆" />
-
-                        <Button
-                            android:id="@+id/btn_type_name6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="15dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/text_background5"
-                            android:maxLength="4"
-                            android:text="更多。。。" />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="1"
-                            android:background="#6d6d6e" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/recommended_products" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="1"
-                            android:background="#6d6d6e" />
-                    </LinearLayout>
-
+                        android:layout_height="1px"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="#6d6d6e" />
                 </LinearLayout>
 
-                <com.hbhongfei.hfcable.util.NoScrollListView
-                    android:id="@+id/lv"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@null"
-                    android:fadeScrollbars="false"></com.hbhongfei.hfcable.util.NoScrollListView>
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_type_name1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_background"
+                        android:text="特种电缆" />
+
+                    <Button
+                        android:id="@+id/btn_type_name2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_weight="1"
+
+                        android:background="@drawable/text_background1"
+                        android:text="特种电缆" />
+
+                    <Button
+                        android:id="@+id/btn_type_name3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_background2"
+                        android:text="特种电缆222" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_type_name4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_background3"
+                        android:text="特种电缆"></Button>
+
+                    <Button
+                        android:id="@+id/btn_type_name5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_background4"
+                        android:text="特种电缆" />
+
+                    <Button
+                        android:id="@+id/btn_type_name6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_background5"
+                        android:maxLength="4"
+                        android:text="更多。。。" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="#6d6d6e" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/recommended_products" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="#6d6d6e" />
+                </LinearLayout>
 
             </LinearLayout>
 
-            <include
-                android:id="@+id/no_internet_index"
-                layout="@layout/internet_no"
+            <com.hbhongfei.hfcable.util.NoScrollListView
+                android:id="@+id/lv"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
-        </FrameLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@null"
+                android:fadeScrollbars="false">
+            </com.hbhongfei.hfcable.util.NoScrollListView>
 
+        </LinearLayout>
+        <include
+            android:id="@+id/no_internet_index"
+            layout="@layout/internet_no"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible" />
+        </RelativeLayout>
     </ScrollView>
-
 </cn.bingoogolapple.refreshlayout.BGARefreshLayout>

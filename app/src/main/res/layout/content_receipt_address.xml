@@ -7,15 +7,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.hbhongfei.hfcable.activity.ReceiptAddressActivity"
     tools:showIn="@layout/activity_receipt_address">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
             <LinearLayout
                 android:id="@+id/layout_address_emity"
                 android:layout_width="match_parent"
@@ -41,23 +32,14 @@
                 android:id="@+id/layout_address_listview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_above="@+id/add_recriptAddress_tview"
                 android:layout_below="@id/layout_address_emity">
-
-                <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1">
                     <ListView
                         android:id="@+id/lview_recriptAddress"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"></ListView>
-                    <include
-                        android:id="@+id/no_internet_receipt_address"
-                        layout="@layout/internet_no"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="gone" />
-                </FrameLayout>
+                        android:layout_height="match_parent">
+                    </ListView>
+
             </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
 
             <TextView
@@ -69,8 +51,11 @@
                 android:gravity="center"
                 android:text="@string/add_receiptAddress"
                 android:textColor="@color/colorWhite" />
-
-        </RelativeLayout>
-    </FrameLayout>
-
+            <include
+                android:id="@+id/no_internet_receipt_address"
+                layout="@layout/internet_no"
+                android:layout_above="@+id/add_recriptAddress_tview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
 </RelativeLayout>
