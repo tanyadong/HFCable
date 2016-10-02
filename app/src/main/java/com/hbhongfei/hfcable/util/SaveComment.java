@@ -56,6 +56,8 @@ public class SaveComment {
                 String msg = jsonObject.getString("save");
                 if (msg.equals("success")){
                     Toast.makeText(context,"评论成功",Toast.LENGTH_SHORT).show();
+                    //通知adpter更新
+
                 }else{
                     Toast.makeText(context,"评论失败",Toast.LENGTH_SHORT).show();
                 }

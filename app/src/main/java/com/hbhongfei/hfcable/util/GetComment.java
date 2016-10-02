@@ -83,7 +83,7 @@ public class GetComment {
         public void onResponse(JSONObject jsonObject) {
             list = new ArrayList<>();
             try {
-                if(jsonObject.getJSONArray("comments")!=null||!jsonObject.getJSONArray("comments").equals("null")){
+                if(jsonObject.optJSONArray("comments")!=null){
                     JSONArray jsonArray = jsonObject.getJSONArray("comments");
                     for (int i=0;i<jsonArray.length();i++){
                         map = new HashMap<>();
@@ -101,6 +101,8 @@ public class GetComment {
                     }
                     commentAdapter = new CommentAdapter(context,list);
                     listView.setAdapter(commentAdapter);
+                }else {
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -116,7 +118,7 @@ public class GetComment {
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,"没有获取网络评论内容", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
         }
     };

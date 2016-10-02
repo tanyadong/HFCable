@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.CommentActivity;
+import com.hbhongfei.hfcable.fragment.MineFragment;
 import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.util.DateUtils;
 import com.hbhongfei.hfcable.util.GetComment;
@@ -47,21 +48,23 @@ public class CableRingAdapter extends BaseAdapter {
     public static final int VIEW_HEADER = 0;
     public static final int VIEW_MOMENT = 1;
     private InputMethodManager imm;
+    private CommentAdapter commentAdapter;
 
-    private List<Map<String,Object>> mList;
+    private List<Map<String, Object>> mList;
     private Context mContext;
     private FloatingActionButton btn;
 
-    public CableRingAdapter(Context context, List<Map<String,Object>> list,FloatingActionButton btn) {
+    public CableRingAdapter(Context context, List<Map<String, Object>> list, FloatingActionButton btn) {
         mList = list;
         mContext = context;
         this.btn = btn;
     }
-    public void addItem(List<Map<String,Object>> list)
-    {
+
+    public void addItem(List<Map<String, Object>> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }
+
     @Override
     public int getViewTypeCount() {
         return 2;
@@ -105,16 +108,16 @@ public class CableRingAdapter extends BaseAdapter {
             holder.cableLinear = (LinearLayout) convertView.findViewById(R.id.item_cable_ring_linear);
             holder.nineGridTestLayout = (NineGridTestLayout) convertView.findViewById(R.id.layout_nine_grid);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         //获取当前用户
         SharedPreferences spf = mContext.getSharedPreferences(LoginConnection.USER, Context.MODE_PRIVATE);
-        final String S_phoneNumber = spf.getString("phoneNumber",null);
+        final String S_phoneNumber = spf.getString("phoneNumber", null);
 
         //设置数据
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map = mList.get(position);
         //设置内容
         holder.mContent.setText((String) map.get("content"));
@@ -130,7 +133,7 @@ public class CableRingAdapter extends BaseAdapter {
                 .placeholder(R.mipmap.img_loading)
                 .error(R.mipmap.img_error)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.head );
+                .into(holder.head);
         //设置点击评论
         WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         final int width = manager.getDefaultDisplay().getWidth();
@@ -155,7 +158,7 @@ public class CableRingAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                if(finalHolder.linear.isShown()==false){
+                if (finalHolder.linear.isShown() == false) {
                     finalHolder.linear.setVisibility(View.VISIBLE);
                     finalHolder.comment.setVisibility(View.GONE);
                     // 获取编辑框焦点
@@ -184,15 +187,21 @@ public class CableRingAdapter extends BaseAdapter {
             @Override
             public void afterTextChanged(Editable s) {
                 String commentText = finalHolder.commentContent.getText().toString().trim();
-                if (commentText!=null&&!commentText.equals("")){
+                if (commentText != null && !commentText.equals("")) {
                     finalHolder.tComment.setBackgroundResource(R.color.colorRed);
                     finalHolder.tComment.setTextColor(mContext.getResources().getColor(R.color.colorWhite));
-                }else{
+                } else {
                     finalHolder.tComment.setBackgroundResource(R.color.colorGray);
                     finalHolder.tComment.setTextColor(mContext.getResources().getColor(R.color.colorBalck));
                 }
             }
         });
+
+        //展示评论
+        List<Map<String, Object>> commentList = new ArrayList<>();
+        commentList = (List<Map<String, Object>>) map.get("comments");
+        commentAdapter = new CommentAdapter(mContext, commentList);
+        holder.listView_comment.setAdapter(commentAdapter);
 
         final String[] id = {(String) map.get("id")};
         //提交评论
@@ -201,13 +210,20 @@ public class CableRingAdapter extends BaseAdapter {
             public void onClick(View v) {
                 String commentText = finalHolder.commentContent.getText().toString().trim();
                 //不为空
-                if (commentText!=null&&!commentText.equals("")) {
-                    SaveComment saveComment = new SaveComment(mContext,id[0],S_phoneNumber,commentText);
+                if (commentText != null && !commentText.equals("")) {
+                    SaveComment saveComment = new SaveComment(mContext, id[0], S_phoneNumber, commentText);
                     saveComment.connInter();
                     finalHolder.commentContent.setText("");
                     // 点击后通知适配器数据发生了变化
-
-                }else{
+                    List<Map<String, Object>> commentList = new ArrayList<>();
+                    Map<String,Object> map = new HashMap<String, Object>();
+                    map.put("nickName","ni");
+                    map.put("commentContent",commentText);
+                    commentList.add(map);
+                    commentAdapter.update(commentList);
+                    /*GetComment getComment = new GetComment(mContext, id[0],finalHolder.listView_comment);
+                    getComment.connInter();*/
+                } else {
                     Toast.makeText(mContext, "请输入内容", Toast.LENGTH_SHORT).show();
                 }
                 // 关闭软键盘
@@ -219,13 +235,8 @@ public class CableRingAdapter extends BaseAdapter {
         });
 
 
-        //展示评论
-        //根据id获取评论
-        GetComment getComment = new GetComment(mContext, id[0],holder.listView_comment);
-        getComment.connInter();
-
         //设置图片
-        ArrayList<String> images= (ArrayList<String>) map.get("images");
+        ArrayList<String> images = (ArrayList<String>) map.get("images");
         holder.nineGridTestLayout.setIsShowAll(false); //当传入的图片数超过9张时，是否全部显示
         holder.nineGridTestLayout.setSpacing(10); //动态设置图片之间的间隔
         holder.nineGridTestLayout.setUrlList(images); //最后再设置图片url
@@ -233,16 +244,16 @@ public class CableRingAdapter extends BaseAdapter {
     }
 
     private static class ViewHolder {
-        TextView mContent,nickName,time,tComment;
+        TextView mContent, nickName, time, tComment;
         RelativeLayout comment;
         ImageView head;
         ListView listView_comment;
-        LinearLayout linear,cableLinear;
+        LinearLayout linear, cableLinear;
         EditText commentContent;
         NineGridTestLayout nineGridTestLayout;
     }
 
-    public void update(){
+    public void update() {
         notifyDataSetChanged();
     }
 }

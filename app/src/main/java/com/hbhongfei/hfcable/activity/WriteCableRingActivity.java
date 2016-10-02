@@ -4,18 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.ImagePublishAdapter;
 import com.hbhongfei.hfcable.pojo.ImageItem;
@@ -38,19 +32,11 @@ import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.IAlertDialogListener;
 import com.hbhongfei.hfcable.util.IntentConstants;
 import com.hbhongfei.hfcable.util.LoginConnection;
-import com.hbhongfei.hfcable.util.MySingleton;
-import com.hbhongfei.hfcable.util.NormalPostRequest;
-import com.hbhongfei.hfcable.util.Url;
+import com.hbhongfei.hfcable.util.UploadImages;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +55,9 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
     private String tag;
     private Map<String, String> map;
     private InputMethodManager imm;
+    private List<String> listImage = new ArrayList<>();
+    private List<String> listImages = new ArrayList<>();
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,131 +175,24 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
         if (s.equals("")&&mDataList.size()==0){
             Toast.makeText(this,"内容不能为空",Toast.LENGTH_SHORT).show();
         }else{
-            String url = Url.url("/androidCableRing/save");
-            map = new HashMap<>();
-            if (s!=null||!s.equals("")){
-                map.put("content", s);
-            }
-            map.put("userName", S_phoneNumber);
-            if (mDataList.size()!=0){
-                Toast.makeText(this,"wwww",Toast.LENGTH_SHORT).show();
-                String [] images = new String[mDataList.size()-1];
-                Toast.makeText(WriteCableRingActivity.this,mDataList.size()+"",Toast.LENGTH_SHORT).show();
-//                new BitmapThread().start();
-                /*for (int i=0;i<mDataList.size();i++) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(mDataList.get(i).sourcePath);
-                        //将bitmap一字节流输出 Bitmap.CompressFormat.PNG 压缩格式，100：压缩率，baos：字节流
-                        //转换字符流
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                        int options = 100;
-                        while ( options>0&&baos.toByteArray().length / 1024>100) { //循环判断如果压缩后图片是否大于100kb,大于继续压缩
-                            baos.reset();//重置baos即清空baos
-                            bitmap.compress(Bitmap.CompressFormat.PNG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
-                            options -= 10;//每次都减少10
-                        }
-                        byte[] buffer = baos.toByteArray();
-                        System.out.println("图片的大小：" + buffer.length);
-                        //将图片的字节流数据加密成base64字符输出
-                        String photo = Base64.encodeToString(buffer, 0, buffer.length, Base64.DEFAULT);
-                        map.put("image" + i, photo);
-                }*/
-
-                new bitmapTask().execute("");
-            }
-            NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectAddCableRingListener, errorListener, map);
-            MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
-        }
-    }
-    class bitmapTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            for (int i=0;i<mDataList.size();i++) {
-                Bitmap bitmap = BitmapFactory.decodeFile(mDataList.get(i).sourcePath);
-                //将bitmap一字节流输出 Bitmap.CompressFormat.PNG 压缩格式，100：压缩率，baos：字节流
-                //转换字符流
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                int options = 100;
-                while ( options>0&&baos.toByteArray().length / 1024>100) { //循环判断如果压缩后图片是否大于100kb,大于继续压缩
-                    baos.reset();//重置baos即清空baos
-                    bitmap.compress(Bitmap.CompressFormat.PNG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
-                    options -= 10;//每次都减少10
-                }
-                byte[] buffer = baos.toByteArray();
-                System.out.println("图片的大小：" + buffer.length);
-                //将图片的字节流数据加密成base64字符输出
-                String photo = Base64.encodeToString(buffer, 0, buffer.length, Base64.DEFAULT);
-                map.put("image" + i, photo);
-            }
-            return "success";
+            new BitmapThread().start();
         }
     }
 
+
+    UploadImages uploadImages = new UploadImages(this);
 
     class BitmapThread extends Thread{
         @Override
         public void run() {
-            for (int i=0;i<mDataList.size();i++) {
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeFile(mDataList.get(i).sourcePath);
-                    //转换字符流
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    //将bitmap一字节流输出 Bitmap.CompressFormat.PNG 压缩格式，100：压缩率，baos：字节流
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                    baos.close();
-                    byte[] buffer = baos.toByteArray();
-                    System.out.println("图片的大小：" + buffer.length);
-                    //将图片的字节流数据加密成base64字符输出
-                    String photo = Base64.encodeToString(buffer, 0, buffer.length, Base64.DEFAULT);
-                    map.put("image" + i, photo);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            List<String> list  =new ArrayList<>();
+            for (int i=0;i<mDataList.size();i++){
+                list.add(mDataList.get(i).sourcePath);
             }
+            uploadImages.doUploadTest(list,S_text,S_phoneNumber,dialog);
+
         }
     }
-
-    /**
-     * 发表缆圈成功后的状态
-     */
-    private Response.Listener<JSONObject> jsonObjectAddCableRingListener = new Response.Listener<JSONObject>() {
-        @Override
-        public void onResponse(JSONObject jsonObject) {
-            try {
-                String msg = jsonObject.getString("save");
-                if (TextUtils.equals(msg, "success")) {
-                    Toast.makeText(WriteCableRingActivity.this,"发布成功",Toast.LENGTH_SHORT).show();
-                    SplashActivity.ID = 4;
-                    removeTempFromPref();
-                    removeTextTempFromPref();
-                    Intent intent = new Intent(WriteCableRingActivity.this,MainActivity.class);
-                    startActivity(intent);
-                    dialog.cancle();
-                } else {
-                    Toast.makeText(WriteCableRingActivity.this,"发布失败",Toast.LENGTH_SHORT).show();
-                    dialog.cancle();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                dialog.cancle();
-            }
-        }
-
-        ;
-    };
-    /**
-     * 失败的监听器
-     */
-    private Response.ErrorListener errorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            dialog.cancle();
-            Toast.makeText(WriteCableRingActivity.this, "请求数据失败", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
-        }
-    };
 
     protected void onPause() {
         super.onPause();
@@ -351,7 +233,7 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
     /**
      * 清除照片缓存
      */
-    private void removeTempFromPref() {
+    public  void removeTempFromPref() {
         SharedPreferences sp = getSharedPreferences(CustomConstants.APPLICATION_NAME, MODE_PRIVATE);
         sp.edit().remove(CustomConstants.PREF_TEMP_IMAGES).commit();
     }
@@ -359,7 +241,7 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
     /**
      * 清除文字缓存
      */
-    private void removeTextTempFromPref() {
+    public void removeTextTempFromPref() {
         SharedPreferences sp = getSharedPreferences(CustomConstants.APPLICATION_NAME, MODE_PRIVATE);
         sp.edit().remove(CustomConstants.PREF_TEMP_TEXT).commit();
     }

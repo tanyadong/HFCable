@@ -31,17 +31,29 @@ public class CommentAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return list.size();
+        if (list!=null){
+            return list.size();
+        }else{
+            return 0;
+        }
     }
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        if (list!=null){
+            return list.get(position);
+        }else{
+            return null;
+        }
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        if (list!=null){
+            return position;
+        }else{
+            return 0;
+        }
     }
 
     @Override
@@ -59,15 +71,16 @@ public class CommentAdapter extends BaseAdapter{
         //设置数据
 
         Map<String,Object> map = new HashMap<>();
-        map = list.get(position);
-        //昵称
-        String S_nickName = (String) map.get("nickName");
-        holder.nickName.setText(S_nickName);
+        if (list!=null){
+            map = list.get(position);
+            //昵称
+            String S_nickName = (String) map.get("nickName");
+            holder.nickName.setText(S_nickName);
 
-        //评论内容
-        String S_comment = (String) map.get("commentContent");
-        holder.comment.setText(S_comment);
-
+            //评论内容
+            String S_comment = (String) map.get("commentContent");
+            holder.comment.setText(S_comment);
+        }
         return convertView;
     }
 

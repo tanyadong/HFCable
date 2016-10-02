@@ -49,9 +49,7 @@ public class ShowBigPictrue extends FragmentActivity {
 		viewPager = (ViewPager) findViewById(R.id.viewPager_show_bigPic);
 		ViewPagerAdapter adapter=new ViewPagerAdapter(getSupportFragmentManager());
 		viewPager.setAdapter(adapter);
-		//��ת���ڼ�������
 		viewPager.setCurrentItem(position);
-		
 	}
 	
 	private class ViewPagerAdapter extends FragmentStatePagerAdapter{

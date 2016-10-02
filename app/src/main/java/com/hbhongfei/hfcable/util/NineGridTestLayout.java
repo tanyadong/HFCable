@@ -1,6 +1,7 @@
 package com.hbhongfei.hfcable.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.View;
@@ -10,7 +11,9 @@ import com.android.volley.toolbox.ImageLoader;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.activity.ShowBigPictrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,24 +78,27 @@ public class NineGridTestLayout extends NineGridLayout {
                 .placeholder(R.mipmap.img_loading)
                 .error(R.mipmap.img_error)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView );
+                .into(imageView);
         return false;// true 代表按照九宫格默认大小显示(此时不要调用setOneImageLayoutParams)；false 代表按照自定义宽高显示。
     }
 
     @Override
     protected void displayImage(RatioImageView imageView, String url) {
-        /*ImageLoaderUtil.getImageLoader(mContext).displayImage(url, imageView, ImageLoaderUtil.getPhotoImageOption());*/
         String url1 = Url.url(url);
         Glide.with(mContext)
                 .load(url1)
                 .placeholder(R.mipmap.img_loading)
                 .error(R.mipmap.img_error)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView );
+                .into(imageView);
     }
 
     @Override
     protected void onClickImage(int i, String url, List<String> urlList) {
-        Toast.makeText(mContext, "点击了图片" + url, Toast.LENGTH_SHORT).show();
+        // 跳到查看大图界面
+        Intent intent = new Intent(mContext,ShowBigPictrue.class);
+        intent.putExtra("position", i);
+        intent.putStringArrayListExtra("image_List", (ArrayList<String>) urlList);
+        mContext.startActivity(intent);
     }
 }

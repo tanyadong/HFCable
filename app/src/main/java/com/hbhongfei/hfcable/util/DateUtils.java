@@ -98,7 +98,7 @@ public class DateUtils {
         } else if (time >= 3600 * 24 * 30 * 12) {
             return time / 3600 / 24 / 30 / 12 + "年前";
         } else {
-            return "111";
+            return "刚刚";
         }
     }
 
