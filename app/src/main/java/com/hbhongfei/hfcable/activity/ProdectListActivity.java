@@ -28,7 +28,6 @@ import com.hbhongfei.hfcable.fragment.IndexFragment;
 import com.hbhongfei.hfcable.util.ConnectionTypeTwo;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
-import com.hbhongfei.hfcable.util.IsNetworkAvailable;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.MySpinner;
 import com.hbhongfei.hfcable.util.NetUtils;
@@ -261,7 +260,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         pageNo=1;
-        if(IsNetworkAvailable.isNetworkAvailable(this)){
+        if(NetUtils.isConnected(this)){
             new MyAsyncTack().execute();
         }else{
             Toast.makeText(this,"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
@@ -271,7 +270,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
 
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        if(IsNetworkAvailable.isNetworkAvailable(this)) {
+        if(NetUtils.isConnected(this)) {
             if (pageNo < count) {
                 pageNo++;
                 new MyAsyncTack().execute();

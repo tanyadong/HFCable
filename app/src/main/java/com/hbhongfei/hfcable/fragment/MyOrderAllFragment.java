@@ -2,14 +2,13 @@ package com.hbhongfei.hfcable.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.ConnectionOrder;
@@ -21,12 +20,14 @@ import org.json.JSONException;
 import java.util.List;
 import java.util.Map;
 
+import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
+
 /**
  * 全部订单的页面
  */
-public class MyOrderAllFragment extends BaseFragment {
+public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayout.BGARefreshLayoutDelegate{
     private static final String USER = LoginConnection.USER;
-    private ListView ListView_myOrderAll;
+   private ListView ListView_myOrderAll;
     private List<Map<String,String>> list;
     private Map<String,String> map;
     private String S_phoneNumber;
@@ -84,14 +85,11 @@ public class MyOrderAllFragment extends BaseFragment {
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
             connectionOrder = new ConnectionOrder(MyOrderAllFragment.this.getActivity(),MyOrderAllFragment.this.getContext(),ListView_myOrderAll,noInternet);
-        try {
             dialog=new Dialog(getActivity());
             dialog.showDialog("正在加载中");
-            connectionOrder.connInterByUserId(S_phoneNumber,pageNo);
+            new MyAsyncTack().execute();
+//            connectionOrder.connInterByUserId(S_phoneNumber,pageNo);
             dialog.cancle();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -102,32 +100,41 @@ public class MyOrderAllFragment extends BaseFragment {
         getValues();
         mHasLoadedOnce=true;
     }
-//    class MyAsyncTack extends AsyncTask<Map<String,String>,Void,Void> {
-//        @Override
-//        protected Void doInBackground(Map<String, String>... params) {
-//            try {
-//                connectionOrder.connInterByUserId(S_phoneNumber,pageNo);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            dialog=new Dialog(getActivity());
-//            dialog.showDialog("正在加载中");
-//
-//            super.onPreExecute();
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            dialog.cancle();
-//
-//            super.onPostExecute(aVoid);
-//        }
-//    }
+    //下拉刷新
+    @Override
+    public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
+
+    }
+    //上拉加载
+    @Override
+    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
+        return false;
+    }
+    class MyAsyncTack extends AsyncTask<Map<String,String>,Void,Void> {
+        @Override
+        protected Void doInBackground(Map<String, String>... params) {
+            try {
+                connectionOrder.connInterByUserId(S_phoneNumber,pageNo);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog=new Dialog(getActivity());
+            dialog.showDialog("正在加载中");
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            dialog.cancle();
+            super.onPostExecute(aVoid);
+        }
+    }
 
 
 }

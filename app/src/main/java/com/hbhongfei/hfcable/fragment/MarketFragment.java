@@ -22,7 +22,6 @@ import com.hbhongfei.hfcable.pojo.MarketInfo;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
-import com.hbhongfei.hfcable.util.IsNetworkAvailable;
 import com.hbhongfei.hfcable.util.NetUtils;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -171,7 +170,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         dialog.showDialog("正在加载中");
-        if (IsNetworkAvailable.isNetworkAvailable(getActivity())) {
+        if (NetUtils.isConnected(getActivity())) {
             for (int i = 1; i <= 4; i++) {
                 new MarketTask().execute(i);
             }
@@ -225,7 +224,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         group_list.add("橡胶");
         group_list.add("塑料");
         dialog.showDialog("正在加载中");
-        if(IsNetworkAvailable.isNetworkAvailable(getActivity())){
+        if(NetUtils.isConnected(getActivity())){
             for (int i=1;i<=4;i++){
                 new MarketTask().execute(i);
             }

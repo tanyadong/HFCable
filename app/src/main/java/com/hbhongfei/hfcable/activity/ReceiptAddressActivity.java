@@ -17,8 +17,8 @@ import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Dialog;
-import com.hbhongfei.hfcable.util.IsNetworkAvailable;
 import com.hbhongfei.hfcable.util.LoginConnection;
+import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.ShoppingAddress_conn;
 
 import org.json.JSONException;
@@ -129,7 +129,7 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
-        if(IsNetworkAvailable.isNetworkAvailable(this)){
+        if(NetUtils.isConnected(this)){
             shoppingAddressListConnection.addressListConnection();
             mRefreshLayout.endRefreshing();
         }else{

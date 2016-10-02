@@ -186,6 +186,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@null"
+                android:visibility="gone"
                 android:fadeScrollbars="false">
             </com.hbhongfei.hfcable.util.NoScrollListView>
 

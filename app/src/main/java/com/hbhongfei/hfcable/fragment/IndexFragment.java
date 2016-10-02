@@ -42,7 +42,6 @@ import com.hbhongfei.hfcable.util.ConnectionProduct;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
-import com.hbhongfei.hfcable.util.IsNetworkAvailable;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NoScrollListView;
@@ -543,7 +542,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         }
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        if(IsNetworkAvailable.isNetworkAvailable(getActivity())) {
+        if(NetUtils.isConnected(getActivity())) {
             if (pageNo < count) {
                 pageNo++;
                 // 如果网络可用，则加载网络数据

@@ -32,7 +32,6 @@ import com.hbhongfei.hfcable.adapter.DataAdapter;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.Information;
-import com.hbhongfei.hfcable.util.IsNetworkAvailable;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.NetUtils;
@@ -325,7 +324,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         index=0;
-        if(IsNetworkAvailable.isNetworkAvailable(getActivity())){
+        if(NetUtils.isConnected(getActivity())){
             new MyAsyncTack().execute();
         }else{
             Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
@@ -337,7 +336,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
         if(index<count) {
             index++;
-            if(IsNetworkAvailable.isNetworkAvailable(getActivity())){
+            if(NetUtils.isConnected(getActivity())){
                 // 如果网络可用，则加载网络数据
                 new MyAsyncTack().execute();
             }else{
