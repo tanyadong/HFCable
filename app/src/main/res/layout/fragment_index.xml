@@ -1,9 +1,11 @@
 <cn.bingoogolapple.refreshlayout.BGARefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/index_modulename_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hbhongfei.hfcable.fragment.IndexFragment">
+    tools:context="com.hbhongfei.hfcable.fragment.IndexFragment"
+    app:layout_collapseParallaxMultiplier="1.0">
     <ScrollView
         android:id="@+id/scrollView_index"
         android:layout_width="match_parent"
@@ -186,7 +188,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@null"
-                android:visibility="gone"
                 android:fadeScrollbars="false">
             </com.hbhongfei.hfcable.util.NoScrollListView>
 
@@ -196,7 +197,7 @@
             layout="@layout/internet_no"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible" />
+            android:visibility="gone" />
         </RelativeLayout>
     </ScrollView>
 </cn.bingoogolapple.refreshlayout.BGARefreshLayout>

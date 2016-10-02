@@ -15,12 +15,11 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.OrderDetailActivity;
 import com.hbhongfei.hfcable.activity.OrderPayActivity;
 import com.hbhongfei.hfcable.pojo.Order;
+import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -48,10 +47,17 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
         this.list = list;
         this.resource = resource;
     }
-
+    public void addItems(ArrayList<Order> list){
+        this.list.addAll(list);
+        notifyDataSetChanged();
+    }
     @Override
     public int getCount() {
-        return list.size();
+        if (list!=null){
+            return list.size();
+        }else {
+            return 0;
+        }
     }
 
     @Override
@@ -97,14 +103,17 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
         //设置图片
         ArrayList<String> imgs=list.get(position).getShoppingCart().getProduct().getProductImages();
         //加载图片
-        if(imgs.size()>0){
-            String url= Url.url(imgs.get(0));
-            Glide.with(context)
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(vh.image_myOrder);
+        if(!imgs.isEmpty()){
+//            String url= Url.url(imgs.get(0));
+//            Glide.with(context)
+//                    .load(url)
+//                    .placeholder(R.mipmap.man)
+//                    .error(R.mipmap.man)
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .into(vh.image_myOrder);
+            vh.image_myOrder.setTag(imgs.get(0));
+            AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
+            asyncBitmapLoader.loadImage(context,vh.image_myOrder,imgs.get(0));
         }
         final Order order=list.get(position);
         //如果是未付款订单
@@ -277,17 +286,15 @@ public class MyOrder_all_Adapter extends BaseAdapter implements View.OnClickList
 
     public static class MyOrderViewHolder{
         View rl_myorder_item;
-        LinearLayout ll_order_bottom;
-        TextView Tview_myOrder_type;
-        ImageView image_myOrder;
-        ImageView Image_myOrder_delete,image_success;
-        TextView Tview_myOrder_name;
-        TextView Tview_myOrder_stage;
-        TextView Tview_myOrder_introduce;
-        TextView Tview_myOrder_pay;
-        TextView Tview_myOrder_price;
-        TextView Tview_myOrder_money;
-        Button btn_order_cancle,btn_order_pay;
+        private LinearLayout ll_order_bottom;
+        private TextView Tview_myOrder_type;
+        private ImageView image_myOrder;
+        private ImageView Image_myOrder_delete,image_success;
+        private TextView Tview_myOrder_stage;
+        private TextView Tview_myOrder_introduce;
+        private TextView Tview_myOrder_price;
+        private TextView Tview_myOrder_money;
+        private Button btn_order_cancle,btn_order_pay;
 
     }
 

@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hbhongfei.hfcable.fragment.MyOrderAllFragment">
-
     <include
         android:id="@+id/no_internet_my_order_all"
         layout="@layout/internet_no"
@@ -11,10 +10,17 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <ListView
-        android:id="@+id/ListView_myOrderAll"
+    <cn.bingoogolapple.refreshlayout.BGARefreshLayout
+        android:id="@+id/my_all_order_freshlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="10dp">
-    </ListView>
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/ListView_myOrderAll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:dividerHeight="10dp">
+        </ListView>
+    </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
+
 </FrameLayout>
