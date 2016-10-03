@@ -99,7 +99,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ReceiptAddressActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask"/>
         <!-- 添加购物车 -->
         <activity android:name=".activity.AddRecietAddress" />
         <!-- 画图 -->

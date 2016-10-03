@@ -47,12 +47,18 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
         toolbar();
         initView();
         initRefreshLayout();
-        //开始加载数据
-        setValue();
         //获取地址
 
         click();
     }
+
+    @Override
+    protected void onPostResume() {
+        //开始加载数据
+        setValue();
+        super.onPostResume();
+    }
+
     /**
      * 设置toolbar
      */
@@ -100,7 +106,6 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
     private void click(){
         add_recriptAddress.setOnClickListener(this);
     }
-
 
 
     @Override
