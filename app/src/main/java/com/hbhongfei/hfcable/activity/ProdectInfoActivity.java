@@ -890,7 +890,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         public void onResponse(JSONObject jsonObject) {
             JSONArray jsonArray;
             try {
-                Toast.makeText(ProdectInfoActivity.this,"包装方式争取",Toast.LENGTH_SHORT).show();
                 price_map = new HashMap();
                 jsonArray = jsonObject.getJSONArray("list");
                 int count = jsonArray.length();
@@ -942,7 +941,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         public void onResponse(JSONObject jsonObject) {
             JSONArray jsonArray;
             try {
-                Toast.makeText(ProdectInfoActivity.this,"颜色争取",Toast.LENGTH_SHORT).show();
                 jsonArray = jsonObject.getJSONArray("colorList");
                 int count = jsonArray.length();
                 for (int i = 0; i < count; i++) {

@@ -1,5 +1,6 @@
 package com.hbhongfei.hfcable.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -24,7 +27,7 @@ import com.hbhongfei.hfcable.R;
 
 import java.util.ArrayList;
 
-public class GuideActivity extends AppCompatActivity {
+public class GuideActivity extends Activity {
     private ViewPager mViewPager;
     private ArrayList<View> mViews;
     private PopupWindow mPopupWindow;
@@ -34,6 +37,36 @@ public class GuideActivity extends AppCompatActivity {
     private ArrayList<ImageView> mIndicatorList;//装小圆点的集合
     SharedPreferences share;
     SharedPreferences.Editor editor;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        /*//取消标题
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        //取消状态栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+*/
+        setContentView(R.layout.activity_guide);
+        share = getSharedPreferences("showWelcomm", Context.MODE_PRIVATE);
+        editor = share.edit();
+
+        mMyHandler= new MyHandler();
+        mIndicatorList = new ArrayList<ImageView>();
+        iniView();
+        iniViewPager();        //初始化ViewPager
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mMyHandler.sendEmptyMessageDelayed(9, 200);
+            }
+        }).start();
+
+    }
+
     private class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -51,27 +84,6 @@ public class GuideActivity extends AppCompatActivity {
                     break;
             }
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guide);
-        share = getSharedPreferences("showWelcomm", Context.MODE_PRIVATE);
-        editor = share.edit();
-
-        mMyHandler= new MyHandler();
-        mIndicatorList = new ArrayList<ImageView>();
-        iniView();
-        iniViewPager();        //初始化ViewPager
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mMyHandler.sendEmptyMessageDelayed(9, 200);
-            }
-        }).start();
-
     }
 
     /**

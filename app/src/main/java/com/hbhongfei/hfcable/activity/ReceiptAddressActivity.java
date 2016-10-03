@@ -47,7 +47,6 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
         toolbar();
         initView();
         initRefreshLayout();
-        Toast.makeText(this,"ReceiptAddressActivity",Toast.LENGTH_SHORT).show();
         //开始加载数据
         setValue();
         //获取地址

@@ -1,7 +1,9 @@
 package com.hbhongfei.hfcable.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,12 +25,14 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.activity.LoginActivity;
 import com.hbhongfei.hfcable.activity.SplashActivity;
 import com.hbhongfei.hfcable.activity.WriteCableRingActivity;
 import com.hbhongfei.hfcable.adapter.CableRingAdapter;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
+import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
@@ -51,7 +55,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MineFragment extends BaseFragment implements View.OnClickListener,BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick {
+public class MineFragment extends BaseFragment implements View.OnClickListener, BGARefreshLayout.BGARefreshLayoutDelegate, IErrorOnclick {
     private View view;
     private ListView mListView;
     private List<Map<String, Object>> list;
@@ -59,26 +63,33 @@ public class MineFragment extends BaseFragment implements View.OnClickListener,B
     private Dialog dialog;
     private CableRingAdapter cableRingAdapter;
     private BGARefreshLayout mRefreshLayout;
-    private int pageNo=1;//当前页数
+    private int pageNo = 1;//当前页数
     private int count;//总页数
     private int page;
-    /** 标志位，标志已经初始化完成 */
+    private static final String LOGINORNOT = LoginConnection.USER;
+    String loginOrNot;
+    /**
+     * 标志位，标志已经初始化完成
+     */
     private boolean isPrepared;
-    /** 是否已被加载过一次，第二次就不再去请求数据了 */
+    /**
+     * 是否已被加载过一次，第二次就不再去请求数据了
+     */
     private boolean mHasLoadedOnce;
     private LinearLayout noInternet;
     private FloatingActionButton fab;
 
     public MineFragment() {
     }
+
     private Handler handler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 1:
-                    count=msg.arg1;
+                    count = msg.arg1;
                     break;
                 default:
                     break;
@@ -87,7 +98,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener,B
         }
 
     };
-    Handler mHandler = new Handler(){
+    Handler mHandler = new Handler() {
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
@@ -102,24 +113,24 @@ public class MineFragment extends BaseFragment implements View.OnClickListener,B
             }
         }
     };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_mine, container, false);
         initView(view);
         setOnClick();
-//        //初始化数据
-//        initValues();
         //初始化刷新
         initRefreshLayout();
         isPrepared = true;
-//        getValues();
         lazyLoad();
         return view;
     }
 
     @Override
     public void onResume() {
+        lazyLoad();
+        getValues();
         super.onResume();
     }
 
@@ -130,7 +141,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener,B
         // 为BGARefreshLayout设置代理
         mRefreshLayout.setDelegate(this);
         // 设置下拉刷新和上拉加载更多的风格     参数1：应用程序上下文，参数2：是否具有上拉加载更多功能
-        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity().getApplication(),true);
+        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity().getApplication(), true);
         // 设置正在加载更多时的文本
         refreshViewHolder.setLoadingMoreText("正在加载中");
         // 设置下拉刷新和上拉加载更多的风
@@ -145,11 +156,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener,B
      * 2016/07/21
      */
     public void initView(View v) {
-        SplashActivity.ID=4;
+        SplashActivity.ID = 4;
         dialog = new Dialog(MineFragment.this.getActivity());
         mListView = (ListView) v.findViewById(R.id.ListView_cableZone);
         //下载刷新
-        mRefreshLayout = (BGARefreshLayout)view.findViewById(R.id.Refresh_cableCZone);
+        mRefreshLayout = (BGARefreshLayout) view.findViewById(R.id.Refresh_cableCZone);
         noInternet = (LinearLayout) view.findViewById(R.id.no_internet_mine);
 
         fab = (FloatingActionButton) v.findViewById(R.id.fab_mine);
@@ -174,29 +185,43 @@ public class MineFragment extends BaseFragment implements View.OnClickListener,B
         shaftConnInter("1");
     }
 
+    /**
+     * 获取数据
+     */
+    private void getValues(){
+        SharedPreferences spf = MineFragment.this.getContext().getSharedPreferences(LOGINORNOT, Context.MODE_PRIVATE);
+        loginOrNot = spf.getString("id", null);
+    }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        Intent intent = new Intent();
+        switch (v.getId()) {
             case R.id.fab_mine:
-                Intent intent = new Intent();
-                intent.setClass(MineFragment.this.getActivity(), WriteCableRingActivity.class);
-                intent.putExtra("tag", "main");
-                startActivity(intent);
-            break;
+                if (loginOrNot!=null){
+                    intent.setClass(MineFragment.this.getActivity(), WriteCableRingActivity.class);
+                    intent.putExtra("tag", "main");
+                }else{
+                    intent.setClass(MineFragment.this.getActivity(), LoginActivity.class);
+                    Toast.makeText(MineFragment.this.getContext(),"请先登录",Toast.LENGTH_SHORT).show();
+                }
+
+                break;
         }
+        startActivity(intent);
     }
 
     /**
      * 获取缆圈信息服务
      */
     public void shaftConnInter(String pageNo) {
-        Map<String,String> params =new HashMap<>();
-        params.put("pageNo",pageNo);
+        Map<String, String> params = new HashMap<>();
+        params.put("pageNo", pageNo);
         String url = Url.url("/androidComment/getAllComment");
         System.out.println(url);
         page = Integer.valueOf(pageNo);
         //使用自己书写的NormalPostRequest类，
-        Request<JSONObject> request = new NormalPostRequest(url,shaftjsonObjectListener,errorListener, params);
+        Request<JSONObject> request = new NormalPostRequest(url, shaftjsonObjectListener, errorListener, params);
         MySingleton.getInstance(getActivity()).addToRequestQueue(request);
     }
 
@@ -210,55 +235,60 @@ public class MineFragment extends BaseFragment implements View.OnClickListener,B
             list = new ArrayList<>();
             try {
                 //获取总的页数，利用handler传值
-                Message message=new Message();
-                message.what=1;
-                message.arg1=jsonObject.getInt("totalPages");
+                Message message = new Message();
+                message.what = 1;
+                message.arg1 = jsonObject.getInt("totalPages");
                 handler.sendMessage(message);
                 //获取具体的电缆信息
-                if(jsonObject.optJSONArray("cableRings")!=null){
+                if (jsonObject.optJSONArray("cableRings") != null) {
                     jsonArray = jsonObject.optJSONArray("cableRings");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        map = new HashMap<>();
-                        JSONObject cableRings = jsonArray.optJSONObject(i);
-                        //缆圈信息
-                        JSONObject cableRing = cableRings.getJSONObject("cableRing");
-                        map.put("id", cableRing.getString("id"));//缆圈的id
-                        map.put("content", cableRing.getString("content"));//缆圈的文字内容
-                        map.put("createTime", cableRing.getLong("createTime"));//缆圈的创建时间
-                        JSONObject user = cableRing.getJSONObject("user");//缆圈的发布者
-                        map.put("nickName", user.getString("nickName"));//缆圈的发布者昵称
-                        map.put("headPortrait", user.getString("headPortrait"));//缆圈的发布者头像
-                        JSONArray ims=cableRing.getJSONArray("cableRingImages");
-                        ArrayList<String> images=new ArrayList<>();
-                        if(ims.length()>0){
-                            for(int j=0;j<ims.length();j++){
-                                images.add((String) ims.get(j));
+                    if (jsonArray.length() != 0) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            map = new HashMap<>();
+                            JSONObject cableRings = jsonArray.optJSONObject(i);
+                            //缆圈信息
+                            JSONObject cableRing = cableRings.getJSONObject("cableRing");
+                            map.put("id", cableRing.getString("id"));//缆圈的id
+                            map.put("content", cableRing.getString("content"));//缆圈的文字内容
+                            map.put("createTime", cableRing.getLong("createTime"));//缆圈的创建时间
+                            JSONObject user = cableRing.getJSONObject("user");//缆圈的发布者
+                            map.put("nickName", user.getString("nickName"));//缆圈的发布者昵称
+                            map.put("headPortrait", user.getString("headPortrait"));//缆圈的发布者头像
+                            JSONArray ims = cableRing.getJSONArray("cableRingImages");
+                            ArrayList<String> images = new ArrayList<>();
+                            if (ims.length() > 0) {
+                                for (int j = 0; j < ims.length(); j++) {
+                                    images.add((String) ims.get(j));
+                                }
                             }
+                            map.put("images", images);//缆圈的图片内容
+                            //缆圈的评论内容
+                            if (cableRings.optJSONArray("comments") != null) {
+                                List<Map<String, Object>> listComment = new ArrayList<>();
+                                JSONArray comments = cableRings.optJSONArray("comments");
+                                for (int j = 0; j < comments.length(); j++) {
+                                    Map<String, Object> commentMap = new HashMap<>();
+                                    JSONObject comment = comments.optJSONObject(j);
+                                    commentMap.put("nickName", comment.getJSONObject("user").getString("nickName"));
+                                    commentMap.put("commentContent", comment.getString("commentContent"));
+                                    listComment.add(commentMap);
+                                }
+                                map.put("comments", listComment);
+                            } else {
+                                map.put("comments", null);
+                            }
+                            list.add(map);
                         }
-                        map.put("images", images);//缆圈的图片内容
 
-                        //缆圈的评论内容
-                        if (cableRings.optJSONArray("comments")!=null){
-                            List<Map<String,Object>> listComment = new ArrayList<>();
-                            JSONArray comments = cableRings.optJSONArray("comments");
-                            for(int j=0;j<comments.length();j++){
-                                Map<String,Object> commentMap = new HashMap<>();
-                                JSONObject comment = comments.optJSONObject(j);
-                                commentMap.put("nickName",comment.getJSONObject("user").getString("nickName"));
-                                commentMap.put("commentContent",comment.getString("commentContent"));
-                                listComment.add(commentMap);
-                            }
-                            map.put("comments",listComment);
-                        }else{
-                            map.put("comments",null);
-                        }
-                        list.add(map);
+                    }else{
+                        Error.toSetting(noInternet, R.mipmap.nothing, "暂时没有缆圈信息", "赶紧去发布一个吧", MineFragment.this);
                     }
-                    if(page==1) {
-                        cableRingAdapter = new CableRingAdapter(MineFragment.this.getContext(), list,fab);
+                    if (page == 1) {
+                        cableRingAdapter = new CableRingAdapter(MineFragment.this.getContext(), list, fab);
                         mListView.setAdapter(cableRingAdapter);
                         mListView.setDivider(null);
-                    }else{
+                        mListView.setDividerHeight(30);
+                    } else {
                         cableRingAdapter.addItem(list);
                         mHandler.sendEmptyMessage(1);
                     }
@@ -276,16 +306,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener,B
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            if (volleyError instanceof NoConnectionError){
-                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MineFragment.this);
-            }else if(volleyError instanceof NetworkError ||volleyError instanceof ServerError ||volleyError instanceof TimeoutError){
+            if (volleyError instanceof NoConnectionError) {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", MineFragment.this);
+            } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
                 Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
                     @Override
                     public void errorClick() {
 
                     }
                 });
-            }else{
+            } else {
                 Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
                     @Override
                     public void errorClick() {
@@ -299,27 +329,29 @@ public class MineFragment extends BaseFragment implements View.OnClickListener,B
 
     /**
      * 下拉刷新
+     *
      * @param refreshLayout
      * @throws JSONException
      */
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
-        pageNo=1;
+        pageNo = 1;
         new MyAsyncTack().execute();
     }
 
     /**
      * 上拉加载
+     *
      * @param refreshLayout
      * @return
      */
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        if(pageNo<count) {
+        if (pageNo < count) {
             pageNo++;
             // 如果网络可用，则加载网络数据
             new MyAsyncTack().execute();
-        }else{
+        } else {
             mRefreshLayout.endLoadingMore();
             return false;
         }
@@ -337,17 +369,18 @@ public class MineFragment extends BaseFragment implements View.OnClickListener,B
             return;
         }
         initValues();
-        mHasLoadedOnce=true;
+        mHasLoadedOnce = true;
     }
 
-    class MyAsyncTack extends AsyncTask<Void,Void,Void>{
+    class MyAsyncTack extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
+
         @Override
         protected Void doInBackground(Void... params) {
-            shaftConnInter(""+pageNo);
+            shaftConnInter("" + pageNo);
             return null;
         }
 

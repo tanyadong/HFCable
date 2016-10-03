@@ -386,12 +386,12 @@ public class MainActivity extends AppCompatActivity
                 viewPager.setCurrentItem(2);
                 break;
             case R.id.ll_main_mine:
-                if (isLogin) {
+//                if (isLogin) {
                     showMine();
                     viewPager.setCurrentItem(3);
-                } else {
-                    toLogin();
-                }
+//                } else {
+//                    toLogin();
+//                }
                 break;
             case R.id.Iamge_mine_head:
                 if (S_phoneNumber != null) {
