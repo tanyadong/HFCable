@@ -1,7 +1,6 @@
 package com.hbhongfei.hfcable.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
@@ -22,23 +21,16 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.activity.CommentActivity;
-import com.hbhongfei.hfcable.fragment.MineFragment;
-import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.util.DateUtils;
-import com.hbhongfei.hfcable.util.GetComment;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NineGridTestLayout;
 import com.hbhongfei.hfcable.util.SaveComment;
 import com.hbhongfei.hfcable.util.Url;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by 苑雪元 on 16-4-12.
@@ -215,14 +207,12 @@ public class CableRingAdapter extends BaseAdapter {
                     saveComment.connInter();
                     finalHolder.commentContent.setText("");
                     // 点击后通知适配器数据发生了变化
-                    List<Map<String, Object>> commentList = new ArrayList<>();
+                    /*List<Map<String, Object>> commentList = new ArrayList<>();
                     Map<String,Object> map = new HashMap<String, Object>();
                     map.put("nickName","ni");
                     map.put("commentContent",commentText);
                     commentList.add(map);
-                    commentAdapter.update(commentList);
-                    /*GetComment getComment = new GetComment(mContext, id[0],finalHolder.listView_comment);
-                    getComment.connInter();*/
+                    commentAdapter.update(commentList);*/
                 } else {
                     Toast.makeText(mContext, "请输入内容", Toast.LENGTH_SHORT).show();
                 }

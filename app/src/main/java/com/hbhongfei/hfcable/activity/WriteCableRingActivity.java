@@ -33,6 +33,7 @@ import com.hbhongfei.hfcable.util.IAlertDialogListener;
 import com.hbhongfei.hfcable.util.IntentConstants;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.UploadImages;
+import com.hbhongfei.hfcable.util.ZipImages;
 
 import java.io.File;
 import java.io.Serializable;
@@ -187,8 +188,10 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
         public void run() {
             List<String> list  =new ArrayList<>();
             for (int i=0;i<mDataList.size();i++){
+                String image = ZipImages.getimage(mDataList.get(i).sourcePath);
                 list.add(mDataList.get(i).sourcePath);
             }
+
             uploadImages.doUploadTest(list,S_text,S_phoneNumber,dialog);
 
         }

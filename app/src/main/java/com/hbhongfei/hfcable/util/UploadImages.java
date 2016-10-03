@@ -41,7 +41,7 @@ public class UploadImages {
         for (int i=0;i<list.size();i++){
             File f = new File(list.get(i));
             if(!f.exists()){
-                Toast.makeText(context, "图片不存在，测试无效", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "图片不存在", Toast.LENGTH_SHORT).show();
                 return;
             }
             fs.add(f);
@@ -57,7 +57,7 @@ public class UploadImages {
 //                context.removeTextTempFromPref();
                 Intent intent = new Intent(context,MainActivity.class);
                 context.startActivity(intent);
-                Toast.makeText(context, "uploadSuccess,response = " + response, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "上传图片成功", Toast.LENGTH_SHORT).show();
                 Log.i("YanZi", "success,response = " + response);
             }
         }, new Response.ErrorListener() {
@@ -65,7 +65,7 @@ public class UploadImages {
             @Override
             public void onErrorResponse(VolleyError error) {
                 dialog.cancle();
-                Toast.makeText(context, "uploadError,response = " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "上传图片失败", Toast.LENGTH_SHORT).show();
                 Log.i("YanZi", "error,response = " + error.getMessage());
             }
         }, "f_file[]", fs, params); //注意这个key必须是f_file[],后面的[]不能少
