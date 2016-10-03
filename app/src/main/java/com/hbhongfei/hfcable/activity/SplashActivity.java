@@ -14,7 +14,7 @@ import com.hbhongfei.hfcable.R;
 
 public class SplashActivity extends Activity {
 
-    public static int ID;
+    public static int ID=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

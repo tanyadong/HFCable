@@ -53,11 +53,9 @@ public class UploadImages {
             public void onResponse(String response) {
                 dialog.cancle();
                 SplashActivity.ID = 4;
-//                context.removeTempFromPref();
-//                context.removeTextTempFromPref();
                 Intent intent = new Intent(context,MainActivity.class);
                 context.startActivity(intent);
-                Toast.makeText(context, "上传图片成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
                 Log.i("YanZi", "success,response = " + response);
             }
         }, new Response.ErrorListener() {
@@ -65,7 +63,7 @@ public class UploadImages {
             @Override
             public void onErrorResponse(VolleyError error) {
                 dialog.cancle();
-                Toast.makeText(context, "上传图片失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "发布失败", Toast.LENGTH_SHORT).show();
                 Log.i("YanZi", "error,response = " + error.getMessage());
             }
         }, "f_file[]", fs, params); //注意这个key必须是f_file[],后面的[]不能少

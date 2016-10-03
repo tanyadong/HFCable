@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MainFragmentAdapter;
@@ -75,6 +76,10 @@ public class MainActivity extends AppCompatActivity
     private Menu mMenu;
     private boolean flag = true;
     private int id;
+    private IndexFragment indexFragment = null;
+    private InfoFragment infoFragment = null;
+    private MarketFragment marketFragment = null;
+    private MineFragment mineFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +117,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPostResume() {
         id = SplashActivity.ID;
-
             if (id==4){
                 showMine();
                 viewPager.setCurrentItem(3);
@@ -223,10 +227,10 @@ public class MainActivity extends AppCompatActivity
         this.imageView_market = (ImageView) findViewById(R.id.img_find);
         this.imageView_mine = (ImageView) findViewById(R.id.img_mine);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        IndexFragment indexFragment = new IndexFragment();
-        InfoFragment infoFragment = new InfoFragment();
-        MarketFragment marketFragment = new MarketFragment();
-        MineFragment mineFragment = new MineFragment();
+        indexFragment = new IndexFragment();
+        infoFragment = new InfoFragment();
+        marketFragment = new MarketFragment();
+        mineFragment = new MineFragment();
 
         list_fragment = new ArrayList<>();
 
@@ -389,9 +393,6 @@ public class MainActivity extends AppCompatActivity
 //                if (isLogin) {
                     showMine();
                     viewPager.setCurrentItem(3);
-//                } else {
-//                    toLogin();
-//                }
                 break;
             case R.id.Iamge_mine_head:
                 if (S_phoneNumber != null) {
