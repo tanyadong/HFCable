@@ -50,9 +50,6 @@ public class ConnectionOrder {
         this.listView = listView;
         this.activity = activity;
         this.noInternet = noInternet;
-//        list.clear();
-//        myOrder_all_adapter = new MyOrder_all_Adapter(context, R.layout.item_my_order, list);
-//        this.listView.setAdapter(myOrder_all_adapter);
     }
 
     Handler mMandler = new Handler() {
@@ -233,6 +230,7 @@ public class ConnectionOrder {
                         listView.setAdapter(myOrder_all_adapter);
                     }else {
                         myOrder_all_adapter.addItems(list);
+                        mMandler.sendEmptyMessage(0);
                     }
 
                 } else {

@@ -96,7 +96,6 @@ public class MyOrder_all_Adapter extends BaseAdapter {
         }
         //赋值
         final Order order=list.get(position);
-        convertView.setTag(position);
         String typeTwoName=list.get(position).getShoppingCart().getProduct().getTypeTwo().typeTwoName;
         vh.Tview_myOrder_type.setText(typeTwoName);
         String introduce=list.get(position).getShoppingCart().getProduct().introduce;
@@ -128,7 +127,6 @@ public class MyOrder_all_Adapter extends BaseAdapter {
 //            asyncBitmapLoader.loadImage(context,vh.image_myOrder,imgs.get(0));
         }
         //未付款未取消订单
-        if((int)convertView.getTag()==position) {
             if (list.get(position).tag == 1) {
                 if (list.get(position).cancleOrNot == 0){
                     //未取消订单
@@ -211,7 +209,6 @@ public class MyOrder_all_Adapter extends BaseAdapter {
                     });
                 }
             }
-        }
             else if (order.completeOrNot == 1) { //已经完成
                 vh.Tview_myOrder_stage.setVisibility(View.GONE);
                 vh.btn_order_cancle.setVisibility(View.GONE);
