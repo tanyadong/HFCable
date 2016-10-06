@@ -1,5 +1,6 @@
 package com.hbhongfei.hfcable.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -42,8 +43,8 @@ public class MyOrder_all_Adapter extends BaseAdapter{
     protected int resource;
     private ArrayList<Order> list;
     private int position_tag;
-    public MyOrder_all_Adapter(){
-
+    public MyOrder_all_Adapter(Activity context){
+        this.context=context;
     }
     public MyOrder_all_Adapter(Context context,int resource, ArrayList<Order> list){
         inflater = LayoutInflater.from(context);
@@ -247,6 +248,7 @@ public class MyOrder_all_Adapter extends BaseAdapter{
             public void onClick(View v) {
                 Intent intent=new Intent(context.getApplicationContext(), OrderDetailActivity.class);
                 intent.putExtra("order",list.get(position));
+                intent.putExtra("position",position);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
@@ -303,15 +305,24 @@ public class MyOrder_all_Adapter extends BaseAdapter{
             try {
                 msg = jsonObject.getString("msg");
                 if(msg.equals("cancle")){
-                    list.get(position_tag).cancleOrNot=1;
-                    notifyDataSetChanged();
+                    if(position_tag!=-1){
+                        list.get(position_tag).cancleOrNot=1;
+                        notifyDataSetChanged();
+                    }
+
                     Toast.makeText(context,"取消订单成功",Toast.LENGTH_SHORT).show();
                 }else if(msg.equals("delete")){
-                    deleteItems(position_tag);
+                    if(position_tag!=-1){
+                        deleteItems(position_tag);
+                    }
+
                     Toast.makeText(context,"删除成功",Toast.LENGTH_SHORT).show();
                 }else if(msg.equals("confirm")) {
-                    list.get(position_tag).completeOrNot=1;
-                    notifyDataSetChanged();
+                    if(position_tag!=-1){
+                        list.get(position_tag).completeOrNot=1;
+                        notifyDataSetChanged();
+                    }
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

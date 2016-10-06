@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,10 +21,10 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.adapter.MyOrder_all_Adapter;
 import com.hbhongfei.hfcable.pojo.LogisticsData;
 import com.hbhongfei.hfcable.pojo.Order;
 import com.hbhongfei.hfcable.pojo.Product;
-import com.hbhongfei.hfcable.util.ConnectionOrder;
 import com.hbhongfei.hfcable.util.DateUtils;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.MySingleton;
@@ -53,6 +54,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     private  Product product;
     private ArrayList<LogisticsData> list;
     private String state;//物流状态
+    private int position=0;
     Dialog dialog;
     Intent intent=new Intent();
     @Override
@@ -120,7 +122,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     public void setValues(){
         Intent intent=getIntent();
         order= (Order) intent.getSerializableExtra("order");
-
+        position=intent.getIntExtra("position",0);
         if(order.shipOrNot==1){
             dialog=new Dialog(this);
             dialog.showDialog("正在加载中");
@@ -142,7 +144,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 btn_order_viewlogistics.setVisibility(View.VISIBLE);
                 btn_order_viewlogistics.setOnClickListener(this);
             }else{
-
                 rl_orderdetail_item_btn.setVisibility(View.GONE);
             }
         }else if(order.cancleOrNot==0&&order.tag==1){
@@ -222,7 +223,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        ConnectionOrder connectionOrder=new ConnectionOrder(this);
+        MyOrder_all_Adapter myOrder_all_adapter=new MyOrder_all_Adapter(this);
         switch (v.getId()){
             case R.id.rl_order_logistics:
                 toLogisticsActivity();
@@ -233,7 +234,9 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 startActivity(intent);
                 break;
             case R.id.btn_order_cancle:
-                connectionOrder.cancleOrder(order.orderNumber);
+                myOrder_all_adapter.cancleOrder(order.orderNumber,-1);
+                order.cancleOrNot=1;
+                setValues();
                 break;
             case R.id.btn_order_viewlogistics:
                 toLogisticsActivity();
@@ -244,7 +247,9 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 startActivity(intent);
                 break;
             case R.id.btn_order_confirmReceipt:
-                connectionOrder.confirmReceipt(order.orderNumber);
+                myOrder_all_adapter.confirmReceipt(order.orderNumber,-1);
+                order.completeOrNot=1;
+                setValues();
                 break;
         }
     }
@@ -313,4 +318,16 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             Log.e("TAG", volleyError.getMessage(), volleyError);
         }
     };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            setResult(RESULT_CANCELED, null);
+            this.finish();
+            return true;
+        }else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
 }

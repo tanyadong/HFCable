@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
@@ -42,14 +40,11 @@ public class ConnectionOrder {
     private ListView listView;
     ArrayList<Order> list;
     int page = 1;
-    private int order_position;
     private int countPage = 0;
     private MyOrder_all_Adapter myOrder_all_adapter;
     private Activity activity;
     private LinearLayout noInternet;
-    public ConnectionOrder(Context context){
-        this.context=context;
-    }
+
     public ConnectionOrder(Activity activity, Context context, ListView listView, LinearLayout noInternet) {
         this.context = context;
         this.listView = listView;
@@ -126,38 +121,7 @@ public class ConnectionOrder {
         MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
 
-    /**
-     * 取消订单
-     */
-    public  void cancleOrder(String orderNum){
-        String url = Url.url("/androidOrder/cancleOrder");
-        Map<String,String> map=new HashMap<>();
-        map.put("orderNum",orderNum);
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonCancleOrderListener,errorOrderListener,map);
-        MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
-    }
 
-    /**
-     * 删除订单
-     */
-    public void deleteOrder(String orderNum,int position){
-        order_position=position;
-        String url = Url.url("/androidOrder/deleteOrder");
-        Map<String,String> map=new HashMap<>();
-        map.put("orderNum",orderNum);
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonCancleOrderListener,errorOrderListener,map);
-        MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
-    }
-    /**
-     * 确认收货
-     */
-    public void confirmReceipt(String orderNum){
-        String url = Url.url("/androidOrder/confirmReceipt");
-        Map<String,String> map=new HashMap<>();
-        map.put("orderNum",orderNum);
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonCancleOrderListener,errorOrderListener,map);
-        MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
-    }
 
     /**
      * 成功的监听器
@@ -279,41 +243,9 @@ public class ConnectionOrder {
         }
     };
 
-    /**
-     * 成功的监听器
-     * 返回的是产品种类
-     */
-    private Response.Listener<JSONObject> jsonCancleOrderListener = new Response.Listener<JSONObject>() {
-        @Override
-        public void onResponse(JSONObject jsonObject) {
-            String msg= null;
-            try {
-                msg = jsonObject.getString("msg");
-                if(msg.equals("cancle")){
-                    Toast.makeText(context,"取消订单成功",Toast.LENGTH_SHORT).show();
-                }else if(msg.equals("delete")){
-                    myOrder_all_adapter=new MyOrder_all_Adapter();
-                    myOrder_all_adapter.deleteItems(order_position);
-                    Toast.makeText(context,"删除成功",Toast.LENGTH_SHORT).show();
-                }else if(msg.equals("confirm")) {
-                    Toast.makeText(context,"确认成功",Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
 
-    /**
-     *  失败的监听器
-     */
-    private Response.ErrorListener errorOrderListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(context, "请求数据失败", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
-        }
-    };
+
+
 
     /**
      * 失败的监听器

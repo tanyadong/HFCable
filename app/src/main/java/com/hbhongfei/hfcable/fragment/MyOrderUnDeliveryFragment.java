@@ -71,6 +71,13 @@ private Dialog dialog;
         lazyLoad();
         return v;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toast.makeText(getActivity(),"xx",Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * 初始化界面
      * @param v
