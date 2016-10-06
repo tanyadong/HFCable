@@ -115,7 +115,8 @@
             android:label="@string/comfirm_order_sure"
             android:parentActivityName=".activity.MyShoppingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.SplashActivity">
+        <activity android:name=".activity.SplashActivity"
+            android:theme="@style/theme_splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

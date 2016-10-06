@@ -73,5 +73,9 @@
         <item name="android:windowNoTitle">true</item> <!-- 设置无标题 -->
         <item name="android:windowFullscreen">?android:windowNoTitle</item> <!-- 是否填充慢屏幕，引用android:windowNoTitle 的值 ?android:windowNoTitle，取决于android:windowNoTitle的值-->
     </style>
-
+    <!-- 启动页的样式 -->
+    <style name="theme_splash">
+        <item name="android:windowBackground">@color/colorWhite</item>
+        <item name="android:windowNoTitle">true</item> <!-- 设置无标题 -->
+    </style>
 </resources>
