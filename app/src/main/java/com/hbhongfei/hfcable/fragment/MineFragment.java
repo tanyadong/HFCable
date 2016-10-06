@@ -254,6 +254,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     private Response.Listener<JSONObject> shaftjsonObjectListener = new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject jsonObject) {
+            noInternet.setVisibility(View.GONE);
             JSONArray jsonArray;
             list = new ArrayList<>();
             try {
