@@ -8,10 +8,11 @@
         android:id="@+id/ll_main_page"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:background="?selectableItemBackground"
+        android:background="@android:color/transparent"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:clickable="true"
+
         android:orientation="vertical">
         <ImageView
             android:id="@+id/img_main"
@@ -32,7 +33,7 @@
         android:id="@+id/ll_main_mess"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:background="?selectableItemBackground"
+        android:background="@android:color/transparent"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -55,7 +56,7 @@
         android:id="@+id/ll_main_find"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:background="?selectableItemBackground"
+        android:background="@android:color/transparent"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -78,7 +79,7 @@
         android:id="@+id/ll_main_mine"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:background="?selectableItemBackground"
+        android:background="@android:color/transparent"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:orientation="vertical">
