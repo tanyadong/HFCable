@@ -1,6 +1,7 @@
 package com.hbhongfei.hfcable.util;
 
 /**
+ * 选择照片的方式
  * Created by 苑雪元 on 2016/9/20.
  */
 public interface IAlertDialogListener  {

@@ -26,25 +26,38 @@ public class UploadImages {
 
     private Context context;
     private static RequestQueue mSingleQueue;
+    private static  final int QUANLITY = 10;
+    private boolean tag;
+    private static final String PATH = "";
 
     public UploadImages(Context context){
         this.context = context;
     }
 
-    public  void doUploadTest(List<String> list, String S_text, String S_phoneNumber, final Dialog dialog){
+    public  void doUploadTest(List<String> list,List<String> listThumbnail, String S_text, String S_phoneNumber, final Dialog dialog,boolean tag){
+        this.tag = tag;
         mSingleQueue = Volley.newRequestQueue(context);
         String url = Url.url("/androidCableRing/save"); //换成自己的测试url地址
         Map<String, String> params = new HashMap<String, String>();
         params.put("content", S_text);
         params.put("userName", S_phoneNumber);
+
         List<File> fs = new ArrayList<File>();
         for (int i=0;i<list.size();i++){
-            File f = new File(list.get(i));
-            if(!f.exists()){
-                Toast.makeText(context, "图片不存在", Toast.LENGTH_SHORT).show();
+            File file = new File(list.get(i));
+            if(!file.exists()){
                 return;
             }
-            fs.add(f);
+
+            //判断是否上传原图
+            if (this.tag){
+                fs.add(file);
+            }else{
+                //压缩图片
+                File f = new File(ZipImages.compressImage(list.get(i),listThumbnail.get(i),QUANLITY));
+                fs.add(f);
+            }
+
         }
 
         MultipartRequest request = new MultipartRequest(url, new Response.Listener<String>() {

@@ -54,4 +54,5 @@ dependencies {
     compile files('libs/okhttp-2.0.0-RC1.jar')
     compile files('libs/okhttp-3.4.1.jar')
     compile files('libs/httpcore-4.3.2.jar')
+    compile files('libs/jai-imageio-1.1.jar')
 }

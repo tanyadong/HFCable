@@ -61,6 +61,11 @@ public class CustomDialog {
     }
 
 
+    /**
+     * 选择照片的方式
+     * @param context
+     * @param listener
+     */
     public static void selectHead(Context context,final IAlertDialogListener listener) {
         View dialogView = null;
         AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.Dialog_FS);
@@ -105,6 +110,72 @@ public class CustomDialog {
                 /*事件回调*/
                 if (listener != null) {
                     listener.photoClick();
+                }
+            }
+        });
+
+
+        /*为dialog设置View*/
+        builder.setView(dialogView);
+        dialog = builder.create();
+
+        /*显示对话框*/
+        dialog.show();
+    }
+
+
+    /**
+     * 选择传输照片的方式
+     * @param context
+     * @param listener
+     */
+    public static void selecUpLoadImage(Context context,final IAlertDialogUploadListener listener) {
+        View dialogView = null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.Dialog_FS);
+        dialogView = LayoutInflater.from(context).inflate(R.layout.album_select_dialog, null);
+
+        TextView dialog_selectFromAlbum = (TextView) dialogView.findViewById(R.id.dialog_selectFromAlbum);
+        TextView dialog_photo = (TextView) dialogView.findViewById(R.id.dialog_photo);
+        TextView dialog_album_cancel = (TextView) dialogView.findViewById(R.id.dialog_album_cancel);
+
+        dialog_selectFromAlbum.setText("上传原图（建议wifi条件下）");
+        dialog_photo.setText("上传缩略图");
+        //取消
+        dialog_album_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        //从相册中选择
+        dialog_selectFromAlbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+
+                /*事件回调*/
+                if (listener != null) {
+                    listener.before();
+                }
+            }
+        });
+
+        //拍照
+        dialog_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+
+                /*事件回调*/
+                if (listener != null) {
+                    listener.zip();
                 }
             }
         });

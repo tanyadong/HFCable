@@ -30,6 +30,7 @@ import com.hbhongfei.hfcable.util.CustomConstants;
 import com.hbhongfei.hfcable.util.CustomDialog;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.IAlertDialogListener;
+import com.hbhongfei.hfcable.util.IAlertDialogUploadListener;
 import com.hbhongfei.hfcable.util.IntentConstants;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.UploadImages;
@@ -44,21 +45,17 @@ import java.util.Map;
 /*
 发表说说
  */
-public class WriteCableRingActivity extends AppCompatActivity implements IAlertDialogListener{
+public class WriteCableRingActivity extends AppCompatActivity implements IAlertDialogListener,IAlertDialogUploadListener{
     private GridView mGridView;
     private EditText text;
     private ImagePublishAdapter mAdapter;
-    private TextView sendTv;
     public static List<ImageItem> mDataList = new ArrayList<>();
     private String S_text,S_phoneNumber;
     private static final String USER = LoginConnection.USER;
     private Dialog dialog;
     private String tag;
-    private Map<String, String> map;
     private InputMethodManager imm;
-    private List<String> listImage = new ArrayList<>();
-    private List<String> listImages = new ArrayList<>();
-    private Bitmap bitmap;
+    private boolean uploadType = false;//默认上传缩略图
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,9 +158,13 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.menu_write){
+        /*if (item.getItemId()==R.id.menu_write){
             S_text = text.getText().toString().trim();
             connect(S_text);
+        }*/
+        //出现dialog
+        if (item.getItemId() == R.id.menu_write){
+            CustomDialog.selecUpLoadImage(WriteCableRingActivity.this,WriteCableRingActivity.this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -175,6 +176,7 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
         dialog.showDialog("正在发布....");
         if (s.equals("")&&mDataList.size()==0){
             Toast.makeText(this,"内容不能为空",Toast.LENGTH_SHORT).show();
+            dialog.cancle();
         }else{
             new BitmapThread().start();
         }
@@ -183,16 +185,38 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
 
     UploadImages uploadImages = new UploadImages(this);
 
+    /**
+     * 原图
+     */
+    @Override
+    public void before() {
+        uploadType = true;
+        Toast.makeText(this,uploadType+"",Toast.LENGTH_SHORT).show();
+        S_text = text.getText().toString().trim();
+        connect(S_text);
+    }
+
+    /**
+     * 缩略图
+     */
+    @Override
+    public void zip() {
+        uploadType = false;
+        S_text = text.getText().toString().trim();
+        connect(S_text);
+    }
+
     class BitmapThread extends Thread{
         @Override
         public void run() {
-            List<String> list  =new ArrayList<>();
+            List<String> list = new ArrayList<>();
+            List<String> listThumbnail = new ArrayList<>();
             for (int i=0;i<mDataList.size();i++){
-                String image = ZipImages.getimage(mDataList.get(i).sourcePath);
                 list.add(mDataList.get(i).sourcePath);
+                listThumbnail.add(mDataList.get(i).thumbnailPath);
             }
 
-            uploadImages.doUploadTest(list,S_text,S_phoneNumber,dialog);
+            uploadImages.doUploadTest(list,listThumbnail,S_text,S_phoneNumber,dialog,uploadType);
 
         }
     }
