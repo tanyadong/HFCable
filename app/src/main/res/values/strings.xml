@@ -146,6 +146,9 @@
     <string name="orderPay">订单支付</string>
     <string name="orderCancle">取消订单</string>
     <string name="goPay">去支付</string>
+    Confirm receipt
+    <string name="confirmReceipt">确认收货</string>
+    <string name="viewLogistics">查看物流</string>
     <string name="orderState">订单状态：</string>
     <string name="orderTime">下单时间：</string>
     <string name="orderFreight">运费：</string>

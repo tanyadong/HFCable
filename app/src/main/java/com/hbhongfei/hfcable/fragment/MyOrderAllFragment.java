@@ -100,7 +100,8 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
             connectionOrder = new ConnectionOrder(MyOrderAllFragment.this.getActivity(),MyOrderAllFragment.this.getContext(),ListView_myOrderAll,noInternet);
-            new MyAsyncTack().execute();
+        pageNo=1;
+        new MyAsyncTack().execute();
     }
 
     @Override

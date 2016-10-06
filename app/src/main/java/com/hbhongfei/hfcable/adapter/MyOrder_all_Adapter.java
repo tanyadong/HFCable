@@ -35,12 +35,16 @@ import java.util.Map;
 /**
  * Created by 谭亚东 on 2016/8/3.
  */
-public class MyOrder_all_Adapter extends BaseAdapter {
+public class MyOrder_all_Adapter extends BaseAdapter{
 
     private Context context;
     protected LayoutInflater inflater;
     protected int resource;
     private ArrayList<Order> list;
+    private int position_tag;
+    public MyOrder_all_Adapter(){
+
+    }
     public MyOrder_all_Adapter(Context context,int resource, ArrayList<Order> list){
         inflater = LayoutInflater.from(context);
         this.context =context;
@@ -49,6 +53,10 @@ public class MyOrder_all_Adapter extends BaseAdapter {
     }
     public void addItems(ArrayList<Order> list){
         this.list.addAll(list);
+        notifyDataSetChanged();
+    }
+    public void deleteItems(int position){
+        this.list.remove(position);
         notifyDataSetChanged();
     }
     @Override
@@ -85,16 +93,19 @@ public class MyOrder_all_Adapter extends BaseAdapter {
             vh.tv_package= (TextView) vh.rl_myorder_item.findViewById(R.id.tv_package);
             vh.Tview_myOrder_price= (TextView) vh.rl_myorder_item.findViewById(R.id.Tview_myOrder_price);
             vh.Tview_myOrder_money = (TextView) convertView.findViewById(R.id.Tview_myOrder_money);
+            vh.Tview_myOrder_pay= (TextView) convertView.findViewById(R.id.Tview_myOrder_pay);
             vh.image_myOrder = (ImageView) vh.rl_myorder_item.findViewById(R.id.image_myOrder);
             vh.image_success= (ImageView) convertView.findViewById(R.id.image_success);
             vh.Image_myOrder_delete = (ImageView) vh.rl_myorder_item.findViewById(R.id.Image_myOrder_delete);
             vh.btn_order_cancle= (Button) convertView.findViewById(R.id.btn_order_cancle);
             vh.btn_order_pay= (Button) convertView.findViewById(R.id.btn_order_goPay);
+            vh.btn_order_confirmReceipt= (Button) convertView.findViewById(R.id.btn_order_confirmReceipt);
             convertView.setTag(vh);
         }else {
             vh = (MyOrderViewHolder) convertView.getTag();
         }
         //赋值
+
         final Order order=list.get(position);
         String typeTwoName=list.get(position).getShoppingCart().getProduct().getTypeTwo().typeTwoName;
         vh.Tview_myOrder_type.setText(typeTwoName);
@@ -114,115 +125,122 @@ public class MyOrder_all_Adapter extends BaseAdapter {
         //设置图片
         ArrayList<String> imgs=list.get(position).getShoppingCart().getProduct().getProductImages();
         //加载图片
-        if(!imgs.isEmpty()){
-                String url= Url.url(imgs.get(0));
-                Glide.with(context)
-                        .load(url)
-                        .placeholder(R.mipmap.man)
-                        .error(R.mipmap.man)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(vh.image_myOrder);
-//            vh.image_myOrder.setTag(imgs.get(0));
-//            AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-//            asyncBitmapLoader.loadImage(context,vh.image_myOrder,imgs.get(0));
+        String url=null;
+        if(!imgs.isEmpty()) {
+            url=Url.url(imgs.get(0));
         }
-        //未付款未取消订单
-            if (list.get(position).tag == 1) {
-                if (list.get(position).cancleOrNot == 0){
-                    //未取消订单
-                    vh.Tview_myOrder_stage.setText("等待付款");
-                    vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
-                    //未取消订单时取消订单
-                    vh.btn_order_cancle.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            cancleOrder(list.get(position).getOrderNumber());
-                        }
-                    });
-                    //去付款
-                    vh.btn_order_pay.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(context, OrderPayActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
-                        }
-                    });
-                    vh.Image_myOrder_delete.setVisibility(View.GONE);
-                }else{
-                    vh.Tview_myOrder_stage.setText("已取消");
-                    vh.ll_order_bottom.setVisibility(View.GONE);
-                    vh.Image_myOrder_delete.setVisibility(View.VISIBLE);
-                    vh.Image_myOrder_delete.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            deleteOrder(list.get(position).getOrderNumber());
-                        }
-                    });
-                    vh.ll_order_bottom.setVisibility(View.GONE);
-                }
-             }else if(order.tag==2 &&order.shipOrNot==2){
-                if(order.cancleOrNot==0){
-                    vh.Tview_myOrder_stage.setText("等待出库");
-                    vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
-                    vh.Image_myOrder_delete.setVisibility(View.GONE);
-                    vh.btn_order_pay.setVisibility(View.GONE);
-                    vh.btn_order_cancle.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            cancleOrder(order.orderNumber);
-                        }
-                    });
-                }else if(order.cancleOrNot==1){
-                    vh.Tview_myOrder_stage.setText("已取消");
-                    vh.ll_order_bottom.setVisibility(View.GONE);
-                    vh.Image_myOrder_delete.setVisibility(View.VISIBLE);
-                    vh.Image_myOrder_delete.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            deleteOrder(list.get(position).getOrderNumber());
-                        }
-                    });
+        Glide.with(context)
+                .load(url)
+                .placeholder(R.mipmap.man)
+                .error(R.mipmap.man)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(vh.image_myOrder);
 
-            }
-        } else  if (order.tag == 2 && order.shipOrNot == 1 && order.completeOrNot == 0) {
-                if (order.cancleOrNot == 0) {
-                    vh.Tview_myOrder_stage.setText("已发货");
-                    vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
-                    vh.Image_myOrder_delete.setVisibility(View.GONE);
-                    vh.btn_order_pay.setText("确认收货");
-                    vh.btn_order_cancle.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            cancleOrder(list.get(position).getOrderNumber());
-                        }
-                    });
-                }else{
-                    vh.Tview_myOrder_stage.setText("已取消");
-                    vh.ll_order_bottom.setVisibility(View.GONE);
-                    vh.Image_myOrder_delete.setVisibility(View.VISIBLE);
-                    vh.Image_myOrder_delete.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            deleteOrder(list.get(position).getOrderNumber());
-                        }
-                    });
+
+        //未付款未取消订单
+        if(list.get(position).tag==1 && list.get(position).cancleOrNot==0){
+            //未取消订单
+            vh.Tview_myOrder_stage.setText("等待付款");
+            vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
+            vh.Tview_myOrder_pay.setText("需付款");
+
+            //未取消订单时取消订单
+            vh.btn_order_cancle.setVisibility(View.VISIBLE);
+            vh.btn_order_pay.setVisibility(View.VISIBLE);
+            vh.Image_myOrder_delete.setVisibility(View.GONE);
+            vh.btn_order_confirmReceipt.setVisibility(View.GONE);
+            vh.btn_order_cancle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancleOrder(list.get(position).orderNumber,position);
                 }
-            }
-            else if (order.completeOrNot == 1) { //已经完成
-                vh.Tview_myOrder_stage.setVisibility(View.GONE);
-                vh.btn_order_cancle.setVisibility(View.GONE);
+            });
+            //去付款
+            vh.btn_order_pay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(context, OrderPayActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            });
+
+        }
+        if(list.get(position).completeOrNot==1){ //已经完成
+            vh.Tview_myOrder_stage.setVisibility(View.GONE);
+            vh.Tview_myOrder_pay.setText("实付款");
+            vh.btn_order_cancle.setVisibility(View.GONE);
+            vh.btn_order_pay.setVisibility(View.GONE);
+            vh.btn_order_confirmReceipt.setVisibility(View.GONE);
+            vh.Image_myOrder_delete.setVisibility(View.VISIBLE);
+            vh.Image_myOrder_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteOrder(order.orderNumber,position);
+                }
+            });
+            vh.image_success.setVisibility(View.VISIBLE);
+        }
+
+        if(order.cancleOrNot==1){ //已quxiao
+            vh.Tview_myOrder_stage.setText("已取消");
+            vh.Tview_myOrder_pay.setText("实付款");
+            vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.black));
+            vh.Image_myOrder_delete.setVisibility(View.VISIBLE);
+            vh.btn_order_cancle.setVisibility(View.GONE);
+            vh.btn_order_pay.setVisibility(View.GONE);
+            vh.btn_order_confirmReceipt.setVisibility(View.GONE);
+            vh.Image_myOrder_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  deleteOrder(order.orderNumber,position);
+                }
+            });
+        }
+
+        //已经付款但是没有发货
+        if(list.get(position).tag==2&&list.get(position).shipOrNot==2&&list.get(position).cancleOrNot==0){
+            vh.Tview_myOrder_stage.setText("等待出库");
+            vh.Tview_myOrder_pay.setText("实付款");
+            vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
+            vh.Image_myOrder_delete.setVisibility(View.GONE);
+            vh.btn_order_pay.setVisibility(View.GONE);
+            vh.btn_order_cancle.setVisibility(View.VISIBLE);
+            vh.btn_order_cancle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   cancleOrder(order.orderNumber,position);
+                }
+            });
+        }
+        //未收货
+        if(order.tag==2&&order.shipOrNot==1&&order.completeOrNot==0){
+            if(order.cancleOrNot==0){
+                vh.Tview_myOrder_stage.setText("已发货");
+                vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
+
+                vh.Tview_myOrder_pay.setText("实付款");
+                vh.Image_myOrder_delete.setVisibility(View.GONE);
+                vh.image_success.setVisibility(View.GONE);
+
                 vh.btn_order_pay.setVisibility(View.GONE);
-                vh.Image_myOrder_delete.setOnClickListener(new View.OnClickListener() {
+                vh.btn_order_cancle.setVisibility(View.VISIBLE);
+                vh.btn_order_confirmReceipt.setVisibility(View.VISIBLE);
+                vh.btn_order_confirmReceipt.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deleteOrder(list.get(position).getOrderNumber());
+                        confirmReceipt(order.orderNumber,position);
                     }
                 });
-                vh.image_success.setVisibility(View.VISIBLE);
+                vh.btn_order_cancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cancleOrder(order.orderNumber,position);
+                    }
+                });
             }
 
-
+        }
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,41 +256,40 @@ public class MyOrder_all_Adapter extends BaseAdapter {
 
 
 
+
     /**
      * 取消订单
      */
-    public void cancleOrder(String orderNum){
+    public  void cancleOrder(String orderNum,int position){
+        position_tag=position;
         String url = Url.url("/androidOrder/cancleOrder");
         Map<String,String> map=new HashMap<>();
         map.put("orderNum",orderNum);
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonCancleOrderListener,errorListener,map);
+        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonCancleOrderListener,errorOrderListener,map);
         MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
 
     /**
      * 删除订单
      */
-    public void deleteOrder(String orderNum){
+    public void deleteOrder(String orderNum,int position){
+       position_tag=position;
         String url = Url.url("/androidOrder/deleteOrder");
         Map<String,String> map=new HashMap<>();
         map.put("orderNum",orderNum);
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonCancleOrderListener,errorListener,map);
+        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonCancleOrderListener,errorOrderListener,map);
         MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
-
-    public static class MyOrderViewHolder{
-        View rl_myorder_item;
-        private LinearLayout ll_order_bottom;
-        private TextView Tview_myOrder_type;
-        private ImageView image_myOrder;
-        private ImageView Image_myOrder_delete,image_success;
-        private TextView Tview_myOrder_stage;
-        private TextView Tview_myOrder_introduce;
-        private TextView Tview_myOrder_price;
-        private TextView Tview_myOrder_money;
-        private TextView tv_buy_num,tv_package;
-        private Button btn_order_cancle,btn_order_pay;
-
+    /**
+     * 确认收货
+     */
+    public void confirmReceipt(String orderNum,int position){
+        position_tag=position;
+        String url = Url.url("/androidOrder/confirmReceipt");
+        Map<String,String> map=new HashMap<>();
+        map.put("orderNum",orderNum);
+        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonCancleOrderListener,errorOrderListener,map);
+        MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
 
     /**
@@ -282,10 +299,19 @@ public class MyOrder_all_Adapter extends BaseAdapter {
     private Response.Listener<JSONObject> jsonCancleOrderListener = new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject jsonObject) {
+            String msg= null;
             try {
-                String msg=jsonObject.getString("msg");
-                if(msg.equals("success")){
+                msg = jsonObject.getString("msg");
+                if(msg.equals("cancle")){
+                    list.get(position_tag).cancleOrNot=1;
+                    notifyDataSetChanged();
                     Toast.makeText(context,"取消订单成功",Toast.LENGTH_SHORT).show();
+                }else if(msg.equals("delete")){
+                    deleteItems(position_tag);
+                    Toast.makeText(context,"删除成功",Toast.LENGTH_SHORT).show();
+                }else if(msg.equals("confirm")) {
+                    list.get(position_tag).completeOrNot=1;
+                    notifyDataSetChanged();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -296,11 +322,28 @@ public class MyOrder_all_Adapter extends BaseAdapter {
     /**
      *  失败的监听器
      */
-    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+    private Response.ErrorListener errorOrderListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(context, "请求数据失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
         }
     };
+
+
+    public static class MyOrderViewHolder{
+        View rl_myorder_item;
+        private LinearLayout ll_order_bottom;
+        private TextView Tview_myOrder_type;
+        private ImageView image_myOrder;
+        private ImageView Image_myOrder_delete,image_success;
+        private TextView Tview_myOrder_stage;
+        private TextView Tview_myOrder_introduce;
+        private TextView Tview_myOrder_price;
+        private TextView Tview_myOrder_money,Tview_myOrder_pay;
+        private TextView tv_buy_num,tv_package;
+        private Button btn_order_cancle,btn_order_pay,btn_order_confirmReceipt;
+
+    }
+
 }

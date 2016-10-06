@@ -10,6 +10,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +23,9 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.LogisticsData;
 import com.hbhongfei.hfcable.pojo.Order;
 import com.hbhongfei.hfcable.pojo.Product;
+import com.hbhongfei.hfcable.util.ConnectionOrder;
 import com.hbhongfei.hfcable.util.DateUtils;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -38,17 +41,19 @@ import java.util.Map;
 public class OrderDetailActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView textview_order_num,textview_order_time,textview_order_state;  //订单信息
     private RelativeLayout rl_order_logistics,rl_order_product; //最新物流信息
-    RelativeLayout rl_bottom_btn;
+    LinearLayout rl_bottom_btn;
+    private RelativeLayout rl_orderdetail_item_btn;
     private TextView tview_order_logistics,tview_order_logistics_time,tview_order_freight,tview_order_totalmoney;
     private TextView name,location,telphone;
     private TextView Tview_myOrder_stage,Tview_myOrder_type,Tview_myOrder_introduce,Tview_myOrder_price;
     private ImageView image_myOrder,Image_myOrder_delete;
-    private Button btn_order_cancle,btn_order_pay;
+    private Button btn_order_cancle,btn_order_pay,btn_order_confirmReceipt,btn_order_viewlogistics;
 //    KdniaoTrackQueryAPI api;
     private Order order;
     private  Product product;
     private ArrayList<LogisticsData> list;
     private String state;//物流状态
+    Dialog dialog;
     Intent intent=new Intent();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +61,17 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_order_detail);
         initview();
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         //数据
         setValues();
         onClick();
     }
+
     public Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -98,18 +110,26 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         tview_order_freight= (TextView) findViewById(R.id.tview_order_freight);
         tview_order_totalmoney= (TextView) findViewById(R.id.tview_order_totalmoney);
 
-        rl_bottom_btn= (RelativeLayout) findViewById(R.id.rl_bottom_btn);
+        rl_bottom_btn= (LinearLayout) findViewById(R.id.rl_bottom_btn);
+        rl_orderdetail_item_btn= (RelativeLayout) findViewById(R.id.rl_orderdetail_item_btn);
         btn_order_cancle= (Button) rl_bottom_btn.findViewById(R.id.btn_order_cancle);
         btn_order_pay= (Button) rl_bottom_btn.findViewById(R.id.btn_order_goPay);
+        btn_order_confirmReceipt= (Button) rl_bottom_btn.findViewById(R.id.btn_order_confirmReceipt);
+        btn_order_viewlogistics= (Button) rl_bottom_btn.findViewById(R.id.btn_order_viewlogistics);
     }
     public void setValues(){
         Intent intent=getIntent();
-        try {
-            getLogitis();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         order= (Order) intent.getSerializableExtra("order");
+
+        if(order.shipOrNot==1){
+            dialog=new Dialog(this);
+            dialog.showDialog("正在加载中");
+            try {
+                getLogitis();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         //顶部订单信息
         String orderTime= DateUtils.timeStampToStr(order.orderTime);
         textview_order_num.setText(order.orderNumber);
@@ -117,24 +137,40 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         if(order.cancleOrNot==1){
             textview_order_state.setText("订单已取消");
             btn_order_cancle.setVisibility(View.GONE);
+            btn_order_pay.setVisibility(View.GONE);
             if(order.shipOrNot==1){
-                btn_order_pay.setText("查看物流");
+                btn_order_viewlogistics.setVisibility(View.VISIBLE);
+                btn_order_viewlogistics.setOnClickListener(this);
             }else{
-                btn_order_pay.setVisibility(View.GONE);
+
+                rl_orderdetail_item_btn.setVisibility(View.GONE);
             }
         }else if(order.cancleOrNot==0&&order.tag==1){
             textview_order_state.setText("待付款");
-
+            rl_order_logistics.setVisibility(View.GONE);
+            btn_order_confirmReceipt.setVisibility(View.GONE);
+            btn_order_viewlogistics.setVisibility(View.GONE);
+            btn_order_pay.setOnClickListener(this);
+            btn_order_cancle.setOnClickListener(this);
         }else if(order.cancleOrNot==0&&order.shipOrNot==2&&order.tag==2){
             textview_order_state.setText("待发货");
             btn_order_pay.setVisibility(View.GONE);
-        }else if(order.cancleOrNot==0&&order.shipOrNot==1){
+            btn_order_cancle.setOnClickListener(this);
+        }else if(order.cancleOrNot==0&&order.shipOrNot==1&&order.completeOrNot==0){
             textview_order_state.setText("待收货");
-            btn_order_pay.setText("查看物流");
-        }else if(order.cancleOrNot==0&&order.completeOrNot==1){
+            btn_order_pay.setVisibility(View.GONE);
+            btn_order_confirmReceipt.setVisibility(View.VISIBLE);
+            btn_order_viewlogistics.setOnClickListener(this); //查看物流
+            btn_order_confirmReceipt.setOnClickListener(this);
+            btn_order_cancle.setOnClickListener(this);
+        }
+        if(order.cancleOrNot==0&&order.completeOrNot==1){
             textview_order_state.setText("已完成，欢迎您再次购买");
             btn_order_cancle.setVisibility(View.GONE);
-            btn_order_pay.setText("查看物流");
+            btn_order_pay.setVisibility(View.GONE);
+            btn_order_confirmReceipt.setVisibility(View.GONE);
+            btn_order_viewlogistics.setVisibility(View.VISIBLE);
+            btn_order_viewlogistics.setOnClickListener(this);
         }
         //收货地址
         name.setText(order.shoppingAddress.getConsignee());
@@ -151,21 +187,22 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         //设置图片
         ArrayList<String> imgs=order.getShoppingCart().getProduct().getProductImages();
         //加载图片
+        String url=null;
         if(imgs.size()>0){
-            String url= Url.url(imgs.get(0));
-            Glide.with(this.getApplicationContext())
-                    .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(image_myOrder);
+             url= Url.url(imgs.get(0));
         }
+        Glide.with(this.getApplicationContext())
+                .load(url)
+                .placeholder(R.mipmap.man)
+                .error(R.mipmap.man)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(image_myOrder);
         tview_order_freight.setText("￥0");
         tview_order_totalmoney.setText(String.valueOf(order.money));
     }
     /**
      * 连接服务
-     * 未发货
+     * 查看物流
      * */
     public void getLogitis() throws JSONException {
         String url = Url.url("/androidLogitis/getLogitis");
@@ -174,6 +211,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         map.put("LogisticsNum","3313367297754");
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectOrderListener,errorListener,map);
         MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
+        dialog.cancle();
+        rl_order_logistics.setVisibility(View.VISIBLE); //查询成功显示组件
     }
     public void onClick(){
         rl_order_logistics.setOnClickListener(this);
@@ -183,11 +222,9 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
+        ConnectionOrder connectionOrder=new ConnectionOrder(this);
         switch (v.getId()){
             case R.id.rl_order_logistics:
-                toLogisticsActivity();
-                break;
-            case R.id.btn_order_goPay:
                 toLogisticsActivity();
                 break;
             case R.id.rl_order_product:
@@ -195,10 +232,23 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 intent.putExtra("product",order.shoppingCart.product);
                 startActivity(intent);
                 break;
+            case R.id.btn_order_cancle:
+                connectionOrder.cancleOrder(order.orderNumber);
+                break;
+            case R.id.btn_order_viewlogistics:
+                toLogisticsActivity();
+                break;
+            case R.id.btn_order_goPay:
+                Intent intent=new Intent(this, OrderPayActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
+            case R.id.btn_order_confirmReceipt:
+                connectionOrder.confirmReceipt(order.orderNumber);
+                break;
         }
     }
     public void toLogisticsActivity(){
-//        Intent intent=new Intent(this,LogisticsDetailsActivity.class);
         intent.setClass(this,LogisticsDetailsActivity.class);
         Bundle bundle = new Bundle();//该类用作携带数据
         if(product.getProductImages().size()!=0){

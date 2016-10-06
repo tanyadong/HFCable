@@ -6,7 +6,7 @@
     tools:context="com.hbhongfei.hfcable.activity.OrderDetailActivity">
     <ScrollView
         android:id="@+id/order_scrollview"
-        android:layout_above="@+id/ll_item_btn"
+        android:layout_above="@+id/rl_orderdetail_item_btn"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -80,6 +80,7 @@
             <RelativeLayout
                 android:id="@+id/rl_order_logistics"
                 android:background="@color/white"
+                android:visibility="gone"
                 android:layout_below="@+id/rl_order_num"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -231,10 +232,10 @@
     <RelativeLayout
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:id="@+id/ll_item_btn"
+        android:id="@+id/rl_orderdetail_item_btn"
         android:background="@drawable/list_background"
         android:layout_width="match_parent"
-        android:gravity="right"
+        android:gravity="right|center_vertical"
         android:layout_height="60dp">
         <include layout="@layout/order_bottom_btn"/>
     </RelativeLayout>

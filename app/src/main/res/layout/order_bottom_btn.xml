@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_bottom_btn"
-    android:gravity="center_vertical"
+    android:gravity="center_vertical|right"
+    android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <Button
@@ -9,7 +10,6 @@
         android:text="@string/orderCancle"
         android:textColor="@color/black"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/btn_order_goPay"
         android:layout_marginRight="10dp"
         android:background="@drawable/order_botton_btn_black"
         android:layout_width="wrap_content"
@@ -18,10 +18,27 @@
         android:id="@+id/btn_order_goPay"
         android:text="@string/goPay"
         android:textColor="@color/colorRed"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
+
         android:background="@drawable/order_botton_btn_red"
         android:layout_marginRight="10dp"
         android:layout_width="wrap_content"
         android:layout_height="40dp" />
-</RelativeLayout>
+    <Button
+        android:id="@+id/btn_order_confirmReceipt"
+        android:text="@string/confirmReceipt"
+        android:textColor="@color/colorRed"
+        android:visibility="visible"
+        android:background="@drawable/order_botton_btn_red"
+        android:layout_marginRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp" />
+    <Button
+        android:id="@+id/btn_order_viewlogistics"
+        android:text="@string/viewLogistics"
+        android:textColor="@color/colorRed"
+        android:visibility="gone"
+        android:background="@drawable/order_botton_btn_red"
+        android:layout_marginRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp" />
+</LinearLayout>
