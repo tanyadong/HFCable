@@ -513,8 +513,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             String url = Url.url((String) map.get("headPortrait"));
             Glide.with(mContext)
                     .load(url)
-                    .placeholder(R.mipmap.img_loading)
-                    .error(R.mipmap.img_error)
+                    .placeholder(R.mipmap.head_portrait)
+                    .error(R.mipmap.head_portrait)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.head);
             //设置点击评论

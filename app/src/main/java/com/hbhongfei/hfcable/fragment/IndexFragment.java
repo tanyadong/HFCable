@@ -380,8 +380,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
                         Glide.with(IndexFragment.this.getContext())
                                 .load(url)
-                                .placeholder(R.mipmap.man)
-                                .error(R.mipmap.man)
+                                .placeholder(R.mipmap.background)
+                                .error(R.mipmap.loading_error)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into( img1 );
                         list.add(img1);
@@ -414,13 +414,10 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                     project.setProjectImg(imgurl);
                     String url=Url.url(imgurl);
                     img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-//                    img1.setTag(url);
-//                    AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-//                    asyncBitmapLoader.loadImage(getActivity(),img1,url);
                     Glide.with(IndexFragment.this.getContext())
                             .load(url)
-                            .placeholder(R.mipmap.man)
-                            .error(R.mipmap.man)
+                            .placeholder(R.mipmap.background)
+                            .error(R.mipmap.loading_error)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into( img1 );
                     list.add(img1);

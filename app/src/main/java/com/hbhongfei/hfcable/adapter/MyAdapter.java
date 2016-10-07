@@ -105,8 +105,8 @@ public class MyAdapter extends BaseAdapter {
                 //加载图片
                 Glide.with(context)
                         .load(url)
-                        .placeholder(R.mipmap.man)
-                        .error(R.mipmap.man)
+                        .placeholder(R.mipmap.background)
+                        .error(R.mipmap.loading_error)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(vh.prodect_imgView1);
             }else {
@@ -136,8 +136,8 @@ public class MyAdapter extends BaseAdapter {
                     //加载图片
                     Glide.with(context)
                             .load(url)
-                            .placeholder(R.mipmap.man)
-                            .error(R.mipmap.man)
+                            .placeholder(R.mipmap.background)
+                            .error(R.mipmap.loading_error)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(vh.prodect_imgView2);
 

@@ -195,8 +195,8 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
             String url = Url.url(cablesInfo.getGoodsImg());
             Glide.with(context)
                     .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
+                    .placeholder(R.mipmap.background)
+                    .error(R.mipmap.loading_error)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(cholder.iv_adapter_list_pic);
 

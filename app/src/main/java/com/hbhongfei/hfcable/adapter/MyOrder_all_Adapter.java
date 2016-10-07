@@ -132,8 +132,8 @@ public class MyOrder_all_Adapter extends BaseAdapter{
         }
         Glide.with(context)
                 .load(url)
-                .placeholder(R.mipmap.man)
-                .error(R.mipmap.man)
+                .placeholder(R.mipmap.background)
+                .error(R.mipmap.loading_error)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(vh.image_myOrder);
 

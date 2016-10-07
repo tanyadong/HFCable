@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/mine_edit"
-            android:icon="@mipmap/ic_edit_mine"
+            android:icon="@mipmap/mine_info"
             android:title="@string/mine_myInfo" />
     </group>
 

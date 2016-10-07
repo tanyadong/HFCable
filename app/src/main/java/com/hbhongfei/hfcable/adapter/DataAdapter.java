@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Information;
@@ -67,11 +69,17 @@ public class DataAdapter extends BaseAdapter {
 
 		if (null != newsData.get(position).getImgUrl()
 				&& !"".equals(newsData.get(position).getImgUrl())) {
-			hView.image.setTag(newsData.get(position).getImgUrl());
+			/*hView.image.setTag(newsData.get(position).getImgUrl());
 			AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-			asyncBitmapLoader.loadImage(mContext,hView.image,newsData.get(position).getImgUrl());
+			asyncBitmapLoader.loadImage(mContext,hView.image,newsData.get(position).getImgUrl());*/
+			Glide.with(mContext)
+					.load(newsData.get(position).getImgUrl())
+					.placeholder(R.mipmap.background)
+					.error(R.mipmap.loading_error)
+					.diskCacheStrategy(DiskCacheStrategy.ALL)
+					.into(hView.image);
 		} else {
-			hView.image.setImageResource(R.drawable.icon_image_default);
+			hView.image.setImageResource(R.mipmap.loading_error);
 		}
 		return convertView;
 	}

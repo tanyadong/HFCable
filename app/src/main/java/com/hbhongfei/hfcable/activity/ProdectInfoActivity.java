@@ -267,8 +267,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
                 Glide.with(this)
                         .load(url)
-                        .placeholder(R.mipmap.man)
-                        .error(R.mipmap.man)
+                        .placeholder(R.mipmap.background)
+                        .error(R.mipmap.loading_error)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(img1);
                 list.add(img1);
@@ -287,7 +287,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             }
             setSmallDot(list);
         } else {
-            img1.setImageResource(R.mipmap.main_img1);
+            img1.setImageResource(R.mipmap.loading_error);
         }
         //设置收藏
         isOrNotColl();
@@ -660,13 +660,13 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             //加载图片
             Glide.with(this)
                     .load(url)
-                    .placeholder(R.mipmap.man)
-                    .error(R.mipmap.man)
+                    .placeholder(R.mipmap.background)
+                    .error(R.mipmap.loading_error)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(iv_pic);
 
         } else {
-            iv_pic.setImageResource(R.mipmap.ic_launcher);
+            iv_pic.setImageResource(R.mipmap.loading_error);
         }
 
         pop_del.setOnClickListener(this);

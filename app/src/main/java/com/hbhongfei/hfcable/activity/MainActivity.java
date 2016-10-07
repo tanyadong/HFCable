@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity
         } else if (tag != 0 && S_head != null) {
             head.setImageBitmap(b);
         } else {
-            drawable = MainActivity.this.getResources().getDrawable(R.mipmap.man);
+            drawable = MainActivity.this.getResources().getDrawable(R.mipmap.head_portrait);
             head.setImageDrawable(drawable);
         }
     }
