@@ -151,6 +151,12 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         return view;
     }
 
+    @Override
+    public void onResume() {
+        Toast.makeText(IndexFragment.this.getActivity(),SplashActivity.ID+"",Toast.LENGTH_SHORT).show();
+        super.onResume();
+    }
+
     private void initRefreshLayout() {
         mRefreshLayout = (BGARefreshLayout)view.findViewById(R.id.index_modulename_refresh);
         // 为BGARefreshLayout设置代理
@@ -193,7 +199,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         }
     };
     public void initView(View view) {
-        SplashActivity.ID=1;
+//        SplashActivity.ID=1;
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
         view.requestFocus();

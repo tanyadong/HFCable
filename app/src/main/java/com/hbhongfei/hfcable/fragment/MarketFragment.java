@@ -78,8 +78,11 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         return view;
     }
 
-
-
+    @Override
+    public void onResume() {
+        Toast.makeText(MarketFragment.this.getActivity(),SplashActivity.ID+"",Toast.LENGTH_SHORT).show();
+        super.onResume();
+    }
 
     @Override
     public void onStart() {
@@ -137,7 +140,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     }
 
     private void initView(View view) {
-        SplashActivity.ID=3;
+//        SplashActivity.ID=3;
         group_list = new ArrayList<>();
         dialog = new Dialog(getActivity());
         ll_market_head= (LinearLayout) view.findViewById(R.id.market_title_llayout);

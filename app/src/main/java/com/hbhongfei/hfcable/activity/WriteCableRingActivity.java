@@ -158,10 +158,6 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*if (item.getItemId()==R.id.menu_write){
-            S_text = text.getText().toString().trim();
-            connect(S_text);
-        }*/
         //出现dialog
         if (item.getItemId() == R.id.menu_write){
             if (mDataList.size()>0){

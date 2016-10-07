@@ -93,6 +93,11 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         return view;
     }
 
+    @Override
+    public void onResume() {
+        Toast.makeText(InfoFragment.this.getActivity(),SplashActivity.ID+"",Toast.LENGTH_SHORT).show();
+        super.onResume();
+    }
 
     //设置懒加载
     @Override
@@ -147,7 +152,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      * 初始化组件
      */
     private  void  initView(View view){
-        SplashActivity.ID=2;
+//        SplashActivity.ID=2;
         info_listView = (ListView) view.findViewById(R.id.fragment_info_listView);
         loadLayout= (LinearLayout) view.findViewById(R.id.fragment_load_layout);
         loading = (TextView) view.findViewById(R.id.fragment_loading);

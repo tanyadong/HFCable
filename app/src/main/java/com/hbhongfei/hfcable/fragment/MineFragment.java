@@ -146,6 +146,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onResume() {
+        Toast.makeText(MineFragment.this.getActivity(),SplashActivity.ID+"",Toast.LENGTH_SHORT).show();
         getValues();
         if (toWrite){
             initValues();
@@ -176,13 +177,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
      * 2016/07/21
      */
     public void initView(View v) {
-        SplashActivity.ID = 4;
         dialog = new Dialog(MineFragment.this.getActivity());
         mListView = (ListView) v.findViewById(R.id.ListView_cableZone);
         //下载刷新
         mRefreshLayout = (BGARefreshLayout) view.findViewById(R.id.Refresh_cableCZone);
         noInternet = (LinearLayout) view.findViewById(R.id.no_internet_mine);
-
         fab = (FloatingActionButton) v.findViewById(R.id.fab_mine);
     }
 

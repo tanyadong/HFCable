@@ -72,7 +72,6 @@ public class UploadImages {
                 Log.i("YanZi", "success,response = " + response);
             }
         }, new Response.ErrorListener() {
-
             @Override
             public void onErrorResponse(VolleyError error) {
                 dialog.cancle();

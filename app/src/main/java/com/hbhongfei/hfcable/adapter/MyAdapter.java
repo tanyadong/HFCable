@@ -110,7 +110,7 @@ public class MyAdapter extends BaseAdapter {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(vh.prodect_imgView1);
             }else {
-                vh.prodect_imgView1.setImageResource(R.drawable.icon_image_default);
+                vh.prodect_imgView1.setImageResource(R.mipmap.loading_error);
             }
             vh.layout1.setOnClickListener(new View.OnClickListener() {
                 @Override

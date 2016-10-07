@@ -37,7 +37,7 @@ public class NineGridTestLayout extends NineGridLayout {
         Glide.with(mContext)
                 .load(url1)
                 .placeholder(R.mipmap.background)
-                .error(R.mipmap.background)
+                .error(R.mipmap.loading_error)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
         return false;// true 代表按照九宫格默认大小显示(此时不要调用setOneImageLayoutParams)；false 代表按照自定义宽高显示。
@@ -49,7 +49,7 @@ public class NineGridTestLayout extends NineGridLayout {
         Glide.with(mContext)
                 .load(url1)
                 .placeholder(R.mipmap.background)
-                .error(R.mipmap.background)
+                .error(R.mipmap.loading_error)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
