@@ -82,7 +82,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     String loginOrNot;
     private CommentAdapter commentAdapter;
     private boolean tag = false;//判断是都是冲刷一次
-    private static final int ALL = 2;//代表默认的刷新个数
+    private static final int ALL = 10;//代表默认的刷新个数
     private boolean toWrite;
     /**
      * 标志位，标志已经初始化完成

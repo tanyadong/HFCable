@@ -164,7 +164,12 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
         }*/
         //出现dialog
         if (item.getItemId() == R.id.menu_write){
-            CustomDialog.selecUpLoadImage(WriteCableRingActivity.this,WriteCableRingActivity.this);
+            if (mDataList.size()>0){
+                CustomDialog.selecUpLoadImage(WriteCableRingActivity.this,WriteCableRingActivity.this);
+            }else{
+                S_text = text.getText().toString().trim();
+                connect(S_text);
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -191,7 +196,6 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
     @Override
     public void before() {
         uploadType = true;
-        Toast.makeText(this,uploadType+"",Toast.LENGTH_SHORT).show();
         S_text = text.getText().toString().trim();
         connect(S_text);
     }
