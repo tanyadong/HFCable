@@ -41,6 +41,7 @@ public class MyOrderUnPaymenFragment extends BaseFragment implements BGARefreshL
     private boolean isPrepared;
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
     private boolean mHasLoadedOnce;
+    public boolean isResult;//是否从订单详情返回
     public MyOrderUnPaymenFragment() {
     }
 
@@ -62,9 +63,21 @@ public class MyOrderUnPaymenFragment extends BaseFragment implements BGARefreshL
         View v = inflater.inflate(R.layout.fragment_my_order_un_paymen, container, false);
         initView(v);
         initRefreshLayout();
+        isResult=false;
+        connectionOrder = new ConnectionOrder(MyOrderUnPaymenFragment.this.getActivity(),MyOrderUnPaymenFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult);
+
         isPrepared = true;
         lazyLoad();
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(connectionOrder.isResult){
+            getValues();
+            isResult=false;
+        }
     }
 
     /**
@@ -90,7 +103,6 @@ public class MyOrderUnPaymenFragment extends BaseFragment implements BGARefreshL
     private void getValues() {
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
-        connectionOrder = new ConnectionOrder(MyOrderUnPaymenFragment.this.getActivity(),MyOrderUnPaymenFragment.this.getContext(), ListView_myOrderUnPayment,noInternet);
         new MyAsyncTack().execute();
     }
 
@@ -126,7 +138,6 @@ public class MyOrderUnPaymenFragment extends BaseFragment implements BGARefreshL
                 return true;
             }else {
                 mRefreshLayout.endLoadingMore();
-                Toast.makeText(getActivity(),"已经是全部数据",Toast.LENGTH_SHORT).show();
                 return false;
             }
         }else {

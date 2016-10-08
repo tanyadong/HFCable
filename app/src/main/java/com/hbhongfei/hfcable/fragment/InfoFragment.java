@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +29,10 @@ import com.hbhongfei.hfcable.activity.InfoDetailActivity;
 import com.hbhongfei.hfcable.activity.SplashActivity;
 import com.hbhongfei.hfcable.adapter.DataAdapter;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.Information;
 import com.hbhongfei.hfcable.util.MySingleton;
-import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.NetUtils;
 
 import org.json.JSONException;
@@ -49,10 +48,6 @@ import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-
 public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick  {
     //下拉和分页框架
     private static final String TAG = IndexFragment.class.getSimpleName();
@@ -61,7 +56,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     private ListView info_listView;
     private DataAdapter mAdapter = null;
     List<Information> info_list = new ArrayList<Information>();
-    boolean isFirst = true;
     Button reload = null;
     LinearLayout loadLayout = null;
     TextView loading = null;
@@ -119,18 +113,16 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         //添加头和尾
         info_listView.setAdapter(mAdapter);
         dialog.showDialog("正在加载中");
+        Toast.makeText(getActivity(),"index"+index+"",Toast.LENGTH_SHORT).show();
         loadData(index);
         mHasLoadedOnce=true;
     }
     Handler mHandler = new Handler(){
-        @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case 0:
-                    count=msg.arg1;
-                    break;
+
                 case 1:
                     //告诉适配器，数据变化了，从新加载listview
                     mAdapter.notifyDataSetChanged();
@@ -210,6 +202,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
+
                             dialog.cancle();
                             if (volleyError instanceof NoConnectionError){
                                 Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
@@ -242,12 +235,19 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     protected void parse(String html) {
         Document doc = Jsoup.parse(html);
         Elements a = doc.getElementById("main_cont_ContentPlaceHolder1_pager").getElementsByTag("a");
-        String s_url=a.last().attr("href");
-        total=s_url.substring(s_url.indexOf("_")+1,s_url.lastIndexOf("."));
-        Message message=new Message();
-        message.what=0;
-        message.arg1=Integer.parseInt(total);
-        mHandler.sendMessage(message);
+        final String s_url=a.last().attr("href");
+//        total=s_url.substring(s_url.indexOf("_")+1,s_url.lastIndexOf("."));
+//        Message message=new Message();
+//        message.what=0;
+//        message.arg1=Integer.parseInt(total);
+//        mHandler.sendMessage(message);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                total=s_url.substring(s_url.indexOf("_")+1,s_url.lastIndexOf("."));
+                count=Integer.parseInt(total);
+            }
+        });
         //Elements
         Elements topnews = doc.getElementsByClass("list31_newlist1");
          for (Element link : topnews) {
@@ -272,23 +272,24 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                if (volleyError instanceof NoConnectionError){
-                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
-                }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
-                        @Override
-                        public void errorClick() {
-
-                        }
-                    });
-                }else{
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
-                        @Override
-                        public void errorClick() {
-
-                        }
-                    });
-                }
+Toast.makeText(getActivity(),volleyError.toString(),Toast.LENGTH_SHORT).show();
+//                if (volleyError instanceof NoConnectionError){
+//                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
+//                }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
+//                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+//                        @Override
+//                        public void errorClick() {
+//
+//                        }
+//                    });
+//                }else{
+//                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+//                        @Override
+//                        public void errorClick() {
+//
+//                        }
+//                    });
+//                }
             }
         });
         MySingleton.getInstance(getActivity()).addToRequestQueue(request);
@@ -339,6 +340,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
 
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
+       Toast.makeText(getActivity(),count+" ",Toast.LENGTH_SHORT).show();
         if(index<count) {
             index++;
             if(NetUtils.isConnected(getActivity())){

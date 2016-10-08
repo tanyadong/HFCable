@@ -19,7 +19,6 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.activity.OrderDetailActivity;
 import com.hbhongfei.hfcable.activity.OrderPayActivity;
 import com.hbhongfei.hfcable.pojo.Order;
 import com.hbhongfei.hfcable.util.MySingleton;
@@ -165,7 +164,6 @@ public class MyOrder_all_Adapter extends BaseAdapter{
                     context.startActivity(intent);
                 }
             });
-
         }
         if(list.get(position).completeOrNot==1){ //已经完成
             vh.Tview_myOrder_stage.setVisibility(View.GONE);
@@ -205,6 +203,7 @@ public class MyOrder_all_Adapter extends BaseAdapter{
             vh.Tview_myOrder_pay.setText("实付款");
             vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
             vh.Image_myOrder_delete.setVisibility(View.GONE);
+            vh.btn_order_confirmReceipt.setVisibility(View.GONE);
             vh.btn_order_pay.setVisibility(View.GONE);
             vh.btn_order_cancle.setVisibility(View.VISIBLE);
             vh.btn_order_cancle.setOnClickListener(new View.OnClickListener() {
@@ -243,16 +242,16 @@ public class MyOrder_all_Adapter extends BaseAdapter{
 
         }
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(context.getApplicationContext(), OrderDetailActivity.class);
-                intent.putExtra("order",list.get(position));
-                intent.putExtra("position",position);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-        });
+//        convertView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent=new Intent(context.getApplicationContext(), OrderDetailActivity.class);
+//                intent.putExtra("order",list.get(position));
+//                intent.putExtra("position",position);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(intent);
+//            }
+//        });
         return convertView;
     }
 

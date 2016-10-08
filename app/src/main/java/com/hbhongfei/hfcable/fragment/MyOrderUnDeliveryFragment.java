@@ -41,7 +41,7 @@ public class MyOrderUnDeliveryFragment extends BaseFragment implements BGARefres
     ConnectionOrder connectionOrder=null;
     private LinearLayout noInternet;
 private Dialog dialog;
-    private boolean isVisable = false;
+    public boolean isResult;//是否从订单详情返回
     /** 标志位，标志已经初始化完成 */
     private boolean isPrepared;
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
@@ -68,6 +68,8 @@ private Dialog dialog;
         initView(v);
         initRefreshLayout();
         isPrepared = true;
+        isResult=false;
+        connectionOrder = new ConnectionOrder(MyOrderUnDeliveryFragment.this.getActivity(),MyOrderUnDeliveryFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult);
         lazyLoad();
         return v;
     }
@@ -75,7 +77,10 @@ private Dialog dialog;
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(getActivity(),"xx",Toast.LENGTH_SHORT).show();
+        if(connectionOrder.isResult){
+            getValues();
+            isResult=false;
+        }
     }
 
     /**
@@ -102,7 +107,7 @@ private Dialog dialog;
     private void getValues() {
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
-        connectionOrder = new ConnectionOrder(MyOrderUnDeliveryFragment.this.getActivity(),MyOrderUnDeliveryFragment.this.getContext(), ListView_myOrderUnPayment,noInternet);
+
         new MyAsyncTack().execute();
 
     }
@@ -162,7 +167,6 @@ private Dialog dialog;
                 return true;
             }else {
                 mRefreshLayout.endLoadingMore();
-                Toast.makeText(getActivity(),"已经是全部数据",Toast.LENGTH_SHORT).show();
                 return false;
             }
         }else {
