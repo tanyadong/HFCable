@@ -17,7 +17,6 @@
     <!--公司logo-->
 <ImageView
     android:id="@+id/companyInfo_logo"
-    android:src="@mipmap/main_img2"
     android:layout_gravity="center"
     android:scaleType="fitXY"
     android:layout_width="match_parent"
@@ -56,7 +55,6 @@
     <!--公司介绍内容-->
     <TextView
         android:id="@+id/companyInfo_introduce_textView"
-        android:text="@string/company_introduce_content"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -85,7 +83,6 @@
     </LinearLayout>
     <TextView
         android:id="@+id/companyInfo_product_textView"
-        android:text="@string/company_introduce_content"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -40,7 +40,7 @@ public class ConnectionTypeTwo {
     ArrayList<Product> pro_list;
     ArrayList<ArrayList<Product>> list;
     int page=1;
-    Dialog dialog;
+    public int totalCount;
     private MyAdapter_typeTwo myAdapter_typeTwo;
     private Activity activity;
     private LinearLayout noInternet;
@@ -57,17 +57,6 @@ public class ConnectionTypeTwo {
             if(msg.what==0){
                 myAdapter_typeTwo.notifyDataSetChanged();
             }
-//            if(msg.what==1){
-//                typeTwo_list.addAll((List<TypeTwo>) msg.obj);
-//                list.addAll((ArrayList<ArrayList<Product>>) msg.obj);
-//
-//                myAdapter_typeTwo = new MyAdapter_typeTwo(typeTwo_list, list, context);
-//                myAdapter_typeTwo.notifyDataSetChanged();
-//                    listView.setAdapter(myAdapter_typeTwo);
-//                for (int i = 0; i < myAdapter_typeTwo.getGroupCount(); i++) {
-//                    listView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
-//                }
-//            }
         }
     };
     /**
@@ -76,8 +65,7 @@ public class ConnectionTypeTwo {
      * */
     public void connInterByType(String typeName,int pageNo) throws JSONException {
         page=pageNo;
-        dialog=new Dialog(context);
-//        dialog.showDialog("正在加载中。。。");
+
         String url = Url.url("/androidTypeTwo/getTypeTwo");
         Map<String,String> map=new HashMap<>();
         map.put("typeName",typeName);
@@ -91,13 +79,26 @@ public class ConnectionTypeTwo {
      */
     private Response.Listener<JSONObject> jsonObjectTypeTwoListener = new Response.Listener<JSONObject>() {
         @Override
-        public void onResponse(JSONObject jsonObject) {
+        public void onResponse(final JSONObject jsonObject) {
             try {
                 list=new ArrayList<>();
                 typeTwo_list=new ArrayList<>();
                 JSONArray jsonArray=jsonObject.getJSONArray("typeTwolist");
                 final int count=jsonArray.length();
                 if (count>0){
+                    listView.setVisibility(View.VISIBLE);
+                    noInternet.setVisibility(View.GONE);
+                    mMandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                totalCount=jsonObject.getInt("totalPages");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
                     for(int i=0;i<count;i++){
                         JSONObject jsonObject1=jsonArray.getJSONObject(i);
                         JSONObject jsonObject2=jsonObject1.getJSONObject("typeTwo");
@@ -141,6 +142,18 @@ public class ConnectionTypeTwo {
                         }
                         list.add(pro_list);
                     }
+
+                    if(page==1) {
+                        myAdapter_typeTwo = new MyAdapter_typeTwo(typeTwo_list, list, context);
+                        listView.setAdapter(myAdapter_typeTwo);
+                }else{
+                    myAdapter_typeTwo.addGroup(typeTwo_list);
+                    myAdapter_typeTwo.addChild(list);
+                    mMandler.sendEmptyMessage(0);
+                }
+                for (int i = 0; i < myAdapter_typeTwo.getGroupCount(); i++) {
+                    listView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
+                }
                 }else {
                     //没有数据
                     Error.toSetting(noInternet, R.mipmap.nothing, "暂无数据哦", "换一个试试", new IErrorOnclick() {
@@ -149,19 +162,6 @@ public class ConnectionTypeTwo {
                             Toast.makeText(context,"暂无数据",Toast.LENGTH_SHORT).show();
                         }
                     });
-                }
-
-                if(page==1) {
-                    myAdapter_typeTwo = new MyAdapter_typeTwo(typeTwo_list, list, context);
-                    listView.setAdapter(myAdapter_typeTwo);
-                }else{
-                    myAdapter_typeTwo.addGroup(typeTwo_list);
-                    myAdapter_typeTwo.addChild(list);
-                    mMandler.sendEmptyMessage(0);
-
-                }
-                for (int i = 0; i < myAdapter_typeTwo.getGroupCount(); i++) {
-                    listView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

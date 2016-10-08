@@ -29,11 +29,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
@@ -78,12 +76,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             prodectInfo_sheathMaterial, prodectInfo_referenceWeight;
     private TextView prodect_addCart;
     private RelativeLayout selectSpec_layout;
-    private LinearLayout all_choice_layout, prodect_bottom;
-    private View mGrayLayout;
-    private boolean isPopWindowShowing = false;
     LinearLayout layout;
-    private int mnSeclectItem = 0;
-    private ArrayList<String> mArrayList = new ArrayList<String>();
     private Product product;
     //    popwindow弹框
     private TextView prodectInfo_s, prodectInfo_s1, prodectInfo_s2;
@@ -108,7 +101,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     boolean isAddCart = false;
     int color_position = 0;
     int spec_position = 0;
-    boolean isFirst = true;
     String S_phoneNumber;
     Double unitPrice;
     private static final String USER = LoginConnection.USER;
@@ -215,7 +207,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
 
         selectSpec_layout = (RelativeLayout) findViewById(R.id.selectSpec_layout);//选择颜色规格
-        prodect_bottom = (LinearLayout) findViewById(R.id.prodect_bottom);
+
         prodectList_img_collect = (ImageView) findViewById(R.id.prodectList_img_collect);
         prodectList_tview_collect = (TextView) findViewById(R.id.prodectList_tview_collect);
         //选择规格和颜色

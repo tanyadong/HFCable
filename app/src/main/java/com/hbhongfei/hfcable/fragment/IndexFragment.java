@@ -34,7 +34,6 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.CompanyInfoActivity;
 import com.hbhongfei.hfcable.activity.ProdectListActivity;
 import com.hbhongfei.hfcable.activity.ProjectActivity;
-import com.hbhongfei.hfcable.activity.SplashActivity;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
 import com.hbhongfei.hfcable.pojo.Company;
 import com.hbhongfei.hfcable.pojo.Project;
@@ -45,7 +44,6 @@ import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NoScrollListView;
-import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
 import org.json.JSONArray;
@@ -53,9 +51,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -108,7 +104,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     Intent intent;
     private Dialog dialog;
     //Toast显示状态
-    private View mLoadMoreFooterView;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -116,6 +111,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             switch (msg.what){
                 case 1:
                     count=msg.arg1;
+                    Toast.makeText(getActivity(),count+"",Toast.LENGTH_SHORT).show();
                     break;
                 case 100:
                     mviewPager.setCurrentItem(currentItem);
@@ -153,7 +149,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     public void onResume() {
-        Toast.makeText(IndexFragment.this.getActivity(),SplashActivity.ID+"",Toast.LENGTH_SHORT).show();
         super.onResume();
     }
 
@@ -170,36 +165,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         // 为了增加下拉刷新头部和加载更多的通用性，提供了以下可选配置选项  -------------START
         mRefreshLayout.setPullDownRefreshEnable(false);
     }
-    /**
-     * 获得最新的产品数
-     */
-    private void getNewProduct() {
-        String url = Url.url("/androidProduct/getTotalRecord");
-        Map<String,String> map=new HashMap<>();
-        map.put("newProducts","是");
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
-        MySingleton.getInstance(getActivity()).addToRequestQueue(normalPostRequest);
-    }
-    /**
-     * 成功的监听器
-     * 返回的是产品种类
-     */
-    private Response.Listener<JSONObject> jsonObjectProductListener = new Response.Listener<JSONObject>() {
-        @Override
-        public void onResponse(JSONObject jsonObject) {
-            try {
-                JSONObject object=jsonObject.getJSONObject("page");
-                Message message=new Message();
-                message.what=1;
-                message.arg1=object.getInt("totalPages");
-                handler.sendMessage(message);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
+
     public void initView(View view) {
-//        SplashActivity.ID=1;
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
@@ -323,9 +290,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         public void onErrorResponse(VolleyError volleyError) {
             dialog.cancle();
             if (volleyError instanceof NoConnectionError){
-                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",IndexFragment.this);
+                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦1","点击设置",IndexFragment.this);
             }else if(volleyError instanceof NetworkError ||volleyError instanceof ServerError ||volleyError instanceof TimeoutError){
-                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦1", new IErrorOnclick() {
                     @Override
                     public void errorClick() {
 
@@ -360,7 +327,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         @Override
         public void onResponse(JSONObject jsonObject) {
             JSONArray jsonArray;
-            List<Company> company_list=new ArrayList<>();
             try {
                     jsonArray = jsonObject.getJSONArray("companyList");
                     final Company company=new Company();
@@ -546,7 +512,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
         if(NetUtils.isConnected(getActivity())) {
-            if (pageNo < count) {
+            Toast.makeText(getActivity(),connectionProduct.countPage+"",Toast.LENGTH_SHORT).show();
+            if (pageNo < connectionProduct.countPage) {
                 pageNo++;
                 // 如果网络可用，则加载网络数据
                 new MyAsyncTack().execute();
@@ -569,8 +536,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             return;
         }
         connInter();
-        //获得最新产品的总数
-        getNewProduct();
         //加载“新型产品”模块数据
         setDate();
         //连接获取公司的服务

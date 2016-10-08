@@ -31,10 +31,9 @@ public class ConnectionProduct {
     private Context context;
     private ListView listView;
     private MyAdapter adapter;
-    private ArrayList<Product> list_pro=new ArrayList<>();
     private List<Product> list;
     private int page=1;
-    List<String> type_list=new ArrayList<>();
+    public int countPage = 0;
     public ConnectionProduct(Context context,ListView listView) {
         this.context = context;
         this.listView=listView;
@@ -61,13 +60,12 @@ public class ConnectionProduct {
      * */
     public void connInterByType(String newProducts,int pageNo) throws JSONException {
         page=pageNo;
-
         String url = Url.url("/androidProduct/getProduct");
         Map<String,String> map=new HashMap<>();
         map.put("newProducts",newProducts);
         map.put("pageNo",String.valueOf(pageNo));
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
-       MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
+        MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
 
     /**
@@ -79,7 +77,16 @@ public class ConnectionProduct {
         public void onResponse(JSONObject jsonObject) {
             try {
                 list=new ArrayList<>();
-                JSONArray jsonArray=jsonObject.getJSONArray("productList");
+                final JSONObject json_page = jsonObject.getJSONObject("page");
+                final int totalPages=json_page.getInt("totalPages");
+                mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            countPage=totalPages;
+                        }
+                    });
+                JSONArray jsonArray = json_page.getJSONArray("list");
+
                 int count=jsonArray.length();
 
                 for(int i=0;i<count;i++){
@@ -122,7 +129,6 @@ public class ConnectionProduct {
                     adapter = new MyAdapter(context, R.layout.intentionlayout, list);
                     listView.setDivider(null);
                     listView.setAdapter(adapter);
-
                 }else{
                     adapter.addItem(list);
                     mHandler.sendEmptyMessage(1);
