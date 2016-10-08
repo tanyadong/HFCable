@@ -187,6 +187,7 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
      */
     protected void parseWeek(String html) {
         Document doc = Jsoup.parse(html);
+
         //Elements
         Element table = doc.getElementsByTag("table").first();
         Elements lists = table.getElementsByTag("tr");
@@ -195,6 +196,7 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
             Elements els = item.getElementsByTag("td");
             averagePrice_list.add(els.get(1).text());
             data_list.add(els.get(0).text());
+            Toast.makeText(this,lists.toString(),Toast.LENGTH_SHORT).show();
         }
         //显示图表
         showChart();
@@ -204,7 +206,6 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
      * 曲线图
      */
     private void showChart() {
-
         // 设置在Y轴上是否是从0开始显示
         mChart.setStartAtZero(false);
         //是否在Y轴显示数据，就是曲线上的数据
