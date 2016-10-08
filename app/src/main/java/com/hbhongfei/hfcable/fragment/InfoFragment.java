@@ -245,9 +245,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             information.setImgUrl(link.getElementsByTag("img").attr("src"));
             information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
              loadContentData(information.getContentUrl(), information);
-//             info_list.add(information);
          }
-//        setValues(info_list);
 
     }
     /**
@@ -315,7 +313,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
 
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-       Toast.makeText(getActivity(),count+" ",Toast.LENGTH_SHORT).show();
         if(index<count) {
             index++;
             if(NetUtils.isConnected(getActivity())){
