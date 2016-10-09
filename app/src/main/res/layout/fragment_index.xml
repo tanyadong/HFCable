@@ -182,7 +182,6 @@
                             android:layout_weight="1"
                             android:background="#6d6d6e" />
                     </LinearLayout>
-
                 </LinearLayout>
 
                 <com.hbhongfei.hfcable.util.NoScrollListView

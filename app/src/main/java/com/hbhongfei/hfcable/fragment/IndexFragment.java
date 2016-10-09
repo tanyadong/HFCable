@@ -63,7 +63,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IndexFragment extends BaseFragment implements View.OnClickListener, BGARefreshLayout.BGARefreshLayoutDelegate, IErrorOnclick {
+public class IndexFragment extends BaseFragment implements View.OnClickListener ,BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick{
     //下拉和分页框架
     private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
@@ -138,7 +138,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
         initRefreshLayout();
         list_obj=new ArrayList<>();
         list = new ArrayList<ImageView>();
-        list_project=new ArrayList<>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
         isPrepared = true;
@@ -564,11 +563,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
                 return null;
             }
 
