@@ -92,7 +92,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
      */
     private ArrayList<Object> list_obj;
     private List<ImageView> list;
-    private List<ImageView> list_project;
     //    添加小圆点控件，
     private LinearLayout dotLayout;
 
@@ -135,7 +134,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         initRefreshLayout();
         list_obj=new ArrayList<>();
         list = new ArrayList<ImageView>();
-        list_project=new ArrayList<>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
         isPrepared = true;
@@ -290,9 +288,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         public void onErrorResponse(VolleyError volleyError) {
             dialog.cancle();
             if (volleyError instanceof NoConnectionError){
-                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦1","点击设置",IndexFragment.this);
+                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",IndexFragment.this);
             }else if(volleyError instanceof NetworkError ||volleyError instanceof ServerError ||volleyError instanceof TimeoutError){
-                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦1", new IErrorOnclick() {
+                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
                     @Override
                     public void errorClick() {
 
@@ -406,7 +404,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 }
                 //设置小圆点
                 setSmallDot(list);
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -489,11 +486,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
                 return null;
             }
 
