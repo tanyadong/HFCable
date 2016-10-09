@@ -95,7 +95,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
 
     @Override
     public void onResume() {
-        Toast.makeText(InfoFragment.this.getActivity(),SplashActivity.ID+"",Toast.LENGTH_SHORT).show();
         super.onResume();
     }
 
@@ -130,6 +129,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             switch (msg.what) {
                 case 0:
                     count=msg.arg1;
+                    System.out.println(count+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                     break;
                 case 1:
                     //告诉适配器，数据变化了，从新加载listview
@@ -201,7 +201,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String url="http://news.cableabc.com/gc_"+index+".html";
+                final String url="http://news.cableabc.com/gc_"+index+".html";
                     StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String s) {
@@ -211,22 +211,31 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
                             dialog.cancle();
-                            if (volleyError instanceof NoConnectionError){
-                                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
-                            }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
-                                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
-                                    @Override
-                                    public void errorClick() {
-                                    }
-                                });
+                            MySingleton mySingleton = new MySingleton(InfoFragment.this.getActivity());
+                            if (mySingleton.getCacheString(url)!=null){
+                                //加载缓存
+                                Toast.makeText(InfoFragment.this.getContext(),"没有网络-加载数据",Toast.LENGTH_SHORT).show();
+                                noInternet.setVisibility(View.GONE);
+                                parse(mySingleton.getCacheString(url).toString());
                             }else{
-                                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
-                                    @Override
-                                    public void errorClick() {
+                                if (volleyError instanceof NoConnectionError){
+                                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",InfoFragment.this);
+                                }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
+                                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                                        @Override
+                                        public void errorClick() {
+                                        }
+                                    });
+                                }else{
+                                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                                        @Override
+                                        public void errorClick() {
 
-                                    }
-                                });
+                                        }
+                                    });
+                                }
                             }
+
                         }
                     });
                 MySingleton.getInstance(getActivity()).addToRequestQueue(request);
@@ -263,7 +272,8 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      * 解析资讯详情
      * @param url
      */
-    private void loadContentData(String url, final Information information){
+    private void loadContentData(final String url, final Information information){
+
         StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
@@ -272,23 +282,31 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                if (volleyError instanceof NoConnectionError){
-                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
-                }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
-                        @Override
-                        public void errorClick() {
-
-                        }
-                    });
+                MySingleton mySingleton = new MySingleton(InfoFragment.this.getActivity());
+                if (mySingleton.getCacheString(url)!=null){
+                    Toast.makeText(InfoFragment.this.getContext(),"没有网络-解析数据",Toast.LENGTH_SHORT).show();
+                    noInternet.setVisibility(View.GONE);
+                    parseContent(mySingleton.getCacheString(url),information);
                 }else{
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
-                        @Override
-                        public void errorClick() {
+                    if (volleyError instanceof NoConnectionError){
+                        Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络解析数据失败","点击设置",InfoFragment.this);
+                    }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
+                        Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                            @Override
+                            public void errorClick() {
 
-                        }
-                    });
+                            }
+                        });
+                    }else{
+                        Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                            @Override
+                            public void errorClick() {
+
+                            }
+                        });
+                    }
                 }
+
             }
         });
         MySingleton.getInstance(getActivity()).addToRequestQueue(request);
@@ -370,7 +388,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         protected void onPreExecute() {
             dialog.showDialog("正在加载中");
             super.onPreExecute();
-
         }
         @Override
         protected Void doInBackground(Void... params) {

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,16 +33,19 @@ public class ConnectionProduct {
     private Context context;
     private ListView listView;
     private MyAdapter adapter;
-    private ArrayList<Product> list_pro=new ArrayList<>();
+    private ArrayList<Product> list_pro = new ArrayList<>();
     private List<Product> list;
-    private int page=1;
-    List<String> type_list=new ArrayList<>();
-    public ConnectionProduct(Context context,ListView listView) {
+    private int page = 1;
+    List<String> type_list = new ArrayList<>();
+    private String url;
+
+    public ConnectionProduct(Context context, ListView listView) {
         this.context = context;
-        this.listView=listView;
+        this.listView = listView;
 
     }
-    Handler mHandler = new Handler(){
+
+    Handler mHandler = new Handler() {
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
@@ -55,19 +60,80 @@ public class ConnectionProduct {
             }
         }
     };
+
     /**
      * 连接服务
      * 根据种类查询产品
-     * */
-    public void connInterByType(String newProducts,int pageNo) throws JSONException {
-        page=pageNo;
+     */
+    public void connInterByType(String newProducts, int pageNo) throws JSONException {
+        page = pageNo;
+        url = Url.url("/androidProduct/getProduct");
+        Map<String, String> map = new HashMap<>();
+        map.put("newProducts", newProducts);
+        map.put("pageNo", String.valueOf(pageNo));
+        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectProductListener, errorListener, map);
+        MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
+    }
 
-        String url = Url.url("/androidProduct/getProduct");
-        Map<String,String> map=new HashMap<>();
-        map.put("newProducts",newProducts);
-        map.put("pageNo",String.valueOf(pageNo));
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
-       MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
+    /**
+     * 解析最新产品
+     * @param jsonObject
+     */
+    private void analysisDataOfProduct(JSONObject jsonObject){
+        try {
+            list = new ArrayList<>();
+            JSONArray jsonArray = jsonObject.getJSONArray("productList");
+            int count = jsonArray.length();
+
+            for (int i = 0; i < count; i++) {
+                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                //typeTwo
+                JSONObject jsonObject2 = jsonObject1.getJSONObject("typeTwo");
+                TypeTwo typeTwo = new TypeTwo();
+                typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
+                //产品
+                Product product = new Product();
+                product.setTypeTwo(typeTwo);
+                product.setId(jsonObject1.getString("id"));
+                product.setPrice(jsonObject1.getDouble("price"));
+                product.setApplicationRange(jsonObject1.getString("applicationRange"));
+                product.setSpecifications(jsonObject1.getString("specifications"));
+                product.introduce = (jsonObject1.getString("introduce"));
+                product.setConductorMaterial(jsonObject1.getString("conductorMaterial"));
+                product.setCoreNumber(jsonObject1.getString("coreNumber"));
+                product.setCrossSection(jsonObject1.getString("crossSection"));
+                product.setImplementationStandards(jsonObject1.getString("implementationStandards"));
+                product.setDiameterLimit(jsonObject1.getString("diameterLimit"));
+                product.setOutsideDiameter(jsonObject1.getString("outsideDiameter"));
+                product.setSheathMaterial(jsonObject1.getString("sheathMaterial"));
+                product.setVoltage(jsonObject1.getString("voltage"));
+                product.setReferenceWeight(jsonObject1.getString("referenceWeight"));
+                product.setPurpose(jsonObject1.getString("purpose"));
+
+                JSONArray jsonArray1 = jsonObject1.getJSONArray("productImages");
+                //有图片时加入到产品图片集合
+                if (jsonArray1.length() > 0) {
+                    ArrayList<String> list1 = new ArrayList<>();
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        list1.add((String) jsonArray1.get(j));
+                    }
+                    product.setProductImages(list1);
+                }
+                list.add(product);
+            }
+            if (page == 1) {
+                adapter = new MyAdapter(context, R.layout.intentionlayout, list);
+                listView.setDivider(null);
+                listView.setAdapter(adapter);
+
+            } else {
+                adapter.addItem(list);
+                mHandler.sendEmptyMessage(1);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -77,71 +143,21 @@ public class ConnectionProduct {
     private Response.Listener<JSONObject> jsonObjectProductListener = new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject jsonObject) {
-            try {
-                list=new ArrayList<>();
-                JSONArray jsonArray=jsonObject.getJSONArray("productList");
-                int count=jsonArray.length();
-
-                for(int i=0;i<count;i++){
-                    JSONObject jsonObject1=jsonArray.getJSONObject(i);
-                    //typeTwo
-                    JSONObject jsonObject2 = jsonObject1.getJSONObject("typeTwo");
-                    TypeTwo typeTwo = new TypeTwo();
-                    typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
-                    //产品
-                    Product product=new Product();
-                    product.setTypeTwo(typeTwo);
-                    product.setId(jsonObject1.getString("id"));
-                    product.setPrice(jsonObject1.getDouble("price"));
-                    product.setApplicationRange(jsonObject1.getString("applicationRange"));
-                    product.setSpecifications(jsonObject1.getString("specifications"));
-                    product.introduce=(jsonObject1.getString("introduce"));
-                    product.setConductorMaterial(jsonObject1.getString("conductorMaterial"));
-                    product.setCoreNumber(jsonObject1.getString("coreNumber"));
-                    product.setCrossSection(jsonObject1.getString("crossSection"));
-                    product.setImplementationStandards(jsonObject1.getString("implementationStandards"));
-                    product.setDiameterLimit(jsonObject1.getString("diameterLimit"));
-                    product.setOutsideDiameter(jsonObject1.getString("outsideDiameter"));
-                    product.setSheathMaterial(jsonObject1.getString("sheathMaterial"));
-                    product.setVoltage(jsonObject1.getString("voltage"));
-                    product.setReferenceWeight(jsonObject1.getString("referenceWeight"));
-                    product.setPurpose(jsonObject1.getString("purpose"));
-
-                    JSONArray jsonArray1=jsonObject1.getJSONArray("productImages");
-                    //有图片时加入到产品图片集合
-                    if(jsonArray1.length()>0){
-                        ArrayList<String> list1=new ArrayList<>();
-                        for(int j=0;j<jsonArray1.length();j++){
-                            list1.add((String) jsonArray1.get(j));
-                        }
-                        product.setProductImages(list1);
-                    }
-                    list.add(product);
-                }
-                if(page==1) {
-                    adapter = new MyAdapter(context, R.layout.intentionlayout, list);
-                    listView.setDivider(null);
-                    listView.setAdapter(adapter);
-
-                }else{
-                    adapter.addItem(list);
-                    mHandler.sendEmptyMessage(1);
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            analysisDataOfProduct(jsonObject);
         }
     };
 
     /**
-     *  失败的监听器
+     * 失败的监听器
      */
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(context, "请求数据失败", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
+            MySingleton mySingleton = new MySingleton(context);
+            if (mySingleton.getCache(url)!=null){
+                Toast.makeText(context,"没有网络",Toast.LENGTH_SHORT).show();
+                analysisDataOfProduct(mySingleton.getCache(url));
+            }
         }
     };
 

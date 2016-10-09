@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.CustomDialog;
+import com.hbhongfei.hfcable.util.GetIP;
 import com.hbhongfei.hfcable.util.MyRadioGroup;
 import com.hbhongfei.hfcable.util.Url;
 import com.pingplusplus.android.Pingpp;
@@ -32,7 +34,9 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -62,13 +66,14 @@ public class OrderPayActivity extends AppCompatActivity implements
     String tag = "";
     private String S_money;
     private int amount;
-//    private String order_no;//订单号
-//    private String client_ip;//客户端的IPV4
-//    private String subject;//商品的标题
-//    private String body;//商品的描述信息
+    private String order_no;//订单号
+    private String client_ip;//客户端的IPV4
+    private String subject;//商品的标题
+    private String body;//商品的描述信息
 
     private Map<String, Object> map;
-//    private List<Map<String,Object>> listMap;
+    private SparseArray array;
+    private StringBuffer buffer;
 
 
     @Override
@@ -122,17 +127,24 @@ public class OrderPayActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         S_money = intent.getStringExtra("money");
         order_payMoney_textview.setText(S_money + "￥");
-
+        Bundle bundle = intent.getExtras();
+        array = bundle.getSparseParcelableArray("introduce");
         String replaceable = String.format("[%s, \\s.]", NumberFormat.getCurrencyInstance(Locale.CHINA).getCurrency().getSymbol(Locale.CHINA));
         String cleanString = S_money.toString().replaceAll(replaceable, "");
         amount = Integer.valueOf(new BigDecimal(cleanString).toString());
 
         //获取ipv4
-//        client_ip = GetIP.GetIp();
-//        order_no = new Date().getTime()+"ksls";
-//        subject = "弘飞电缆1";
-//        body = "特别的号啊啊";
-
+        client_ip = GetIP.GetIp();
+        order_no = new Date().getTime()+"ksls";
+        subject = "弘飞线缆";
+        buffer = new StringBuffer();
+        for (int i=0;i<array.size();i++){
+            buffer.append(array.get(i));
+            if (i!=array.size()-1){
+                buffer.append(",");
+            }
+        }
+        body =buffer.toString();
     }
 
     /**
@@ -144,7 +156,9 @@ public class OrderPayActivity extends AppCompatActivity implements
         map = new HashMap<>();
         map.put("channel", chanel);
         map.put("amount", amount);
-
+        map.put("body",body);
+        map.put("order_no",order_no);
+        map.put("client_ip",client_ip);
     }
 
     private void onClick() {

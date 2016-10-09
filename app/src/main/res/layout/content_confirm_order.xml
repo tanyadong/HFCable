@@ -12,61 +12,66 @@
         android:id="@+id/Layout_confirm_order_location"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:orientation="horizontal"
-        android:background="@color/colorWhite">
+        android:background="@color/colorWhite"
+        android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@mipmap/location"/>
+            android:src="@mipmap/location" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:orientation="vertical">
+
             <RelativeLayout
-                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp">
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp">
+
                 <TextView
                     android:id="@+id/shouhuoren"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size"
+                    android:text="@string/comfirm_order_shouhuo"
                     android:textColor="@color/colorBalck"
-                    android:text="@string/comfirm_order_shouhuo"/>
+                    android:textSize="@dimen/text_size" />
+
                 <TextView
                     android:id="@+id/Tview_confirm_order_name"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_toRightOf="@id/shouhuoren"
-                    android:textSize="@dimen/text_size"
                     android:textColor="@color/colorBalck"
-                    android:text="苑雪元"/>
+                    android:textSize="@dimen/text_size" />
+
                 <TextView
                     android:id="@+id/Tview_confirm_order_tel"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
-                    android:textSize="@dimen/text_size"
-                    android:textColor="@color/colorBalck"
                     android:layout_marginRight="50dp"
-                    />
+                    android:textColor="@color/colorBalck"
+                    android:textSize="@dimen/text_size" />
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="收获地址："/>
+                    android:text="收获地址：" />
+
                 <TextView
                     android:id="@+id/Tview_confirm_order_location"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    />
+                    android:layout_height="match_parent" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -74,41 +79,44 @@
     <!--订单-->
     <ListView
         android:id="@+id/list_confirm_order_product"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/Layout_confirm_order_location">
-    </ListView>
+        android:layout_below="@id/Layout_confirm_order_location"
+        android:layout_marginTop="10dp"></ListView>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@color/colorWhiteBlack">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="合计："/>
+                android:text="合计：" />
+
             <TextView
                 android:id="@+id/Tview_confirm_order_money"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_marginRight="20dp"
-                />
+                android:gravity="center" />
+
             <TextView
                 android:id="@+id/Tview_confirm_order_commit"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:background="@color/colorRed"
-                android:textColor="@color/colorWhite"
                 android:gravity="center"
-                android:text="提交订单"/>
+                android:text="提交订单"
+                android:textColor="@color/colorWhite" />
         </LinearLayout>
 
     </RelativeLayout>

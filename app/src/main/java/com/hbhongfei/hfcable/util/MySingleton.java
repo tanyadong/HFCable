@@ -8,6 +8,9 @@ import com.android.volley.toolbox.ClearCacheRequest;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 
 /**
@@ -18,7 +21,7 @@ public class MySingleton {
     private static Context mCtx;
     private static MySingleton mInstance;
 
-    private MySingleton(Context context) {
+    public MySingleton(Context context) {
         mCtx = context;
         mRequestQueue = getRuquestQueue();
     }
@@ -47,8 +50,43 @@ public class MySingleton {
         mRequestQueue.start();
 
         // clear all volley caches.
-        mRequestQueue.add(new ClearCacheRequest(cache, null));
+//        mRequestQueue.add(new ClearCacheRequest(cache, null));
         getRuquestQueue().add(req);
+    }
+
+    /**
+     * 获取缓存数据
+     * @param url
+     * @return
+     */
+    public JSONObject getCache(String url){
+        if(mRequestQueue.getCache().get(url)!=null){
+            JSONObject jsonObject = null;
+            try {
+                jsonObject =  new JSONObject(new String(mRequestQueue.getCache().get(url).data).toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return jsonObject;
+        }else{
+            return null;
+        }
+    }
+
+    public String getCacheString(String url){
+        if(mRequestQueue.getCache().get(url)!=null){
+            return new String(mRequestQueue.getCache().get(url).data).toString();
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     * 清除缓存
+     * @param url
+     */
+    public void clearCache(String url){
+        mRequestQueue.getCache().remove(url);
     }
 
 

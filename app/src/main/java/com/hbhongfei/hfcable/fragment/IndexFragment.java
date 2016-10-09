@@ -67,7 +67,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IndexFragment extends BaseFragment implements View.OnClickListener ,BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick{
+public class IndexFragment extends BaseFragment implements View.OnClickListener, BGARefreshLayout.BGARefreshLayoutDelegate, IErrorOnclick {
     //下拉和分页框架
     private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
@@ -83,9 +83,13 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     private Button btn_typeName1, btn_typeName2, btn_typeName3, btn_typeName4, btn_typeName5, btn_typeName6;
     ConnectionProduct connectionProduct;
     private int count;
-    /** 标志位，标志已经初始化完成 */
+    /**
+     * 标志位，标志已经初始化完成
+     */
     private boolean isPrepared;
-    /** 是否已被加载过一次，第二次就不再去请求数据了 */
+    /**
+     * 是否已被加载过一次，第二次就不再去请求数据了
+     */
     private boolean mHasLoadedOnce;
     /**
      * 用于小圆点图片
@@ -103,19 +107,23 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     private int currentItem = 0;//当前页面
 
     boolean isAutoPlay = true;//是否自动轮播
-    private int pageNo=1;//当前页数
+    private int pageNo = 1;//当前页数
     private ScheduledExecutorService scheduledExecutorService;
     Intent intent;
     private Dialog dialog;
+    private int tag;//判断调用的那个服务(公司，产品种类，推荐产品)
+    private String urlType, urlProduct, urlCompany;
+
+
     //Toast显示状态
     private View mLoadMoreFooterView;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 1:
-                    count=msg.arg1;
+                    count = msg.arg1;
                     break;
                 case 100:
                     mviewPager.setCurrentItem(currentItem);
@@ -130,16 +138,17 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
     public IndexFragment() {
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_index, container, false);
-        dialog=new Dialog(getActivity());
+        dialog = new Dialog(getActivity());
         initView(view);
         initRefreshLayout();
-        list_obj=new ArrayList<>();
+        list_obj = new ArrayList<>();
         list = new ArrayList<ImageView>();
-        list_project=new ArrayList<>();
+        list_project = new ArrayList<>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
         isPrepared = true;
@@ -153,16 +162,15 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     public void onResume() {
-        Toast.makeText(IndexFragment.this.getActivity(),SplashActivity.ID+"",Toast.LENGTH_SHORT).show();
         super.onResume();
     }
 
     private void initRefreshLayout() {
-        mRefreshLayout = (BGARefreshLayout)view.findViewById(R.id.index_modulename_refresh);
+        mRefreshLayout = (BGARefreshLayout) view.findViewById(R.id.index_modulename_refresh);
         // 为BGARefreshLayout设置代理
         mRefreshLayout.setDelegate(this);
         // 设置下拉刷新和上拉加载更多的风格     参数1：应用程序上下文，参数2：是否具有上拉加载更多功能
-        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity().getApplication(),true);
+        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity().getApplication(), true);
         // 设置正在加载更多时的文本
         refreshViewHolder.setLoadingMoreText("正在加载中");
         // 设置下拉刷新和上拉加载更多的风
@@ -170,16 +178,18 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         // 为了增加下拉刷新头部和加载更多的通用性，提供了以下可选配置选项  -------------START
         mRefreshLayout.setPullDownRefreshEnable(false);
     }
+
     /**
      * 获得最新的产品数
      */
     private void getNewProduct() {
         String url = Url.url("/androidProduct/getTotalRecord");
-        Map<String,String> map=new HashMap<>();
-        map.put("newProducts","是");
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
+        Map<String, String> map = new HashMap<>();
+        map.put("newProducts", "是");
+        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectProductListener, errorNewProductNum, map);
         MySingleton.getInstance(getActivity()).addToRequestQueue(normalPostRequest);
     }
+
     /**
      * 成功的监听器
      * 返回的是产品种类
@@ -188,27 +198,37 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         @Override
         public void onResponse(JSONObject jsonObject) {
             try {
-                JSONObject object=jsonObject.getJSONObject("page");
-                Message message=new Message();
-                message.what=1;
-                message.arg1=object.getInt("totalPages");
+                JSONObject object = jsonObject.getJSONObject("page");
+                Message message = new Message();
+                message.what = 1;
+                message.arg1 = object.getInt("totalPages");
                 handler.sendMessage(message);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     };
+
+    /**
+     * 种类失败的监听器
+     */
+    public Response.ErrorListener errorNewProductNum = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(IndexFragment.this.getContext(),"加载失败",Toast.LENGTH_SHORT).show();
+        }
+    };
+
     public void initView(View view) {
-//        SplashActivity.ID=1;
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         inflater = LayoutInflater.from(getActivity());
-        scrollView= (ScrollView) view.findViewById(R.id.scrollView_index);
+        scrollView = (ScrollView) view.findViewById(R.id.scrollView_index);
         listView = (NoScrollListView) view.findViewById(R.id.lv);
-        connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),listView);
-        mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
-        dotLayout = (LinearLayout)view.findViewById(R.id.dotLayout);
+        connectionProduct = new ConnectionProduct(IndexFragment.this.getActivity(), listView);
+        mviewPager = (ViewPager) view.findViewById(R.id.myviewPager);
+        dotLayout = (LinearLayout) view.findViewById(R.id.dotLayout);
 
 
         btn_typeName1 = (Button) view.findViewById(R.id.btn_type_name1);
@@ -230,7 +250,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         btn_typeName3.setOnClickListener(this);
         btn_typeName4.setOnClickListener(this);
         btn_typeName5.setOnClickListener(this);
-        btn_typeName6.setOnClickListener(this);;
+        btn_typeName6.setOnClickListener(this);
+        ;
 
     }
 
@@ -240,7 +261,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     public void setDate() {
         //首页根据条件查询产品
         try {
-            connectionProduct.connInterByType("是",pageNo);
+            connectionProduct.connInterByType("是", pageNo);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -250,9 +271,10 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
     /**
      * 设置小圆点
+     *
      * @param list
      */
-    public void setSmallDot(List<ImageView>list){
+    public void setSmallDot(List<ImageView> list) {
         //加入小圆点
         for (int i = 0; i < list.size(); i++) {
             ImageView indicator = new ImageView(getContext());
@@ -282,15 +304,37 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         scheduledExecutorService.scheduleAtFixedRate(new SlideShowTask(), 1, 4, TimeUnit.SECONDS);
         //根据他的参数说明，第一个参数是执行的任务，第二个参数是第一次执行的间隔，第三个参数是执行任务的周期；
     }
+
     /**
      * 获取产品种类服务
      */
-    public void connInter(){
+    public void connInter() {
+        tag = 1;
         dialog.showDialog("正在加载中。。。");
-        String url = Url.url("/androidType/getType");
-        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
-                jsonObjectListener,errorListener);
+        urlType = Url.url("/androidType/getType");
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlType, null,
+                jsonObjectListener, errorTypeListener);
         MySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjectRequest);
+    }
+
+    /**
+     * 种类
+     * 解析信息
+     */
+    private void analysisDataOfType(JSONObject jsonObject) {
+        JSONArray jsonArray;
+        List<String> type_list = new ArrayList<>();
+        try {
+            jsonArray = jsonObject.getJSONArray("list");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
+                String typeName = jsonObject1.getString("typeName");
+                type_list.add(typeName);
+            }
+            setTypeValue(type_list);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -299,46 +343,45 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     private Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject jsonObject) {
-            JSONArray jsonArray;
-            List<String> type_list=new ArrayList<>();
-            try {
-                jsonArray = jsonObject.getJSONArray("list");
-                for(int i=0;i<jsonArray.length();i++){
-                    JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
-                    String typeName=jsonObject1.getString("typeName");
-                    type_list.add(typeName);
-                }
-                setTypeValue(type_list);
-                dialog.cancle();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            analysisDataOfType(jsonObject);
+            dialog.cancle();
         }
     };
+
+
     /**
-     *  失败的监听器
+     * 种类失败的监听器
      */
-    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+    public Response.ErrorListener errorTypeListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             dialog.cancle();
-            if (volleyError instanceof NoConnectionError){
-                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",IndexFragment.this);
-            }else if(volleyError instanceof NetworkError ||volleyError instanceof ServerError ||volleyError instanceof TimeoutError){
-                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
+            MySingleton mySingleton = new MySingleton(IndexFragment.this.getActivity());
+            if (mySingleton.getCache(urlType) != null) {
+                Toast.makeText(IndexFragment.this.getContext(), "没有网络", Toast.LENGTH_SHORT).show();
+                noInternet.setVisibility(View.GONE);
+                //加载种类
+                analysisDataOfType(mySingleton.getCache(urlType));
+            } else {
+                if (volleyError instanceof NoConnectionError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", IndexFragment.this);
+                } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
 
-                    }
-                });
-            }else{
-                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
+                        }
+                    });
+                } else {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
+
         }
     };
 
@@ -346,11 +389,104 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     /**
      * 获取公司信息
      */
-    public void connInterGetCompanyInfo(){
-        String url = Url.url("/androidCompany/getCompanyInfo");
-        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,
-                jsonObjectCompanyListener,errorListener);
+    public void connInterGetCompanyInfo() {
+        tag = 2;
+        urlCompany = Url.url("/androidCompany/getCompanyInfo");
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlCompany, null,
+                jsonObjectCompanyListener, errorCompanyListener);
         MySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjectRequest);
+    }
+
+    /**
+     * 解析公司信息
+     *
+     * @param jsonObject
+     */
+    private void analysisDataOfCompany(JSONObject jsonObject) {
+        JSONArray jsonArray;
+        List<Company> company_list = new ArrayList<>();
+        try {
+            jsonArray = jsonObject.getJSONArray("companyList");
+            final Company company = new Company();
+            JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(0);
+            company.setLogo(jsonObject1.getString("logo"));
+            company.setAddress(jsonObject1.getString("address"));
+            company.setCompanyName(jsonObject1.getString("companyName"));
+            company.setDescription(jsonObject1.getString("description"));
+            company.setEmail(jsonObject1.getString("email"));
+            company.setProductIntroduction(jsonObject1.getString("productIntroduction"));
+            company.setTelephone(jsonObject1.getString("telephone"));
+            //保存电话号码
+            savePhoneNum(jsonObject1.getString("telephone"));
+
+            company.setZipCode(jsonObject1.getInt("zipCode"));
+            JSONArray jsonArray1 = jsonObject1.getJSONArray("list");
+            ArrayList<String> list1 = new ArrayList<>();
+            for (int j = 0; j < jsonArray1.length(); j++) {
+                JSONObject jsonObject2 = jsonArray1.getJSONObject(j);
+                list1.add(jsonObject2.getString("image"));
+                String url = Url.url(jsonObject2.getString("image"));
+                img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
+
+                Glide.with(IndexFragment.this.getContext())
+                        .load(url)
+                        .placeholder(R.mipmap.background)
+                        .error(R.mipmap.loading_error)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(img1);
+                list.add(img1);
+                list_obj.add(company);
+                //给图片添加点击事件。跳转到公司信息界面
+                img1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        intent = new Intent(IndexFragment.this.getActivity(), CompanyInfoActivity.class);
+                        intent.putExtra("company", company);
+                        startActivity(intent);
+                    }
+                });
+            }
+            company.setList(list1);
+
+                    /*解析项目信息*/
+            JSONArray array_project = jsonObject.getJSONArray("project_list");
+            int count = array_project.length();
+            for (int i = 0; i < count; i++) {
+                final Project project = new Project();
+                JSONObject jsonObject_project = (JSONObject) array_project.get(i);
+                String id = jsonObject_project.getString("id");
+                String projectName = jsonObject_project.getString("projectName");
+                String introduce = jsonObject_project.getString("introduce");
+                String imgurl = jsonObject_project.getString("projectImg");
+                project.setId(id);
+                project.setIntroduce(introduce);
+                project.setProjectName(projectName);
+                project.setProjectImg(imgurl);
+                String url = Url.url(imgurl);
+                img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
+                Glide.with(IndexFragment.this.getContext())
+                        .load(url)
+                        .placeholder(R.mipmap.background)
+                        .error(R.mipmap.loading_error)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(img1);
+                list.add(img1);
+                list_obj.add(project);
+                //给图片添加点击事件。跳转到项目界面
+                img1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        intent = new Intent(IndexFragment.this.getActivity(), ProjectActivity.class);
+                        intent.putExtra("project", project);
+                        startActivity(intent);
+                    }
+                });
+            }
+            //设置小圆点
+            setSmallDot(list);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -359,99 +495,54 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     private Response.Listener<JSONObject> jsonObjectCompanyListener = new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject jsonObject) {
-            JSONArray jsonArray;
-            List<Company> company_list=new ArrayList<>();
-            try {
-                    jsonArray = jsonObject.getJSONArray("companyList");
-                    final Company company=new Company();
-                    JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(0);
-                    company.setLogo(jsonObject1.getString("logo"));
-                    company.setAddress(jsonObject1.getString("address"));
-                    company.setCompanyName(jsonObject1.getString("companyName"));
-                    company.setDescription(jsonObject1.getString("description"));
-                    company.setEmail(jsonObject1.getString("email"));
-                    company.setProductIntroduction(jsonObject1.getString("productIntroduction"));
-                    company.setTelephone(jsonObject1.getString("telephone"));
-                     //保存电话号码
-                    savePhoneNum(jsonObject1.getString("telephone"));
+            analysisDataOfCompany(jsonObject);
+        }
+    };
 
-                    company.setZipCode(jsonObject1.getInt("zipCode"));
-                    JSONArray jsonArray1=jsonObject1.getJSONArray("list");
-                    ArrayList<String> list1=new ArrayList<>();
-                    for (int j=0;j<jsonArray1.length();j++){
-                        JSONObject jsonObject2=jsonArray1.getJSONObject(j);
-                        list1.add(jsonObject2.getString("image"));
-                        String url=Url.url(jsonObject2.getString("image"));
-                        img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
 
-                        Glide.with(IndexFragment.this.getContext())
-                                .load(url)
-                                .placeholder(R.mipmap.background)
-                                .error(R.mipmap.loading_error)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into( img1 );
-                        list.add(img1);
-                        list_obj.add(company);
-                        //给图片添加点击事件。跳转到公司信息界面
-                        img1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                intent =new Intent(IndexFragment.this.getActivity(), CompanyInfoActivity.class);
-                                intent.putExtra("company",company);
-                                startActivity(intent);
-                            }
-                        });
-                    }
-                    company.setList(list1);
-
-                    /*解析项目信息*/
-                JSONArray array_project=jsonObject.getJSONArray("project_list");
-                int count=array_project.length();
-                for(int i=0;i<count;i++){
-                    final Project project=new Project();
-                    JSONObject jsonObject_project= (JSONObject) array_project.get(i);
-                    String id=jsonObject_project.getString("id");
-                    String projectName=jsonObject_project.getString("projectName");
-                    String introduce=jsonObject_project.getString("introduce");
-                    String imgurl=jsonObject_project.getString("projectImg");
-                    project.setId(id);
-                    project.setIntroduce(introduce);
-                    project.setProjectName(projectName);
-                    project.setProjectImg(imgurl);
-                    String url=Url.url(imgurl);
-                    img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-                    Glide.with(IndexFragment.this.getContext())
-                            .load(url)
-                            .placeholder(R.mipmap.background)
-                            .error(R.mipmap.loading_error)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into( img1 );
-                    list.add(img1);
-                    list_obj.add(project);
-                    //给图片添加点击事件。跳转到项目界面
-                    img1.setOnClickListener(new View.OnClickListener() {
+    /**
+     * 公司失败的监听器
+     */
+    public Response.ErrorListener errorCompanyListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            dialog.cancle();
+            MySingleton mySingleton = new MySingleton(IndexFragment.this.getActivity());
+            if (mySingleton.getCache(urlCompany) != null) {
+                Toast.makeText(IndexFragment.this.getContext(), "没有网络", Toast.LENGTH_SHORT).show();
+                noInternet.setVisibility(View.GONE);//||
+                //公司信息
+                list_obj.clear();
+                list.clear();
+                dotLayout.removeAllViews();
+                analysisDataOfCompany(mySingleton.getCache(urlCompany));
+            } else {
+                if (volleyError instanceof NoConnectionError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", IndexFragment.this);
+                } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
                         @Override
-                        public void onClick(View v) {
-                            intent =new Intent(IndexFragment.this.getActivity(), ProjectActivity.class);
-                            intent.putExtra("project",project);
-                            startActivity(intent);
+                        public void errorClick() {
+
+                        }
+                    });
+                } else {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+
                         }
                     });
                 }
-                //设置小圆点
-                setSmallDot(list);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
+
         }
     };
 
     /**
      * 设置种类名称
      */
-    public void setTypeValue(List<String> list){
-
+    public void setTypeValue(List<String> list) {
         btn_typeName1.setText(list.get(0));
         btn_typeName2.setText(list.get(1));
         btn_typeName3.setText(list.get(2));
@@ -462,16 +553,15 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     /**
      * 保存公司电话信息
      * 方便产品详情界面拨打电话
+     *
      * @param
      */
-    private void savePhoneNum(String phoneNum){
+    private void savePhoneNum(String phoneNum) {
         SharedPreferences settings = getActivity().getSharedPreferences("SAVE_PHONE", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("phoneNum", phoneNum);
         editor.commit();
     }
-
-
 
 
     @Override
@@ -490,7 +580,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 startActivity(intent);
                 break;
             case R.id.btn_type_name3:
-                 typeName = btn_typeName3.getText().toString();
+                typeName = btn_typeName3.getText().toString();
                 intent = new Intent(getActivity(), ProdectListActivity.class);
                 intent.putExtra("typeName", typeName);
                 startActivity(intent);
@@ -515,6 +605,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 break;
         }
     }
+
     //下拉刷新
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
@@ -535,17 +626,18 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             protected void onPostExecute(Void aVoid) {
                 // 加载完毕后在UI线程结束下拉刷新
                 try {
-                    connectionProduct.connInterByType("是",1);
+                    connectionProduct.connInterByType("是", 1);
                     mRefreshLayout.endRefreshing();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }.execute();
-        }
+    }
+
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        if(NetUtils.isConnected(getActivity())) {
+        if (NetUtils.isConnected(getActivity())) {
             if (pageNo < count) {
                 pageNo++;
                 // 如果网络可用，则加载网络数据
@@ -555,8 +647,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 return false;
             }
             return true;
-        }else{
-            Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "网络连接失败，请检查您的网络", Toast.LENGTH_SHORT).show();
             mRefreshLayout.endLoadingMore();
             return false;
         }
@@ -575,35 +667,38 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         setDate();
         //连接获取公司的服务
         connInterGetCompanyInfo();
-        mHasLoadedOnce=true;
+        mHasLoadedOnce = true;
     }
+
     @Override
     public void errorClick() {
         NetUtils.openSetting(IndexFragment.this.getActivity());
     }
 
 
-    class MyAsyncTack extends AsyncTask<Void,Void,Void>{
-       @Override
-       protected void onPreExecute() {
-           super.onPreExecute();
-       }
-       @Override
-       protected Void doInBackground(Void... params) {
-           try {
-               connectionProduct.connInterByType("是",pageNo);
-           } catch (JSONException e) {
-               e.printStackTrace();
-           }
-           return null;
-       }
+    class MyAsyncTack extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-       @Override
-       protected void onPostExecute(Void aVoid) {
-           mRefreshLayout.endLoadingMore();
-           super.onPostExecute(aVoid);
-       }
-   }
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                connectionProduct.connInterByType("是", pageNo);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mRefreshLayout.endLoadingMore();
+            super.onPostExecute(aVoid);
+        }
+    }
+
     /**
      * 执行轮播图切换任务
      */
@@ -623,6 +718,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
      */
     private class MyPageChangeListener implements ViewPager.OnPageChangeListener {
         boolean isAutoPlay = false;
+
         @Override
         public void onPageScrollStateChanged(int arg0) {
             // TODO Auto-generated method stub

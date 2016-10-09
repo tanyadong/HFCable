@@ -95,6 +95,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     private LinearLayout noInternet;
     private FloatingActionButton fab;
 
+    private String url;
+
     public MineFragment() {
     }
 
@@ -146,7 +148,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onResume() {
-        Toast.makeText(MineFragment.this.getActivity(),SplashActivity.ID+"",Toast.LENGTH_SHORT).show();
         getValues();
         if (toWrite){
             initValues();
@@ -202,6 +203,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
      */
     private void initValues() {
         shaftConnInter("1",ALL+"");
+
     }
 
 
@@ -239,7 +241,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         Map<String, String> params = new HashMap<>();
         params.put("pageNo", pageNo);
         params.put("all", all);
-        String url = Url.url("/androidComment/getAllComment");
+        url= Url.url("/androidComment/getAllComment");
         System.out.println(url);
         page = Integer.valueOf(pageNo);
         //使用自己书写的NormalPostRequest类，
@@ -247,108 +249,125 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         MySingleton.getInstance(getActivity()).addToRequestQueue(request);
     }
 
+
+
+
     /**
      * 成功的监听器
      */
     private Response.Listener<JSONObject> shaftjsonObjectListener = new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject jsonObject) {
-            noInternet.setVisibility(View.GONE);
-            JSONArray jsonArray;
-            list = new ArrayList<>();
-            try {
-                //获取总的页数，利用handler传值
-                Message message = new Message();
-                message.what = 1;
-                message.arg1 = jsonObject.getInt("totalPages");
-                handler.sendMessage(message);
-                //获取具体的电缆信息
-                if (jsonObject.optJSONArray("cableRings") != null) {
-                    jsonArray = jsonObject.optJSONArray("cableRings");
-                    if (jsonArray.length() != 0) {
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            map = new HashMap<>();
-                            JSONObject cableRings = jsonArray.optJSONObject(i);
-                            //缆圈信息
-                            JSONObject cableRing = cableRings.getJSONObject("cableRing");
-                            map.put("id", cableRing.getString("id"));//缆圈的id
-                            map.put("content", cableRing.getString("content"));//缆圈的文字内容
-                            map.put("createTime", cableRing.getLong("createTime"));//缆圈的创建时间
-                            JSONObject user = cableRing.getJSONObject("user");//缆圈的发布者
-                            map.put("nickName", user.getString("nickName"));//缆圈的发布者昵称
-                            map.put("headPortrait", user.getString("headPortrait"));//缆圈的发布者头像
-                            JSONArray ims = cableRing.getJSONArray("cableRingImages");
-                            ArrayList<String> images = new ArrayList<>();
-                            if (ims.length() > 0) {
-                                for (int j = 0; j < ims.length(); j++) {
-                                    images.add((String) ims.get(j));
-                                }
-                            }
-                            map.put("images", images);//缆圈的图片内容
-                            //缆圈的评论内容
-                            if (cableRings.optJSONArray("comments") != null) {
-                                List<Map<String, Object>> listComment = new ArrayList<>();
-                                JSONArray comments = cableRings.optJSONArray("comments");
-                                for (int j = 0; j < comments.length(); j++) {
-                                    Map<String, Object> commentMap = new HashMap<>();
-                                    JSONObject comment = comments.optJSONObject(j);
-                                    commentMap.put("nickName", comment.getJSONObject("user").getString("nickName"));
-                                    commentMap.put("commentContent", comment.getString("commentContent"));
-                                    listComment.add(commentMap);
-                                }
-                                map.put("comments", listComment);
-                            } else {
-                                map.put("comments", null);
-                            }
-                            list.add(map);
-                        }
-
-                    } else {
-                        Error.toSetting(noInternet, R.mipmap.nothing, "暂时没有缆圈信息", "赶紧去发布一个吧", MineFragment.this);
-                    }
-                    if (page == 1&& tag == false) {
-                        cableRingAdapter = new CableRingAdapters(MineFragment.this.getContext(), list, fab);
-                        mListView.setAdapter(cableRingAdapter);
-                        mListView.setDivider(null);
-                        mListView.setDividerHeight(30);
-                    } else if (page!=1 &&tag == false){
-                        cableRingAdapter.addItem(list);
-                        mHandler.sendEmptyMessage(1);
-                    }else{
-                        tag = false;
-                        cableRingAdapter.updateItem(list);
-                        mHandler.sendEmptyMessage(1);
-                    }
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            analysisData(jsonObject);
         }
     };
 
+    /**
+     * 解析数据
+     * @param jsonObject
+     */
+    private void analysisData(JSONObject jsonObject){
+        noInternet.setVisibility(View.GONE);
+        JSONArray jsonArray;
+        list = new ArrayList<>();
+        try {
+            //获取总的页数，利用handler传值
+            Message message = new Message();
+            message.what = 1;
+            message.arg1 = jsonObject.getInt("totalPages");
+            handler.sendMessage(message);
+            //获取具体的电缆信息
+            if (jsonObject.optJSONArray("cableRings") != null) {
+                jsonArray = jsonObject.optJSONArray("cableRings");
+                if (jsonArray.length() != 0) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        map = new HashMap<>();
+                        JSONObject cableRings = jsonArray.optJSONObject(i);
+                        //缆圈信息
+                        JSONObject cableRing = cableRings.getJSONObject("cableRing");
+                        map.put("id", cableRing.getString("id"));//缆圈的id
+                        map.put("content", cableRing.getString("content"));//缆圈的文字内容
+                        map.put("createTime", cableRing.getLong("createTime"));//缆圈的创建时间
+                        JSONObject user = cableRing.getJSONObject("user");//缆圈的发布者
+                        map.put("nickName", user.getString("nickName"));//缆圈的发布者昵称
+                        map.put("headPortrait", user.getString("headPortrait"));//缆圈的发布者头像
+                        JSONArray ims = cableRing.getJSONArray("cableRingImages");
+                        ArrayList<String> images = new ArrayList<>();
+                        if (ims.length() > 0) {
+                            for (int j = 0; j < ims.length(); j++) {
+                                images.add((String) ims.get(j));
+                            }
+                        }
+                        map.put("images", images);//缆圈的图片内容
+                        //缆圈的评论内容
+                        if (cableRings.optJSONArray("comments") != null) {
+                            List<Map<String, Object>> listComment = new ArrayList<>();
+                            JSONArray comments = cableRings.optJSONArray("comments");
+                            for (int j = 0; j < comments.length(); j++) {
+                                Map<String, Object> commentMap = new HashMap<>();
+                                JSONObject comment = comments.optJSONObject(j);
+                                commentMap.put("nickName", comment.getJSONObject("user").getString("nickName"));
+                                commentMap.put("commentContent", comment.getString("commentContent"));
+                                listComment.add(commentMap);
+                            }
+                            map.put("comments", listComment);
+                        } else {
+                            map.put("comments", null);
+                        }
+                        list.add(map);
+                    }
+
+                } else {
+                    Error.toSetting(noInternet, R.mipmap.nothing, "暂时没有缆圈信息", "赶紧去发布一个吧", MineFragment.this);
+                }
+                if (page == 1&& tag == false) {
+                    cableRingAdapter = new CableRingAdapters(MineFragment.this.getContext(), list, fab);
+                    mListView.setAdapter(cableRingAdapter);
+                    mListView.setDivider(null);
+                    mListView.setDividerHeight(30);
+                } else if (page!=1 &&tag == false){
+                    cableRingAdapter.addItem(list);
+                    mHandler.sendEmptyMessage(1);
+                }else{
+                    tag = false;
+                    cableRingAdapter.updateItem(list);
+                    mHandler.sendEmptyMessage(1);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * 失败的监听器
      */
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            if (volleyError instanceof NoConnectionError) {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", MineFragment.this);
-            } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
+            MySingleton mySingleton = new MySingleton(MineFragment.this.getActivity());
+            if (mySingleton.getCache(url)!=null){
+                Toast.makeText(MineFragment.this.getContext(),"没有网络",Toast.LENGTH_SHORT).show();
+                noInternet.setVisibility(View.GONE);
+                analysisData(mySingleton.getCache(url));
+            }else{
+                if (volleyError instanceof NoConnectionError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", MineFragment.this);
+                } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
 
-                    }
-                });
-            } else {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
-                    }
-                });
+                        }
+                    });
+                } else {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                        }
+                    });
+                }
             }
+
 
         }
     };
@@ -356,7 +375,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     /**
      * 下拉刷新
-     *
      * @param refreshLayout
      * @throws JSONException
      */

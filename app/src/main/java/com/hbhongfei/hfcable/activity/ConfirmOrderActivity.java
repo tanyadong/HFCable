@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,34 +30,38 @@ import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class ConfirmOrderActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView name,location,telphone,money,commit;
+    private TextView name, location, telphone, money, commit;
     private ListView products;
     private LinearLayout Llocation;
-    private List<Map<String,Object>> list;// 新建适配器 ，绑定数据
-    private  ArrayList<Order> list_order;
-    private JSONObject json;
+    private List<Map<String, Object>> list;// 新建适配器 ，绑定数据
+    private ArrayList<Order> list_order ;
+    private JSONObject json = new JSONObject();
     private ConfirmOrderAdapter confirmOrderAdapter;
-    private String[] from = { "product_name", "color", "product_price", "product_num" ,"product_package","product_iamge"};
+    private String[] from = {"product_name", "color", "product_price", "product_num", "product_package", "product_iamge"};
     private String addressId;
     private static final String USER = LoginConnection.USER;
-    private ArrayList<Map<String,Object>> proInfos;
-    private Map<String,String> packageMap;
-    Map<String,String> param;
-    private  String S_phoneNumber;
+    private ArrayList<Map<String, Object>> proInfos;
+    private Map<String, String> packageMap;
+    Map<String, String> param;
+    private String S_phoneNumber;
     private Double S_money;
     private ShoppingAddress shoppingAddress;
-    private int tag= 0;
-    private static final String TEMP_INFO = "temp_info";
+    private int tag = 0;
+    private SparseArray array = new SparseArray();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         toolBar();
         initView();
         setOnClick();
+
     }
 
     /**
@@ -84,11 +90,10 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onResume() {
         super.onResume();
-        if (tag==0){
+        if (tag == 0) {
             address();
         }
         initValues();
-
     }
 
     @Override
@@ -96,40 +101,36 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         super.onDestroy();
         list.clear();
     }
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
-                case 1:
-                    addressId= (String) msg.obj;
-                    setValues();
-                    break;
-
+            switch (msg.what) {
                 default:
                     break;
             }
-
         }
 
     };
+
     /**
      * 初始化界面
      */
-    private void initView(){
+    private void initView() {
         this.name = (TextView) findViewById(R.id.Tview_confirm_order_name);
         this.location = (TextView) findViewById(R.id.Tview_confirm_order_location);
         this.telphone = (TextView) findViewById(R.id.Tview_confirm_order_tel);
         this.money = (TextView) findViewById(R.id.Tview_confirm_order_money);
         this.commit = (TextView) findViewById(R.id.Tview_confirm_order_commit);
         this.products = (ListView) findViewById(R.id.list_confirm_order_product);
-        this.Llocation  = (LinearLayout) findViewById(R.id.Layout_confirm_order_location);
+        this.Llocation = (LinearLayout) findViewById(R.id.Layout_confirm_order_location);
     }
 
     /**
      * 设置点击事件
      */
-    private void setOnClick(){
+    private void setOnClick() {
         this.commit.setOnClickListener(this);
         this.Llocation.setOnClickListener(this);
     }
@@ -137,70 +138,138 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     /**
      * 初始化数据
      */
-    private void initValues(){
+    private void initValues() {
         Intent intent = getIntent();
-        proInfos = (ArrayList<Map<String,Object>>) intent.getSerializableExtra("proInfos");
-        S_money = intent.getDoubleExtra("price",0.00);
-        packageMap = (Map<String, String>) intent.getSerializableExtra("map");
+        if (intent.getSerializableExtra("proInfos") != null) {
+            proInfos = (ArrayList<Map<String, Object>>) intent.getSerializableExtra("proInfos");
+            S_money = intent.getDoubleExtra("price", 0.00);
+            packageMap = (Map<String, String>) intent.getSerializableExtra("map");
+            JSONArray mJsonArray = new JSONArray();
+            for (int i = 0; i < proInfos.size(); i++) {
+                Map<String, Object> itemMap = proInfos.get(i);
+                Iterator<Map.Entry<String, Object>> iterator = itemMap.entrySet().iterator();
+                JSONObject object = new JSONObject();
+                while (iterator.hasNext()) {
+                    Map.Entry<String, Object> entry = iterator.next();
+                    try {
+                        object.put(entry.getKey(), entry.getValue());
+                    } catch (JSONException e) {
+                    }
+                }
+                mJsonArray.put(object);
+            }
+
+            SharedPreferences sp = this.getSharedPreferences("comfirmOrder", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("proInfos", mJsonArray.toString());
+            editor.putString("S_money", S_money + "");
+            editor.commit();
+        } else {
+            List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
+            SharedPreferences sp = this.getSharedPreferences("comfirmOrder", Context.MODE_PRIVATE);
+            String result = sp.getString("proInfos", "");
+            try {
+                JSONArray array = new JSONArray(result);
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject itemObject = array.getJSONObject(i);
+                    Map<String, Object> itemMap = new HashMap<String, Object>();
+                    JSONArray names = itemObject.names();
+                    if (names != null) {
+                        for (int j = 0; j < names.length(); j++) {
+                            String name = names.getString(j);
+                            if (name.equals("product_price")) {
+                                Double value = itemObject.getDouble(name);
+                                itemMap.put(name, value);
+                            } else {
+                                Object value = itemObject.get(name);
+                                itemMap.put(name, value);
+                            }
+                        }
+                    }
+                    datas.add(itemMap);
+                }
+            } catch (JSONException e) {
+
+            }
+            proInfos = (ArrayList<Map<String, Object>>) datas;
+            S_money = Double.parseDouble(sp.getString("S_money", "1"));
+        }
+
+        setValues();
+
     }
+
     /**
      * 设置数据
      */
     private void setValues(){
         list = new ArrayList<Map<String, Object>>();
-        // 新增数据
-        list_order=new ArrayList<>();
-        json=new JSONObject();
-        for (int i = 0; i < proInfos.size(); i++) {
-            param=new HashMap<>();
-            Map map = new HashMap<String, Object>();
-            Map proInfo = proInfos.get(i);
-            //map放入两个键值对，键名与from对应，
-            for (int j=0;j<from.length;j++){
-                map.put(from[j],proInfo.get(from[j]));
+        list_order = new ArrayList<>();;
+        if (proInfos != null) {
+            String random = RandomStringUtils.randomNumeric(20);
+            for (int i = 0; i < proInfos.size(); i++) {
+                param = new HashMap<>();
+                Map map = new HashMap<String, Object>();
+                Map proInfo = proInfos.get(i);
+                //map放入两个键值对，键名与from对应，
+                for (int j = 0; j < from.length; j++) {
+                    map.put(from[j], proInfo.get(from[j]));
+                }
+                array.put(i, (String) proInfo.get("product_name"));
+                param.put("id" + i, (String) proInfo.get("id"));
+                Double monty = (Double) proInfo.get("product_price") * (Integer) proInfo.get("product_num");
+                param.put("money" + i, Double.toString(monty));
+                param.put("addressId", addressId);
+                try {
+                    json.put("order" + i, param);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //往list添加数据
+                list.add(map);
             }
-            param.put("id"+i, (String) proInfo.get("id"));
-            Double monty= (Double) proInfo.get("product_price")*(Integer)proInfo.get("product_num");
-            param.put("money"+i,Double.toString(monty));
-            param.put("addressId",addressId);
-            try {
-                json.put("order"+i,param);
+            /*try {
+                json.put("order_no",random);
             } catch (JSONException e) {
                 e.printStackTrace();
-            }
-            //往list添加数据
-            list.add(map);
+            }*/
+            confirmOrderAdapter = new ConfirmOrderAdapter(this, list);
+            products.setAdapter(confirmOrderAdapter);
+            money.setText(String.valueOf(S_money));
         }
-        confirmOrderAdapter = new ConfirmOrderAdapter(this,list);
-        products.setAdapter(confirmOrderAdapter);
-        money.setText(String.valueOf(S_money));
+
     }
 
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.Tview_confirm_order_commit:
                 //提交订单
                 //保存订单
                 saveOrder();
-                intent.setClass(ConfirmOrderActivity.this,OrderPayActivity.class);
-                intent.putExtra("money",money.getText());
+                //确认支付界面
+                intent.setClass(ConfirmOrderActivity.this, OrderPayActivity.class);
+                intent.putExtra("money", money.getText());
+                Bundle bundle = new Bundle();
+                bundle.putSparseParcelableArray("introduce", array);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 break;
             case R.id.Layout_confirm_order_location:
                 //转换地址
-                intent.setClass(ConfirmOrderActivity.this,AddressListActivity.class);
-                startActivityForResult(intent,0);
+                intent.setClass(ConfirmOrderActivity.this, AddressListActivity.class);
+                startActivityForResult(intent, 0);
                 break;
         }
     }
-    public void saveOrder()  {
-        String url = Url.url("/androidOrder/save");
-        JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST,url,json,jsonSuccessListener,errorListener);
-        MySingleton.getInstance(this).addToRequestQueue(request);
-        //使用自己书写的NormalPostRequest类，
 
+    public void saveOrder() {
+        String url = Url.url("/androidOrder/save");
+        // 订单编号
+        String random = RandomStringUtils.randomNumeric(20);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, json, jsonSuccessListener, errorListener);
+        MySingleton.getInstance(this).addToRequestQueue(request);
     }
 
     /**
@@ -210,27 +279,29 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onResponse(JSONObject jsonObject) {
             try {
-                String  msg = jsonObject.getString("msg");
-                if (msg.equals("success")){
-                    Toast.makeText(ConfirmOrderActivity.this,"11111", Toast.LENGTH_SHORT).show();
-                }else if (msg.equals("filed")){
+                String msg = jsonObject.getString("msg");
+                if (msg.equals("success")) {
+                    Toast.makeText(ConfirmOrderActivity.this, "保存订单成功", Toast.LENGTH_SHORT).show();
+                } else if (msg.equals("filed")) {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     };
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode==0&&resultCode==0){
-
-            shoppingAddress = (ShoppingAddress) data.getSerializableExtra("shoppingAddress");
-            addressId=shoppingAddress.getId();
-            name.setText(shoppingAddress.getConsignee());
-            telphone.setText(shoppingAddress.getPhone());
-            location.setText(shoppingAddress.getLocalArea()+shoppingAddress.getDetailAddress());
-            tag = 1;
-        }else{
+        if (requestCode == 0 && resultCode == 0) {
+            if (data != null) {
+                shoppingAddress = (ShoppingAddress) data.getSerializableExtra("shoppingAddress");
+                addressId = shoppingAddress.getId();
+                name.setText(shoppingAddress.getConsignee());
+                telphone.setText(shoppingAddress.getPhone());
+                location.setText(shoppingAddress.getLocalArea() + shoppingAddress.getDetailAddress());
+                tag = 1;
+            }
+        } else {
             tag = 0;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -239,14 +310,14 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     /**
      * 连接地址服务
      */
-    public void address(){
+    public void address() {
         SharedPreferences spf = this.getSharedPreferences(USER, Context.MODE_PRIVATE);
-        S_phoneNumber = spf.getString("phoneNumber",null);
+        S_phoneNumber = spf.getString("phoneNumber", null);
         String url = Url.url("/androidAddress/getDefauleAddress");
-        Map<String,String> params =new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("phoneNumber", S_phoneNumber);
         //使用自己书写的NormalPostRequest类，
-        Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
+        Request<JSONObject> request = new NormalPostRequest(url, jsonObjectListener, errorListener, params);
         MySingleton.getInstance(this).addToRequestQueue(request);
     }
 
@@ -257,21 +328,27 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onResponse(JSONObject jsonObject) {
             try {
-                String  msg = jsonObject.getString("msg");
-                if (msg.equals("success")){
-                    JSONObject address = jsonObject.getJSONObject("shoppingAddress");
+                String msg = jsonObject.getString("msg");
+                if (msg.equals("success")) {
+                    final JSONObject address = jsonObject.getJSONObject("shoppingAddress");
                     String userName = address.getString("consignee");
-                    Message message=new Message();
-                    message.what=1;
-                    message.obj=address.getString("id");
-                    handler.sendMessage(message);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                addressId=address.getString("id");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                     name.setText(userName);
                     String phone = address.getString("phone");
                     telphone.setText(phone);
                     String detailAddress = address.getString("detailAddress");
                     String localArea = address.getString("localArea");
-                    location.setText(localArea+detailAddress);
-                }else if (msg.equals("filed")){
+                    location.setText(localArea + detailAddress);
+                } else if (msg.equals("filed")) {
 
                 }
 
@@ -282,12 +359,12 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     };
 
     /**
-     *  失败的监听器
+     * 失败的监听器
      */
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(ConfirmOrderActivity.this,"链接网络失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ConfirmOrderActivity.this, "链接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
         }
     };
