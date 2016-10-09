@@ -6,9 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.Company;
-import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Url;
 
 public class CompanyInfoActivity extends AppCompatActivity {
@@ -22,7 +23,6 @@ public class CompanyInfoActivity extends AppCompatActivity {
         //返回键
         android.support.v7.app.ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
-
         initView();
         setValues();
     }
@@ -55,9 +55,13 @@ public class CompanyInfoActivity extends AppCompatActivity {
         companyInfo_introduce_textView.setText(company.getDescription());
         //网络加载图片
         String url= Url.url(company.getLogo());
-        logo.setTag(url);
-        AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-        asyncBitmapLoader.loadImage(this,logo,url);
+//        logo.setTag(url);
+        Glide.with(this)
+                .load(url)
+                .placeholder(R.mipmap.background)
+                .error(R.mipmap.loading_error)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into( logo );
     }
 
 }

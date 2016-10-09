@@ -142,7 +142,7 @@ public class MyAdapter extends BaseAdapter {
                             .into(vh.prodect_imgView2);
 
                 }else {
-                    vh.prodect_imgView2.setImageResource(R.drawable.icon_image_default);
+                    vh.prodect_imgView2.setImageResource(R.mipmap.loading_error);
                 }
                 vh.layout2.setOnClickListener(new View.OnClickListener() {
                     @Override

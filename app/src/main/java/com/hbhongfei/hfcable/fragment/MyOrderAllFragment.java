@@ -1,8 +1,6 @@
 package com.hbhongfei.hfcable.fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,8 +25,6 @@ import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
-import static android.app.Activity.RESULT_CANCELED;
-
 /**
  * 全部订单的页面
  */
@@ -49,7 +45,6 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
     public boolean isResult;//是否从订单详情返回
 
     public MyOrderAllFragment() {
-        // Required empty public constructor
     }
 
     public static MyOrderAllFragment newInstance(String param1, String param2) {
@@ -71,32 +66,24 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
         View v = inflater.inflate(R.layout.fragment_my_order_all, container, false);
         initView(v);
         initRefreshLayout();
-
-//        isPrepared = true;
-//        lazyLoad();
+        isResult=false;
+        connectionOrder = new ConnectionOrder(MyOrderAllFragment.this.getActivity(),MyOrderAllFragment.this.getContext(),ListView_myOrderAll,noInternet,isResult);
+        isPrepared = true;
+        lazyLoad();
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        isPrepared = true;
-        lazyLoad();
-//        isResult=false;
-
+         if(connectionOrder.isResult){
+             getValues();
+             isResult=false;
+         }
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode== Activity.RESULT_OK){
-            if(resultCode==RESULT_CANCELED){
-                Toast.makeText(getActivity(),"eee",Toast.LENGTH_SHORT).show();
-                getValues();
-            }
-        }
-    }
+
 
     /**
      * 初始化界面
@@ -123,7 +110,6 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
     private void getValues(){
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
-        connectionOrder = new ConnectionOrder(MyOrderAllFragment.this.getActivity(),MyOrderAllFragment.this.getContext(),ListView_myOrderAll,noInternet);
         pageNo=1;
         new MyAsyncTack().execute();
 
@@ -135,7 +121,6 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
             return;
         }
         getValues();
-        Toast.makeText(getActivity(),"aaaa",Toast.LENGTH_SHORT).show();
         mHasLoadedOnce=true;
     }
     //下拉刷新
@@ -144,8 +129,6 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
         if(NetUtils.isConnected(getActivity())){
             pageNo=1;
             new MyAsyncTack().execute();
-//            ListView_myOrderAll.setVisibility(View.VISIBLE);
-
             mRefreshLayout.endRefreshing();
         }else {
             Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
@@ -165,7 +148,6 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
                 return true;
             }else {
                 mRefreshLayout.endLoadingMore();
-                Toast.makeText(getActivity(),"已经是全部数据",Toast.LENGTH_SHORT).show();
                 return false;
             }
         }else {

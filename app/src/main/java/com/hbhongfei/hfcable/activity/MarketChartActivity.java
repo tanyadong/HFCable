@@ -93,7 +93,7 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
                 StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
-                        parse(s);
+                        parseMonth(s);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -123,69 +123,12 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
             }
         }).start();
     }
-
     /**
-     * 解析html,获取一周行情的地址
+     * 解析html,获取一个月的记录
      *
      * @param html
      */
-    protected void parse(String html) {
-        Document doc = Jsoup.parse(html);
-        //Elements
-        Element ul = doc.getElementsByClass("scrollUl").first();
-        Element li = ul.getElementsByTag("li").first();
-        week_url = "http://material.cableabc.com" + li.getElementsByTag("a").attr("href");
-        getOneWeekInfo(week_url);
-    }
-
-    /**
-     * 获取一周的原材料行情信息
-     * 谭亚东
-     */
-    private void getOneWeekInfo(final String s) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                StringRequest request = new StringRequest(Request.Method.GET, s, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        parseWeek(s);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //请求失败
-                        dialog.cancle();
-                        if (volleyError instanceof NoConnectionError) {
-                            Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", MarketChartActivity.this);
-                        } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
-                            Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
-                                @Override
-                                public void errorClick() {
-                                    Toast.makeText(MarketChartActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } else {
-                            Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
-                                @Override
-                                public void errorClick() {
-                                    Toast.makeText(MarketChartActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    }
-                });
-                MySingleton.getInstance(MarketChartActivity.this).addToRequestQueue(request);
-            }
-        }).start();
-    }
-
-    /**
-     * 解析html,获取一周行情
-     *
-     * @param html
-     */
-    protected void parseWeek(String html) {
+    protected void parseMonth(String html) {
         Document doc = Jsoup.parse(html);
         //Elements
         Element table = doc.getElementsByTag("table").first();
@@ -204,7 +147,6 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
      * 曲线图
      */
     private void showChart() {
-
         // 设置在Y轴上是否是从0开始显示
         mChart.setStartAtZero(false);
         //是否在Y轴显示数据，就是曲线上的数据
@@ -245,7 +187,6 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
         // set the marker to the chart
         mChart.setMarkerView(mv);
 
-        // enable/disable highlight indicators (the lines that indicate the
         // highlighted Entry)
         mChart.setHighlightIndicatorEnabled(true);
         //设置字体格式，如正楷

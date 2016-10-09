@@ -3,8 +3,6 @@ package com.hbhongfei.hfcable.activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -26,12 +24,12 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.SpinnerListAdapter;
 import com.hbhongfei.hfcable.fragment.IndexFragment;
 import com.hbhongfei.hfcable.util.ConnectionTypeTwo;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.MySpinner;
 import com.hbhongfei.hfcable.util.NetUtils;
-import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
 import org.json.JSONArray;
@@ -39,9 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
@@ -56,10 +52,11 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
     private BGARefreshLayout mRefreshLayout;
     private String typeName;
     private int width;
-    private int count=0;
     private int pageNo=1;//D当前页数
     ConnectionTypeTwo typtTwoConnection;
     private LinearLayout noInternet;
+    private     Dialog dialog;
+;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,17 +70,8 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
         initRefreshLayout();
         setValues();
         connInter();
-        getTotolCount();//总页数
     }
-    Handler mMandler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if(msg.what==0){
-                count=msg.arg1;
-            }
-        }
-    };
+
     public void initView(){
         prodectType_spinner = (LinearLayout) findViewById(R.id.prodectType_spinner);
         prodectType_textView = (TextView) findViewById(R.id.prodectType_textView);
@@ -102,35 +90,9 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
         // 设置正在加载更多时的文本
         refreshViewHolder.setLoadingMoreText("正在加载中");
     }
-    /**
-     * 获得总页数
-     */
-    private void getTotolCount() {
-        String url = Url.url("/androidTypeTwo/getTotalRecord");
-        Map<String,String> map=new HashMap<>();
-        map.put("typeName",typeName);
-        NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectProductListener,errorListener,map);
-        MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
-    }
 
-    /**
-     * 成功的监听器
-     * 返回的是产品种类
-     */
-    private Response.Listener<JSONObject> jsonObjectProductListener = new Response.Listener<JSONObject>() {
-        @Override
-        public void onResponse(JSONObject jsonObject) {
-            try {
-                JSONObject object=jsonObject.getJSONObject("page");
-                Message message=new Message();
-                message.what=0;
-                message.arg1=object.getInt("totalPages");
-                mMandler.sendMessage(message);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
+
+
 
     /**
      * 连接服务
@@ -218,6 +180,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
      * 设置数据
      */
     public void setValues(){
+        dialog=new Dialog(this);
         Intent intent=getIntent();
         typeName=intent.getStringExtra("typeName");
         prodectType_textView.setText(typeName);
@@ -226,7 +189,9 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
         width = wm.getDefaultDisplay().getWidth();
         try {
             typtTwoConnection=new ConnectionTypeTwo(ProdectListActivity.this,ProdectListActivity.this,prodectList_listView,noInternet);
+            dialog.showDialog("正在加载中");
             typtTwoConnection.connInterByType(typeName,pageNo);
+            dialog.cancle();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -246,7 +211,10 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
                         typeName=list.get(position);
                         prodectType_textView.setText(list.get(position));
                         try {
+                            pageNo=1;
+                            dialog.showDialog("正在加载中");
                             typtTwoConnection.connInterByType(list.get(position),pageNo);
+                            dialog.cancle();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -271,7 +239,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
         if(NetUtils.isConnected(this)) {
-            if (pageNo < count) {
+            if (pageNo <typtTwoConnection.totalCount ) {
                 pageNo++;
                 new MyAsyncTack().execute();
             } else {
@@ -315,8 +283,6 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //防止handler引起的内存泄露
-        mMandler.removeCallbacksAndMessages(null);
     }
 
 }

@@ -140,6 +140,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             textview_order_state.setText("订单已取消");
             btn_order_cancle.setVisibility(View.GONE);
             btn_order_pay.setVisibility(View.GONE);
+            btn_order_confirmReceipt.setVisibility(View.GONE);
             if(order.shipOrNot==1){
                 btn_order_viewlogistics.setVisibility(View.VISIBLE);
                 btn_order_viewlogistics.setOnClickListener(this);

@@ -34,7 +34,6 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.CompanyInfoActivity;
 import com.hbhongfei.hfcable.activity.ProdectListActivity;
 import com.hbhongfei.hfcable.activity.ProjectActivity;
-import com.hbhongfei.hfcable.activity.SplashActivity;
 import com.hbhongfei.hfcable.adapter.ImagePaperAdapter;
 import com.hbhongfei.hfcable.pojo.Company;
 import com.hbhongfei.hfcable.pojo.Project;
@@ -45,7 +44,6 @@ import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NoScrollListView;
-import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
 import org.json.JSONArray;
@@ -53,9 +51,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -83,13 +79,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
     private Button btn_typeName1, btn_typeName2, btn_typeName3, btn_typeName4, btn_typeName5, btn_typeName6;
     ConnectionProduct connectionProduct;
     private int count;
-    /**
-     * 标志位，标志已经初始化完成
-     */
+    /** 标志位，标志已经初始化完成 */
     private boolean isPrepared;
-    /**
-     * 是否已被加载过一次，第二次就不再去请求数据了
-     */
+    /** 是否已被加载过一次，第二次就不再去请求数据了 */
     private boolean mHasLoadedOnce;
     /**
      * 用于小圆点图片
@@ -107,7 +99,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
     private int currentItem = 0;//当前页面
 
     boolean isAutoPlay = true;//是否自动轮播
-    private int pageNo = 1;//当前页数
+    private int pageNo=1;//当前页数
     private ScheduledExecutorService scheduledExecutorService;
     Intent intent;
     private Dialog dialog;
@@ -116,14 +108,13 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
 
 
     //Toast显示状态
-    private View mLoadMoreFooterView;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what) {
+            switch (msg.what){
                 case 1:
-                    count = msg.arg1;
+                    count=msg.arg1;
                     break;
                 case 100:
                     mviewPager.setCurrentItem(currentItem);
@@ -138,17 +129,16 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
 
     public IndexFragment() {
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_index, container, false);
-        dialog = new Dialog(getActivity());
+        dialog=new Dialog(getActivity());
         initView(view);
         initRefreshLayout();
-        list_obj = new ArrayList<>();
+        list_obj=new ArrayList<>();
         list = new ArrayList<ImageView>();
-        list_project = new ArrayList<>();
+        list_project=new ArrayList<>();
         dotViewList = new ArrayList<ImageView>();
         dotLayout.removeAllViews();
         isPrepared = true;
@@ -166,11 +156,11 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void initRefreshLayout() {
-        mRefreshLayout = (BGARefreshLayout) view.findViewById(R.id.index_modulename_refresh);
+        mRefreshLayout = (BGARefreshLayout)view.findViewById(R.id.index_modulename_refresh);
         // 为BGARefreshLayout设置代理
         mRefreshLayout.setDelegate(this);
         // 设置下拉刷新和上拉加载更多的风格     参数1：应用程序上下文，参数2：是否具有上拉加载更多功能
-        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity().getApplication(), true);
+        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity().getApplication(),true);
         // 设置正在加载更多时的文本
         refreshViewHolder.setLoadingMoreText("正在加载中");
         // 设置下拉刷新和上拉加载更多的风
@@ -179,56 +169,17 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
         mRefreshLayout.setPullDownRefreshEnable(false);
     }
 
-    /**
-     * 获得最新的产品数
-     */
-    private void getNewProduct() {
-        String url = Url.url("/androidProduct/getTotalRecord");
-        Map<String, String> map = new HashMap<>();
-        map.put("newProducts", "是");
-        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectProductListener, errorNewProductNum, map);
-        MySingleton.getInstance(getActivity()).addToRequestQueue(normalPostRequest);
-    }
-
-    /**
-     * 成功的监听器
-     * 返回的是产品种类
-     */
-    private Response.Listener<JSONObject> jsonObjectProductListener = new Response.Listener<JSONObject>() {
-        @Override
-        public void onResponse(JSONObject jsonObject) {
-            try {
-                JSONObject object = jsonObject.getJSONObject("page");
-                Message message = new Message();
-                message.what = 1;
-                message.arg1 = object.getInt("totalPages");
-                handler.sendMessage(message);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
-    /**
-     * 种类失败的监听器
-     */
-    public Response.ErrorListener errorNewProductNum = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-                Toast.makeText(IndexFragment.this.getContext(),"加载失败",Toast.LENGTH_SHORT).show();
-        }
-    };
-
     public void initView(View view) {
+//        SplashActivity.ID=1;
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         inflater = LayoutInflater.from(getActivity());
-        scrollView = (ScrollView) view.findViewById(R.id.scrollView_index);
+        scrollView= (ScrollView) view.findViewById(R.id.scrollView_index);
         listView = (NoScrollListView) view.findViewById(R.id.lv);
-        connectionProduct = new ConnectionProduct(IndexFragment.this.getActivity(), listView);
-        mviewPager = (ViewPager) view.findViewById(R.id.myviewPager);
-        dotLayout = (LinearLayout) view.findViewById(R.id.dotLayout);
+        connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),listView);
+        mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
+        dotLayout = (LinearLayout)view.findViewById(R.id.dotLayout);
 
 
         btn_typeName1 = (Button) view.findViewById(R.id.btn_type_name1);
@@ -250,8 +201,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
         btn_typeName3.setOnClickListener(this);
         btn_typeName4.setOnClickListener(this);
         btn_typeName5.setOnClickListener(this);
-        btn_typeName6.setOnClickListener(this);
-        ;
+        btn_typeName6.setOnClickListener(this);;
 
     }
 
@@ -261,7 +211,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
     public void setDate() {
         //首页根据条件查询产品
         try {
-            connectionProduct.connInterByType("是", pageNo);
+            connectionProduct.connInterByType("是",pageNo);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -271,10 +221,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
 
     /**
      * 设置小圆点
-     *
      * @param list
      */
-    public void setSmallDot(List<ImageView> list) {
+    public void setSmallDot(List<ImageView>list){
         //加入小圆点
         for (int i = 0; i < list.size(); i++) {
             ImageView indicator = new ImageView(getContext());
@@ -304,7 +253,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
         scheduledExecutorService.scheduleAtFixedRate(new SlideShowTask(), 1, 4, TimeUnit.SECONDS);
         //根据他的参数说明，第一个参数是执行的任务，第二个参数是第一次执行的间隔，第三个参数是执行任务的周期；
     }
-
     /**
      * 获取产品种类服务
      */
@@ -564,6 +512,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
     }
 
 
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -626,7 +576,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
             protected void onPostExecute(Void aVoid) {
                 // 加载完毕后在UI线程结束下拉刷新
                 try {
-                    connectionProduct.connInterByType("是", 1);
+                    connectionProduct.connInterByType("是",1);
                     mRefreshLayout.endRefreshing();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -637,8 +587,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        if (NetUtils.isConnected(getActivity())) {
-            if (pageNo < count) {
+        if(NetUtils.isConnected(getActivity())) {
+            Toast.makeText(getActivity(),connectionProduct.countPage+"",Toast.LENGTH_SHORT).show();
+            if (pageNo < connectionProduct.countPage) {
                 pageNo++;
                 // 如果网络可用，则加载网络数据
                 new MyAsyncTack().execute();
@@ -647,8 +598,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
                 return false;
             }
             return true;
-        } else {
-            Toast.makeText(getActivity(), "网络连接失败，请检查您的网络", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
             mRefreshLayout.endLoadingMore();
             return false;
         }
@@ -661,44 +612,39 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
             return;
         }
         connInter();
-        //获得最新产品的总数
-        getNewProduct();
         //加载“新型产品”模块数据
         setDate();
         //连接获取公司的服务
         connInterGetCompanyInfo();
-        mHasLoadedOnce = true;
+        mHasLoadedOnce=true;
     }
-
     @Override
     public void errorClick() {
         NetUtils.openSetting(IndexFragment.this.getActivity());
     }
 
 
-    class MyAsyncTack extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
+    class MyAsyncTack extends AsyncTask<Void,Void,Void>{
+       @Override
+       protected void onPreExecute() {
+           super.onPreExecute();
+       }
+       @Override
+       protected Void doInBackground(Void... params) {
+           try {
+               connectionProduct.connInterByType("是",pageNo);
+           } catch (JSONException e) {
+               e.printStackTrace();
+           }
+           return null;
+       }
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                connectionProduct.connInterByType("是", pageNo);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            mRefreshLayout.endLoadingMore();
-            super.onPostExecute(aVoid);
-        }
-    }
-
+       @Override
+       protected void onPostExecute(Void aVoid) {
+           mRefreshLayout.endLoadingMore();
+           super.onPostExecute(aVoid);
+       }
+   }
     /**
      * 执行轮播图切换任务
      */
@@ -718,7 +664,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener,
      */
     private class MyPageChangeListener implements ViewPager.OnPageChangeListener {
         boolean isAutoPlay = false;
-
         @Override
         public void onPageScrollStateChanged(int arg0) {
             // TODO Auto-generated method stub

@@ -8,6 +8,7 @@
     <Button
         android:id="@+id/btn_order_cancle"
         android:text="@string/orderCancle"
+        android:focusable="false"
         android:textColor="@color/black"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="10dp"
@@ -18,7 +19,7 @@
         android:id="@+id/btn_order_goPay"
         android:text="@string/goPay"
         android:textColor="@color/colorRed"
-
+        android:focusable="false"
         android:background="@drawable/order_botton_btn_red"
         android:layout_marginRight="10dp"
         android:layout_width="wrap_content"
@@ -28,6 +29,7 @@
         android:text="@string/confirmReceipt"
         android:textColor="@color/colorRed"
         android:visibility="visible"
+        android:focusable="false"
         android:background="@drawable/order_botton_btn_red"
         android:layout_marginRight="10dp"
         android:layout_width="wrap_content"
@@ -36,6 +38,7 @@
         android:id="@+id/btn_order_viewlogistics"
         android:text="@string/viewLogistics"
         android:textColor="@color/colorRed"
+        android:focusable="false"
         android:visibility="gone"
         android:background="@drawable/order_botton_btn_red"
         android:layout_marginRight="10dp"

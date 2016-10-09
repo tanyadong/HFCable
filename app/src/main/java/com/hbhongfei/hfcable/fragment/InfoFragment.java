@@ -49,10 +49,6 @@ import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-
 public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick  {
     //下拉和分页框架
     private static final String TAG = IndexFragment.class.getSimpleName();
@@ -60,16 +56,16 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     private View view;
     private ListView info_listView;
     private DataAdapter mAdapter = null;
-    List<Information> info_list = new ArrayList<Information>();
-    boolean isFirst = true;
+    List<Information> info_list=new ArrayList<Information>();;
     Button reload = null;
     LinearLayout loadLayout = null;
     TextView loading = null;
     String total = null;
     private int index = 0;
-    private int count=1;
+    private int count;
     private LinearLayout noInternet;
-
+    private String info_time,info_content;
+    Information information=null;
 
     /** 标志位，标志已经初始化完成 */
     private boolean isPrepared;
@@ -115,22 +111,18 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
                 getActivity().startActivity(intent);
             }
         });
-        //添加头和尾
+//        //添加头和尾
         info_listView.setAdapter(mAdapter);
         dialog.showDialog("正在加载中");
+        index=0;
         loadData(index);
         mHasLoadedOnce=true;
     }
     Handler mHandler = new Handler(){
-        @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case 0:
-                    count=msg.arg1;
-                    System.out.println(count+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-                    break;
                 case 1:
                     //告诉适配器，数据变化了，从新加载listview
                     mAdapter.notifyDataSetChanged();
@@ -152,7 +144,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      * 初始化组件
      */
     private  void  initView(View view){
-//        SplashActivity.ID=2;
         info_listView = (ListView) view.findViewById(R.id.fragment_info_listView);
         loadLayout= (LinearLayout) view.findViewById(R.id.fragment_load_layout);
         loading = (TextView) view.findViewById(R.id.fragment_loading);
@@ -185,13 +176,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
                 getActivity().startActivity(intent);
             }
         });
-        reload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reload.setVisibility(View.GONE);
-                loadData(0);
-            }
-        });
+
     }
 
     /**
@@ -251,33 +236,38 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     protected void parse(String html) {
         Document doc = Jsoup.parse(html);
         Elements a = doc.getElementById("main_cont_ContentPlaceHolder1_pager").getElementsByTag("a");
-        String s_url=a.last().attr("href");
-        total=s_url.substring(s_url.indexOf("_")+1,s_url.lastIndexOf("."));
-        Message message=new Message();
-        message.what=0;
-        message.arg1=Integer.parseInt(total);
-        mHandler.sendMessage(message);
+        final String s_url=a.last().attr("href");
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                total=s_url.substring(s_url.indexOf("_")+1,s_url.lastIndexOf("."));
+                count=Integer.parseInt(total);
+            }
+        });
         //Elements
         Elements topnews = doc.getElementsByClass("list31_newlist1");
          for (Element link : topnews) {
-            Information information = new Information();
+             information = new Information();
             information.setTitle(link.getElementsByClass("list31_title1").text());
             information.setBrief(link.getElementsByClass("list31_text1").text());
             information.setImgUrl(link.getElementsByTag("img").attr("src"));
             information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
-            loadContentData(information.getContentUrl(), information);
+             loadContentData(information.getContentUrl(), information);
          }
+
     }
     /**
      * 解析资讯详情
      * @param url
      */
+    private void loadContentData(String url, final Information info){
     private void loadContentData(final String url, final Information information){
 
         StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
-            public void onResponse(String s) {
-                parseContent(s,information);
+            public void onResponse(final String s) {
+
+                parseContent(s,info);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -315,12 +305,12 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      * 解析html
      * @param html
      */
-    protected void parseContent(String html, final Information information) {
+    protected void parseContent(String html, final Information info) {
         Document doc = Jsoup.parse(html);
         //获取资讯时间
         Elements time = doc.getElementsByClass("contentspage");
-        String s_time=time.get(0).getElementsByTag("span").first().text();
-        String s_source=time.get(0).getElementsByTag("span").get(1).text();
+        final String s_time=time.get(0).getElementsByTag("span").first().text();
+        final String s_source=time.get(0).getElementsByTag("span").get(1).text();
         //Elements
         //获取资讯内容
         Element id = doc.getElementById("main_ContentPlaceHolder1_pnlContent");
@@ -330,17 +320,16 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             content+="\u3000\u3000"+contents.get(i).text();
             content+="\n";
         }
-        information.setTime(s_time+s_source);
-        information.setDetailContent(content);
+        info.setTime(s_time+s_source);
+        info.setDetailContent(content);
         mHandler.post(new Runnable() {
             @Override
             public void run() {
                 dialog.cancle();
-                info_list.add(information);
+                info_list.add(info);
                 mAdapter.notifyDataSetChanged();
             }
         });
-
     }
 
 
@@ -348,6 +337,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         index=0;
         if(NetUtils.isConnected(getActivity())){
+            info_list.clear();
             new MyAsyncTack().execute();
         }else{
             Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
