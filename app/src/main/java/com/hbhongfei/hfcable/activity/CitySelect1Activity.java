@@ -35,7 +35,6 @@ import java.util.ArrayList;
  */
 public class CitySelect1Activity extends AppCompatActivity implements OnClickListener {
 
-	private Button btn_back, btn_right;
 	private ListView lv_city;
 	private ArrayList<MyRegion> regions;
 

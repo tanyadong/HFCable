@@ -16,7 +16,6 @@ public class InfoDetailActivity extends AppCompatActivity {
     private ImageView infoDetail_img;
     private TextView infoDetail_title;
     private TextView infoDetail_content,infoDetail_time;
-    private String[] array;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

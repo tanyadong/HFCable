@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MarketChartActivity extends AppCompatActivity implements IErrorOnclick {
-    private String url, week_url;
+    private String url;
     private String area, produceName;
     private List<String> averagePrice_list;
     private List<String> data_list;
@@ -56,9 +56,13 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_market_chart);
+        //返回键
+        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
         //初始化组件
         initView();
         //初始化数据
@@ -227,7 +231,6 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
         l.setForm(Legend.LegendForm.LINE);  //设置图最下面显示的类型
         l.setTypeface(tf);
         l.setTextSize(15);
-//        l.setTextColor(Color.rgb(104, 241, 175));
         l.setTextColor(getResources().getColor(R.color.colorRed));
         l.setFormSize(30f); // set the size of the legend forms/shapes
         l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
@@ -246,7 +249,10 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
             xVals.add(data_list.get(i));
         }
         for (int i = 0; i < averagePrice_list.size(); i++) {
-            yVals.add(new Entry(Float.parseFloat(averagePrice_list.get(i)), i));
+            boolean isNum = averagePrice_list.get(i).matches("[0-9]+");
+            if(isNum){
+                yVals.add(new Entry(Float.parseFloat(averagePrice_list.get(i)), i));
+            }
         }
 
         // create a dataset and give it a type

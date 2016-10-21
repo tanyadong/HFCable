@@ -56,7 +56,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
     ConnectionTypeTwo typtTwoConnection;
     private LinearLayout noInternet;
     private     Dialog dialog;
-;
+    private String url_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,41 +99,43 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
      * 展示当前用户管理任务连接服务
      */
     public void connInter(){
-        String url = Url.url("/androidType/getType");
-        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url,null,jsonObjectListener,getTypeErrorListener);
+        url_type= Url.url("/androidType/getType");
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url_type,null,jsonObjectListener,getTypeErrorListener);
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
     }
+    private void analysisDataOfAddress(JSONObject jsonObject){
+        JSONArray jsonArray;
+        List<String> type_list=new ArrayList<>();
+        try {
+            jsonArray = jsonObject.getJSONArray("list");
+            if (jsonArray.length()>0){
+                for(int i=0;i<jsonArray.length();i++){
+                    JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
+                    String typeName=jsonObject1.getString("typeName");
+                    type_list.add(typeName);
+                }
+                //点击事件
+                onClickLisener(type_list);
+            }else{
+                Error.toSetting(noInternet, R.mipmap.nothing, "暂无数据哦", "换一个试试", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+                        Toast.makeText(ProdectListActivity.this,"暂无数据",Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
 
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      *获取种类成功的监听器
      */
     private Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject jsonObject) {
-            JSONArray jsonArray;
-            List<String> type_list=new ArrayList<>();
-            try {
-                jsonArray = jsonObject.getJSONArray("list");
-                if (jsonArray.length()>0){
-                    for(int i=0;i<jsonArray.length();i++){
-                        JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
-                        String typeName=jsonObject1.getString("typeName");
-                        type_list.add(typeName);
-                    }
-                    //点击事件
-                    onClickLisener(type_list);
-                }else{
-                    Error.toSetting(noInternet, R.mipmap.nothing, "暂无数据哦", "换一个试试", new IErrorOnclick() {
-                        @Override
-                        public void errorClick() {
-                            Toast.makeText(ProdectListActivity.this,"暂无数据",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            analysisDataOfAddress(jsonObject);
         }
     };
 
@@ -143,22 +145,35 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
     private Response.ErrorListener getTypeErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            if (volleyError instanceof NoConnectionError) {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", ProdectListActivity.this);
-            } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
-                        Toast.makeText(ProdectListActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
-                        Toast.makeText(ProdectListActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            MySingleton mySingleton = new MySingleton(ProdectListActivity.this);
+            if (mySingleton.getCacheString(url_type)!=null){
+                if(volleyError instanceof NoConnectionError){
+                    Toast.makeText(ProdectListActivity.this,"没有网络",Toast.LENGTH_SHORT).show();
+                }else if(volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError){
+                    Toast.makeText(ProdectListActivity.this,"服务器端异常",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(ProdectListActivity.this,"不好啦，出错啦",Toast.LENGTH_SHORT).show();
+                }
+                noInternet.setVisibility(View.GONE);
+                analysisDataOfAddress(mySingleton.getCache(url_type));
+            }else {
+                if (volleyError instanceof NoConnectionError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", ProdectListActivity.this);
+                } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                            Toast.makeText(ProdectListActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                            Toast.makeText(ProdectListActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         }
     };
@@ -203,24 +218,28 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
         prodectType_spinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MySpinner mySpinner = new MySpinner(ProdectListActivity.this, width, list);
-                mySpinner.showAsDropDown(prodectType_spinner, 0, 0);//显示在rl_spinner的下方
-                mySpinner.setOnItemClickListener(new SpinnerListAdapter.onItemClickListener() {
-                    @Override
-                    public void click(int position, View view) {
-                        typeName=list.get(position);
-                        prodectType_textView.setText(list.get(position));
-                        try {
-                            pageNo=1;
-                            dialog.showDialog("正在加载中");
-                            typtTwoConnection.connInterByType(list.get(position),pageNo);
-                            dialog.cancle();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    MySpinner mySpinner = new MySpinner(ProdectListActivity.this, width, list);
+                    mySpinner.showAsDropDown(prodectType_spinner, 0, 0);//显示在rl_spinner的下方
+                    mySpinner.setOnItemClickListener(new SpinnerListAdapter.onItemClickListener() {
+                        @Override
+                        public void click(int position, View view) {
+                            if(NetUtils.isConnected(ProdectListActivity.this)) {
+                                typeName = list.get(position);
+                                prodectType_textView.setText(list.get(position));
+                                try {
+                                    pageNo = 1;
+                                    dialog.showDialog("正在加载中");
+                                    typtTwoConnection.connInterByType(list.get(position), pageNo);
+                                    dialog.cancle();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }else{
+                                Toast.makeText(ProdectListActivity.this,"请检查您的网络",Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
         });
     }
 

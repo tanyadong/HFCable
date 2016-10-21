@@ -185,6 +185,7 @@
 
     <!--收货地址管理-->
     <string name="add_receiptAddress">新增收货地址</string>
+    <string name="receiptAddress_lale">收货地址</string>
     <string name="title_activity_receipt_address">收货地址管理</string>
     <string name="address_emity">您还没有收货地址</string>
     <string name="address_emity_to">前去添加一个吧！</string>
@@ -210,6 +211,7 @@
 
 
     <!--行情-->
+    <string name="market_lable">资讯详情</string>
     <string name="market_area">市场/地区</string>
     <string name="market_product_name">产品名称</string>
     <string name="market_average_price">均价</string>

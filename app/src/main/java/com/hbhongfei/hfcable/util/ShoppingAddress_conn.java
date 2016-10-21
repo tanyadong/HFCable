@@ -2,7 +2,6 @@ package com.hbhongfei.hfcable.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -37,7 +36,7 @@ public class ShoppingAddress_conn {
     private ListView listView;
     private LinearLayout linearLayout, noInternet;
     private Activity activity;
-
+private String url;
     public ShoppingAddress_conn(Context context, String phoneNum, Activity activity, ListView listView, LinearLayout linearLayout, LinearLayout noInternet) {
         this.phoneNum = phoneNum;
         this.context = context;
@@ -55,7 +54,7 @@ public class ShoppingAddress_conn {
     public void addressListConnection() {
         dialog = new Dialog(context);
         dialog.showDialog("正在加载中。。。");
-        String url = Url.url("/androidAddress/getAddress");
+        url = Url.url("/androidAddress/getAddress");
         Map<String, String> map = new HashMap<>();
         map.put("userName", phoneNum);
         NormalPostRequest normalPostRequest = new NormalPostRequest(url, getSuccessListener, errorListener, map);
@@ -67,36 +66,7 @@ public class ShoppingAddress_conn {
     public Response.Listener<JSONObject> getSuccessListener = new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject jsonObject) {
-            try {
-                List<ShoppingAddress> list = new ArrayList<>();
-                JSONArray jsonArray = jsonObject.getJSONArray("address_list");
-                if (jsonArray.length() > 0) {
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        ShoppingAddress shoppingAddress = new ShoppingAddress();
-                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                        shoppingAddress.setId(jsonObject1.getString("id"));
-                        shoppingAddress.setConsignee(jsonObject1.getString("consignee"));
-                        shoppingAddress.setDetailAddress(jsonObject1.getString("detailAddress"));
-                        shoppingAddress.setLocalArea(jsonObject1.getString("localArea"));
-                        shoppingAddress.setPhone(jsonObject1.getString("phone"));
-                        shoppingAddress.setTag(jsonObject1.getInt("tag"));
-                        list.add(shoppingAddress);
-                    }
-                    //给listview添加数据
-                    Address_all_Adapter address_all_adapter = new Address_all_Adapter(activity,context, list, phoneNum, listView, linearLayout,noInternet);
-                    listView.setAdapter(address_all_adapter);
-                    listView.setDivider(null);
-                    listView.setDividerHeight(30);
-                    dialog.cancle();
-                }else{
-                    dialog.cancle();
-                    linearLayout.setVisibility(View.VISIBLE);
-                }
-
-            } catch (JSONException e) {
-                dialog.cancle();
-                e.printStackTrace();
-            }
+            analysisDataOfAddress(jsonObject);
         }
     };
     /**
@@ -106,28 +76,77 @@ public class ShoppingAddress_conn {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             dialog.cancle();
-            if (volleyError instanceof NoConnectionError) {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
-                        NetUtils.openSetting(activity);
-                    }
-                });
-            } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
+            MySingleton mySingleton = new MySingleton(context);
+            if (mySingleton.getCacheString(url)!=null){
+                if(volleyError instanceof NoConnectionError){
+                    Toast.makeText(context,"没有网络",Toast.LENGTH_SHORT).show();
+                }else if(volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError){
+                    Toast.makeText(context,"服务器端异常",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context,"不好啦，出错啦",Toast.LENGTH_SHORT).show();
+                }
+                noInternet.setVisibility(View.GONE);
+                analysisDataOfAddress(mySingleton.getCache(url));
+            }else {
+                if (volleyError instanceof NoConnectionError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                            NetUtils.openSetting(activity);
+                        }
+                    });
+                } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
 
-                    }
-                });
-            } else {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
-
-                    }
-                });
+                        }
+                    });
+                } else {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                        }
+                    });
+                }
             }
         }
     };
+
+    /**
+     * 解析json
+     * @param jsonObject
+     */
+    private void analysisDataOfAddress(JSONObject jsonObject){
+        try {
+            List<ShoppingAddress> list = new ArrayList<>();
+            JSONArray jsonArray = jsonObject.getJSONArray("address_list");
+            if (jsonArray.length() > 0) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    ShoppingAddress shoppingAddress = new ShoppingAddress();
+                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                    shoppingAddress.setId(jsonObject1.getString("id"));
+                    shoppingAddress.setConsignee(jsonObject1.getString("consignee"));
+                    shoppingAddress.setDetailAddress(jsonObject1.getString("detailAddress"));
+                    shoppingAddress.setLocalArea(jsonObject1.getString("localArea"));
+                    shoppingAddress.setPhone(jsonObject1.getString("phone"));
+                    shoppingAddress.setTag(jsonObject1.getInt("tag"));
+                    list.add(shoppingAddress);
+                }
+                //给listview添加数据
+                Address_all_Adapter address_all_adapter = new Address_all_Adapter(activity,context, list, phoneNum, listView, linearLayout,noInternet);
+                listView.setAdapter(address_all_adapter);
+                listView.setDivider(null);
+                listView.setDividerHeight(30);
+                dialog.cancle();
+            }else{
+                dialog.cancle();
+                linearLayout.setVisibility(View.VISIBLE);
+            }
+
+        } catch (JSONException e) {
+            dialog.cancle();
+            e.printStackTrace();
+        }
+    }
 }

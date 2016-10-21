@@ -567,7 +567,6 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         tvGoToPay.setText("去支付(" + totalCount + ")");
         //计算购物车的金额为0时候清空购物车的视图
         if(totalCount==0){
-//            setCartNum();
         } else{
         }
     }

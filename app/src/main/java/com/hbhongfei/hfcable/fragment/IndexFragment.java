@@ -78,7 +78,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     private ImageView img1;
     private Button btn_typeName1, btn_typeName2, btn_typeName3, btn_typeName4, btn_typeName5, btn_typeName6;
     ConnectionProduct connectionProduct;
-    private int count;
     /** 标志位，标志已经初始化完成 */
     private boolean isPrepared;
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
@@ -92,7 +91,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
      */
     private ArrayList<Object> list_obj;
     private List<ImageView> list;
-    private List<ImageView> list_project;
     //    添加小圆点控件，
     private LinearLayout dotLayout;
 
@@ -113,9 +111,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case 1:
-                    count=msg.arg1;
-                    break;
                 case 100:
                     mviewPager.setCurrentItem(currentItem);
                     break;
@@ -169,7 +164,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     }
 
     public void initView(View view) {
-//        SplashActivity.ID=1;
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
@@ -554,7 +548,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 break;
         }
     }
-
     //下拉刷新
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {

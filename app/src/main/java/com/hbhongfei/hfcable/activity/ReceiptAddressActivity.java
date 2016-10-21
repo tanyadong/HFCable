@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.ShoppingAddress_conn;
@@ -37,7 +36,6 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
     private LinearLayout layout_address_emity,noInternet;
     private static final String USER = LoginConnection.USER;
     private String S_phoneNumber;//用户名
-    private  Dialog dialog;
 
     ShoppingAddress_conn shoppingAddressListConnection;
     @Override

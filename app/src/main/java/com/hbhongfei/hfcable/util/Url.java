@@ -7,7 +7,7 @@ package com.hbhongfei.hfcable.util;
  */
 public  class  Url {
 //    public static final String URL =  "http://59.110.1.213:8080/HFCable";
-    public static final String URL =  "http://192.168.137.3:8080/HFCable";
+public static final String URL =  "http://192.168.137.2:8080/HFCable";
     public static String url(String url){
         return URL+url;
     }

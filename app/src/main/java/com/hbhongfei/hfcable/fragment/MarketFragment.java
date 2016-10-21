@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,11 @@ import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.MarketChartActivity;
-import com.hbhongfei.hfcable.activity.SplashActivity;
 import com.hbhongfei.hfcable.adapter.MyExpandableListViewAdapter;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
 import com.hbhongfei.hfcable.util.Dialog;
-import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.NetUtils;
-import com.squareup.okhttp.OkHttpClient;
 
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -31,13 +29,21 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
+import okhttp3.Cache;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 /**
@@ -56,11 +62,13 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
     private boolean mHasLoadedOnce;
     //下拉和分页框架
-    private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
     private MyExpandableListViewAdapter myExpandableListViewAdapter=null;
     int index=1;
     private LinearLayout noInternet;
+
+
+    private OkHttpClient mOkHttpClient;
 
     public MarketFragment() {
     }
@@ -72,6 +80,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         view = inflater.inflate(R.layout.fragment_market, container, false);
         initView(view);
         initRefreshLayout();
+        initOkHttpClient(); //初始化okhttp请求
         isPrepared = true;
         //懒加载
         lazyLoad();
@@ -97,7 +106,6 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
                 case 0:
                     myExpandableListViewAdapter.notifyDataSetChanged();
                     break;
-
                 default:
                     break;
             }
@@ -145,26 +153,108 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         expandableListView = (ExpandableListView) view.findViewById(R.id.market_expendlist);
         noInternet = (LinearLayout) view.findViewById(R.id.no_internet_market);
     }
+    private void initOkHttpClient() {
+//        File sdcache =getActivity().getCacheDir();
+        File sdcache=getActivity().getExternalCacheDir();
+        int cacheSize = 10 * 1024 * 1024;
+        OkHttpClient.Builder builder = null;
+            builder = new OkHttpClient.Builder()
+                    .connectTimeout(15, TimeUnit.SECONDS)
+                    .writeTimeout(20, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
+        mOkHttpClient = builder.build();
+    }
 
-    /**
-     * 访问网络
-     */
     private  String netWork(final int index) {
         final String url = "http://material.cableabc.com/matermarket/spotshow_00" + index + ".html";
-        com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder().url(url).build();
+        Request.Builder requestBuilder = new Request.Builder().url(url);
+        requestBuilder.method("GET", null);
+        Request request = requestBuilder.build();
+//        try {
+//            Response response = mOkHttpClient.newCall(request).execute();
+//            if(NetUtils.isConnected(getActivity())) {
+//                if (response != null) {
+//                    Log.i("cache",response.cacheResponse().toString());
+////                    runOnUiThread(new Runnable() {
+////                        @Override
+////                        public void run() {
+////                            Toast.makeText(getApplicationContext(), "请求成功", Toast.LENGTH_SHORT).show();
+////                        }
+////                    });
+////                    Toast.makeText(getActivity(),response.cacheResponse().toString(),Toast.LENGTH_SHORT).show();
+//                    return response.body().string();
+//                } else {
+//                    throw new IOException("Unexpected code " + response);
+//                }
+//            }else {
+//                if(null!=response.cacheResponse()){
+//                    return  response.cacheResponse().toString();
+//                }else{
+////                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MarketFragment.this);
+//                }
+//                System.out.println(response.cacheResponse().toString()+" adfsfsd");
+//            }
 
-        OkHttpClient client = new OkHttpClient();
-        com.squareup.okhttp.Response response = null;
-        try {
-            response = client.newCall(request).execute();
-            if (response!=null) {
-                return response.body().string();
-            } else {
-                throw new IOException("Unexpected code " + response);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            Call mcall = mOkHttpClient.newCall(request);
+            mcall.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if(NetUtils.isConnected(getActivity())) {
+                            response.body().string();
+                            final String str = response.networkResponse().toString();
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), "network" + str, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            Log.i("wangshu", "network---" + str);
+                    }else {
+                        if (null != response.cacheResponse()) {
+                            final String str = response.body().string();
+                            Log.i("wangshu", "cache---" + str);
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), "cache" + str, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity(), "请求成功", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        try {
+////            Cache cache=new Cache(getActivity().getCacheDir(),cacheSize);
+//            OkHttpClient client = new OkHttpClient();
+//            com.squareup.okhttp.Response response = null;
+//            response = client.newCall(request).execute();
+//            if(NetUtils.isConnected(getActivity())) {
+//                if (response != null) {
+//                    return response.body().string();
+//                } else {
+//                    throw new IOException("Unexpected code " + response);
+//                }
+//            }else {
+//                Toast.makeText(getActivity(), response.cacheResponse().toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return null;
     }
     //下拉刷新
@@ -192,10 +282,10 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     class MarketTask extends AsyncTask<Integer, Void, ArrayList<List<MarketInfo>>> {
         @Override
         protected ArrayList<List<MarketInfo>> doInBackground(Integer... params) {
-
                 index = params[0];
                 String data = netWork(index);
-                return parse(data, index);
+//                return parse(data);
+            return null;
         }
         @Override
         protected void onPreExecute() {
@@ -208,11 +298,11 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
          */
         @Override
         protected void onPostExecute(final ArrayList<List<MarketInfo>> data) {
-            if(data.size()==4){
-                dialog.cancle();
-                ll_market_head.setVisibility(View.VISIBLE);
-                setValues(data);
-            }
+//            if(data.size()==4){
+//                dialog.cancle();
+//                ll_market_head.setVisibility(View.VISIBLE);
+//                setValues(data);
+//            }
         }
     }
     /**
@@ -225,14 +315,15 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         group_list.add("橡胶");
         group_list.add("塑料");
         dialog.showDialog("正在加载中");
-        if(NetUtils.isConnected(getActivity())){
+//        if(NetUtils.isConnected(getActivity())){
             for (int i=1;i<=4;i++){
                 new MarketTask().execute(i);
             }
-        }else{
-            dialog.cancle();
-            Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MarketFragment.this);
-        }
+        dialog.cancle();
+//        }else{
+//            dialog.cancle();
+//            Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MarketFragment.this);
+//        }
 
     }
 
@@ -241,7 +332,8 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
      *
      * @param html
      */
-    public ArrayList<List<MarketInfo>> parse(String html, final int index) {
+    public ArrayList<List<MarketInfo>> parse(String html) {
+        Log.d("html",html);
         Document doc = Jsoup.parse(html);
         //Elements
         Element table = doc.getElementsByTag("table").first();

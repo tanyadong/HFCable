@@ -3,9 +3,8 @@ package com.hbhongfei.hfcable.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.support.v7.app.AppCompatActivity;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.LoginConnection;
@@ -32,6 +31,5 @@ public class CommentActivity extends AppCompatActivity {
         S_phoneNumber = spf.getString("phoneNumber",null);
         Intent intent = getIntent();
         S_cableRingId = intent.getStringExtra("cableRingId");
-        Toast.makeText(this,S_cableRingId+"",Toast.LENGTH_SHORT).show();
     }
 }

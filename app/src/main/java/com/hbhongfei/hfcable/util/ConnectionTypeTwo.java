@@ -44,6 +44,7 @@ public class ConnectionTypeTwo {
     private MyAdapter_typeTwo myAdapter_typeTwo;
     private Activity activity;
     private LinearLayout noInternet;
+    private String url;
     public ConnectionTypeTwo(Activity activity, Context context, ExpandableListView listView, LinearLayout noInternet) {
         this.context = context;
         this.listView=listView;
@@ -65,87 +66,85 @@ public class ConnectionTypeTwo {
      * */
     public void connInterByType(String typeName,int pageNo) throws JSONException {
         page=pageNo;
-
-        String url = Url.url("/androidTypeTwo/getTypeTwo");
+         url= Url.url("/androidTypeTwo/getTypeTwo");
         Map<String,String> map=new HashMap<>();
         map.put("typeName",typeName);
         map.put("pageNo",String.valueOf(pageNo));
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectTypeTwoListener,errorListener,map);
         MySingleton.getInstance(context).addToRequestQueue(normalPostRequest);
     }
+
     /**
-     * 成功的监听器
-     * 返回的是产品种类
+     * jiexi二级种类
+     * @param jsonObject
      */
-    private Response.Listener<JSONObject> jsonObjectTypeTwoListener = new Response.Listener<JSONObject>() {
-        @Override
-        public void onResponse(final JSONObject jsonObject) {
-            try {
-                list=new ArrayList<>();
-                typeTwo_list=new ArrayList<>();
-                JSONArray jsonArray=jsonObject.getJSONArray("typeTwolist");
-                final int count=jsonArray.length();
-                if (count>0){
-                    listView.setVisibility(View.VISIBLE);
-                    noInternet.setVisibility(View.GONE);
-                    mMandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                totalCount=jsonObject.getInt("totalPages");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
+    private void analysisDataOfTypeTwo(final JSONObject jsonObject){
+        try {
+            list=new ArrayList<>();
+            typeTwo_list=new ArrayList<>();
+            JSONArray jsonArray=jsonObject.getJSONArray("typeTwolist");
+            final int count=jsonArray.length();
+            if (count>0){
+                listView.setVisibility(View.VISIBLE);
+                noInternet.setVisibility(View.GONE);
+                mMandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            totalCount=jsonObject.getInt("totalPages");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    });
-                    for(int i=0;i<count;i++){
-                        JSONObject jsonObject1=jsonArray.getJSONObject(i);
-                        JSONObject jsonObject2=jsonObject1.getJSONObject("typeTwo");
-                        TypeTwo typeTwo=new TypeTwo();
-                        typeTwo.setId(jsonObject2.getString("id"));
-                        typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
-                        typeTwo_list.add(typeTwo); //添加父组件
-                        JSONArray jsonArray1=jsonObject1.getJSONArray("products");
-                        pro_list=new ArrayList<>();
-                        int count_product=jsonArray1.length();
-                        for(int j=0;j<count_product;j++){
-                            JSONObject object= (JSONObject) jsonArray1.get(j);
-                            Product product=new Product();
-                            product.setId(object.getString("id"));
-                            product.setPrice(object.getDouble("price"));
-                            product.setTypeTwo(typeTwo);
-                            product.setApplicationRange(object.getString("applicationRange"));
-                            product.setSpecifications(object.getString("specifications"));
-                            product.introduce=object.getString("introduce");
-                            product.setConductorMaterial(object.getString("conductorMaterial"));
-                            product.setCoreNumber(object.getString("coreNumber"));
-                            product.setCrossSection(object.getString("crossSection"));
-                            product.setImplementationStandards(object.getString("implementationStandards"));
-                            product.setDiameterLimit(object.getString("diameterLimit"));
-                            product.setOutsideDiameter(object.getString("outsideDiameter"));
-                            product.setSheathMaterial(object.getString("sheathMaterial"));
-                            product.setVoltage(object.getString("voltage"));
-                            product.setReferenceWeight(object.getString("referenceWeight"));
-                            product.setPurpose(object.getString("purpose"));
 
-                            JSONArray array=object.getJSONArray("productImages");
-                            //有图片时加入到产品图片集合
-                            if(array.length()>0){
-                                ArrayList<String> list1=new ArrayList<>();
-                                for(int k=0;k<array.length();k++){
-                                    list1.add((String) array.get(k));
-                                }
-                                product.setProductImages(list1);
-                            }
-                            pro_list.add(product);
-                        }
-                        list.add(pro_list);
                     }
+                });
+                for(int i=0;i<count;i++){
+                    JSONObject jsonObject1=jsonArray.getJSONObject(i);
+                    JSONObject jsonObject2=jsonObject1.getJSONObject("typeTwo");
+                    TypeTwo typeTwo=new TypeTwo();
+                    typeTwo.setId(jsonObject2.getString("id"));
+                    typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
+                    typeTwo_list.add(typeTwo); //添加父组件
+                    JSONArray jsonArray1=jsonObject1.getJSONArray("products");
+                    pro_list=new ArrayList<>();
+                    int count_product=jsonArray1.length();
+                    for(int j=0;j<count_product;j++){
+                        JSONObject object= (JSONObject) jsonArray1.get(j);
+                        Product product=new Product();
+                        product.setId(object.getString("id"));
+                        product.setPrice(object.getDouble("price"));
+                        product.setTypeTwo(typeTwo);
+                        product.setApplicationRange(object.getString("applicationRange"));
+                        product.setSpecifications(object.getString("specifications"));
+                        product.introduce=object.getString("introduce");
+                        product.setConductorMaterial(object.getString("conductorMaterial"));
+                        product.setCoreNumber(object.getString("coreNumber"));
+                        product.setCrossSection(object.getString("crossSection"));
+                        product.setImplementationStandards(object.getString("implementationStandards"));
+                        product.setDiameterLimit(object.getString("diameterLimit"));
+                        product.setOutsideDiameter(object.getString("outsideDiameter"));
+                        product.setSheathMaterial(object.getString("sheathMaterial"));
+                        product.setVoltage(object.getString("voltage"));
+                        product.setReferenceWeight(object.getString("referenceWeight"));
+                        product.setPurpose(object.getString("purpose"));
 
-                    if(page==1) {
-                        myAdapter_typeTwo = new MyAdapter_typeTwo(typeTwo_list, list, context);
-                        listView.setAdapter(myAdapter_typeTwo);
+                        JSONArray array=object.getJSONArray("productImages");
+                        //有图片时加入到产品图片集合
+                        if(array.length()>0){
+                            ArrayList<String> list1=new ArrayList<>();
+                            for(int k=0;k<array.length();k++){
+                                list1.add((String) array.get(k));
+                            }
+                            product.setProductImages(list1);
+                        }
+                        pro_list.add(product);
+                    }
+                    list.add(pro_list);
+                }
+
+                if(page==1) {
+                    myAdapter_typeTwo = new MyAdapter_typeTwo(typeTwo_list, list, context);
+                    listView.setAdapter(myAdapter_typeTwo);
                 }else{
                     myAdapter_typeTwo.addGroup(typeTwo_list);
                     myAdapter_typeTwo.addChild(list);
@@ -154,18 +153,27 @@ public class ConnectionTypeTwo {
                 for (int i = 0; i < myAdapter_typeTwo.getGroupCount(); i++) {
                     listView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
                 }
-                }else {
-                    //没有数据
-                    Error.toSetting(noInternet, R.mipmap.nothing, "暂无数据哦", "换一个试试", new IErrorOnclick() {
-                        @Override
-                        public void errorClick() {
-                            Toast.makeText(context,"暂无数据",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            }else {
+                //没有数据
+                Error.toSetting(noInternet, R.mipmap.nothing, "暂无数据哦", "换一个试试", new IErrorOnclick() {
+                    @Override
+                    public void errorClick() {
+                        Toast.makeText(context,"暂无数据",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 成功的监听器
+     * 返回的是产品种类
+     */
+    private Response.Listener<JSONObject> jsonObjectTypeTwoListener = new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(final JSONObject jsonObject) {
+            analysisDataOfTypeTwo(jsonObject);
         }
     };
 
@@ -175,27 +183,40 @@ public class ConnectionTypeTwo {
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            if (volleyError instanceof NoConnectionError) {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
-                        NetUtils.openSetting(activity);
-                    }
-                });
-            } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
-                        Toast.makeText(context, "出错啦", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
-                    @Override
-                    public void errorClick() {
-                        Toast.makeText(context, "出错啦", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            MySingleton mySingleton = new MySingleton(context);
+            if (mySingleton.getCacheString(url)!=null){
+                if(volleyError instanceof NoConnectionError){
+                    Toast.makeText(context,"没有网络",Toast.LENGTH_SHORT).show();
+                }else if(volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError){
+                    Toast.makeText(context,"服务器端异常",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context,"不好啦，出错啦",Toast.LENGTH_SHORT).show();
+                }
+                noInternet.setVisibility(View.GONE);
+                analysisDataOfTypeTwo(mySingleton.getCache(url));
+            }else {
+                if (volleyError instanceof NoConnectionError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                            NetUtils.openSetting(activity);
+                        }
+                    });
+                } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                            Toast.makeText(context, "出错啦", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                            Toast.makeText(context, "出错啦", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         }
     };

@@ -86,9 +86,7 @@ public class ConnectionProduct {
                 }
             });
             JSONArray jsonArray = json_page.getJSONArray("list");
-
             int count=jsonArray.length();
-
             for(int i=0;i<count;i++){
                 JSONObject jsonObject1=jsonArray.getJSONObject(i);
                 //typeTwo

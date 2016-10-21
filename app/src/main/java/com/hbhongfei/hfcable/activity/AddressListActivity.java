@@ -1,7 +1,6 @@
 package com.hbhongfei.hfcable.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.ShoppingAddressListConnection;
 

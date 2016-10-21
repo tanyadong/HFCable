@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +26,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.InfoDetailActivity;
-import com.hbhongfei.hfcable.activity.SplashActivity;
 import com.hbhongfei.hfcable.adapter.DataAdapter;
 import com.hbhongfei.hfcable.util.Dialog;
+import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.Information;
 import com.hbhongfei.hfcable.util.MySingleton;
-import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.NetUtils;
 
 import org.json.JSONException;
@@ -199,7 +197,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
                             MySingleton mySingleton = new MySingleton(InfoFragment.this.getActivity());
                             if (mySingleton.getCacheString(url)!=null){
                                 //加载缓存
-                                Toast.makeText(InfoFragment.this.getContext(),"没有网络-加载数据",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(InfoFragment.this.getContext(),"没有网络",Toast.LENGTH_SHORT).show();
                                 noInternet.setVisibility(View.GONE);
                                 parse(mySingleton.getCacheString(url).toString());
                             }else{
@@ -260,21 +258,19 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      * 解析资讯详情
      * @param url
      */
-//    private void loadContentData(String url, final Information info){
-    private void loadContentData(final String url, final Information information){
+    private void loadContentData(final String url, final Information info){
 
         StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(final String s) {
-
-                parseContent(s,information);
+                parseContent(s,info);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 MySingleton mySingleton = new MySingleton(InfoFragment.this.getActivity());
                 if (mySingleton.getCacheString(url)!=null){
-                    Toast.makeText(InfoFragment.this.getContext(),"没有网络-解析数据",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InfoFragment.this.getContext(),"没有网络",Toast.LENGTH_SHORT).show();
                     noInternet.setVisibility(View.GONE);
                     parseContent(mySingleton.getCacheString(url),information);
                 }else{
