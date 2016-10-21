@@ -3,9 +3,6 @@ package com.hbhongfei.hfcable.util;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,12 +30,10 @@ public class ConnectionProduct {
     private Context context;
     private ListView listView;
     private MyAdapter adapter;
-    private ArrayList<Product> list_pro = new ArrayList<>();
     private List<Product> list;
     private int page = 1;
-    List<String> type_list = new ArrayList<>();
     private String url;
-
+    public int countPage = 0;
     public ConnectionProduct(Context context, ListView listView) {
         this.context = context;
         this.listView = listView;
@@ -81,24 +76,33 @@ public class ConnectionProduct {
      */
     private void analysisDataOfProduct(JSONObject jsonObject){
         try {
-            list = new ArrayList<>();
-            JSONArray jsonArray = jsonObject.getJSONArray("productList");
-            int count = jsonArray.length();
+            list=new ArrayList<>();
+            final JSONObject json_page = jsonObject.getJSONObject("page");
+            final int totalPages=json_page.getInt("totalPages");
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    countPage=totalPages;
+                }
+            });
+            JSONArray jsonArray = json_page.getJSONArray("list");
 
-            for (int i = 0; i < count; i++) {
-                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+            int count=jsonArray.length();
+
+            for(int i=0;i<count;i++){
+                JSONObject jsonObject1=jsonArray.getJSONObject(i);
                 //typeTwo
                 JSONObject jsonObject2 = jsonObject1.getJSONObject("typeTwo");
                 TypeTwo typeTwo = new TypeTwo();
                 typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
                 //产品
-                Product product = new Product();
+                Product product=new Product();
                 product.setTypeTwo(typeTwo);
                 product.setId(jsonObject1.getString("id"));
                 product.setPrice(jsonObject1.getDouble("price"));
                 product.setApplicationRange(jsonObject1.getString("applicationRange"));
                 product.setSpecifications(jsonObject1.getString("specifications"));
-                product.introduce = (jsonObject1.getString("introduce"));
+                product.introduce=(jsonObject1.getString("introduce"));
                 product.setConductorMaterial(jsonObject1.getString("conductorMaterial"));
                 product.setCoreNumber(jsonObject1.getString("coreNumber"));
                 product.setCrossSection(jsonObject1.getString("crossSection"));
@@ -110,23 +114,22 @@ public class ConnectionProduct {
                 product.setReferenceWeight(jsonObject1.getString("referenceWeight"));
                 product.setPurpose(jsonObject1.getString("purpose"));
 
-                JSONArray jsonArray1 = jsonObject1.getJSONArray("productImages");
+                JSONArray jsonArray1=jsonObject1.getJSONArray("productImages");
                 //有图片时加入到产品图片集合
-                if (jsonArray1.length() > 0) {
-                    ArrayList<String> list1 = new ArrayList<>();
-                    for (int j = 0; j < jsonArray1.length(); j++) {
+                if(jsonArray1.length()>0){
+                    ArrayList<String> list1=new ArrayList<>();
+                    for(int j=0;j<jsonArray1.length();j++){
                         list1.add((String) jsonArray1.get(j));
                     }
                     product.setProductImages(list1);
                 }
                 list.add(product);
             }
-            if (page == 1) {
+            if(page==1) {
                 adapter = new MyAdapter(context, R.layout.intentionlayout, list);
                 listView.setDivider(null);
                 listView.setAdapter(adapter);
-
-            } else {
+            }else{
                 adapter.addItem(list);
                 mHandler.sendEmptyMessage(1);
             }

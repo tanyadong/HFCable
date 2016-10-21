@@ -17,11 +17,14 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.CustomDialog;
 import com.hbhongfei.hfcable.util.GetIP;
 import com.hbhongfei.hfcable.util.MyRadioGroup;
+import com.hbhongfei.hfcable.util.MySingleton;
+import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 import com.pingplusplus.android.Pingpp;
 import com.pingplusplus.android.PingppLog;
@@ -30,6 +33,9 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -126,6 +132,7 @@ public class OrderPayActivity extends AppCompatActivity implements
     private void initValue() {
         Intent intent = getIntent();
         S_money = intent.getStringExtra("money");
+        order_no = intent.getStringExtra("order_no");
         order_payMoney_textview.setText(S_money + "￥");
         Bundle bundle = intent.getExtras();
         array = bundle.getSparseParcelableArray("introduce");
@@ -135,7 +142,6 @@ public class OrderPayActivity extends AppCompatActivity implements
 
         //获取ipv4
         client_ip = GetIP.GetIp();
-        order_no = new Date().getTime()+"ksls";
         subject = "弘飞线缆";
         buffer = new StringBuffer();
         for (int i=0;i<array.size();i++){
@@ -248,13 +254,11 @@ public class OrderPayActivity extends AppCompatActivity implements
                 CustomDialog.payDialog(OrderPayActivity.this,"fail");
                 return;
             }
-            Log.d("charge", data);
 //            Pingpp.createPayment(ClientSDKActivity.this, data);
             //QQ钱包调起支付方式  “qwalletXXXXXXX”需与AndroidManifest.xml中的data值一致
             //建议填写规则:qwallet + APP_ID
             Pingpp.createPayment(OrderPayActivity.this, data, "qwalletapp_v90SuTjXH4yTrrPi");
         }
-
     }
 
     /**
@@ -268,7 +272,7 @@ public class OrderPayActivity extends AppCompatActivity implements
         //支付页面返回处理
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
-                Intent intent = new Intent();
+
                 String result = data.getExtras().getString("pay_result");
                 /* 处理返回值
                  * "success" - payment succeed
@@ -277,10 +281,9 @@ public class OrderPayActivity extends AppCompatActivity implements
                  * "invalid" - payment plugin not installed
                  */
                 if (result.equals("success")) {
-                    intent.setClass(OrderPayActivity.this, PayStateActivity.class);
-                    intent.putExtra("amount", S_money);
-                    startActivity(intent);
-                    finish();
+                    //此处进行验证
+                    //链接验证服务
+                    updatePayState();
                 } else {
                     CustomDialog.payDialog(this,result);
                 }
@@ -288,6 +291,43 @@ public class OrderPayActivity extends AppCompatActivity implements
             }
         }
     }
+    /**
+     * 更改支付状态
+     */
+    private void updatePayState() {
+        Toast.makeText(this,"支付成功",Toast.LENGTH_SHORT).show();
+        Map<String,String> params =new HashMap<>();
+        params.put("orderNum", order_no);
+        String url = Url.url("/androidOrder/updatePayState");
+        //使用自己书写的NormalPostRequest类，
+        com.android.volley.Request<JSONObject> request = new NormalPostRequest(url,updateListener,errorListener, params);
+        MySingleton.getInstance(this).addToRequestQueue(request);
+    }
+
+    /**
+     * 找回密码时连接服务
+     * 成功的监听器
+     */
+    private com.android.volley.Response.Listener<JSONObject> updateListener = new com.android.volley.Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject jsonObject) {
+            try {
+                String s = jsonObject.getString("msg");
+                if (s.equals("success")){
+                    Intent intent = new Intent();
+                    intent.setClass(OrderPayActivity.this, PayStateActivity.class);
+                    intent.putExtra("amount", S_money);
+                    startActivity(intent);
+                    finish();
+                }else if(s.equals("filed")) {
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
 
 
     /**
@@ -312,4 +352,15 @@ public class OrderPayActivity extends AppCompatActivity implements
             throw new IOException("Unexpected code " + response);
         }
     }
+
+
+    /**
+     *  失败的监听器
+     */
+    private com.android.volley.Response.ErrorListener errorListener = new com.android.volley.Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            Toast.makeText(OrderPayActivity.this,"链接网络失败", Toast.LENGTH_SHORT).show();
+        }
+    };
 }

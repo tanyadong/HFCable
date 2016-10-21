@@ -260,14 +260,14 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      * 解析资讯详情
      * @param url
      */
-    private void loadContentData(String url, final Information info){
+//    private void loadContentData(String url, final Information info){
     private void loadContentData(final String url, final Information information){
 
         StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(final String s) {
 
-                parseContent(s,info);
+                parseContent(s,information);
             }
         }, new Response.ErrorListener() {
             @Override

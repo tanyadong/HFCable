@@ -62,6 +62,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     private ShoppingAddress shoppingAddress;
     private int tag = 0;
     private SparseArray array = new SparseArray();
+    private String random;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,11 +108,13 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                default:
+                /*case 1:
+                    addressId = (String) msg.obj;
                     break;
+                default:
+                    break;*/
             }
         }
-
     };
 
     /**
@@ -206,7 +209,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         list = new ArrayList<Map<String, Object>>();
         list_order = new ArrayList<>();;
         if (proInfos != null) {
-            String random = RandomStringUtils.randomNumeric(20);
+            random = RandomStringUtils.randomNumeric(20);
             for (int i = 0; i < proInfos.size(); i++) {
                 param = new HashMap<>();
                 Map map = new HashMap<String, Object>();
@@ -220,6 +223,8 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                 Double monty = (Double) proInfo.get("product_price") * (Integer) proInfo.get("product_num");
                 param.put("money" + i, Double.toString(monty));
                 param.put("addressId", addressId);
+                Toast.makeText(this,addressId+"",Toast.LENGTH_LONG).show();
+                param.put("orderNumber", random);
                 try {
                     json.put("order" + i, param);
                 } catch (JSONException e) {
@@ -228,11 +233,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                 //往list添加数据
                 list.add(map);
             }
-            /*try {
-                json.put("order_no",random);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
             confirmOrderAdapter = new ConfirmOrderAdapter(this, list);
             products.setAdapter(confirmOrderAdapter);
             money.setText(String.valueOf(S_money));
@@ -251,6 +251,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                 //确认支付界面
                 intent.setClass(ConfirmOrderActivity.this, OrderPayActivity.class);
                 intent.putExtra("money", money.getText());
+                intent.putExtra("order_no",random);
                 Bundle bundle = new Bundle();
                 bundle.putSparseParcelableArray("introduce", array);
                 intent.putExtras(bundle);
@@ -265,9 +266,9 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void saveOrder() {
+        // 订单编号
         String url = Url.url("/androidOrder/save");
         // 订单编号
-        String random = RandomStringUtils.randomNumeric(20);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, json, jsonSuccessListener, errorListener);
         MySingleton.getInstance(this).addToRequestQueue(request);
     }
@@ -282,7 +283,10 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                 String msg = jsonObject.getString("msg");
                 if (msg.equals("success")) {
                     Toast.makeText(ConfirmOrderActivity.this, "保存订单成功", Toast.LENGTH_SHORT).show();
-                } else if (msg.equals("filed")) {
+                } else if (msg.equals("fail")) {
+                    Toast.makeText(ConfirmOrderActivity.this, "保存订单失败", Toast.LENGTH_SHORT).show();
+                }else if(msg.equals("have")){
+                    Toast.makeText(ConfirmOrderActivity.this, "订单失效", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -342,6 +346,10 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                             }
                         }
                     });
+                    /*Message message = new Message();
+                    message.obj = address.getString("id");
+                    message.what =1 ;
+                    handler.sendMessage(message);*/
                     name.setText(userName);
                     String phone = address.getString("phone");
                     telphone.setText(phone);

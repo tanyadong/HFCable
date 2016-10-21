@@ -112,7 +112,6 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
         S_phoneNumber = spf.getString("phoneNumber", null);
         pageNo=1;
         new MyAsyncTack().execute();
-
     }
 
     @Override

@@ -3,7 +3,9 @@ package com.hbhongfei.hfcable.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,6 +163,13 @@ public class MyOrder_all_Adapter extends BaseAdapter{
                 public void onClick(View v) {
                     Intent intent=new Intent(context, OrderPayActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("money",String.valueOf(order.getMoney()));
+                    intent.putExtra("order_no",order.getOrderNumber());
+                    Bundle bundle = new Bundle();
+                    SparseArray array = new SparseArray();
+                    array.put(0,order.getShoppingCart().getProduct().introduce);
+                    bundle.putSparseParcelableArray("introduce",array);
+                    intent.putExtras(bundle);
                     context.startActivity(intent);
                 }
             });
