@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -102,30 +103,38 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        //请求失败
                         dialog.cancle();
-                        if (volleyError instanceof NoConnectionError) {
-                            Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", MarketChartActivity.this);
-                        } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
-                            Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
-                                @Override
-                                public void errorClick() {
-                                    Toast.makeText(MarketChartActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } else {
-                            Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
-                                @Override
-                                public void errorClick() {
-                                    Toast.makeText(MarketChartActivity.this, "出错啦", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                        MySingleton mySingleton = new MySingleton(MarketChartActivity.this);
+                        if (mySingleton.getCacheString(url)!=null){
+                            //加载缓存
+                            Toast.makeText(MarketChartActivity.this,"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+                            noInternet.setVisibility(View.GONE);
+                            parseMonth(mySingleton.getCacheString(url).toString());
+                        }else{
+                            if (volleyError instanceof NoConnectionError){
+                                Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",MarketChartActivity.this);
+                            }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
+                                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                                    @Override
+                                    public void errorClick() {
+                                    }
+                                });
+                            }else{
+                                Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
+                                    @Override
+                                    public void errorClick() {
+
+                                    }
+                                });
+                            }
                         }
+
                     }
                 });
                 MySingleton.getInstance(MarketChartActivity.this).addToRequestQueue(request);
             }
         }).start();
+
     }
     /**
      * 解析html,获取一个月的记录
