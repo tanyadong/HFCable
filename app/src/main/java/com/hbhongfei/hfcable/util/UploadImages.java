@@ -55,11 +55,10 @@ public class UploadImages {
                 fs.add(file);
             } else {
                 //压缩图片
-                File f = new File(ZipImages.compressImage(list.get(i), listThumbnail.get(i)
+                File f = new File(ZipImages.compressImage(list.get(i), list.get(i)
                         , QUANLITY));
                 fs.add(f);
             }
-
         }
 
         MultipartRequest request = new MultipartRequest(url, new Response.Listener<String>() {
