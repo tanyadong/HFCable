@@ -460,7 +460,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
      * 添加购物车服务
      */
     private void addShoppingCartCoon() {
-        String url = Url.url("/androidShoppingCart/sava");
+        String url = Url.url("/androidShoppingCart/save");
         Map<String, String> map = new HashMap<>();
         map.put("productId", product.getId());
         map.put("color", color);
@@ -694,7 +694,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 dismiss();
             }
         });
-
     }
 
     /**

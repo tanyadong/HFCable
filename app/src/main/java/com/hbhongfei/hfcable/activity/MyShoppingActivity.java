@@ -150,7 +150,6 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             try {
                 JSONArray shoppingCarts = jsonObject.getJSONArray("shoppingCarts");
                 if (shoppingCarts.length()!=0){
-
                     int count=shoppingCarts.length();
                     for (int i=0;i<count;i++){
                         JSONObject shoppingCart= (JSONObject) shoppingCarts.opt(i);//shoppingCarts的第一组
@@ -256,8 +255,6 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-//            Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
-//            Log.e("TAG", volleyError.getMessage(), volleyError);
             dialog.cancle();
             if (volleyError instanceof NoConnectionError) {
                 Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", MyShoppingActivity.this);
@@ -323,7 +320,6 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         tvTotalPrice.setText("￥" + totalPrice);
         tvGoToPay.setText("去支付(" + totalCount + ")");
         initDatas();
-//        setCartNum();
     }
 
     @Override

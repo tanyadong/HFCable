@@ -81,10 +81,11 @@
         android:id="@+id/list_confirm_order_product"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/Layout_confirm_order_location"
-        android:layout_marginTop="10dp"></ListView>
+        android:layout_above="@+id/RL_confirm"
+        android:layout_below="@id/Layout_confirm_order_location"/>
 
     <RelativeLayout
+        android:id="@+id/RL_confirm"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
