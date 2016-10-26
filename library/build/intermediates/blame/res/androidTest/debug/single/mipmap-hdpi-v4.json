@@ -1,15 +1,15 @@
 [
     {
-        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading09.png",
-        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading09.png"
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading04.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading04.png"
     },
     {
-        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading03.png",
-        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading03.png"
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\refresh_head_arrow.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\refresh_head_arrow.png"
     },
     {
-        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading11.png",
-        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading11.png"
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading01.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading01.png"
     },
     {
         "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading01.png",
@@ -20,12 +20,72 @@
         "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\refresh_head_arrow.png"
     },
     {
+        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading08.png",
+        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading08.png"
+    },
+    {
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading12.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading12.png"
+    },
+    {
+        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading05.png",
+        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading05.png"
+    },
+    {
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading07.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading07.png"
+    },
+    {
+        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading02.png",
+        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading02.png"
+    },
+    {
+        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading10.png",
+        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading10.png"
+    },
+    {
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading11.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading11.png"
+    },
+    {
+        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading09.png",
+        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading09.png"
+    },
+    {
+        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading03.png",
+        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading03.png"
+    },
+    {
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading06.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading06.png"
+    },
+    {
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading09.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading09.png"
+    },
+    {
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading03.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading03.png"
+    },
+    {
+        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading11.png",
+        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading11.png"
+    },
+    {
         "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading06.png",
         "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading06.png"
     },
     {
-        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading08.png",
-        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading08.png"
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading02.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading02.png"
+    },
+    {
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading05.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading05.png"
+    },
+    {
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading08.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading08.png"
     },
     {
         "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading12.png",
@@ -36,19 +96,11 @@
         "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading04.png"
     },
     {
+        "merged": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading10.png",
+        "source": "E:\\3Next\\Dianlan\\Code\\Android\\HFCable\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading10.png"
+    },
+    {
         "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading07.png",
         "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading07.png"
-    },
-    {
-        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading05.png",
-        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading05.png"
-    },
-    {
-        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading02.png",
-        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading02.png"
-    },
-    {
-        "merged": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-hdpi-v4\\bga_refresh_loading10.png",
-        "source": "D:\\3NEXT\\DianlanProject\\android\\HFCable\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap-hdpi-v4\\bga_refresh_loading10.png"
     }
 ]

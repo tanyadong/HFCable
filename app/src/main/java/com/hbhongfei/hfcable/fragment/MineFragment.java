@@ -343,7 +343,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         public void onErrorResponse(VolleyError volleyError) {
             MySingleton mySingleton = new MySingleton(MineFragment.this.getActivity());
             if (mySingleton.getCache(url)!=null){
-//                Toast.makeText(MineFragment.this.getContext(),"没有网络",Toast.LENGTH_SHORT).show();
                 noInternet.setVisibility(View.GONE);
                 analysisData(mySingleton.getCache(url));
             }else{

@@ -103,7 +103,6 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
         name.setText(S_name);
     }
 
-
     /**
      * 退出登录
      */
@@ -177,7 +176,6 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         // 下面是两种方法得到宽度和高度 getWindow().getDecorView().getWidth()
-
         final PopupWindow window = new PopupWindow(view,WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
         // 设置popWindow弹出窗体可点击，这句话必须添加，并且是true

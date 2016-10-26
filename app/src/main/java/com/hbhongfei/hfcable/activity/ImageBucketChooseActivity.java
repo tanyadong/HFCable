@@ -45,7 +45,7 @@ public class ImageBucketChooseActivity extends Activity {
 
     private void initData() {
         mDataList = mHelper.getImagesBucketList(false);
-        availableSize = getIntent().getIntExtra(IntentConstants.EXTRA_CAN_ADD_IMAGE_SIZE,CustomConstants.MAX_IMAGE_SIZE);
+        availableSize = getIntent().getIntExtra(IntentConstants.EXTRA_CAN_ADD_IMAGE_SIZE,CustomConstants.MAX_IMAGE_SIZE);//IntentConstants.EXTRA_CAN_ADD_IMAGE_SIZE,CustomConstants.MAX_IMAGE_SIZE
     }
 
     private void initView() {
@@ -57,8 +57,7 @@ public class ImageBucketChooseActivity extends Activity {
         mListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
                 selectOne(position);
                 Intent intent = new Intent(ImageBucketChooseActivity.this,ImageChooseActivity.class);
                 intent.putExtra(IntentConstants.EXTRA_IMAGE_LIST,(Serializable) mDataList.get(position).imageList);

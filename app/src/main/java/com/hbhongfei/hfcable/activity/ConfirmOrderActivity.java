@@ -52,7 +52,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     private JSONObject json = new JSONObject();
     private ConfirmOrderAdapter confirmOrderAdapter;
     private String[] from = {"product_name", "color", "product_price", "product_num", "product_package", "product_iamge"};
-    private String addressId;
+    private String addressId = null;
     private static final String USER = LoginConnection.USER;
     private ArrayList<Map<String, Object>> proInfos;
     private Map<String, String> packageMap;
@@ -108,11 +108,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                /*case 1:
-                    addressId = (String) msg.obj;
-                    break;
-                default:
-                    break;*/
             }
         }
     };
@@ -223,7 +218,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                 Double monty = (Double) proInfo.get("product_price") * (Integer) proInfo.get("product_num");
                 param.put("money" + i, Double.toString(monty));
                 param.put("addressId", addressId);
-                Toast.makeText(this,addressId+"",Toast.LENGTH_LONG).show();
                 param.put("orderNumber", random);
                 try {
                     json.put("order" + i, param);
@@ -242,23 +236,28 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.Tview_confirm_order_commit:
-                //提交订单
-                //保存订单
-                saveOrder();
-                //确认支付界面
-                intent.setClass(ConfirmOrderActivity.this, OrderPayActivity.class);
-                intent.putExtra("money", money.getText());
-                intent.putExtra("order_no",random);
-                Bundle bundle = new Bundle();
-                bundle.putSparseParcelableArray("introduce", array);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if (addressId!=null){
+                    Intent intent = new Intent();
+                    //提交订单
+                    //保存订单
+                    saveOrder();
+                    //确认支付界面
+                    intent.setClass(ConfirmOrderActivity.this, OrderPayActivity.class);
+                    intent.putExtra("money", money.getText());
+                    intent.putExtra("order_no",random);
+                    Bundle bundle = new Bundle();
+                    bundle.putSparseParcelableArray("introduce", array);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(this,"请选择收获地址哦",Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.Layout_confirm_order_location:
                 //转换地址
+                Intent intent = new Intent();
                 intent.setClass(ConfirmOrderActivity.this, AddressListActivity.class);
                 startActivityForResult(intent, 0);
                 break;

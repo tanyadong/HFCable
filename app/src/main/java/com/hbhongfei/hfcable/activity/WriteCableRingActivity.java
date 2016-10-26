@@ -179,6 +179,7 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
             Toast.makeText(this,"内容不能为空",Toast.LENGTH_SHORT).show();
             dialog.cancle();
         }else{
+//            Toast.makeText(this,mDataList.get(0).sourcePath+"--"+mDataList.get(0).thumbnailPath,Toast.LENGTH_SHORT).show();
             new BitmapThread().start();
         }
     }
@@ -215,9 +216,7 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
                 list.add(mDataList.get(i).sourcePath);
                 listThumbnail.add(mDataList.get(i).thumbnailPath);
             }
-
             uploadImages.doUploadTest(list,listThumbnail,S_text,S_phoneNumber,dialog,uploadType);
-
         }
     }
 
@@ -320,8 +319,10 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
      */
     @Override
     public void selectFromAlbumClick() {
-        Intent intent = new Intent(WriteCableRingActivity.this,ImageBucketChooseActivity.class);
-        intent.putExtra(IntentConstants.EXTRA_CAN_ADD_IMAGE_SIZE,getAvailableSize());
+        Intent intent = new Intent(WriteCableRingActivity.this,ImageBucketChooseActivity.class);//WriteCableRingActivity.this,ImageBucketChooseActivity.class
+//        intent.putExtra(IntentConstants.EXTRA_CAN_ADD_IMAGE_SIZE,getAvailableSize());
+//        Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//        intent.putExtra(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivity(intent);
     }
 

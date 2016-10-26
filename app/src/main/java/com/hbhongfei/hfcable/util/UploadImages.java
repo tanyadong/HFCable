@@ -2,6 +2,7 @@ package com.hbhongfei.hfcable.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,15 +27,15 @@ public class UploadImages {
 
     private Context context;
     private static RequestQueue mSingleQueue;
-    private static  final int QUANLITY = 10;
+    private static final int QUANLITY = 10;
     private boolean tag;
-    private static final String PATH = "";
+    private final String PATH = Environment.getExternalStorageDirectory().toString() + "/HFCable/picture";
 
-    public UploadImages(Context context){
+    public UploadImages(Context context) {
         this.context = context;
     }
 
-    public  void doUploadTest(List<String> list,List<String> listThumbnail, String S_text, String S_phoneNumber, final Dialog dialog,boolean tag){
+    public void doUploadTest(List<String> list, List<String> listThumbnail, String S_text, String S_phoneNumber, final Dialog dialog, boolean tag) {
         this.tag = tag;
         mSingleQueue = Volley.newRequestQueue(context);
         String url = Url.url("/androidCableRing/save"); //换成自己的测试url地址
@@ -43,18 +44,19 @@ public class UploadImages {
         params.put("userName", S_phoneNumber);
 
         List<File> fs = new ArrayList<File>();
-        for (int i=0;i<list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             File file = new File(list.get(i));
-            if(!file.exists()){
+            if (!file.exists()) {
                 return;
             }
 
             //判断是否上传原图
-            if (this.tag){
+            if (this.tag) {
                 fs.add(file);
-            }else{
+            } else {
                 //压缩图片
-                File f = new File(ZipImages.compressImage(list.get(i),listThumbnail.get(i),QUANLITY));
+                File f = new File(ZipImages.compressImage(list.get(i), listThumbnail.get(i)
+                        , QUANLITY));
                 fs.add(f);
             }
 
@@ -66,7 +68,7 @@ public class UploadImages {
             public void onResponse(String response) {
                 dialog.cancle();
                 SplashActivity.ID = 4;
-                Intent intent = new Intent(context,MainActivity.class);
+                Intent intent = new Intent(context, MainActivity.class);
                 context.startActivity(intent);
                 Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
                 Log.i("YanZi", "success,response = " + response);
