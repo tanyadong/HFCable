@@ -1,5 +1,6 @@
 package com.hbhongfei.hfcable.activity;
 
+import android.app.FragmentManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -69,7 +70,6 @@ public class MyOrderActivity extends AppCompatActivity {
         tab_FindFragment_title.setTabMode(TabLayout.MODE_FIXED);
         //为TabLayout添加tab名称
         tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(0)));
-
         tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(1)));
         tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(2)));
         tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(3)));

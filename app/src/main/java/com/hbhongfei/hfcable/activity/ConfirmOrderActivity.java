@@ -71,7 +71,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         toolBar();
         initView();
         setOnClick();
-
     }
 
     /**
@@ -111,7 +110,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
             }
         }
     };
-
     /**
      * 初始化界面
      */
@@ -284,9 +282,9 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                     Toast.makeText(ConfirmOrderActivity.this, "保存订单成功", Toast.LENGTH_SHORT).show();
                 } else if (msg.equals("fail")) {
                     Toast.makeText(ConfirmOrderActivity.this, "保存订单失败", Toast.LENGTH_SHORT).show();
-                }else if(msg.equals("have")){
+                }/*else if(msg.equals("have")){
                     Toast.makeText(ConfirmOrderActivity.this, "订单失效", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -345,10 +343,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                             }
                         }
                     });
-                    /*Message message = new Message();
-                    message.obj = address.getString("id");
-                    message.what =1 ;
-                    handler.sendMessage(message);*/
                     name.setText(userName);
                     String phone = address.getString("phone");
                     telphone.setText(phone);

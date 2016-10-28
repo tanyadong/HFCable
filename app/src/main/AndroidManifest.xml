@@ -179,7 +179,6 @@
             android:label="@string/title_activity_pay_success"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
-        <!--<activity android:name="com.android.settings.WirelessSetting" />-->
     </application>
 
 </manifest>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.LoginConnection;
@@ -28,15 +29,19 @@ public class AddressListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receipt_address);
-
         //toolbar
         toolBar();
         //初始化界面
         initView();
+    }
 
+    @Override
+    protected void onPostResume() {
         //初始化数据
         initValues();
+        super.onPostResume();
     }
+
     /**
      * 展示toolbar
      */

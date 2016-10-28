@@ -75,16 +75,12 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
 
     @Override
     public void onResume() {
+        if(connectionOrder.isResult){
+            getValues();
+            isResult=false;
+        }
         super.onResume();
-         if(connectionOrder.isResult){
-             getValues();
-             isResult=false;
-         }
-
     }
-
-
-
     /**
      * 初始化界面
      * @param v

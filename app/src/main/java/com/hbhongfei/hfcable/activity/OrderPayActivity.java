@@ -266,9 +266,7 @@ public class OrderPayActivity extends AppCompatActivity implements
      * 最终支付成功根据异步通知为准
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         btn_confimgPay.setOnClickListener(this);
-
         //支付页面返回处理
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
