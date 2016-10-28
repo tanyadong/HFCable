@@ -95,7 +95,8 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>
         <!-- 添加购物车 -->
-        <activity android:name=".activity.AddRecietAddress" />
+        <activity android:name=".activity.AddRecietAddress"
+            android:parentActivityName=".activity.AddressListActivity"/>
         <!-- 画图 -->
         <activity android:name=".activity.MarketChartActivity" />
         <activity android:name=".activity.CitySelect1Activity" />

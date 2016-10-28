@@ -71,9 +71,20 @@ public class AddRecietAddress extends AppCompatActivity implements View.OnClickL
         initview();
         //初始化数据
         initValues();
-//        //保存收货地址的服务
-//        saveConnection();
+
+        //tolbar
+        toolBar();
+
+        //点击事件
         click();
+    }
+
+
+    private void toolBar(){
+        //返回键
+        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setDisplayShowTitleEnabled(true);
     }
     /**
      * 初始化组件
