@@ -236,9 +236,8 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.Tview_confirm_order_commit:
-                if (addressId!=null){
+                if (!addressId.isEmpty()){
                     Intent intent = new Intent();
-                    //提交订单
                     //保存订单
                     saveOrder();
                     //确认支付界面
@@ -250,7 +249,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }else{
-                    Toast.makeText(this,"请选择收获地址哦",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this,"请确认收获地址哦",Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.Layout_confirm_order_location:

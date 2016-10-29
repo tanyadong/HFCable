@@ -45,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,13 +54,12 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_myShopping.CheckInterface,
-        MyAdapter_myShopping.ModifyCountInterface, MyAdapter_myShopping.GroupEdtorListener ,View.OnClickListener,IErrorOnclick{
-    private TextView  tvTotalPrice,tvDelete,tvGoToPay;
-    private LinearLayout llInfo,llCart,cart_empty,noInternet;
+        MyAdapter_myShopping.ModifyCountInterface, MyAdapter_myShopping.GroupEdtorListener, View.OnClickListener, IErrorOnclick {
+    private TextView tvTotalPrice, tvDelete, tvGoToPay;
+    private LinearLayout llInfo, llCart, cart_empty, noInternet;
     private RelativeLayout llShar;
     private ExpandableListView exListView;
     private CheckBox allChekbox;
-
     private Context context;
     private double totalPrice = 0.00;// 购买的商品总价
     private int totalCount = 0;// 购买的商品总数量
@@ -72,8 +72,9 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     private static final String USER = LoginConnection.USER;
     private Dialog dialog;
     private ArrayList<String> proIds = new ArrayList<>();
-    private ArrayList<Map<String,Object>> proInfos;
-    private Map<String,String> packageMap;
+    private ArrayList<Map<String, Object>> proInfos;
+    private Map<String, String> packageMap;
+    private DecimalFormat df = new DecimalFormat("0.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     /**
      * 初始化界面
      */
-    private void initView(){
+    private void initView() {
         tvTotalPrice = (TextView) findViewById(R.id.tv_total_price);
         tvDelete = (TextView) findViewById(R.id.tv_delete);
         tvGoToPay = (TextView) findViewById(R.id.tv_go_to_pay);
@@ -101,14 +102,15 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
 
         allChekbox = (CheckBox) findViewById(R.id.all_chekbox);
         SharedPreferences spf = this.getSharedPreferences(USER, Context.MODE_PRIVATE);
-        S_phoneNumber = spf.getString("phoneNumber",null);
+        S_phoneNumber = spf.getString("phoneNumber", null);
 
         noInternet = (LinearLayout) findViewById(R.id.no_internet_my_shopping);
     }
+
     /**
      * 设置点击事件
      */
-    private void setOnClick(){
+    private void setOnClick() {
         allChekbox.setOnClickListener(this);
         tvDelete.setOnClickListener(this);
         tvGoToPay.setOnClickListener(this);
@@ -126,18 +128,17 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     }
 
 
-
     /**
      * 连接服务
      */
-    public void connInter(){
+    public void connInter() {
         dialog = new Dialog(this.context);
         dialog.showDialog("正在加载中...");
-        Map<String,String> params =new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("phoneNumber", S_phoneNumber);
         String url = Url.url("/androidShoppingCart/list");
         //使用自己书写的NormalPostRequest类，
-        Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
+        Request<JSONObject> request = new NormalPostRequest(url, jsonObjectListener, errorListener, params);
         MySingleton.getInstance(context).addToRequestQueue(request);
     }
 
@@ -149,11 +150,11 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         public void onResponse(JSONObject jsonObject) {
             try {
                 JSONArray shoppingCarts = jsonObject.getJSONArray("shoppingCarts");
-                if (shoppingCarts.length()!=0){
+                if (shoppingCarts.length() != 0) {
 
-                    int count=shoppingCarts.length();
-                    for (int i=0;i<count;i++){
-                        JSONObject shoppingCart= (JSONObject) shoppingCarts.opt(i);//shoppingCarts的第一组
+                    int count = shoppingCarts.length();
+                    for (int i = 0; i < count; i++) {
+                        JSONObject shoppingCart = (JSONObject) shoppingCarts.opt(i);//shoppingCarts的第一组
                         /****************产品种类*******************/
                         JSONObject type = shoppingCart.getJSONObject("type");
                         groups.add(new TypeInfo(i + "", type.getString("typeTwoName")));//添加组
@@ -162,17 +163,17 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                         JSONArray productImages = shoppingCart.getJSONArray("productImage");
                         List<CablesInfo> cablesInfos = new ArrayList<>();
                         List<Product> list_product = new ArrayList<>();
-                        for(int j=0;j<products.length();j++){
-                        /**************购物车信息*****************/
-                            JSONObject product= (JSONObject) products.opt(j);
+                        for (int j = 0; j < products.length(); j++) {
+                            /**************购物车信息*****************/
+                            JSONObject product = (JSONObject) products.opt(j);
                             JSONArray images = productImages.getJSONArray(j);
                             int quantity = product.getInt("quantity");
                             String color = product.getString("color");
                             String specifications = product.getString("packages");//包装
                             String id = product.getString("id");
-                            Double unit_price=product.getDouble("unitPrice");
+                            Double unit_price = product.getDouble("unitPrice");
 
-                        /**************产品信息*****************/
+                            /**************产品信息*****************/
                             JSONObject productInfo = product.getJSONObject("product");
 
                             //typeTwo  所有的产品信息
@@ -181,14 +182,14 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
                             //产品
 
-                            Product product1=new Product();
+                            Product product1 = new Product();
                             String productName = productInfo.getString("introduce");//名
                             String voltage = productInfo.getString("voltage");//电压
                             product1.setTypeTwo(typeTwo);
                             product1.setId(productInfo.getString("id"));
                             product1.setPrice(productInfo.getDouble("price"));
                             product1.setApplicationRange(productInfo.getString("applicationRange"));
-                            product1.introduce=productName;
+                            product1.introduce = productName;
                             product1.setConductorMaterial(productInfo.getString("conductorMaterial"));
                             product1.setCoreNumber(productInfo.getString("coreNumber"));
                             product1.setCrossSection(productInfo.getString("crossSection"));
@@ -200,32 +201,32 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             product1.setReferenceWeight(productInfo.getString("referenceWeight"));
                             product1.setPurpose(productInfo.getString("purpose"));
 
-                            JSONArray jsonArray1=productInfo.getJSONArray("productImages");
+                            JSONArray jsonArray1 = productInfo.getJSONArray("productImages");
                             //有图片时加入到产品图片集合
-                            if(jsonArray1.length()>0){
-                                ArrayList<String> list1=new ArrayList<>();
-                                for(int k=0;k<jsonArray1.length();k++){
+                            if (jsonArray1.length() > 0) {
+                                ArrayList<String> list1 = new ArrayList<>();
+                                for (int k = 0; k < jsonArray1.length(); k++) {
                                     list1.add((String) jsonArray1.get(k));
                                 }
                                 product1.setProductImages(list1);
                             }
                             JSONObject image = (JSONObject) images.opt(0);
                             String img;
-                            if(image!=null){
+                            if (image != null) {
                                 img = (String) image.getString("image");//存在问题
-                            }else{
+                            } else {
                                 img = "/images/b3043ec169634ba5a7d2631200723a67.jpeg";
                             }
                             list_product.add(product1);
-                            cablesInfos.add(new CablesInfo(id, productName, voltage,color,specifications,unit_price, quantity,img));
+                            cablesInfos.add(new CablesInfo(id, productName, voltage, color, specifications, unit_price, quantity, img));
                         }
-                        child.put(groups.get(i).getId(),list_product);
+                        child.put(groups.get(i).getId(), list_product);
                         children.put(groups.get(i).getId(), cablesInfos);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
                     }
-                    selva = new MyAdapter_myShopping(groups, children, MyShoppingActivity.this,packageMap);
-                    selva.setCheckInterface( MyShoppingActivity.this);// 关键步骤1,设置复选框接口
-                    selva.setModifyCountInterface( MyShoppingActivity.this);// 关键步骤2,设置数量增减接口
-                    selva.setmListener( MyShoppingActivity.this);//设置监听器接口
+                    selva = new MyAdapter_myShopping(groups, children, MyShoppingActivity.this, packageMap);
+                    selva.setCheckInterface(MyShoppingActivity.this);// 关键步骤1,设置复选框接口
+                    selva.setModifyCountInterface(MyShoppingActivity.this);// 关键步骤2,设置数量增减接口
+                    selva.setmListener(MyShoppingActivity.this);//设置监听器接口
                     exListView.setAdapter(selva);
                     for (int i = 0; i < selva.getGroupCount(); i++) {
                         exListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
@@ -233,13 +234,13 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                     exListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                         @Override
                         public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                            Intent intent=new Intent(MyShoppingActivity.this,ProdectInfoActivity.class);
+                            Intent intent = new Intent(MyShoppingActivity.this, ProdectInfoActivity.class);
                             intent.putExtra("product", child.get(groups.get(groupPosition).getId()).get(childPosition));
                             startActivity(intent);
                             return true;
                         }
                     });
-                }else{
+                } else {
                     clearCart();
                 }
                 dialog.cancle();
@@ -251,14 +252,11 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     };
 
     /**
-     *  添加数据失败的监听器
+     * 添加数据失败的监听器
      */
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-//            Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
-//            Log.e("TAG", volleyError.getMessag", Toast.LENGTH_SHORT).show();
-//            Log.e("TAG", volleyError.getMessage(), volleyError);
             dialog.cancle();
             if (volleyError instanceof NoConnectionError) {
                 Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", MyShoppingActivity.this);
@@ -305,7 +303,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                     JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
                     String shaftName = jsonObject1.getString("shaftName");
                     String shaftPrice = jsonObject1.getString("shaftPrice");
-                    packageMap.put(shaftName,shaftPrice);
+                    packageMap.put(shaftName, shaftPrice);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -319,31 +317,31 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         allChekbox.setChecked(false);
         groups.clear();
         children.clear();
-        totalCount=0;
-        totalPrice=0.00;
-        tvTotalPrice.setText("￥" + totalPrice);
+        totalCount = 0;
+        totalPrice = 0.00;
+        tvTotalPrice.setText("￥" +df.format(totalPrice) );
         tvGoToPay.setText("去支付(" + totalCount + ")");
         initDatas();
-//        setCartNum();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        selva=null;
+        selva = null;
         groups.clear();
         children.clear();
-        totalPrice=0;
-        totalCount=0;
+        totalPrice = 0;
+        totalCount = 0;
     }
+
     /**
      * 设置标题购物车产品数量
      */
     private void setCartNum() {
         int count = 0;
         //购物车已清空
-        if(count==0){
-        } else{
+        if (count == 0) {
+        } else {
         }
     }
 
@@ -357,6 +355,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
 
     /**
      * 是否选中
+     *
      * @return
      */
     private boolean isAllCheck() {
@@ -419,15 +418,15 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     /**
      * 修改连接服务
      */
-    public void updateQuantity(String proId,String quantity){
+    public void updateQuantity(String proId, String quantity) {
         dialog = new Dialog(this.context);
         dialog.showDialog("正在修改中...");
-        Map<String,String> params =new HashMap<>();
-        params.put("id",proId);
-        params.put("quantity",quantity);
+        Map<String, String> params = new HashMap<>();
+        params.put("id", proId);
+        params.put("quantity", quantity);
         String url = Url.url("/androidShoppingCart/quantity");
         //使用自己书写的NormalPostRequest类，
-        Request<JSONObject> request = new NormalPostRequest(url,updateListener,errorListener, params);
+        Request<JSONObject> request = new NormalPostRequest(url, updateListener, errorListener, params);
         MySingleton.getInstance(context).addToRequestQueue(request);
     }
 
@@ -439,10 +438,10 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         public void onResponse(JSONObject jsonObject) {
             try {
                 String s = jsonObject.getString("quantity");
-                if (s.equals("success")){
+                if (s.equals("success")) {
                     Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
                     dialog.cancle();
-                }else if(s.equals("filed")){
+                } else if (s.equals("filed")) {
                     Toast.makeText(context, "修改失败", Toast.LENGTH_SHORT).show();
                     dialog.cancle();
                 }
@@ -456,7 +455,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     private Response.ErrorListener updateErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "链接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
             dialog.cancle();
 
@@ -465,7 +464,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
 
 
     /**
-     *  增加
+     * 增加
+     *
      * @param groupPosition 组元素位置
      * @param childPosition 子元素位置
      * @param showCountView 用于展示变化后数量的View
@@ -473,12 +473,12 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
      */
     @Override
     public void doIncrease(int groupPosition, int childPosition, View showCountView, boolean isChecked) {
-        CablesInfo product = (CablesInfo) selva.getChild(groupPosition,childPosition);
+        CablesInfo product = (CablesInfo) selva.getChild(groupPosition, childPosition);
         int currentCount = product.getCount();
         currentCount++;
         product.setCount(currentCount);
         //联网修改
-        updateQuantity(product.getId(),String.valueOf(currentCount));
+        updateQuantity(product.getId(), String.valueOf(currentCount));
         ((TextView) showCountView).setText(currentCount + "");
         selva.notifyDataSetChanged();
         calculate();
@@ -486,6 +486,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
 
     /**
      * 减少
+     *
      * @param groupPosition 组元素位置
      * @param childPosition 子元素位置
      * @param showCountView 用于展示变化后数量的View
@@ -501,7 +502,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         currentCount--;
         product.setCount(currentCount);
         //联网修改
-        updateQuantity(product.getId(),String.valueOf(currentCount));
+        updateQuantity(product.getId(), String.valueOf(currentCount));
         ((TextView) showCountView).setText(currentCount + "");
         selva.notifyDataSetChanged();
         calculate();
@@ -511,14 +512,14 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     public void childDelete(int groupPosition, int childPosition) {
         TypeInfo group = groups.get(groupPosition);
         List<CablesInfo> childs = children.get(group.getId());
-        for (int i=0;i<childs.size();i++){
+        for (int i = 0; i < childs.size(); i++) {
             delete(childs.get(i).getId());
             children.get(groups.get(groupPosition).getId()).remove(childPosition);
         }
         if (childs.size() == 0) {
             groups.remove(groupPosition);
         }
-        if (groups.size()==0){
+        if (groups.size() == 0) {
             clearCart();
         }
         selva.notifyDataSetChanged();
@@ -539,36 +540,36 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             TypeInfo group = groups.get(i);
             List<CablesInfo> childs = children.get(group.getId());
             for (int j = 0; j < childs.size(); j++) {
-                Map<String,Object> map = new HashMap<>();
+                Map<String, Object> map = new HashMap<>();
                 CablesInfo cable = childs.get(j);
                 if (cable.isChoosed()) {
                     totalCount++;
-                    map.put("id",cable.getId());
-                    map.put("product_name",cable.getName());
-                    map.put("introduce",cable.getIntroduce());
-                    map.put("color",cable.getColor());
-                    map.put("product_price",cable.getPrice());
-                    map.put("product_num",cable.getCount());
-                    map.put("product_package",cable.getSpecifications());
-                    map.put("product_iamge",cable.getGoodsImg());
+                    map.put("id", cable.getId());
+                    map.put("product_name", cable.getName());
+                    map.put("introduce", cable.getIntroduce());
+                    map.put("color", cable.getColor());
+                    map.put("product_price", cable.getPrice());
+                    map.put("product_num", cable.getCount());
+                    map.put("product_package", cable.getSpecifications());
+                    map.put("product_iamge", cable.getGoodsImg());
                     proInfos.add(map);
-                    if (cable.getSpecifications().equals("10米")){
+                    if (cable.getSpecifications().equals("10米")) {
                         //10米价格增长
                         totalPrice += cable.getPrice() * cable.getCount();//价格
-                    }else if(cable.getSpecifications().equals("1盘")) {
-                        totalPrice+=cable.getPrice()*cable.getCount();
-                    }else{
+                    } else if (cable.getSpecifications().equals("1盘")) {
+                        totalPrice += cable.getPrice() * cable.getCount();
+                    } else {
                         String s = packageMap.get(cable.getSpecifications());
-                        totalPrice +=cable.getPrice()*cable.getCount();
+                        totalPrice += cable.getPrice() * cable.getCount();
                     }
                 }
             }
         }
-        tvTotalPrice.setText("￥" + totalPrice);
+        tvTotalPrice.setText("￥" + df.format(totalPrice));
         tvGoToPay.setText("去支付(" + totalCount + ")");
         //计算购物车的金额为0时候清空购物车的视图
-        if(totalCount==0){
-        } else{
+        if (totalCount == 0) {
+        } else {
         }
     }
 
@@ -625,10 +626,10 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
-                                Intent intent = new Intent(MyShoppingActivity.this,ConfirmOrderActivity.class);
-                                intent.putExtra("proInfos",proInfos);
+                                Intent intent = new Intent(MyShoppingActivity.this, ConfirmOrderActivity.class);
+                                intent.putExtra("proInfos", proInfos);
                                 intent.putExtra("map", (Serializable) packageMap);
-                                intent.putExtra("price",totalPrice);
+                                intent.putExtra("price", totalPrice);
                                 startActivity(intent);
                                 sDialog.dismissWithAnimation();
                             }
@@ -638,6 +639,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
 
         }
     }
+
     /**
      * 全选与反选
      */
@@ -653,6 +655,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         selva.notifyDataSetChanged();
         calculate();
     }
+
     /**
      * 删除操作<br>
      * 1.不要边遍历边删除，容易出现数组越界的情况<br>
@@ -677,27 +680,23 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             childs.removeAll(toBeDeleteProducts);
         }
         groups.removeAll(toBeDeleteGroups);
-        //记得重新设置购物车
-//        setCartNum();
-        if (groups.size()==0){
+        if (groups.size() == 0) {
             clearCart();
         }
         selva.notifyDataSetChanged();
     }
 
 
-
     /**
      * 连接服务
      */
-    public void delete(String id){
+    public void delete(String id) {
         dialog = new Dialog(this.context);
-        dialog.showDialog("正在删除中...");
-        Map<String,String> params =new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("id", id);
         String url = Url.url("/androidShoppingCart/delete");
         //使用自己书写的NormalPostRequest类，
-        Request<JSONObject> request = new NormalPostRequest(url,deleteListener,errorListener, params);
+        Request<JSONObject> request = new NormalPostRequest(url, deleteListener, errorListener, params);
         MySingleton.getInstance(context).addToRequestQueue(request);
     }
 
@@ -709,17 +708,13 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         public void onResponse(JSONObject jsonObject) {
             try {
                 String s = jsonObject.getString("delete");
-                if (s.equals("success")){
-                    Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
-                    dialog.cancle();
-                }else if(s.equals("filed")){
-                    Toast.makeText(context, "删除失败", Toast.LENGTH_SHORT).show();
-                    dialog.cancle();
+                if (s.equals("success")) {
+                    Toast.makeText(MyShoppingActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+                } else if (s.equals("filed")) {
+                    Toast.makeText(MyShoppingActivity.this,"删除失败",Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                dialog.cancle();
-
             }
         }
     };

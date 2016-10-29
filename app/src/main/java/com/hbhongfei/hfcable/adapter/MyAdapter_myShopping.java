@@ -19,6 +19,7 @@ import com.hbhongfei.hfcable.pojo.CablesInfo;
 import com.hbhongfei.hfcable.pojo.TypeInfo;
 import com.hbhongfei.hfcable.util.Url;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
     public  int flag = 0;
     private GroupEdtorListener mListener;
     private Map<String,String> map;
+    private DecimalFormat df = new DecimalFormat("0.00");
 
     public GroupEdtorListener getmListener() {
         return mListener;
@@ -180,7 +182,7 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
         final CablesInfo cablesInfo = (CablesInfo) getChild(groupPosition, childPosition);
         if (cablesInfo != null) {
             cholder.tv_product_name.setText(cablesInfo.getName());
-            cholder.tv_price.setText("￥" + cablesInfo.getPrice());
+            cholder.tv_price.setText("￥" + df.format(cablesInfo.getPrice()));
             if (cablesInfo.getSpecifications().equals("1盘")){
                 //盘的单价
                 cholder.tv_package.setText("单位:100米/盘");

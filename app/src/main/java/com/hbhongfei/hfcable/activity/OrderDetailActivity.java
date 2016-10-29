@@ -49,7 +49,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     private TextView Tview_myOrder_stage,Tview_myOrder_type,Tview_myOrder_introduce,Tview_myOrder_price;
     private ImageView image_myOrder,Image_myOrder_delete;
     private Button btn_order_cancle,btn_order_pay,btn_order_confirmReceipt,btn_order_viewlogistics;
-//    KdniaoTrackQueryAPI api;
     private Order order;
     private  Product product;
     private ArrayList<LogisticsData> list;

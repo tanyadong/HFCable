@@ -156,11 +156,11 @@ public class OrderPayActivity extends AppCompatActivity implements
     /**
      * 存入数据，并将此数据放到json中
      *
-     * @param chanel 支付类型
+     * @param channel 支付类型
      */
-    private void putValues(String chanel) {
+    private void putValues(String channel) {
         map = new HashMap<>();
-        map.put("channel", chanel);
+        map.put("channel", channel);
         map.put("amount", amount);
         map.put("body",body);
         map.put("order_no",order_no);
@@ -283,6 +283,9 @@ public class OrderPayActivity extends AppCompatActivity implements
                     //链接验证服务
                     updatePayState();
                 } else {
+                    String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+                    String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+                    Toast.makeText(this,errorMsg+"--"+extraMsg,Toast.LENGTH_SHORT).show();
                     CustomDialog.payDialog(this,result);
                 }
 

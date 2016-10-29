@@ -45,6 +45,7 @@ import com.hbhongfei.hfcable.util.DataUtil;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.MySingleton;
+import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
 
@@ -52,6 +53,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -150,6 +153,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
     };
 
+    private DecimalFormat df = new DecimalFormat("0.00");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -214,9 +219,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         prodectInfo_s = (TextView) findViewById(R.id.prodectInfo_s);
         prodectInfo_s1 = (TextView) findViewById(R.id.prodectInfo_s1);
         prodectInfo_s2 = (TextView) findViewById(R.id.prodectInfo_s2);
-
-        //初始化对话框
-//        popWindow = new BabyPopWindow(ProdectInfoActivity.this);
     }
 
     /**
@@ -403,7 +405,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 if (!pop_num.getText().toString().equals("750")) {
                     String num_add = Integer.valueOf(pop_num.getText().toString()) + ADDORREDUCE + "";
                     D_price += D_tagPrice;
-                    prodectInfo_last_price.setText("金额:" + D_price);
+                    prodectInfo_last_price.setText("金额:" + df.format(D_price));
                     pop_num.setText(num_add);
                 } else {
                     Toast.makeText(this, "不能超过最大产品数量", Toast.LENGTH_SHORT).show();
@@ -415,7 +417,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                     String num_reduce = Integer.valueOf(pop_num.getText().toString()) - ADDORREDUCE + "";
                     pop_num.setText(num_reduce);
                     D_price -= D_tagPrice;
-                    prodectInfo_last_price.setText("金额:" + D_price);
+                    prodectInfo_last_price.setText("金额:" + df.format(D_price));
                 } else {
                     Toast.makeText(this, "购买数量不能低于1件", Toast.LENGTH_SHORT).show();
                 }
@@ -563,7 +565,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(ProdectInfoActivity.this, "请求数据失败", Toast.LENGTH_SHORT).show();
-            Log.e("TAG", volleyError.getMessage(), volleyError);
             dialog.cancle();
             dismiss();
         }
@@ -573,12 +574,20 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
      * 判断是否收藏
      */
     private void isOrNotColl() {
+        dialog.showDialog("正在加载...");
         String url = Url.url("/androidCollecton/isCollection");
         Map<String, String> map = new HashMap<>();
         map.put("productId", product.getId());
         map.put("userName", S_phoneNumber);
-        NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectIsListener, errorListener, map);
-        MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
+        //此处有问题，无网状态下无法连接网络，直接崩溃,
+        //通过先判断有无网进行解决
+        if (NetUtils.isConnected(this)){
+            NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectIsListener, errorListener, map);
+            MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
+        }else{
+            dialog.cancle();
+        }
+
     }
 
     /**
@@ -595,14 +604,12 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                     prodectList_img_collect.setImageResource(R.mipmap.heart_red);
                     prodectList_tview_collect.setText("已收藏");
                 }
+                dialog.cancle();
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.cancle();
             }
-
-
         }
-
-        ;
     };
 
     /**
@@ -635,7 +642,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         tv_name = (TextView) view.findViewById(R.id.tv_name);
         Layout_add = (LinearLayout) view.findViewById(R.id.Layout_add);
         prodectInfo_last_price = (TextView) view.findViewById(R.id.tv_price);
-        prodectInfo_last_price.setText("金额:" + D_beforePrice);
+        prodectInfo_last_price.setText("金额:" + df.format(D_beforePrice));
         iv_pic = (ImageView) view.findViewById(R.id.iv_pic);
         pop_del = (ImageView) view.findViewById(R.id.pop_del);
         btn_sure = (Button) view.findViewById(R.id.btn_sure);
@@ -727,9 +734,9 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                         }
                         if (position != 0) {
                             Double price = D_price - Double.parseDouble(package_list_price.get(position - 1));
-                            prodectInfo_last_price.setText("金额:" + D_price);
+                            prodectInfo_last_price.setText("金额:" + df.format(D_price));
                         } else {
-                            prodectInfo_last_price.setText("金额:" + D_beforePrice);
+                            prodectInfo_last_price.setText("金额:" + df.format(D_beforePrice));
                             Layout_add.setVisibility(View.GONE);
                         }
                         break;
@@ -744,7 +751,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                         if (position != 0) {
                             D_price = D_beforePrice;
                             Double price1 = Double.parseDouble(package_list_price.get(position - 1)) + package_list_num.get(position - 1) / 10 * D_price;
-                            prodectInfo_last_price.setText("金额:" + price1);
+                            prodectInfo_last_price.setText("金额:" + df.format(price1));
                             String s = String.valueOf(package_list_num.get(position - 1));
                             packages = s.substring(0, s.indexOf("."));
                             Layout_add.setVisibility(View.GONE);
@@ -761,7 +768,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                                             //10米
                                             D_price = D_beforePrice;
                                             D_tagPrice = D_price;
-                                            prodectInfo_last_price.setText("金额:" + D_price);
+                                            prodectInfo_last_price.setText("金额:" + df.format(D_price));
                                             packages = "10米";
                                             sweetAlertDialog.dismiss();
                                         }
@@ -773,7 +780,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                                             packages = "1盘";
                                             D_price = D_beforePrice * 10;
                                             D_tagPrice = D_price;
-                                            prodectInfo_last_price.setText("金额:" + D_price);
+                                            prodectInfo_last_price.setText("金额:" + df.format(D_price));
                                             sweetAlertDialog.dismiss();
                                         }
                                     }).show();
