@@ -299,7 +299,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             dialog.cancle();
             MySingleton mySingleton = new MySingleton(IndexFragment.this.getActivity());
             if (mySingleton.getCache(urlType) != null) {
-                Toast.makeText(IndexFragment.this.getContext(), "没有网络", Toast.LENGTH_SHORT).show();
+                if(!NetUtils.isConnected(getActivity())){
+                    Toast.makeText(IndexFragment.this.getContext(), "没有网络", Toast.LENGTH_SHORT).show();
+                }
                 noInternet.setVisibility(View.GONE);
                 //加载种类
                 analysisDataOfType(mySingleton.getCache(urlType));
@@ -310,7 +312,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                     Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
                         @Override
                         public void errorClick() {
-
                         }
                     });
                 } else {
@@ -347,84 +348,87 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         JSONArray jsonArray;
         List<Company> company_list = new ArrayList<>();
         try {
-            jsonArray = jsonObject.getJSONArray("companyList");
-            final Company company = new Company();
-            JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(0);
-            company.setLogo(jsonObject1.getString("logo"));
-            company.setAddress(jsonObject1.getString("address"));
-            company.setCompanyName(jsonObject1.getString("companyName"));
-            company.setDescription(jsonObject1.getString("description"));
-            company.setEmail(jsonObject1.getString("email"));
-            company.setProductIntroduction(jsonObject1.getString("productIntroduction"));
-            company.setTelephone(jsonObject1.getString("telephone"));
-            //保存电话号码
-            savePhoneNum(jsonObject1.getString("telephone"));
+            if(jsonObject.optJSONArray("companyList") != null && jsonObject.optJSONArray("project_list") != null ){
+                jsonArray = jsonObject.getJSONArray("companyList");
+                  /*解析项目信息*/
+                JSONArray array_project = jsonObject.getJSONArray("project_list");
 
-            company.setZipCode(jsonObject1.getInt("zipCode"));
-            JSONArray jsonArray1 = jsonObject1.getJSONArray("list");
-            ArrayList<String> list1 = new ArrayList<>();
-            for (int j = 0; j < jsonArray1.length(); j++) {
-                JSONObject jsonObject2 = jsonArray1.getJSONObject(j);
-                list1.add(jsonObject2.getString("image"));
-                String url = Url.url(jsonObject2.getString("image"));
-                img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
+                final Company company = new Company();
+                JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(0);
+                company.setLogo(jsonObject1.getString("logo"));
+                company.setAddress(jsonObject1.getString("address"));
+                company.setCompanyName(jsonObject1.getString("companyName"));
+                company.setDescription(jsonObject1.getString("description"));
+                company.setEmail(jsonObject1.getString("email"));
+                company.setProductIntroduction(jsonObject1.getString("productIntroduction"));
+                company.setTelephone(jsonObject1.getString("telephone"));
+                //保存电话号码
+                savePhoneNum(jsonObject1.getString("telephone"));
 
-                Glide.with(IndexFragment.this.getContext())
-                        .load(url)
-                        .placeholder(R.mipmap.background)
-                        .error(R.mipmap.loading_error)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(img1);
-                list.add(img1);
-                list_obj.add(company);
-                //给图片添加点击事件。跳转到公司信息界面
-                img1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        intent = new Intent(IndexFragment.this.getActivity(), CompanyInfoActivity.class);
-                        intent.putExtra("company", company);
-                        startActivity(intent);
-                    }
-                });
+                company.setZipCode(jsonObject1.getInt("zipCode"));
+                JSONArray jsonArray1 = jsonObject1.getJSONArray("list");
+                ArrayList<String> list1 = new ArrayList<>();
+                for (int j = 0; j < jsonArray1.length(); j++) {
+                    JSONObject jsonObject2 = jsonArray1.getJSONObject(j);
+                    list1.add(jsonObject2.getString("image"));
+                    String url = Url.url(jsonObject2.getString("image"));
+                    img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
+
+                    Glide.with(IndexFragment.this.getContext())
+                            .load(url)
+                            .placeholder(R.mipmap.background)
+                            .error(R.mipmap.loading_error)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(img1);
+                    list.add(img1);
+                    list_obj.add(company);
+                    //给图片添加点击事件。跳转到公司信息界面
+                    img1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            intent = new Intent(IndexFragment.this.getActivity(), CompanyInfoActivity.class);
+                            intent.putExtra("company", company);
+                            startActivity(intent);
+                        }
+                    });
+                }
+                company.setList(list1);
+
+                int count = array_project.length();
+                for (int i = 0; i < count; i++) {
+                    final Project project = new Project();
+                    JSONObject jsonObject_project = (JSONObject) array_project.get(i);
+                    String id = jsonObject_project.getString("id");
+                    String projectName = jsonObject_project.getString("projectName");
+                    String introduce = jsonObject_project.getString("introduce");
+                    String imgurl = jsonObject_project.getString("projectImg");
+                    project.setId(id);
+                    project.setIntroduce(introduce);
+                    project.setProjectName(projectName);
+                    project.setProjectImg(imgurl);
+                    String url = Url.url(imgurl);
+                    img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
+                    Glide.with(IndexFragment.this.getContext())
+                            .load(url)
+                            .placeholder(R.mipmap.background)
+                            .error(R.mipmap.loading_error)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(img1);
+                    list.add(img1);
+                    list_obj.add(project);
+                    //给图片添加点击事件。跳转到项目界面
+                    img1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            intent = new Intent(IndexFragment.this.getActivity(), ProjectActivity.class);
+                            intent.putExtra("project", project);
+                            startActivity(intent);
+                        }
+                    });
+                }
+                //设置小圆点
+                setSmallDot(list);
             }
-            company.setList(list1);
-
-                    /*解析项目信息*/
-            JSONArray array_project = jsonObject.getJSONArray("project_list");
-            int count = array_project.length();
-            for (int i = 0; i < count; i++) {
-                final Project project = new Project();
-                JSONObject jsonObject_project = (JSONObject) array_project.get(i);
-                String id = jsonObject_project.getString("id");
-                String projectName = jsonObject_project.getString("projectName");
-                String introduce = jsonObject_project.getString("introduce");
-                String imgurl = jsonObject_project.getString("projectImg");
-                project.setId(id);
-                project.setIntroduce(introduce);
-                project.setProjectName(projectName);
-                project.setProjectImg(imgurl);
-                String url = Url.url(imgurl);
-                img1 = (ImageView) inflater.inflate(R.layout.scroll_vew_item, null);
-                Glide.with(IndexFragment.this.getContext())
-                        .load(url)
-                        .placeholder(R.mipmap.background)
-                        .error(R.mipmap.loading_error)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(img1);
-                list.add(img1);
-                list_obj.add(project);
-                //给图片添加点击事件。跳转到项目界面
-                img1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        intent = new Intent(IndexFragment.this.getActivity(), ProjectActivity.class);
-                        intent.putExtra("project", project);
-                        startActivity(intent);
-                    }
-                });
-            }
-            //设置小圆点
-            setSmallDot(list);
         } catch (JSONException e) {
             e.printStackTrace();
         }

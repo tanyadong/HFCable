@@ -7,12 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Information;
 
 import java.util.ArrayList;
@@ -28,7 +26,7 @@ public class DataAdapter extends BaseAdapter {
 		inflater = LayoutInflater.from(context);
 		newsData = nList;
 	}
-	public List<Information> addItems(List<Information> list){
+	public List<Information> addItems(ArrayList<Information> list){
 		newsData.addAll(list);
 		notifyDataSetChanged();
 		return newsData;

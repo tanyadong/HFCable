@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,9 +54,11 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     private LinearLayout ll_market_head;
     private ArrayList<String> group_list;
     private ArrayList<MarketInfo> child_list;
+    ArrayList<List<MarketInfo>> list;
     private ArrayList<List<MarketInfo>> item_list=new ArrayList<>();;;
     private View view;
     private Dialog dialog;
+    private Request request;
     /** 标志位，标志已经初始化完成 */
     private boolean isPrepared;
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
@@ -81,7 +82,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         view = inflater.inflate(R.layout.fragment_market, container, false);
         initView(view);
         initRefreshLayout();
-        initOkHttpClient(); //初始化okhttp请求
+
         isPrepared = true;
         //懒加载
         lazyLoad();
@@ -89,13 +90,18 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     }
 
     Handler mHandler = new Handler(){
-        @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
                     myExpandableListViewAdapter.notifyDataSetChanged();
+                    break;
+                case 1:
+                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",MarketFragment.this);
+                    break;
+                case 2:
+                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",MarketFragment.this);
                     break;
                 default:
                     break;
@@ -145,51 +151,40 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         noInternet = (LinearLayout) view.findViewById(R.id.no_internet_market);
     }
     private void initOkHttpClient() {
-//        File sdcache =getActivity().getCacheDir();
         File sdcache=getActivity().getExternalCacheDir();
         int cacheSize = 10 * 1024 * 1024;
-        OkHttpClient.Builder builder = null;
-            builder = new OkHttpClient.Builder()
-                    .connectTimeout(15, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .addInterceptor(new CaheInterceptor(this.getContext()))
-                    .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(new CaheInterceptor(getActivity()))
+//                .addNetworkInterceptor(new CaheInterceptor(getActivity()))
+                .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
         mOkHttpClient = builder.build();
-    }
 
+    }
     private  String netWork(final int index) {
         final String url = "http://material.cableabc.com/matermarket/spotshow_00" + index + ".html";
         CacheControl.Builder builder = new CacheControl.Builder();
-        Request request = new Request.Builder()
+        request = new Request.Builder()
                 .cacheControl(builder.build())
                 .url(url)
                 .build();
         try {
-            final Response response = mOkHttpClient.newCall(request).execute();;
+            Response response = mOkHttpClient.newCall(request).execute();
             if(response.isSuccessful()){
-                if(response.cacheResponse()!=null){
-                    return response.body().string();
-
-                }else {
-                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",MarketFragment.this);
-                }
+                return response.body().string();
             }else {
                 if(response.cacheResponse()!=null){
                     return response.body().string();
                 }else {
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
-                        @Override
-                        public void errorClick() {
-                        }
-                    });
+                    mHandler.sendEmptyMessage(2);
+
                 }
             }
-
-        }catch (Exception e){
+        }catch (final Exception e){
             e.printStackTrace();
         }
-
         return null;
     }
     //下拉刷新
@@ -215,28 +210,28 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     }
 
 
-    class MarketTask extends AsyncTask<Integer, Void, ArrayList<List<MarketInfo>>> {
+    class MarketTask extends AsyncTask<Integer, Void, String> {
         @Override
-        protected ArrayList<List<MarketInfo>> doInBackground(Integer... params) {
+        protected String doInBackground(Integer... params) {
                 index = params[0];
                 String data = netWork(index);
-                return parse(data);
+                return data;
         }
         @Override
         protected void onPreExecute() {
             //请求之前
         }
-
         /**
          * 请求之后的操作
-         * @param data
+         * @param html
          */
         @Override
-        protected void onPostExecute(final ArrayList<List<MarketInfo>> data) {
-            if(data.size()==4){
+        protected void onPostExecute(final String html) {
+           list=parseHtml(html);
+            if(list.size()==4){
                 dialog.cancle();
                 ll_market_head.setVisibility(View.VISIBLE);
-                setValues(data);
+                setValues(list);
             }
         }
     }
@@ -253,6 +248,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
             for (int i=1;i<=4;i++){
                 new MarketTask().execute(i);
             }
+//        dialog.cancle();
     }
 
     /**
@@ -260,8 +256,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
      *
      * @param html
      */
-    public ArrayList<List<MarketInfo>> parse(String html) {
-        Log.d("html",html);
+    public ArrayList<List<MarketInfo>> parseHtml(final String html) {
         Document doc = Jsoup.parse(html);
         //Elements
         Element table = doc.getElementsByTag("table").first();
@@ -301,6 +296,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         if (!isPrepared || !isVisible || mHasLoadedOnce) {
             return;
         }
+        initOkHttpClient(); //初始化okhttp请求
         try {
             initValues();
         } catch (IOException e) {

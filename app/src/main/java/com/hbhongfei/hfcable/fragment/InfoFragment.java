@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,22 +17,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.InfoDetailActivity;
 import com.hbhongfei.hfcable.adapter.DataAdapter;
+import com.hbhongfei.hfcable.util.CaheInterceptor;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.Information;
-import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NetUtils;
 
 import org.json.JSONException;
@@ -40,21 +33,28 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
+import okhttp3.Cache;
+import okhttp3.CacheControl;
+import okhttp3.OkHttpClient;
+
+import static android.widget.Toast.makeText;
 
 public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick  {
     //下拉和分页框架
-    private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
     private View view;
     private ListView info_listView;
     private DataAdapter mAdapter = null;
-    List<Information> info_list=new ArrayList<Information>();;
+    ArrayList<Information> info_list=null;
+
     Button reload = null;
     LinearLayout loadLayout = null;
     TextView loading = null;
@@ -62,6 +62,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     private int index = 0;
     private int count;
     private LinearLayout noInternet;
+    public Handler mHandler;
     private String info_time,info_content;
     Information information=null;
 
@@ -70,6 +71,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
     private boolean mHasLoadedOnce;
     private Dialog dialog;
+    private OkHttpClient mOkHttpClient;
     public InfoFragment() {
     }
     @Override
@@ -79,8 +81,11 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         //声明一个队列
         setHasOptionsMenu(true);
         initRefreshLayout();
-
+// 初始化handler
+        handlerMessage();
         initView(view);
+        initOkHttpClient();
+
         isPrepared = true;
         lazyLoad();
 
@@ -91,7 +96,18 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     public void onResume() {
         super.onResume();
     }
-
+    /**
+     * @author  tanyadong
+     * @Title: handlerMessage
+     * @Description: 创建handler
+     * @date 2016-10-26 上午11:14:33
+     */
+    public void handlerMessage() {
+        // 得到当前线程的Looper实例，由于当前线程是UI线程也可以通过Looper.getMainLooper()得到
+        Looper looper = Looper.myLooper();
+        // 此处甚至可以不需要设置Looper，因为 Handler默认就使用当前线程的Looper
+        mHandler = new MessageHandler(looper);
+    }
     //设置懒加载
     @Override
     protected void lazyLoad() {
@@ -99,45 +115,41 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             return;
         }
         dialog=new Dialog(getActivity());
-        mAdapter = new DataAdapter(getActivity(), info_list);
-        info_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Intent intent = new Intent(getActivity(), InfoDetailActivity.class);
-                intent.putExtra("data", info_list.get(position));
-                getActivity().startActivity(intent);
-            }
-        });
-//        //添加头和尾
-        info_listView.setAdapter(mAdapter);
-        dialog.showDialog("正在加载中");
         index=0;
-        loadData(index);
+        new MyAsyncTack().execute();
         mHasLoadedOnce=true;
     }
-    Handler mHandler = new Handler(){
+
+
+    /**
+     * @author tanyadong
+     * @Description: handler,处理返回结果
+     * @date 2016-10-26 上午11:15:53
+     */
+    class MessageHandler extends Handler {
+        int icount = 0;
+
+        public MessageHandler(Looper looper) {
+            super(looper);
+        }
+
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
+            int iswitch = msg.arg1;
+            switch (iswitch) {
                 case 1:
                     //告诉适配器，数据变化了，从新加载listview
                     mAdapter.notifyDataSetChanged();
                     //设置加载中为false
                     info_listView.setVisibility(View.VISIBLE);
                     break;
-                case 2:
-                    reload.setVisibility(View.VISIBLE);
-                    if(isAdded()){
-                        loading.setText(getString(R.string.tip_text_data_fail));
-                    }
-                    break;
+
                 default:
                     break;
             }
         }
-    };
+    }
+
     /**
      * 初始化组件
      */
@@ -160,8 +172,9 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     }
     /**
      * 初始化数据
+     * @param list
      */
-    private  void setValues(final List<Information> list){
+    private  void setValues(final ArrayList<Information> list){
         mAdapter = new DataAdapter(getActivity(), list);
         //添加头和尾
         info_listView.setAdapter(mAdapter);
@@ -180,58 +193,22 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     /**
      * 加载数据
      */
-    private void loadData( final int index){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final String url="http://news.cableabc.com/gc_"+index+".html";
-                    StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String s) {
-                            parse(s);
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            dialog.cancle();
-                            MySingleton mySingleton = new MySingleton(InfoFragment.this.getActivity());
-                            if (mySingleton.getCacheString(url)!=null){
-                                //加载缓存
-                                Toast.makeText(InfoFragment.this.getContext(),"没有网络",Toast.LENGTH_SHORT).show();
-                                noInternet.setVisibility(View.GONE);
-                                parse(mySingleton.getCacheString(url).toString());
-                            }else{
-                                if (volleyError instanceof NoConnectionError){
-                                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",InfoFragment.this);
-                                }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
-                                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
-                                        @Override
-                                        public void errorClick() {
-                                        }
-                                    });
-                                }else{
-                                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
-                                        @Override
-                                        public void errorClick() {
-
-                                        }
-                                    });
-                                }
-                            }
-
-                        }
-                    });
-                MySingleton.getInstance(getActivity()).addToRequestQueue(request);
-                }
-        }).start();
-
+    private List<Information>  loadData( final int index){
+            final String url="http://news.cableabc.com/gc_"+index+".html";
+        String info_html= netWork(url);
+        if(info_html!=null){
+            return parse(info_html);
+        }
+        return null;
     }
 
     /**
      * 解析html
      * @param
      */
-    protected void parse(String html) {
+    protected List<Information>  parse(String html) {
+        info_list=new ArrayList<Information>();
+        //初始化okhttp
         Document doc = Jsoup.parse(html);
         Elements a = doc.getElementById("main_cont_ContentPlaceHolder1_pager").getElementsByTag("a");
         final String s_url=a.last().attr("href");
@@ -250,58 +227,94 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             information.setBrief(link.getElementsByClass("list31_text1").text());
             information.setImgUrl(link.getElementsByTag("img").attr("src"));
             information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
-             loadContentData(information.getContentUrl(), information);
+             final String data_html=loadContentData(information.getContentUrl());
+             information=parseContent(data_html,information);
+             info_list.add(information);
          }
+        return info_list;
 
     }
-    /**
-     * 解析资讯详情
-     * @param url
-     */
-    private void loadContentData(final String url, final Information info){
 
-        StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(final String s) {
-                parseContent(s,info);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                MySingleton mySingleton = new MySingleton(InfoFragment.this.getActivity());
-                if (mySingleton.getCacheString(url)!=null){
-                    Toast.makeText(InfoFragment.this.getContext(),"没有网络",Toast.LENGTH_SHORT).show();
-                    noInternet.setVisibility(View.GONE);
-                    parseContent(mySingleton.getCacheString(url),information);
-                }else{
-                    if (volleyError instanceof NoConnectionError){
-                        Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络解析数据失败","点击设置",InfoFragment.this);
-                    }else if(volleyError instanceof NetworkError||volleyError instanceof ServerError||volleyError instanceof TimeoutError){
-                        Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
-                            @Override
-                            public void errorClick() {
-
-                            }
-                        });
-                    }else{
-                        Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
-                            @Override
-                            public void errorClick() {
-
-                            }
-                        });
-                    }
+    public void initOkHttpClient() {
+            File sdcache=getActivity().getExternalCacheDir();
+            int cacheSize = 10 * 1024 * 1024;
+            OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                    .connectTimeout(15, TimeUnit.SECONDS)
+                    .writeTimeout(20, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    .addInterceptor(new CaheInterceptor(getActivity()))
+//                .addNetworkInterceptor(new CaheInterceptor(getActivity()))
+                    .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
+            mOkHttpClient = builder.build();
+    }
+    public  String netWork(String url) {
+        CacheControl.Builder builder = new CacheControl.Builder();
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .cacheControl(builder.build())
+                .url(url)
+                .build();
+        try {
+            final okhttp3.Response response = mOkHttpClient.newCall(request).execute();;
+            if(response.isSuccessful()){
+                return response.body().string();
+            }else {
+                if(response.cacheResponse()!=null){
+                    return response.body().string();
+                }else {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                        }
+                    });
                 }
-
             }
-        });
-        MySingleton.getInstance(getActivity()).addToRequestQueue(request);
+
+        }catch (final Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
+   /**
+   * @author  谭亚东
+   * @Title:
+   * @Description: 获取资讯详情在主页显示时间
+   * @date 2016/10/29 14:42
+   */
+    private String loadContentData(final String url){
+        CacheControl.Builder builder = new CacheControl.Builder();
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .cacheControl(builder.build())
+                .url(url)
+                .build();
+        try {
+            final okhttp3.Response response = mOkHttpClient.newCall(request).execute();
+            if(response.isSuccessful()){
+                return response.body().string();
+            }else {
+                if(response.cacheResponse()!=null){
+                    return response.body().string();
+                }else {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
+                        @Override
+                        public void errorClick() {
+                        }
+                    });
+                }
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
     /**
      * 解析html
      * @param html
      */
-    protected void parseContent(String html, final Information info) {
+    protected Information parseContent(String html, final Information info) {
         Document doc = Jsoup.parse(html);
         //获取资讯时间
         Elements time = doc.getElementsByClass("contentspage");
@@ -318,14 +331,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         }
         info.setTime(s_time+s_source);
         info.setDetailContent(content);
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                dialog.cancle();
-                info_list.add(info);
-                mAdapter.notifyDataSetChanged();
-            }
-        });
+        return info;
     }
 
 
@@ -336,7 +342,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             info_list.clear();
             new MyAsyncTack().execute();
         }else{
-            Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+            makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
             mRefreshLayout.endRefreshing();
         }
     }
@@ -348,8 +354,9 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             if(NetUtils.isConnected(getActivity())){
                 // 如果网络可用，则加载网络数据
                 new MyAsyncTack().execute();
+                return true;
             }else{
-                Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+                makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
                 mRefreshLayout.endLoadingMore();
                 return false;
             }
@@ -358,7 +365,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             mRefreshLayout.endLoadingMore();
             return false;
         }
-        return true;
     }
 
     @Override
@@ -369,24 +375,28 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     /**
      * 异步执行加载
      */
-    class MyAsyncTack extends AsyncTask<Void,Void,Void> {
+    class MyAsyncTack extends AsyncTask<Void,Void,List<Information>> {
         @Override
         protected void onPreExecute() {
             dialog.showDialog("正在加载中");
             super.onPreExecute();
         }
         @Override
-        protected Void doInBackground(Void... params) {
-            loadData(index);
-            return null;
+        protected List<Information>  doInBackground(Void... params) {
+            return loadData(index);
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void   onPostExecute(List<Information> list ) {
             dialog.cancle();
+            if(index==0){
+                setValues(info_list);
+            }else {
+                mAdapter.addItems(info_list);
+            }
             mRefreshLayout.endLoadingMore();
             mRefreshLayout.endRefreshing();
-            super.onPostExecute(aVoid);
+            super.onPostExecute(list);
         }
     }
 

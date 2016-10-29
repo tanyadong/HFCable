@@ -48,7 +48,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
     private TextView prodectType_textView;
     private ExpandableListView prodectList_listView;
     //下拉和分页框架
-    private static final String TAG = IndexFragment.class.getSimpleName();
+
     private BGARefreshLayout mRefreshLayout;
     private String typeName;
     private int width;
