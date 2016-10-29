@@ -35,7 +35,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -192,7 +191,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         }
 
         setValues();
-
     }
 
     /**
@@ -204,7 +202,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         if (proInfos != null) {
             random = RandomStringUtils.randomNumeric(20);
             for (int i = 0; i < proInfos.size(); i++) {
-                param = new HashMap<>();
                 Map map = new HashMap<String, Object>();
                 Map proInfo = proInfos.get(i);
                 //map放入两个键值对，键名与from对应，
@@ -212,16 +209,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                     map.put(from[j], proInfo.get(from[j]));
                 }
                 array.put(i, (String) proInfo.get("product_name"));
-                param.put("id" + i, (String) proInfo.get("id"));
-                Double monty = (Double) proInfo.get("product_price") * (Integer) proInfo.get("product_num");
-                param.put("money" + i, Double.toString(monty));
-                param.put("addressId", addressId);
-                param.put("orderNumber", random);
-                try {
-                    json.put("order" + i, param);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 //往list添加数据
                 list.add(map);
             }
@@ -236,7 +223,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.Tview_confirm_order_commit:
-                if (addressId!=null){
+                if (!addressId.isEmpty()){
                     Intent intent = new Intent();
                     //提交订单
                     //保存订单
@@ -264,6 +251,20 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
 
     public void saveOrder() {
         // 订单编号
+        for (int i = 0; i < proInfos.size(); i++) {
+            param = new HashMap<>();
+            Map proInfo = proInfos.get(i);
+            param.put("id" + i, (String) proInfo.get("id"));
+            Double monty = (Double) proInfo.get("product_price") * (Integer) proInfo.get("product_num");
+            param.put("money" + i, Double.toString(monty));
+            param.put("addressId", addressId);
+            param.put("orderNumber", random);
+            try {
+                json.put("order" + i, param);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         String url = Url.url("/androidOrder/save");
         // 订单编号
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, json, jsonSuccessListener, errorListener);
