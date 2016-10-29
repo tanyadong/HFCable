@@ -50,7 +50,6 @@
             android:id="@+id/tview_logistics_company"
             android:layout_toRightOf="@id/tview_logistics_company0"
             android:layout_below="@+id/tview_logistics_state"
-            android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="30dp" />
@@ -68,6 +67,7 @@
             android:id="@+id/tview_logistics_num"
             android:layout_width="wrap_content"
             android:gravity="center_vertical"
+            android:layout_toRightOf="@id/tview_logistics_num0"
             android:layout_below="@id/tview_logistics_company"
             android:layout_height="30dp" />
     </RelativeLayout>

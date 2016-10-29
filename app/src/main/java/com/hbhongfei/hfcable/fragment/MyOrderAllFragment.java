@@ -167,7 +167,6 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
             dialog.showDialog("正在加载中");
             super.onPreExecute();
         }
-
         @Override
         protected void onPostExecute(Void aVoid) {
             dialog.cancle();

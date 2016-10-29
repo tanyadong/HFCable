@@ -50,6 +50,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     private ImageView image_myOrder,Image_myOrder_delete;
     private Button btn_order_cancle,btn_order_pay,btn_order_confirmReceipt,btn_order_viewlogistics;
 //    KdniaoTrackQueryAPI api;
+    private String logisticsNumber;
+    private String logisticsCompanyNameCode;
     private Order order;
     private  Product product;
     private ArrayList<LogisticsData> list;
@@ -61,8 +63,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         initview();
-
 
     }
 
@@ -123,6 +125,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         Intent intent=getIntent();
         order= (Order) intent.getSerializableExtra("order");
         position=intent.getIntExtra("position",0);
+       logisticsNumber=order.logistics.logisticsNumber;
+        logisticsCompanyNameCode=order.logistics.logisticsCompanyNameCode;
         if(order.shipOrNot==1){
             dialog=new Dialog(this);
             dialog.showDialog("正在加载中");
@@ -157,10 +161,12 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         }else if(order.cancleOrNot==0&&order.shipOrNot==2&&order.tag==2){
             textview_order_state.setText("待发货");
             btn_order_pay.setVisibility(View.GONE);
+            btn_order_confirmReceipt.setVisibility(View.GONE);
             btn_order_cancle.setOnClickListener(this);
         }else if(order.cancleOrNot==0&&order.shipOrNot==1&&order.completeOrNot==0){
             textview_order_state.setText("待收货");
             btn_order_pay.setVisibility(View.GONE);
+            btn_order_viewlogistics.setVisibility(View.VISIBLE);
             btn_order_confirmReceipt.setVisibility(View.VISIBLE);
             btn_order_viewlogistics.setOnClickListener(this); //查看物流
             btn_order_confirmReceipt.setOnClickListener(this);
@@ -209,8 +215,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     public void getLogitis() throws JSONException {
         String url = Url.url("/androidLogitis/getLogitis");
         Map<String,String> map=new HashMap<>();
-        map.put("LogisticsCode","STO");
-        map.put("LogisticsNum","3313367297754");
+        map.put("LogisticsCode",logisticsCompanyNameCode);
+        map.put("LogisticsNum",logisticsNumber);
         NormalPostRequest normalPostRequest=new NormalPostRequest(url,jsonObjectOrderListener,errorListener,map);
         MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
         dialog.cancle();

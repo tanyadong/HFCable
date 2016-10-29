@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
@@ -16,9 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.activity.AddressListActivity;
 import com.hbhongfei.hfcable.adapter.AddressListAdapter;
 import com.hbhongfei.hfcable.pojo.ShoppingAddress;
 
@@ -99,7 +95,6 @@ public class ShoppingAddressListConnection {
                         shoppingAddress.setTag(jsonObject1.getInt("tag"));
                         list.add(shoppingAddress);
                     }
-
                         addressListAdapter = new AddressListAdapter(activity, context, list, phoneNum, listView, linearLayout);
                         listView.setAdapter(addressListAdapter);
                         listView.setDivider(null);

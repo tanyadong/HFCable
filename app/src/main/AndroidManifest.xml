@@ -49,6 +49,7 @@
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MyOrderActivity"
+            android:label="@string/myOrder_lable"
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MyShoppingActivity"
@@ -145,8 +146,15 @@
             android:name=".activity.AddressListActivity"
             android:parentActivityName=".activity.ConfirmOrderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.OrderDetailActivity" />
-        <activity android:name=".activity.LogisticsDetailsActivity" />
+        <!--订单详情-->
+        <activity android:name=".activity.OrderDetailActivity"
+            android:label="@string/order_detail"
+            android:parentActivityName=".activity.MyOrderActivity"/>
+        <!--物流详情-->
+        <activity android:name=".activity.LogisticsDetailsActivity"
+            android:label="@string/logistics_detail"
+            android:launchMode="singleTask"
+          />
 
         <!-- Ping++ sdk -->
         <activity

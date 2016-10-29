@@ -66,12 +66,12 @@ public class Address_all_Adapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int arg0) {
-		return null;
+		return list.get(arg0);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return 0;
+		return position;
 	}
 
 	@Override
@@ -236,6 +236,7 @@ public class Address_all_Adapter extends BaseAdapter {
                 if (msg.equals("success")) {
 					ShoppingAddress_conn shoppingAddress_conn=new ShoppingAddress_conn(mContext,phoneNum,activity,listView,linearLayout,noInternet);
 					shoppingAddress_conn.addressListConnection();
+					notifyDataSetChanged();
                     Toast.makeText(mContext, "设置成功", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(mContext, "设置失败", Toast.LENGTH_SHORT).show();

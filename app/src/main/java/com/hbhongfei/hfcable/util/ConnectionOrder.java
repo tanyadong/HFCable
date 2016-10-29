@@ -193,12 +193,12 @@ private String url;
                     address.setDetailAddress(json_address.getString("detailAddress"));
                     /**  *******物流信息*********/
                     Logistics logistics = new Logistics();
-//                    if(json_order.getJSONObject("logistics")!=null){
-//                        JSONObject json_logistics=json_order.getJSONObject("logistics");
-//                        logistics.logisticsCompanyName=json_logistics.getString("logisticsCompanyName");
-//                        logistics.logisticsNumber=json_logistics.getString("logisticsNumber");
-//                    }
-
+                    if(json_order.optJSONObject("logistics")!=null){
+                        JSONObject json_logistics=json_order.getJSONObject("logistics");
+                        logistics.logisticsCompanyName=json_logistics.getString("logisticsCompanyName");
+                        logistics.logisticsNumber=json_logistics.getString("logisticsNumber");
+                        logistics.logisticsCompanyNameCode=json_logistics.getString("logisticsCompanyNameCode");
+                    }
                     /**  *******产品信息*********/
                     JSONObject json_pro = json_shCart.getJSONObject("product");
                     Product product = new Product();
@@ -218,6 +218,7 @@ private String url;
                     product.setVoltage(json_pro.getString("voltage"));
                     product.setReferenceWeight(json_pro.getString("referenceWeight"));
                     product.setPurpose(json_pro.getString("purpose"));
+                    product.introduce=json_pro.getString("introduce");
                     JSONArray array = json_pro.getJSONArray("productImages");
                     //有图片时加入到产品图片集合
                     if (array.length() > 0) {

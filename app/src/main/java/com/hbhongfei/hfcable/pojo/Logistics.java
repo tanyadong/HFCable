@@ -16,6 +16,7 @@ public class Logistics implements Serializable {
 	public String logisticsCompanyName;// 物流公司名称
 	public String logisticsNumber; // 物流单号
 	public Long logisticsTime;// 发货日期
+	public String logisticsCompanyNameCode;//物流公司编码
 
 	public Logistics() {
 		super();
@@ -46,11 +47,22 @@ public class Logistics implements Serializable {
 		this.logisticsNumber = logisticsNumber;
 	}
 
+	public String getLogisticsCompanyNameCode() {
+		return logisticsCompanyNameCode;
+	}
 
+	public void setLogisticsCompanyNameCode(String logisticsCompanyNameCode) {
+		this.logisticsCompanyNameCode = logisticsCompanyNameCode;
+	}
 
 	@Override
 	public String toString() {
-		return "Logistics [id=" + id + ", logisticsCompanyName=" + logisticsCompanyName + ", logisticsNumber=" + logisticsNumber + ", logisticsTime=" + logisticsTime + "]";
+		return "Logistics{" +
+				"id='" + id + '\'' +
+				", logisticsCompanyName='" + logisticsCompanyName + '\'' +
+				", logisticsNumber='" + logisticsNumber + '\'' +
+				", logisticsTime=" + logisticsTime +
+				", logisticsCompanyNameCode='" + logisticsCompanyNameCode + '\'' +
+				'}';
 	}
-
 }

@@ -248,7 +248,6 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
             for (int i=1;i<=4;i++){
                 new MarketTask().execute(i);
             }
-//        dialog.cancle();
     }
 
     /**
