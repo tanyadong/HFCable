@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.LoginConnection;

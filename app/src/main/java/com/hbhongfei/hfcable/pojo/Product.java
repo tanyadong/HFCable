@@ -187,6 +187,14 @@ public class Product implements java.io.Serializable {
 		this.referenceWeight = referenceWeight;
 	}
 
+	public String getIntroduce() {
+		return introduce;
+	}
+
+	public void setIntroduce(String introduce) {
+		this.introduce = introduce;
+	}
+
 	@Override
 	public String toString() {
 		return "Product{" +

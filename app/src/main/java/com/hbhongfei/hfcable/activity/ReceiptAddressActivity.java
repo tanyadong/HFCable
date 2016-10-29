@@ -51,10 +51,11 @@ public class ReceiptAddressActivity extends AppCompatActivity implements View.On
     }
 
     @Override
-    protected void onPostResume() {
+    protected void onResume() {
+        super.onResume();
         //开始加载数据
         setValue();
-        super.onPostResume();
+
     }
 
     /**

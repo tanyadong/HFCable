@@ -134,6 +134,7 @@
     <string name="tip_speak_error">阅读错误！</string>
     <string name="title_activity_order_pay">订单支付</string>
     <!--订单-->
+    <string name="order_detail">订单详情</string>
     <string name="myOrder_lable">我的订单</string>
     <string name="orderPayHint">订单提交完成，请您尽快支付！</string>
     <string name="orderPayHint1">请您在提交订单后</string>
@@ -146,7 +147,7 @@
     <string name="orderPay">订单支付</string>
     <string name="orderCancle">取消订单</string>
     <string name="goPay">去支付</string>
-    Confirm receipt
+    <!--Confirm receipt-->
     <string name="confirmReceipt">确认收货</string>
     <string name="viewLogistics">查看物流</string>
     <string name="orderState">订单状态：</string>
@@ -236,7 +237,8 @@
     <string name="input_company_info_name_legal">填写公司法人姓名</string>
     <string name="input_company_info_tel">填写公司联系电话</string>
 
-
+<!--物流详情-->
+    <string name="logistics_detail">物流详情</string>
     <!--album_select_dialog-->
     <string name="dialog_selectFromAlbum">从相册中选择</string>
     <string name="dialog_photo">拍照</string>

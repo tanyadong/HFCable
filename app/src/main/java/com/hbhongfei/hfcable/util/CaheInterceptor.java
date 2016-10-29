@@ -2,8 +2,6 @@ package com.hbhongfei.hfcable.util;
 
 import android.content.Context;
 
-import com.baidu.wallet.core.utils.NetworkUtils;
-
 import java.io.IOException;
 
 import okhttp3.CacheControl;
@@ -13,20 +11,21 @@ import okhttp3.Response;
 
 public class CaheInterceptor implements Interceptor {
     private Context context;
+    private Response.Builder builder;
 
-public CaheInterceptor(Context context) {
+    public CaheInterceptor(Context context) {
     this.context = context;
 }
 
 @Override
 public Response intercept(Chain chain) throws IOException {
     Request request = chain.request();
-//    if (NetUtils.isConnected(context)) {
+//    if (NetworkUtils.isNetworkConnected(context)) {
 //        Response response = chain.proceed(request);
-//        int maxAge = 300;
+//        int maxAge = 3600;
 //        String cacheControl = request.cacheControl().toString();
-//        Log.e("Tamic", maxAge+ "s load cahe:" + cacheControl);
-//        return response.newBuilder()
+//        Log.e("Tamic", maxAge + "s load cahe:" + cacheControl);
+//        return builder
 //                .removeHeader("Pragma")
 //                .removeHeader("Cache-Control")
 //                .header("Cache-Control", "public, max-age=" + maxAge)
@@ -46,7 +45,7 @@ public Response intercept(Chain chain) throws IOException {
 //                .build();
 //    }
     //如果没有网络，则启用 FORCE_CACHE
-    if (!NetworkUtils.isNetworkConnected(context))
+    if (!NetUtils.isConnected(context))
     {
         request = request
                 .newBuilder()
@@ -59,5 +58,5 @@ public Response intercept(Chain chain) throws IOException {
             //在这里生成新的响应并修改它的响应头
             .header("Cache-Control", "public,max-age=3600")
             .removeHeader("Pragma").build();
-}
+    }
 }

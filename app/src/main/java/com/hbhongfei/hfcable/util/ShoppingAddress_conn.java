@@ -134,6 +134,7 @@ private String url;
                     list.add(shoppingAddress);
                 }
                 //给listview添加数据
+                linearLayout.setVisibility(View.GONE);
                 Address_all_Adapter address_all_adapter = new Address_all_Adapter(activity,context, list, phoneNum, listView, linearLayout,noInternet);
                 listView.setAdapter(address_all_adapter);
                 listView.setDivider(null);
