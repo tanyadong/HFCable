@@ -72,6 +72,7 @@
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.InfoDetailActivity"
+            android:label="资讯详情"
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MyPasswordActivity"
@@ -95,6 +96,7 @@
         <activity
             android:name=".activity.ReceiptAddressActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:label="收货地址"
             android:launchMode="singleTask"/>
         <!-- 添加购物车 -->
         <activity android:name=".activity.AddRecietAddress"
@@ -157,7 +159,6 @@
             android:label="@string/logistics_detail"
             android:launchMode="singleTask"
           />
-
         <!-- Ping++ sdk -->
         <activity
             android:name="com.pingplusplus.android.PaymentActivity"
