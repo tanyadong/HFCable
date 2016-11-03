@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
@@ -71,7 +70,11 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
 
 
     private OkHttpClient mOkHttpClient;
-
+    //****************************************************************
+    // 判断应用是否初次加载，读取SharedPreferences中的guide_activity字段
+    //****************************************************************
+    private static final String SHAREDPREFERENCES_NAME = "my_pref";
+    private static final String KEY_GUIDE_ACTIVITY = "guide_activity";
     public MarketFragment() {
     }
 
@@ -97,10 +100,8 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
                 case 0:
                     myExpandableListViewAdapter.notifyDataSetChanged();
                     break;
-                case 1:
-                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",MarketFragment.this);
-                    break;
                 case 2:
+                    dialog.cancle();
                     Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",MarketFragment.this);
                     break;
                 default:
@@ -154,9 +155,9 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         File sdcache=getActivity().getExternalCacheDir();
         int cacheSize = 10 * 1024 * 1024;
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .writeTimeout(20, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
+//                .connectTimeout(15, TimeUnit.SECONDS)
+//                .writeTimeout(20, TimeUnit.SECONDS)
+//                .readTimeout(20, TimeUnit.SECONDS)
                 .addInterceptor(new CaheInterceptor(getActivity()))
 //                .addNetworkInterceptor(new CaheInterceptor(getActivity()))
                 .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
@@ -172,16 +173,16 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
                 .build();
         try {
             Response response = mOkHttpClient.newCall(request).execute();
-            if(response.isSuccessful()){
-                return response.body().string();
-            }else {
-                if(response.cacheResponse()!=null){
+                if(response.isSuccessful()){
                     return response.body().string();
                 }else {
-                    mHandler.sendEmptyMessage(2);
-
+                    if(response.cacheResponse()!=null){
+                        return response.body().string();
+                    }else {
+                        mHandler.sendEmptyMessage(2);
+                    }
                 }
-            }
+
         }catch (final Exception e){
             e.printStackTrace();
         }
@@ -227,6 +228,9 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
          */
         @Override
         protected void onPostExecute(final String html) {
+            if(html.isEmpty()){
+                return;
+            }
            list=parseHtml(html);
             if(list.size()==4){
                 dialog.cancle();
@@ -245,14 +249,19 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         group_list.add("橡胶");
         group_list.add("塑料");
         dialog.showDialog("正在加载中");
+        if (NetUtils.isConnected(getActivity())){
             for (int i=1;i<=4;i++){
                 new MarketTask().execute(i);
             }
+        }else {
+            dialog.cancle();
+            Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",MarketFragment.this);
+        }
+            
     }
 
     /**
      * 解析html
-     *
      * @param html
      */
     public ArrayList<List<MarketInfo>> parseHtml(final String html) {

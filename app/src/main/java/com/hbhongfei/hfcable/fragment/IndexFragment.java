@@ -492,6 +492,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         btn_typeName3.setText(list.get(2));
         btn_typeName4.setText(list.get(3));
         btn_typeName5.setText(list.get(4));
+        btn_typeName6.setText("全部");
     }
 
     /**
@@ -602,6 +603,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         if (!isPrepared || !isVisible || mHasLoadedOnce) {
             return;
         }
+        //获取种类
         connInter();
         //加载“新型产品”模块数据
         setDate();

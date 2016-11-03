@@ -36,7 +36,6 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
@@ -116,7 +115,13 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         }
         dialog=new Dialog(getActivity());
         index=0;
-        new MyAsyncTack().execute();
+//        dialog.showDialog("正在加载中...");
+        if(NetUtils.isConnected(getActivity())){
+            new MyAsyncTack().execute();
+        }else {
+            dialog.cancle();
+            Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",InfoFragment.this);
+        }
         mHasLoadedOnce=true;
     }
 
@@ -127,8 +132,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      * @date 2016-10-26 上午11:15:53
      */
     class MessageHandler extends Handler {
-        int icount = 0;
-
         public MessageHandler(Looper looper) {
             super(looper);
         }
@@ -143,7 +146,9 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
                     //设置加载中为false
                     info_listView.setVisibility(View.VISIBLE);
                     break;
-
+                case 2:
+                    dialog.cancle();
+                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",InfoFragment.this);
                 default:
                     break;
             }
@@ -239,9 +244,9 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             File sdcache=getActivity().getExternalCacheDir();
             int cacheSize = 10 * 1024 * 1024;
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                    .connectTimeout(15, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
-                    .readTimeout(20, TimeUnit.SECONDS)
+//                    .connectTimeout(15, TimeUnit.SECONDS)
+//                    .writeTimeout(20, TimeUnit.SECONDS)
+//                    .readTimeout(20, TimeUnit.SECONDS)
                     .addInterceptor(new CaheInterceptor(getActivity()))
 //                .addNetworkInterceptor(new CaheInterceptor(getActivity()))
                     .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
@@ -261,11 +266,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
                 if(response.cacheResponse()!=null){
                     return response.body().string();
                 }else {
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
-                        @Override
-                        public void errorClick() {
-                        }
-                    });
+                    mHandler.sendEmptyMessage(2);
                 }
             }
 

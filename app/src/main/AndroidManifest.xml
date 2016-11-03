@@ -46,6 +46,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".activity.MyFavoriteActivity"
+            android:label="我的收藏"
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MyOrderActivity"
@@ -101,6 +102,7 @@
         <!-- 画图 -->
         <activity android:name=".activity.MarketChartActivity" />
         <activity android:name=".activity.CitySelect1Activity" />
+
         <activity android:name=".activity.GuideActivity" android:theme="@style/theme_fullScreen"/>
 
         <!-- 项目 -->

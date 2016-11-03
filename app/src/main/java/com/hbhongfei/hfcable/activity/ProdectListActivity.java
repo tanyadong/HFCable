@@ -22,7 +22,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.SpinnerListAdapter;
-import com.hbhongfei.hfcable.fragment.IndexFragment;
 import com.hbhongfei.hfcable.util.ConnectionTypeTwo;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Error;
@@ -109,6 +108,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
         try {
             jsonArray = jsonObject.getJSONArray("list");
             if (jsonArray.length()>0){
+                type_list.add("全部");
                 for(int i=0;i<jsonArray.length();i++){
                     JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
                     String typeName=jsonObject1.getString("typeName");
@@ -205,6 +205,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
         try {
             typtTwoConnection=new ConnectionTypeTwo(ProdectListActivity.this,ProdectListActivity.this,prodectList_listView,noInternet);
             dialog.showDialog("正在加载中");
+            Toast.makeText(this,typeName,Toast.LENGTH_SHORT).show();
             typtTwoConnection.connInterByType(typeName,pageNo);
             dialog.cancle();
         } catch (JSONException e) {
