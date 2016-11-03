@@ -977,7 +977,9 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
      * 关闭弹框
      */
     private void dismiss() {
-        popWindow.dismiss();
+        if (popWindow!=null){
+            popWindow.dismiss();
+        }
         WindowManager.LayoutParams params = this.getWindow().getAttributes();
         params.alpha = 1f;
         this.getWindow().setAttributes(params);

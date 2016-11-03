@@ -63,7 +63,7 @@ public class ConnectionProduct {
     public void connInterByType(String newProducts, int pageNo) throws JSONException {
         page = pageNo;
         url = Url.url("/androidProduct/getProduct");
-        Map<String, String> map = new HashMap<>();
+        Map<String,String> map = new HashMap<>();
         map.put("newProducts", newProducts);
         map.put("pageNo", String.valueOf(pageNo));
         NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectProductListener, errorListener, map);
@@ -75,6 +75,7 @@ public class ConnectionProduct {
      * @param jsonObject
      */
     private void analysisDataOfProduct(JSONObject jsonObject){
+        Toast.makeText(context,"产品解析成功",Toast.LENGTH_SHORT).show();
         try {
             list=new ArrayList<>();
             final JSONObject json_page = jsonObject.getJSONObject("page");
@@ -156,10 +157,9 @@ public class ConnectionProduct {
         public void onErrorResponse(VolleyError volleyError) {
             MySingleton mySingleton = new MySingleton(context);
             if (mySingleton.getCache(url)!=null){
-                Toast.makeText(context,"没有网络",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"没有网络-产品",Toast.LENGTH_SHORT).show();
                 analysisDataOfProduct(mySingleton.getCache(url));
             }
         }
     };
-
 }
