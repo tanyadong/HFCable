@@ -158,7 +158,7 @@ private String url;
                         countPage=totalPages;
                     }
                 });
-                JSONArray jsonArray = json_page.getJSONArray("list");
+                JSONArray jsonArray = json_page.optJSONArray("list");
                 int count = jsonArray.length();
 
                 for (int i = 0; i < count; i++) {
@@ -234,10 +234,11 @@ private String url;
                     order.shoppingAddress = address;
                     list.add(order);
                 }
+                listView.setVisibility(View.VISIBLE);
+                noInternet.setVisibility(View.GONE);
                 if(page==1){
                     myOrder_all_adapter = new MyOrder_all_Adapter(context, R.layout.item_my_order, list);
                     listView.setAdapter(myOrder_all_adapter);
-
                 }else {
                     myOrder_all_adapter.addItems(list);
                     mMandler.sendEmptyMessage(0);
@@ -262,6 +263,7 @@ private String url;
 
             } else {
                 //没有数据
+                listView.setVisibility(View.GONE);
                 Error.toSetting(noInternet, R.mipmap.order_empty, "没有订单记录哦", "赶紧去下单吧", new IErrorOnclick() {
                     @Override
                     public void errorClick() {

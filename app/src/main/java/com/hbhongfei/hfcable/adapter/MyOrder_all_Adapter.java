@@ -190,7 +190,7 @@ public class MyOrder_all_Adapter extends BaseAdapter{
             vh.image_success.setVisibility(View.VISIBLE);
         }
 
-        if(order.cancleOrNot==1){ //已quxiao
+        if(order.cancleOrNot==1){ //已经取消的订单
             vh.Tview_myOrder_stage.setText("已取消");
             vh.Tview_myOrder_pay.setText("实付款");
             vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.black));
@@ -251,16 +251,6 @@ public class MyOrder_all_Adapter extends BaseAdapter{
 
         }
 
-//        convertView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent=new Intent(context.getApplicationContext(), OrderDetailActivity.class);
-//                intent.putExtra("order",list.get(position));
-//                intent.putExtra("position",position);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                context.startActivity(intent);
-//            }
-//        });
         return convertView;
     }
 

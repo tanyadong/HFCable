@@ -61,7 +61,8 @@
             android:name=".activity.MyInfoActivity"
             android:label="@string/myInfo_title"
             android:parentActivityName=".activity.MainActivity" />
-        <activity android:name=".activity.ProdectInfoActivity" />
+        <activity android:name=".activity.ProdectInfoActivity"
+            android:label="@string/prodect_lable"/>
         <activity android:name=".activity.ShowBigPictrue" />
         <activity
             android:name=".activity.CompanyInfoActivity"
@@ -100,15 +101,21 @@
             android:launchMode="singleTask"/>
         <!-- 添加购物车 -->
         <activity android:name=".activity.AddRecietAddress"
+            android:label="收货地址"
             android:parentActivityName=".activity.AddressListActivity"/>
         <!-- 画图 -->
-        <activity android:name=".activity.MarketChartActivity" />
-        <activity android:name=".activity.CitySelect1Activity" />
+        <activity android:name=".activity.MarketChartActivity"
+            android:label="@string/market_price_trend"
+            android:parentActivityName=".activity.MainActivity"
+            />
+        <activity android:name=".activity.CitySelect1Activity"
+            android:label="@string/add_address_selectCity"/>
 
         <activity android:name=".activity.GuideActivity" android:theme="@style/theme_fullScreen"/>
 
         <!-- 项目 -->
-        <activity android:name=".activity.ProjectActivity" />
+        <activity android:name=".activity.ProjectActivity"
+            android:label="@string/new_project_lable"/>
         <activity
             android:name=".activity.ConfirmOrderActivity"
             android:label="@string/comfirm_order_sure"
@@ -138,6 +145,7 @@
         <activity
             android:name=".activity.WriteCableRingActivity"
             android:launchMode="singleTask"
+            android:label="发布揽圈"
             android:parentActivityName=".activity.MainActivity" />
         <activity android:name=".activity.ImageBucketChooseActivity" />
         <activity android:name=".activity.ImageChooseActivity" />
@@ -146,6 +154,7 @@
         <!-- 地址列表 -->
         <activity
             android:name=".activity.AddressListActivity"
+            android:label="@string/receiptAddress_lale"
             android:parentActivityName=".activity.ConfirmOrderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--订单详情-->

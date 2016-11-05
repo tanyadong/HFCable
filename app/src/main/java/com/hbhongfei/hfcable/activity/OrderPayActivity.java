@@ -1,14 +1,12 @@
 package com.hbhongfei.hfcable.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
@@ -40,9 +38,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -133,7 +129,7 @@ public class OrderPayActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         S_money = intent.getStringExtra("money");
         order_no = intent.getStringExtra("order_no");
-        order_payMoney_textview.setText(S_money + "￥");
+        order_payMoney_textview.setText("￥"+S_money);
         Bundle bundle = intent.getExtras();
         array = bundle.getSparseParcelableArray("introduce");
         String replaceable = String.format("[%s, \\s.]", NumberFormat.getCurrencyInstance(Locale.CHINA).getCurrency().getSymbol(Locale.CHINA));

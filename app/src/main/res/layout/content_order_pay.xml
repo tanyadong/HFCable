@@ -78,7 +78,6 @@
                     android:id="@+id/order_payMoney_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1000￥"
                     android:textColor="@color/colorPrimary" />
 
             </LinearLayout>

@@ -98,7 +98,7 @@
 
     <!--sexSelector-->
     <string name="sexSelector_sure">确定</string>
-    <string name="title_activity_main2">Main2Activity</string>
+
     <string name="title_activity_my_password">我的密码</string>
 
 
@@ -192,6 +192,7 @@
     <string name="address_emity_to">前去添加一个吧！</string>
     <!--addAddress-->
     <string name="add_address_lable"></string>
+    <string name="add_address_selectCity">选择城市</string>
     <string name="add_consignee">收货人:</string>
     <string name="add_phone">手机号码:</string>
     <string name="add_localArea">所在地区:</string>
@@ -206,6 +207,7 @@
 
 
     <!--comfirm_order-->
+
     <string name="comfirm_order_sure">确认订单</string>
     <string name="comfirm_order_shouhuo">收货人：</string>
     <string name="comfirm_order_location">收获地址：</string>
@@ -221,6 +223,7 @@
     <string name="market_maxprice">最高价</string>
     <string name="market_factory_area">厂家/地区</string>
     <string name="market_data">日期</string>
+    <string name="market_price_trend">价格走势</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -247,4 +250,7 @@
     <!--PaySuccessActivity-->
     <string name="title_activity_pay_success">支付完成</string>
     <string name="title_activity_test">test</string>
+
+    <!--最新项目-->
+    <string name="new_project_lable">最新项目</string>
 </resources>

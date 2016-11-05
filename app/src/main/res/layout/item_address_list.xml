@@ -2,15 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
+    android:layout_height="200dp"
     android:layout_marginBottom="10dp"
+    android:background="@color/colorWhite"
     android:id="@+id/Rlayout_address_list"
     tools:context="com.hbhongfei.hfcable.activity.AddressListActivity">
 
         <TextView
             android:id="@+id/textview_address_list_name"
-            android:text="hhh"
             android:textSize="18dp"
             android:gravity="center"
             android:layout_marginLeft="16dp"
@@ -19,7 +18,6 @@
             android:layout_height="30dp" />
         <TextView
             android:id="@+id/textview_address_list_phoneNumber"
-            android:text="15732158857"
             android:gravity="center|right"
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
@@ -28,7 +26,13 @@
             android:layout_marginLeft="50dp"
             android:layout_width="wrap_content"
             android:layout_height="30dp" />
-
+<View
+    android:layout_below="@+id/textview_address_list_name"
+    android:layout_width="match_parent"
+    android:background="@color/qianGray"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp"
+    android:layout_height="1dp"></View>
         <TextView
             android:id="@+id/textview_address_list_detail_default"
             android:layout_below="@+id/textview_address_list_name"
@@ -41,7 +45,6 @@
             android:text="[默认地址]"/>
         <TextView
             android:id="@+id/textview_address_list_detail"
-            android:text="详细地址啊啊 啊asdas啊手机大陆开始撒发射点发射点发生打发士大夫大师傅似的发射点发射点"
             android:layout_below="@+id/textview_address_list_phoneNumber"
             android:layout_toRightOf="@+id/textview_address_list_detail_default"
             android:layout_width="match_parent"

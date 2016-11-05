@@ -47,12 +47,6 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
     public MyOrderAllFragment() {
     }
 
-    public static MyOrderAllFragment newInstance(String param1, String param2) {
-        MyOrderAllFragment fragment = new MyOrderAllFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
