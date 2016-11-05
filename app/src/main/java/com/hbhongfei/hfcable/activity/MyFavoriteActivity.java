@@ -93,7 +93,7 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
     private void analysisDataOfMyFavirute(JSONObject jsonObject){
         try {
             List<Product> list=new ArrayList<>();
-            JSONArray jsonArray=jsonObject.getJSONArray("productList");
+            JSONArray jsonArray=jsonObject.optJSONArray("productList");
             if(jsonArray.length()>0){
                 for(int i=0;i<jsonArray.length();i++){
                     JSONObject jsonObject1=jsonArray.getJSONObject(i);
@@ -110,7 +110,7 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
                     if(jsonArray1.length()>0){
                         ArrayList<String> list1=new ArrayList<>();
                         for(int j=0;j<jsonArray1.length();j++){
-                            list1.add((String) jsonArray1.get(i));
+                            list1.add((String) jsonArray1.get(j));
                         }
                         product.setProductImages(list1);
                     }
