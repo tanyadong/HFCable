@@ -105,7 +105,7 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
                     JSONObject jsonObject2=jsonObject1.getJSONObject("typeTwo");
                     typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
                     product.setTypeTwo(typeTwo);
-                    JSONArray jsonArray1=jsonObject1.getJSONArray("productImages");
+                    JSONArray jsonArray1=jsonObject1.optJSONArray("productImages");
                     //有图片时加入到产品图片集合
                     if(jsonArray1.length()>0){
                         ArrayList<String> list1=new ArrayList<>();
@@ -116,6 +116,7 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
                     }
                     list.add(product);
                 }
+                Toast.makeText(this,"有数据"+list,Toast.LENGTH_SHORT).show();
             }else{
                 Error.toSetting(noInternet, R.mipmap.nothing, "您还没有收藏宝贝", "快去收藏一个吧!", new IErrorOnclick() {
                     @Override
@@ -132,7 +133,6 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
             e.printStackTrace();
             dialog.cancle();
         }
-
     }
     /**
      *  失败的监听器

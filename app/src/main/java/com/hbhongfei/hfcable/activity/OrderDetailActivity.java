@@ -250,8 +250,17 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 toLogisticsActivity();
                 break;
             case R.id.btn_order_goPay:
+
                 Intent intent=new Intent(this, OrderPayActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("money",String.valueOf(order.getMoney()));
+                intent.putExtra("order_no",order.getOrderNumber());
+                Bundle bundle = new Bundle();
+                SparseArray array = new SparseArray();
+                array.put(0,order.getShoppingCart().getProduct().introduce);
+                bundle.putSparseParcelableArray("introduce",array);
+                intent.putExtras(bundle);
+
                 startActivity(intent);
                 break;
             case R.id.btn_order_confirmReceipt:
