@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.OrderPayActivity;
 import com.hbhongfei.hfcable.pojo.Order;
+import com.hbhongfei.hfcable.util.Error;
+import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -44,14 +47,18 @@ public class MyOrder_all_Adapter extends BaseAdapter{
     protected int resource;
     private ArrayList<Order> list;
     private int position_tag;
+    private ListView listView;
+    private LinearLayout linearLayout;
     public MyOrder_all_Adapter(Activity context){
         this.context=context;
     }
-    public MyOrder_all_Adapter(Context context,int resource, ArrayList<Order> list){
+    public MyOrder_all_Adapter(Context context, int resource, ArrayList<Order> list, ListView listView,LinearLayout nointent){
         inflater = LayoutInflater.from(context);
         this.context =context;
         this.list = list;
         this.resource = resource;
+        this.listView=listView;
+        this.linearLayout=nointent;
     }
     public void addItems(ArrayList<Order> list){
         this.list.addAll(list);
@@ -60,6 +67,13 @@ public class MyOrder_all_Adapter extends BaseAdapter{
     public void deleteItems(int position){
         this.list.remove(position);
         notifyDataSetChanged();
+        if(list.isEmpty()){
+            Error.toSetting(linearLayout, R.mipmap.order_empty, "没有订单记录哦", "赶紧去下单吧", new IErrorOnclick() {
+                @Override
+                public void errorClick() {
+                }
+            });
+        }
     }
     @Override
     public int getCount() {

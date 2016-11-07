@@ -234,10 +234,9 @@ private String url;
                     order.shoppingAddress = address;
                     list.add(order);
                 }
-                listView.setVisibility(View.VISIBLE);
-                noInternet.setVisibility(View.GONE);
+
                 if(page==1){
-                    myOrder_all_adapter = new MyOrder_all_Adapter(context, R.layout.item_my_order, list);
+                    myOrder_all_adapter = new MyOrder_all_Adapter(context, R.layout.item_my_order, list,listView,noInternet);
                     listView.setAdapter(myOrder_all_adapter);
                 }else {
                     myOrder_all_adapter.addItems(list);
