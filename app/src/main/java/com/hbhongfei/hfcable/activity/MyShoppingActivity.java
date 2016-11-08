@@ -614,7 +614,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                 }
                 new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
                         .setTitleText("操作提示")
-                        .setContentText("总计:\n" + totalCount + "种商品\n" + totalPrice + "元")
+                        .setContentText("总计:\n" + totalCount + "种商品\n" + df.format(totalPrice) + "元")
                         .setConfirmText("支付")
                         .setCancelText("取消")
                         .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {

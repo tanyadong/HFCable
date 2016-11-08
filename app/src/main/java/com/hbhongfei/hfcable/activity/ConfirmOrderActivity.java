@@ -35,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -62,6 +63,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     private int tag = 0;
     private SparseArray array = new SparseArray();
     private String random;
+    private DecimalFormat df = new DecimalFormat("0.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +159,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
             SharedPreferences sp = this.getSharedPreferences("comfirmOrder", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("proInfos", mJsonArray.toString());
-            editor.putString("S_money", S_money + "");
+            editor.putString("S_money", df.format(S_money) + "");
             editor.commit();
         } else {
             List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
