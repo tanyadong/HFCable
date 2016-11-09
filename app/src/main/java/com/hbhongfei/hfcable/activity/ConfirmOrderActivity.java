@@ -225,7 +225,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.Tview_confirm_order_commit:
-                if (!addressId.isEmpty()){
+                if (addressId!=null){
                     Intent intent = new Intent();
                     //保存订单
                     saveOrder();

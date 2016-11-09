@@ -8,7 +8,6 @@
     <LinearLayout
         android:id="@+id/prodectList_LLayout1"
         android:layout_weight="1"
-        android:layout_marginTop="10dp"
         android:background="@drawable/list_background"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -46,7 +45,6 @@
         android:id="@+id/prodectList_LLayout2"
         android:layout_weight="1"
         android:background="@drawable/list_background"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
         android:orientation="vertical"
 

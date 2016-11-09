@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.CustomDialog;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.GetIP;
 import com.hbhongfei.hfcable.util.MyRadioGroup;
 import com.hbhongfei.hfcable.util.MySingleton;
@@ -72,7 +73,7 @@ public class OrderPayActivity extends AppCompatActivity implements
     private String client_ip;//客户端的IPV4
     private String subject;//商品的标题
     private String body;//商品的描述信息
-
+    private Dialog dialog;
     private Map<String, Object> map;
     private SparseArray array;
     private StringBuffer buffer;
@@ -86,10 +87,8 @@ public class OrderPayActivity extends AppCompatActivity implements
         initView();
         //初始化数据
         initValue();
-
         //设置点击事件
         onClick();
-
         //设置需要使用的支付方式
         PingppLog.DEBUG = true;
 
@@ -126,6 +125,7 @@ public class OrderPayActivity extends AppCompatActivity implements
      * 初始化数据
      */
     private void initValue() {
+        dialog=new Dialog(this);
         Intent intent = getIntent();
         S_money = intent.getStringExtra("money");
         order_no = intent.getStringExtra("order_no");
@@ -237,6 +237,7 @@ public class OrderPayActivity extends AppCompatActivity implements
 
         @Override
         protected void onPreExecute() {
+            dialog.showDialog("正在发起支付");
             //按键点击之后的禁用，防止重复点击
             btn_confimgPay.setOnClickListener(null);
         }
@@ -248,8 +249,10 @@ public class OrderPayActivity extends AppCompatActivity implements
         protected void onPostExecute(String data) {
             if (null == data) {
                 CustomDialog.payDialog(OrderPayActivity.this,"fail");
+                dialog.cancle();
                 return;
             }
+            dialog.cancle();
 //            Pingpp.createPayment(ClientSDKActivity.this, data);
             //QQ钱包调起支付方式  “qwalletXXXXXXX”需与AndroidManifest.xml中的data值一致
             //建议填写规则:qwallet + APP_ID
