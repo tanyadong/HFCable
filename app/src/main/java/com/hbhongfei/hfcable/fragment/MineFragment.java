@@ -603,23 +603,28 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             holder.tComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String commentText = finalHolder.commentContent.getText().toString().trim();
-                    //不为空
-                    if (commentText != null && !commentText.equals("")) {
-                        connInter(id[0], S_phoneNumber, commentText);
-                        finalHolder.commentContent.setText("");
-                    } else {
-                        Toast.makeText(mContext, "请输入内容", Toast.LENGTH_SHORT).show();
+                    if (loginOrNot != null) {
+                        String commentText = finalHolder.commentContent.getText().toString().trim();
+                        //不为空
+                        if (commentText != null && !commentText.equals("")) {
+                            connInter(id[0], S_phoneNumber, commentText);
+                            finalHolder.commentContent.setText("");
+                        } else {
+                            Toast.makeText(mContext, "请输入内容", Toast.LENGTH_SHORT).show();
+                        }
+                        // 关闭软键盘
+                        imm.hideSoftInputFromWindow(finalHolder.commentContent.getWindowToken(), 0);
+                        finalHolder.linear.setVisibility(View.GONE);
+                        finalHolder.comment.setVisibility(View.VISIBLE);
+                        btn.setVisibility(View.VISIBLE);
+                    }else{
+                        Intent intent = new Intent();
+                        intent.setClass(MineFragment.this.getActivity(), LoginActivity.class);
+                        Toast.makeText(MineFragment.this.getContext(), "请先登录", Toast.LENGTH_SHORT).show();
+                        startActivity(intent);
                     }
-                    // 关闭软键盘
-                    imm.hideSoftInputFromWindow(finalHolder.commentContent.getWindowToken(), 0);
-                    finalHolder.linear.setVisibility(View.GONE);
-                    finalHolder.comment.setVisibility(View.VISIBLE);
-                    btn.setVisibility(View.VISIBLE);
                 }
             });
-
-
             //设置图片
             ArrayList<String> images = (ArrayList<String>) map.get("images");
             holder.nineGridTestLayout.setIsShowAll(false); //当传入的图片数超过9张时，是否全部显示
