@@ -102,7 +102,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
                     break;
                 case 2:
                     dialog.cancle();
-                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",MarketFragment.this);
+                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MarketFragment.this);
                     break;
                 default:
                     break;
@@ -251,7 +251,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
             }
         }else {
             dialog.cancle();
-            Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",MarketFragment.this);
+            Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MarketFragment.this);
         }
             
     }

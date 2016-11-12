@@ -115,12 +115,12 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         }
         dialog=new Dialog(getActivity());
         index=0;
-//        dialog.showDialog("正在加载中...");
+        dialog.showDialog("正在加载中...");
         if(NetUtils.isConnected(getActivity())){
             new MyAsyncTack().execute();
         }else {
             dialog.cancle();
-            Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",InfoFragment.this);
+            Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
         }
         mHasLoadedOnce=true;
     }
@@ -148,7 +148,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
                     break;
                 case 2:
                     dialog.cancle();
-                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络加载数据失败","点击设置",InfoFragment.this);
+                    Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
                 default:
                     break;
             }
