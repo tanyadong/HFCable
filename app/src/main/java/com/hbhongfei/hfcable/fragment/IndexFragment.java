@@ -200,9 +200,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
      */
     public void setDate() {
         //首页根据条件查询产品
-        Toast.makeText(getActivity(),"aaa",Toast.LENGTH_SHORT).show();
         try {
-            connectionProduct.connInterByType("是",pageNo);
+            connectionProduct.connInterByType("是", pageNo,dialog);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -248,8 +247,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
      * 获取产品种类服务
      */
     public void connInter() {
-        Toast.makeText(getActivity(),"1111111",Toast.LENGTH_SHORT).show();
-        dialog.showDialog("正在加载中。。。");
         urlType = Url.url("/androidType/getType");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlType, null,
                 jsonObjectListener, errorTypeListener);
@@ -264,8 +261,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         JSONArray jsonArray;
         List<String> type_list = new ArrayList<>();
         try {
-            jsonArray = jsonObject.getJSONArray("list");
-            if(jsonArray.length()>0){
+            jsonArray = jsonObject.optJSONArray("list");
+            if (jsonArray!=null&&jsonArray.length()>=5){
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
                     String typeName = jsonObject1.getString("typeName");
@@ -273,6 +270,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 }
                 setTypeValue(type_list);
             }
+            //加载“新型产品”模块数据
+            setDate();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -285,7 +284,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         @Override
         public void onResponse(JSONObject jsonObject) {
             analysisDataOfType(jsonObject);
-            dialog.cancle();
         }
     };
 
@@ -332,7 +330,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
      * 获取公司信息
      */
     public void connInterGetCompanyInfo() {
-        Toast.makeText(getActivity(),"1111111",Toast.LENGTH_SHORT).show();
+        dialog.showDialog("正在加载中。。。");
         urlCompany = Url.url("/androidCompany/getCompanyInfo");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlCompany, null,
                 jsonObjectCompanyListener, errorCompanyListener);
@@ -429,6 +427,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 //设置小圆点
                 setSmallDot(list);
             }
+            //获取种类
+            connInter();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -454,7 +454,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             dialog.cancle();
             MySingleton mySingleton = new MySingleton(IndexFragment.this.getActivity());
             if (mySingleton.getCache(urlCompany) != null) {
-                Toast.makeText(IndexFragment.this.getContext(), "没有网络-公司", Toast.LENGTH_SHORT).show();
                 noInternet.setVisibility(View.GONE);//||
                 //公司信息
                 list_obj.clear();
@@ -561,6 +560,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
+
                 return null;
             }
 
@@ -568,7 +568,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             protected void onPostExecute(Void aVoid) {
                 // 加载完毕后在UI线程结束下拉刷新
                 try {
-                    connectionProduct.connInterByType("是",1);
+                    connectionProduct.connInterByType("是", 1,dialog);
                     mRefreshLayout.endRefreshing();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -579,8 +579,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        if(NetUtils.isConnected(getActivity())) {
-            Toast.makeText(getActivity(),connectionProduct.countPage+"",Toast.LENGTH_SHORT).show();
+        if (NetUtils.isConnected(getActivity())) {
             if (pageNo < connectionProduct.countPage) {
                 pageNo++;
                 // 如果网络可用，则加载网络数据
@@ -590,8 +589,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 return false;
             }
             return true;
-        }else{
-            Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "网络连接失败，请检查您的网络", Toast.LENGTH_SHORT).show();
             mRefreshLayout.endLoadingMore();
             return false;
         }
@@ -603,13 +602,13 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         if (!isPrepared || !isVisible || mHasLoadedOnce) {
             return;
         }
-        //获取种类
-        connInter();
-        //加载“新型产品”模块数据
-        setDate();
         //连接获取公司的服务
         connInterGetCompanyInfo();
-        mHasLoadedOnce=true;
+        //获取种类
+//        connInter();
+        //加载“新型产品”模块数据
+//        setDate();
+        mHasLoadedOnce = true;
     }
     @Override
     public void errorClick() {
@@ -617,27 +616,29 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    class MyAsyncTack extends AsyncTask<Void,Void,Void>{
-       @Override
-       protected void onPreExecute() {
-           super.onPreExecute();
-       }
-       @Override
-       protected Void doInBackground(Void... params) {
-           try {
-               connectionProduct.connInterByType("是",pageNo);
-           } catch (JSONException e) {
-               e.printStackTrace();
-           }
-           return null;
-       }
+    class MyAsyncTack extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-       @Override
-       protected void onPostExecute(Void aVoid) {
-           mRefreshLayout.endLoadingMore();
-           super.onPostExecute(aVoid);
-       }
-   }
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                connectionProduct.connInterByType("是", pageNo,dialog);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mRefreshLayout.endLoadingMore();
+            super.onPostExecute(aVoid);
+        }
+    }
+
     /**
      * 执行轮播图切换任务
      */

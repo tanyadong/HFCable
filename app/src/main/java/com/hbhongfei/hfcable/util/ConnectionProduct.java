@@ -34,6 +34,8 @@ public class ConnectionProduct {
     private int page = 1;
     private String url;
     public int countPage = 0;
+    private Dialog dialog;
+
     public ConnectionProduct(Context context, ListView listView) {
         this.context = context;
         this.listView = listView;
@@ -60,7 +62,9 @@ public class ConnectionProduct {
      * 连接服务
      * 根据种类查询产品
      */
-    public void connInterByType(String newProducts, int pageNo) throws JSONException {
+    public void connInterByType(String newProducts, int pageNo,Dialog dialog) throws JSONException {
+        Toast.makeText(context,"产品-加载",Toast.LENGTH_SHORT).show();
+        this.dialog = dialog;
         page = pageNo;
         url = Url.url("/androidProduct/getProduct");
         Map<String,String> map = new HashMap<>();
@@ -75,7 +79,7 @@ public class ConnectionProduct {
      * @param jsonObject
      */
     private void analysisDataOfProduct(JSONObject jsonObject){
-        Toast.makeText(context,"产品解析成功",Toast.LENGTH_SHORT).show();
+        Toast.makeText(context,"产品-解析成功",Toast.LENGTH_SHORT).show();
         try {
             list=new ArrayList<>();
             final JSONObject json_page = jsonObject.getJSONObject("page");
@@ -133,6 +137,7 @@ public class ConnectionProduct {
                 mHandler.sendEmptyMessage(1);
             }
 
+            dialog.cancle();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -145,6 +150,7 @@ public class ConnectionProduct {
     private Response.Listener<JSONObject> jsonObjectProductListener = new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject jsonObject) {
+            Toast.makeText(context,"产品-加载成功",Toast.LENGTH_SHORT).show();
             analysisDataOfProduct(jsonObject);
         }
     };
