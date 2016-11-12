@@ -37,7 +37,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.LoginActivity;
-import com.hbhongfei.hfcable.activity.SplashActivity;
 import com.hbhongfei.hfcable.activity.WriteCableRingActivity;
 import com.hbhongfei.hfcable.adapter.CommentAdapter;
 import com.hbhongfei.hfcable.util.DateUtils;
@@ -126,6 +125,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                     //告诉适配器，数据变化了，从新加载listview
                     cableRingAdapter.notifyDataSetChanged();
                     break;
+                case 0:
+                    dialog.cancle();
+                    break;
                 default:
                     break;
             }
@@ -169,7 +171,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         // 设置下拉刷新和上拉加载更多的风
         mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
         // 为了增加下拉刷新头部和加载更多的通用性，提供了以下可选配置选项  -------------START
-//        mRefreshLayout.setPullDownRefreshEnable(false);
     }
 
     /**
@@ -202,6 +203,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
      * 2016/07/21
      */
     private void initValues() {
+        dialog.showDialog("正在加载中");
         shaftConnInter("1",ALL+"");
 
     }
@@ -317,6 +319,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 } else {
                     Error.toSetting(noInternet, R.mipmap.nothing, "暂时没有缆圈信息", "赶紧去发布一个吧", MineFragment.this);
                 }
+                mHandler.sendEmptyMessage(0);
                 if (page == 1&& tag == false) {
                     cableRingAdapter = new CableRingAdapters(MineFragment.this.getContext(), list, fab);
                     mListView.setAdapter(cableRingAdapter);
@@ -342,6 +345,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             MySingleton mySingleton = new MySingleton(MineFragment.this.getActivity());
+            mHandler.sendEmptyMessage(0);
             if (mySingleton.getCache(url)!=null){
                 noInternet.setVisibility(View.GONE);
                 analysisData(mySingleton.getCache(url));
@@ -375,7 +379,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         pageNo = 1;
-        new MyAsyncTack().execute();
+        if(NetUtils.isConnected(getActivity())){
+            new MyAsyncTack().execute();
+        }else {
+            Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+            mRefreshLayout.endRefreshing();
+        }
     }
 
     /**
@@ -389,12 +398,18 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         if (pageNo < count) {
             pageNo++;
             // 如果网络可用，则加载网络数据
-            new MyAsyncTack().execute();
+            if(NetUtils.isConnected(getActivity())){
+                new MyAsyncTack().execute();
+                return true;
+            }else {
+                Toast.makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+                mRefreshLayout.endLoadingMore();
+                return false;
+            }
         } else {
             mRefreshLayout.endLoadingMore();
             return false;
         }
-        return true;
     }
 
     @Override
@@ -414,6 +429,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     class MyAsyncTack extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
+            dialog.showDialog("正在加载中");
             super.onPreExecute();
         }
 
@@ -427,6 +443,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         protected void onPostExecute(Void aVoid) {
             mRefreshLayout.endLoadingMore();
             mRefreshLayout.endRefreshing();
+            dialog.cancle();
             super.onPostExecute(aVoid);
         }
     }

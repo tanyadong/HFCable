@@ -49,13 +49,15 @@ public class ConnectionOrder {
     private Activity activity;
     private LinearLayout noInternet;
     public boolean isResult;
+    private Dialog dialog;
 private String url;
-    public ConnectionOrder(Activity activity, Context context, ListView listView, LinearLayout noInternet,boolean isResult) {
+    public ConnectionOrder(Activity activity, Context context, ListView listView, LinearLayout noInternet,boolean isResult,Dialog dialog) {
         this.context = context;
         this.listView = listView;
         this.activity = activity;
         this.noInternet = noInternet;
         this.isResult=isResult;
+        this.dialog=dialog;
     }
 
     Handler mMandler = new Handler() {
@@ -64,6 +66,9 @@ private String url;
             super.handleMessage(msg);
             if (msg.what == 0) {
                 myOrder_all_adapter.notifyDataSetChanged();
+            }
+            if(msg.what==1){
+                dialog.cancle();
             }
         }
     };
@@ -234,7 +239,7 @@ private String url;
                     order.shoppingAddress = address;
                     list.add(order);
                 }
-
+                mMandler.sendEmptyMessage(1);
                 if(page==1){
                     myOrder_all_adapter = new MyOrder_all_Adapter(context, R.layout.item_my_order, list,listView,noInternet);
                     listView.setAdapter(myOrder_all_adapter);
@@ -242,6 +247,7 @@ private String url;
                     myOrder_all_adapter.addItems(list);
                     mMandler.sendEmptyMessage(0);
                 }
+
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -262,6 +268,7 @@ private String url;
 
             } else {
                 //没有数据
+                mMandler.sendEmptyMessage(1);
                 listView.setVisibility(View.GONE);
                 Error.toSetting(noInternet, R.mipmap.order_empty, "没有订单记录哦", "赶紧去下单吧", new IErrorOnclick() {
                     @Override
@@ -281,6 +288,7 @@ private String url;
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
+            mMandler.sendEmptyMessage(1);
             MySingleton mySingleton = new MySingleton(context);
             if (mySingleton.getCacheString(url)!=null){
                 if(volleyError instanceof NoConnectionError){
@@ -307,7 +315,6 @@ private String url;
                     Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "服务器出错啦", new IErrorOnclick() {
                         @Override
                         public void errorClick() {
-//                        Toast.makeText(context, "出错啦", Toast.LENGTH_SHORT).show();
                         }
                     });
                     listView.setVisibility(View.GONE);
@@ -316,7 +323,6 @@ private String url;
                     Error.toSetting(noInternet, R.mipmap.internet_no, "大事不妙啦", "出错啦", new IErrorOnclick() {
                         @Override
                         public void errorClick() {
-//                        Toast.makeText(context, "出错啦", Toast.LENGTH_SHORT).show();
                         }
                     });
                     listView.setVisibility(View.GONE);

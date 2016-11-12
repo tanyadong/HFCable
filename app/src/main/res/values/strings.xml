@@ -58,7 +58,7 @@
 
     <string name="prodect_introduce">产品说明</string>
     <string name="prodect_detail">产品详情</string>
-    <string name="prodect_detailContent">shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</string>
+    <string name="prodect_detailContent"></string>
     <string name="prodect_phone">电话</string>
     <string name="prodect_collect">收藏</string>
     <string name="prodect_shoppingCat">购物车</string>

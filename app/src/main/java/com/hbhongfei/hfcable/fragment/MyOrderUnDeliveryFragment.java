@@ -69,7 +69,9 @@ private Dialog dialog;
         initRefreshLayout();
         isPrepared = true;
         isResult=false;
-        connectionOrder = new ConnectionOrder(MyOrderUnDeliveryFragment.this.getActivity(),MyOrderUnDeliveryFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult);
+        dialog=new Dialog(getActivity());
+
+        connectionOrder = new ConnectionOrder(MyOrderUnDeliveryFragment.this.getActivity(),MyOrderUnDeliveryFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult,dialog);
         lazyLoad();
         return v;
     }
@@ -124,14 +126,12 @@ private Dialog dialog;
 
         @Override
         protected void onPreExecute() {
-            dialog=new Dialog(getActivity());
             dialog.showDialog("正在加载中");
             super.onPreExecute();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            dialog.cancle();
             super.onPostExecute(aVoid);
         }
     }

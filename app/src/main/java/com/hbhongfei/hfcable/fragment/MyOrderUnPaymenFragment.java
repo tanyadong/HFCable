@@ -59,7 +59,8 @@ public class MyOrderUnPaymenFragment extends BaseFragment implements BGARefreshL
         initView(v);
         initRefreshLayout();
         isResult=false;
-        connectionOrder = new ConnectionOrder(MyOrderUnPaymenFragment.this.getActivity(),MyOrderUnPaymenFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult);
+        dialog=new Dialog(getActivity());
+        connectionOrder = new ConnectionOrder(MyOrderUnPaymenFragment.this.getActivity(),MyOrderUnPaymenFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult,dialog);
 
         isPrepared = true;
         lazyLoad();
@@ -155,14 +156,12 @@ public class MyOrderUnPaymenFragment extends BaseFragment implements BGARefreshL
 
         @Override
         protected void onPreExecute() {
-            dialog=new Dialog(getActivity());
             dialog.showDialog("正在加载中");
             super.onPreExecute();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            dialog.cancle();
             super.onPostExecute(aVoid);
         }
     }

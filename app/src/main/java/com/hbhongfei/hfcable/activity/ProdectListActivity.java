@@ -98,6 +98,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
      * 展示当前用户管理任务连接服务
      */
     public void connInter(){
+        dialog.showDialog("正在加载中...");
         url_type= Url.url("/androidType/getType");
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET,url_type,null,jsonObjectListener,getTypeErrorListener);
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
@@ -116,6 +117,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
                 }
                 //点击事件
                 onClickLisener(type_list);
+
             }else{
                 Error.toSetting(noInternet, R.mipmap.nothing, "暂无数据哦", "换一个试试", new IErrorOnclick() {
                     @Override
@@ -124,7 +126,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
                     }
                 });
             }
-
+            dialog.cancle();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -145,6 +147,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
     private Response.ErrorListener getTypeErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
+            dialog.cancle();
             MySingleton mySingleton = new MySingleton(ProdectListActivity.this);
             if (mySingleton.getCacheString(url_type)!=null){
                 if(volleyError instanceof NoConnectionError){
@@ -205,7 +208,6 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
         try {
             typtTwoConnection=new ConnectionTypeTwo(ProdectListActivity.this,ProdectListActivity.this,prodectList_listView,noInternet);
             dialog.showDialog("正在加载中");
-            Toast.makeText(this,typeName,Toast.LENGTH_SHORT).show();
             typtTwoConnection.connInterByType(typeName,pageNo);
             dialog.cancle();
         } catch (JSONException e) {
@@ -236,6 +238,7 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
                                     e.printStackTrace();
                                 }
                             }else{
+                                dialog.cancle();
                                 Toast.makeText(ProdectListActivity.this,"请检查您的网络",Toast.LENGTH_SHORT).show();
                             }
                         }

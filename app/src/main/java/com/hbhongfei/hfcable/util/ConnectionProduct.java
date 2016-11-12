@@ -86,7 +86,7 @@ public class ConnectionProduct {
                     countPage=totalPages;
                 }
             });
-            JSONArray jsonArray = json_page.getJSONArray("list");
+            JSONArray jsonArray = json_page.optJSONArray("list");
             int count=jsonArray.length();
             for(int i=0;i<count;i++){
                 JSONObject jsonObject1=jsonArray.getJSONObject(i);
@@ -113,7 +113,7 @@ public class ConnectionProduct {
                 product.setReferenceWeight(jsonObject1.getString("referenceWeight"));
                 product.setPurpose(jsonObject1.getString("purpose"));
 
-                JSONArray jsonArray1=jsonObject1.getJSONArray("productImages");
+                JSONArray jsonArray1=jsonObject1.optJSONArray("productImages");
                 //有图片时加入到产品图片集合
                 if(jsonArray1.length()>0){
                     ArrayList<String> list1=new ArrayList<>();

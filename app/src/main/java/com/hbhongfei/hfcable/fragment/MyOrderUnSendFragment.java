@@ -64,7 +64,9 @@ public class MyOrderUnSendFragment extends BaseFragment implements BGARefreshLay
         initView(v);
         initRefreshLayout();
         isResult=false;
-        connectionOrder = new ConnectionOrder(MyOrderUnSendFragment.this.getActivity(),MyOrderUnSendFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult);
+        dialog=new Dialog(getActivity());
+
+        connectionOrder = new ConnectionOrder(MyOrderUnSendFragment.this.getActivity(),MyOrderUnSendFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult,dialog);
 
         isPrepared = true;
         lazyLoad();
@@ -160,14 +162,12 @@ public class MyOrderUnSendFragment extends BaseFragment implements BGARefreshLay
 
         @Override
         protected void onPreExecute() {
-            dialog=new Dialog(getActivity());
             dialog.showDialog("正在加载中");
             super.onPreExecute();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            dialog.cancle();
             super.onPostExecute(aVoid);
         }
     }

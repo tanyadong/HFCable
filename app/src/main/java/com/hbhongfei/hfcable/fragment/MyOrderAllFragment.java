@@ -61,7 +61,8 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
         initView(v);
         initRefreshLayout();
         isResult=false;
-        connectionOrder = new ConnectionOrder(MyOrderAllFragment.this.getActivity(),MyOrderAllFragment.this.getContext(),ListView_myOrderAll,noInternet,isResult);
+        dialog=new Dialog(getActivity());
+        connectionOrder = new ConnectionOrder(MyOrderAllFragment.this.getActivity(),MyOrderAllFragment.this.getContext(),ListView_myOrderAll,noInternet,isResult,dialog);
         isPrepared = true;
         lazyLoad();
         return v;
@@ -157,13 +158,11 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
 
         @Override
         protected void onPreExecute() {
-            dialog=new Dialog(getActivity());
             dialog.showDialog("正在加载中");
             super.onPreExecute();
         }
         @Override
         protected void onPostExecute(Void aVoid) {
-            dialog.cancle();
             mRefreshLayout.endLoadingMore();
             super.onPostExecute(aVoid);
         }

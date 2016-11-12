@@ -65,7 +65,6 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
  */
 public class IndexFragment extends BaseFragment implements View.OnClickListener ,BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick{
     //下拉和分页框架
-    private static final String TAG = IndexFragment.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
 
     private View view;
@@ -101,7 +100,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     private ScheduledExecutorService scheduledExecutorService;
     Intent intent;
     private Dialog dialog;
-    private int tag;//判断调用的那个服务(公司，产品种类，推荐产品)
     private String urlType, urlProduct, urlCompany;
 
 
@@ -202,6 +200,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
      */
     public void setDate() {
         //首页根据条件查询产品
+        Toast.makeText(getActivity(),"aaa",Toast.LENGTH_SHORT).show();
         try {
             connectionProduct.connInterByType("是",pageNo);
         } catch (JSONException e) {
@@ -249,7 +248,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
      * 获取产品种类服务
      */
     public void connInter() {
-        tag = 1;
+        Toast.makeText(getActivity(),"1111111",Toast.LENGTH_SHORT).show();
         dialog.showDialog("正在加载中。。。");
         urlType = Url.url("/androidType/getType");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlType, null,
@@ -266,12 +265,14 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         List<String> type_list = new ArrayList<>();
         try {
             jsonArray = jsonObject.getJSONArray("list");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
-                String typeName = jsonObject1.getString("typeName");
-                type_list.add(typeName);
+            if(jsonArray.length()>0){
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
+                    String typeName = jsonObject1.getString("typeName");
+                    type_list.add(typeName);
+                }
+                setTypeValue(type_list);
             }
-            setTypeValue(type_list);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -331,7 +332,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
      * 获取公司信息
      */
     public void connInterGetCompanyInfo() {
-        tag = 2;
+        Toast.makeText(getActivity(),"1111111",Toast.LENGTH_SHORT).show();
         urlCompany = Url.url("/androidCompany/getCompanyInfo");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlCompany, null,
                 jsonObjectCompanyListener, errorCompanyListener);
@@ -560,7 +561,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-
                 return null;
             }
 

@@ -116,7 +116,6 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
                     }
                     list.add(product);
                 }
-                Toast.makeText(this,"有数据"+list,Toast.LENGTH_SHORT).show();
             }else{
                 Error.toSetting(noInternet, R.mipmap.nothing, "您还没有收藏宝贝", "快去收藏一个吧!", new IErrorOnclick() {
                     @Override

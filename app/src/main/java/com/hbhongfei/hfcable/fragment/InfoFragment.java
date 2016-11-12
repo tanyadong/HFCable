@@ -244,11 +244,8 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             File sdcache=getActivity().getExternalCacheDir();
             int cacheSize = 10 * 1024 * 1024;
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
-//                    .connectTimeout(15, TimeUnit.SECONDS)
-//                    .writeTimeout(20, TimeUnit.SECONDS)
-//                    .readTimeout(20, TimeUnit.SECONDS)
+
                     .addInterceptor(new CaheInterceptor(getActivity()))
-//                .addNetworkInterceptor(new CaheInterceptor(getActivity()))
                     .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
             mOkHttpClient = builder.build();
     }
@@ -379,7 +376,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     class MyAsyncTack extends AsyncTask<Void,Void,List<Information>> {
         @Override
         protected void onPreExecute() {
-            dialog.showDialog("正在加载中");
             super.onPreExecute();
         }
         @Override

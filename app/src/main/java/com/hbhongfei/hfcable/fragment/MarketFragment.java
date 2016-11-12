@@ -85,7 +85,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         view = inflater.inflate(R.layout.fragment_market, container, false);
         initView(view);
         initRefreshLayout();
-
+        initOkHttpClient(); //初始化okhttp请求
         isPrepared = true;
         //懒加载
         lazyLoad();
@@ -155,11 +155,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         File sdcache=getActivity().getExternalCacheDir();
         int cacheSize = 10 * 1024 * 1024;
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
-//                .connectTimeout(15, TimeUnit.SECONDS)
-//                .writeTimeout(20, TimeUnit.SECONDS)
-//                .readTimeout(20, TimeUnit.SECONDS)
                 .addInterceptor(new CaheInterceptor(getActivity()))
-//                .addNetworkInterceptor(new CaheInterceptor(getActivity()))
                 .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
         mOkHttpClient = builder.build();
 
@@ -304,7 +300,6 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         if (!isPrepared || !isVisible || mHasLoadedOnce) {
             return;
         }
-        initOkHttpClient(); //初始化okhttp请求
         try {
             initValues();
         } catch (IOException e) {
