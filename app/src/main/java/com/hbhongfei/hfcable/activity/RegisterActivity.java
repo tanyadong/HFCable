@@ -200,7 +200,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(RegisterActivity.this, "两次输入的密码不相同", Toast.LENGTH_SHORT).show();
                 }
                 if (!isEmpty() && checkPhoneNumber() && PasswordLength() && surePassword()) {
-                    Toast.makeText(RegisterActivity.this, "信息完善", Toast.LENGTH_SHORT).show();
                     SMSSDK.submitVerificationCode("86", S_user, S_verificationCode);
                 }
                 break;

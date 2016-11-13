@@ -5,11 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
-import com.hbhongfei.hfcable.fragment.MyOrderAllFragment;
-import com.hbhongfei.hfcable.fragment.MyOrderUnDeliveryFragment;
-import com.hbhongfei.hfcable.fragment.MyOrderUnPaymenFragment;
-import com.hbhongfei.hfcable.fragment.MyOrderUnSendFragment;
-
 import java.util.List;
 
 /**
@@ -43,6 +38,11 @@ public class MyOrder_tab_Adapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return list_Title.get(position % list_Title.size());
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return super.getItemPosition(object);
     }
 
     //防止重新销毁视图

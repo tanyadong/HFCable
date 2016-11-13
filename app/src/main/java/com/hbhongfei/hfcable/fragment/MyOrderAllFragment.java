@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +30,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * 全部订单的页面
  */
-public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayout.BGARefreshLayoutDelegate{
+public class MyOrderAllFragment  extends Fragment implements BGARefreshLayout.BGARefreshLayoutDelegate{
     private static final String USER = LoginConnection.USER;
    private ListView ListView_myOrderAll;
     private BGARefreshLayout mRefreshLayout;
@@ -37,13 +39,9 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
     private int pageNo=1;
     ConnectionOrder connectionOrder=null;
     private LinearLayout noInternet;
-    /** 标志位，标志已经初始化完成 */
-    private boolean isPrepared;
-    /** 是否已被加载过一次，第二次就不再去请求数据了 */
-    private boolean mHasLoadedOnce;
     private Dialog dialog;
     public boolean isResult;//是否从订单详情返回
-
+    private boolean isViewCreated; //判断view是否加载
     public MyOrderAllFragment() {
     }
 
@@ -59,13 +57,28 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_order_all, container, false);
         initView(v);
+        isViewCreated=true;
         initRefreshLayout();
         isResult=false;
         dialog=new Dialog(getActivity());
         connectionOrder = new ConnectionOrder(MyOrderAllFragment.this.getActivity(),MyOrderAllFragment.this.getContext(),ListView_myOrderAll,noInternet,isResult,dialog);
-        isPrepared = true;
-        lazyLoad();
         return v;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser&&isViewCreated){
+            getValues();
+        }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(getUserVisibleHint()){
+            getValues();
+        }
     }
 
     @Override
@@ -99,19 +112,11 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
      * 获取数据
      */
     private void getValues(){
+
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
         pageNo=1;
         new MyAsyncTack().execute();
-    }
-
-    @Override
-    protected void lazyLoad() {
-        if (!isPrepared || !isVisible || mHasLoadedOnce) {
-            return;
-        }
-        getValues();
-        mHasLoadedOnce=true;
     }
     //下拉刷新
     @Override
@@ -145,6 +150,9 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
             return false;
         }
     }
+
+
+
     class MyAsyncTack extends AsyncTask<Map<String,String>,Void,Void> {
         @Override
         protected Void doInBackground(Map<String, String>... params) {
@@ -164,6 +172,7 @@ public class MyOrderAllFragment extends BaseFragment  implements BGARefreshLayou
         @Override
         protected void onPostExecute(Void aVoid) {
             mRefreshLayout.endLoadingMore();
+            dialog.cancle();
             super.onPostExecute(aVoid);
         }
     }

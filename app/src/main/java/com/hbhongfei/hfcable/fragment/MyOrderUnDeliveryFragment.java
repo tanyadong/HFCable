@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +31,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * 没有付款的订单
  */
-public class MyOrderUnDeliveryFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
+public class MyOrderUnDeliveryFragment extends Fragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
     private static final String USER = LoginConnection.USER;
     private ListView ListView_myOrderUnPayment;
     private BGARefreshLayout mRefreshLayout;
@@ -37,23 +39,12 @@ public class MyOrderUnDeliveryFragment extends BaseFragment implements BGARefres
     private Map<String,String> map;
     private String S_phoneNumber;
     private int pageNo=1;
-    private int countPage;
     ConnectionOrder connectionOrder=null;
     private LinearLayout noInternet;
 private Dialog dialog;
     public boolean isResult;//是否从订单详情返回
-    /** 标志位，标志已经初始化完成 */
-    private boolean isPrepared;
-    /** 是否已被加载过一次，第二次就不再去请求数据了 */
-    private boolean mHasLoadedOnce;
+    private boolean isViewCreated;
     public MyOrderUnDeliveryFragment() {
-    }
-
-    public static MyOrderUnDeliveryFragment newInstance(String param1, String param2) {
-        MyOrderUnDeliveryFragment fragment = new MyOrderUnDeliveryFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -66,13 +57,12 @@ private Dialog dialog;
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_order_un_paymen, container, false);
         initView(v);
+        isViewCreated=true;
         initRefreshLayout();
-        isPrepared = true;
         isResult=false;
         dialog=new Dialog(getActivity());
-
         connectionOrder = new ConnectionOrder(MyOrderUnDeliveryFragment.this.getActivity(),MyOrderUnDeliveryFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult,dialog);
-        lazyLoad();
+
         return v;
     }
 
@@ -84,7 +74,21 @@ private Dialog dialog;
             isResult=false;
         }
     }
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser&&isViewCreated){
+            getValues();
+        }
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(getUserVisibleHint()){
+            getValues();
+        }
+    }
     /**
      * 初始化界面
      * @param v
@@ -107,6 +111,7 @@ private Dialog dialog;
      * 获取数据
      */
     private void getValues() {
+
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
 
@@ -132,17 +137,9 @@ private Dialog dialog;
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            mRefreshLayout.endLoadingMore();
             super.onPostExecute(aVoid);
         }
-    }
-
-    @Override
-    protected void lazyLoad() {
-        if (!isPrepared || !isVisible || mHasLoadedOnce) {
-            return;
-        }
-        getValues();
-        mHasLoadedOnce=true;
     }
 
     @Override

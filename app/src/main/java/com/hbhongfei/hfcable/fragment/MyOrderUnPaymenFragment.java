@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +30,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * 没有付款的订单
  */
-public class MyOrderUnPaymenFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate{
+public class MyOrderUnPaymenFragment extends Fragment implements BGARefreshLayout.BGARefreshLayoutDelegate{
     private static final String USER = LoginConnection.USER;
     private ListView ListView_myOrderUnPayment;
     private BGARefreshLayout mRefreshLayout;
@@ -37,11 +39,9 @@ public class MyOrderUnPaymenFragment extends BaseFragment implements BGARefreshL
     private Dialog dialog;
     ConnectionOrder connectionOrder=null;
     private LinearLayout noInternet;
-    /** 标志位，标志已经初始化完成 */
-    private boolean isPrepared;
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
-    private boolean mHasLoadedOnce;
     public boolean isResult;//是否从订单详情返回
+    private boolean isViewCreated;
     public MyOrderUnPaymenFragment() {
     }
 
@@ -58,15 +58,28 @@ public class MyOrderUnPaymenFragment extends BaseFragment implements BGARefreshL
         View v = inflater.inflate(R.layout.fragment_my_order_un_paymen, container, false);
         initView(v);
         initRefreshLayout();
+
         isResult=false;
+        isViewCreated=true;
         dialog=new Dialog(getActivity());
         connectionOrder = new ConnectionOrder(MyOrderUnPaymenFragment.this.getActivity(),MyOrderUnPaymenFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult,dialog);
-
-        isPrepared = true;
-        lazyLoad();
         return v;
     }
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser&&isViewCreated){
+            getValues();
+        }
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(getUserVisibleHint()){
+            getValues();
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -101,17 +114,6 @@ public class MyOrderUnPaymenFragment extends BaseFragment implements BGARefreshL
         S_phoneNumber = spf.getString("phoneNumber", null);
         new MyAsyncTack().execute();
     }
-
-
-    @Override
-    protected void lazyLoad() {
-        if (!isPrepared || !isVisible || mHasLoadedOnce) {
-            return;
-        }
-        getValues();
-        mHasLoadedOnce=true;
-    }
-
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         if(NetUtils.isConnected(getActivity())){
@@ -162,6 +164,8 @@ public class MyOrderUnPaymenFragment extends BaseFragment implements BGARefreshL
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            mRefreshLayout.endLoadingMore();
+            dialog.cancle();
             super.onPostExecute(aVoid);
         }
     }

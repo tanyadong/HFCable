@@ -1,13 +1,12 @@
 package com.hbhongfei.hfcable.activity;
 
-import android.app.FragmentManager;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyOrder_tab_Adapter;
@@ -73,7 +72,7 @@ public class MyOrderActivity extends AppCompatActivity {
         tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(1)));
         tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(2)));
         tab_FindFragment_title.addTab(tab_FindFragment_title.newTab().setText(list_title.get(3)));
-        fAdapter = new MyOrder_tab_Adapter(getSupportFragmentManager(),list_fragment,list_title);
+        fAdapter =new MyOrder_tab_Adapter(getSupportFragmentManager(),list_fragment,list_title);
         //viewpager加载adapter
         vp_FindFragment_pager.setAdapter(fAdapter);
         //TabLayout加载viewpager

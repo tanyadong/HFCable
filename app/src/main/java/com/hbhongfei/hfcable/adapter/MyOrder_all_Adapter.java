@@ -241,7 +241,6 @@ public class MyOrder_all_Adapter extends BaseAdapter{
             if(order.cancleOrNot==0){
                 vh.Tview_myOrder_stage.setText("已发货");
                 vh.Tview_myOrder_stage.setTextColor(context.getResources().getColor(R.color.colorRed));
-
                 vh.Tview_myOrder_pay.setText("实付款");
                 vh.Image_myOrder_delete.setVisibility(View.GONE);
                 vh.image_success.setVisibility(View.GONE);
@@ -321,13 +320,11 @@ public class MyOrder_all_Adapter extends BaseAdapter{
                         list.get(position_tag).cancleOrNot=1;
                         notifyDataSetChanged();
                     }
-
                     Toast.makeText(context,"取消订单成功",Toast.LENGTH_SHORT).show();
                 }else if(msg.equals("delete")){
                     if(position_tag!=-1){
                         deleteItems(position_tag);
                     }
-
                     Toast.makeText(context,"删除成功",Toast.LENGTH_SHORT).show();
                 }else if(msg.equals("confirm")) {
                     if(position_tag!=-1){
@@ -348,6 +345,7 @@ public class MyOrder_all_Adapter extends BaseAdapter{
     private Response.ErrorListener errorOrderListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
+
             Toast.makeText(context, "请求数据失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
         }

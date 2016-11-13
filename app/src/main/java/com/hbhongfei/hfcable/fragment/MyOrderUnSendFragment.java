@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +30,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 /**
  * 没有付款的订单
  */
-public class MyOrderUnSendFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
+public class MyOrderUnSendFragment extends Fragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
     private static final String USER = LoginConnection.USER;
     private ListView ListView_myOrderUnPayment;
     private BGARefreshLayout mRefreshLayout;
@@ -42,15 +44,11 @@ public class MyOrderUnSendFragment extends BaseFragment implements BGARefreshLay
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
     private boolean mHasLoadedOnce;
     public boolean isResult;//是否从订单详情返回
+    private boolean isViewCreated;
     public MyOrderUnSendFragment() {
     }
 
-    public static MyOrderUnSendFragment newInstance(String param1, String param2) {
-        MyOrderUnSendFragment fragment = new MyOrderUnSendFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,12 +62,12 @@ public class MyOrderUnSendFragment extends BaseFragment implements BGARefreshLay
         initView(v);
         initRefreshLayout();
         isResult=false;
+        isViewCreated=true;
         dialog=new Dialog(getActivity());
 
         connectionOrder = new ConnectionOrder(MyOrderUnSendFragment.this.getActivity(),MyOrderUnSendFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult,dialog);
 
         isPrepared = true;
-        lazyLoad();
         return v;
     }
 
@@ -81,7 +79,21 @@ public class MyOrderUnSendFragment extends BaseFragment implements BGARefreshLay
             isResult=false;
         }
     }
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser&&isViewCreated){
+            getValues();
+        }
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(getUserVisibleHint()){
+            getValues();
+        }
+    }
     /**
      * 初始化界面
      * @param v
@@ -106,18 +118,9 @@ public class MyOrderUnSendFragment extends BaseFragment implements BGARefreshLay
     private void getValues() {
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
-
         new MyAsyncTack().execute();
     }
 
-    @Override
-    protected void lazyLoad() {
-        if (!isPrepared || !isVisible || mHasLoadedOnce) {
-            return;
-        }
-        getValues();
-        mHasLoadedOnce=true;
-    }
 
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
@@ -168,6 +171,7 @@ public class MyOrderUnSendFragment extends BaseFragment implements BGARefreshLay
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            mRefreshLayout.endLoadingMore();
             super.onPostExecute(aVoid);
         }
     }
