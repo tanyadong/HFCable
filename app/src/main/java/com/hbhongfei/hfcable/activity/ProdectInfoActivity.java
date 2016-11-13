@@ -54,7 +54,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
-import java.text.Format;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -505,13 +504,9 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             try {
                 String msg = jsonObject.getString("msg");
                 if (TextUtils.equals(msg, "成功")) {
-                    new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("添加购物车成功")
-                            .show();
+                    Toast.makeText(ProdectInfoActivity.this,"添加购物车成功",Toast.LENGTH_SHORT).show();
                 } else {
-                    new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("添加购物车失败")
-                            .show();
+                    Toast.makeText(ProdectInfoActivity.this,"添加购物车失败",Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -532,21 +527,13 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 if (TextUtils.equals(msg, "收藏成功")) {
                     prodectList_img_collect.setImageResource(R.mipmap.heart_red);
                     prodectList_tview_collect.setText("已收藏");
-                    new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("添加收藏成功")
-                            .show();
                 } else if (TextUtils.equals(msg, "取消收藏")) {
-                    new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("取消收藏成功")
-                            .show();
                     prodectList_img_collect.setImageResource(R.mipmap.heart);
                     prodectList_tview_collect.setText("收藏");
                 } else if (TextUtils.equals(msg, "取消收藏失败")) {
                     Toast.makeText(ProdectInfoActivity.this, "取消收藏失败", Toast.LENGTH_SHORT).show();
                 } else {
-                    new SweetAlertDialog(ProdectInfoActivity.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("收藏失败")
-                            .show();
+                    Toast.makeText(ProdectInfoActivity.this, "收藏失败", Toast.LENGTH_SHORT).show();
                 }
 
             } catch (JSONException e) {
@@ -666,7 +653,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         } else {
             iv_pic.setImageResource(R.mipmap.loading_error);
         }
-
         pop_del.setOnClickListener(this);
         btn_sure.setOnClickListener(this);
         pop_add.setOnClickListener(this);
@@ -708,12 +694,10 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     public void setSpecificationsData() {
         skuPackageAdapter = new SkuAdapter(mPackageList, this);
         //设置默认选中的位置
-//        skuSpecificationsAdapter.setSelectedPosition(spec_position);
         gvPackage.setAdapter(skuPackageAdapter);
         skuPackageAdapter.setItemClickListener(new SkuAdapter.onItemClickListener() {
             @Override
             public void onItemClick(Bean bean, int position) {
-//                packages = bean.getName();
                 switch (Integer.parseInt(bean.getStates())) {
                     case 0:
                         // 清空规格
@@ -839,7 +823,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                             // 根据颜色计算库存
                             tvSkuName.setText("请选择规格");
                         }
-
                         break;
                     default:
                         break;

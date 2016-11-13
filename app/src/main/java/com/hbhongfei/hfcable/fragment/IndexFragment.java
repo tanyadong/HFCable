@@ -100,7 +100,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     private ScheduledExecutorService scheduledExecutorService;
     Intent intent;
     private Dialog dialog;
-    private String urlType, urlProduct, urlCompany;
+    private String urlType,urlCompany;
 
 
     //Toast显示状态
