@@ -863,7 +863,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     }
 
     /**
-     * 成功的监听器
+     * 获取包装方式成功的监听
      */
     private Response.Listener<JSONObject> jsonObjectListener = new Response.Listener<JSONObject>() {
         @Override
@@ -871,30 +871,31 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             JSONArray jsonArray;
             try {
                 price_map = new HashMap();
-                jsonArray = jsonObject.getJSONArray("list");
+                jsonArray = jsonObject.optJSONArray("list");
                 int count = jsonArray.length();
-                for (int i = 0; i < count; i++) {
-                    JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
-                    String shaftName = jsonObject1.getString("shaftName");
-                    String shaftPrice = jsonObject1.getString("shaftPrice");
-                    package_list.add(shaftName + "米轴");
-                    package_list_num.add(Double.parseDouble(shaftName));
-                    package_list_price.add(shaftPrice);
-                    price_map.put(shaftName, shaftPrice);
-
+                if(count>0){
+                    for (int i = 0; i < count; i++) {
+                        JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
+                        String shaftName = jsonObject1.getString("shaftName");
+                        String shaftPrice = jsonObject1.getString("shaftPrice");
+                        package_list.add(shaftName + "米轴");
+                        package_list_num.add(Double.parseDouble(shaftName));
+                        package_list_price.add(shaftPrice);
+                        price_map.put(shaftName, shaftPrice);
+                    }
+                    Message message = new Message();
+                    message.what = 1;
+                    message.obj = price_map;
+                    handler.sendMessage(message);
+                    //设置包装方式
+                    for (int i = 0; i < package_list.size(); i++) {
+                        Bean bean = new Bean();
+                        bean.setName(package_list.get(i));
+                        bean.setStates("1");
+                        mPackageList.add(bean);
+                    }
+                    setSpecificationsData();
                 }
-                Message message = new Message();
-                message.what = 1;
-                message.obj = price_map;
-                handler.sendMessage(message);
-                //设置包装方式
-                for (int i = 0; i < package_list.size(); i++) {
-                    Bean bean = new Bean();
-                    bean.setName(package_list.get(i));
-                    bean.setStates("1");
-                    mPackageList.add(bean);
-                }
-                setSpecificationsData();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -921,18 +922,20 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         public void onResponse(JSONObject jsonObject) {
             JSONArray jsonArray;
             try {
-                jsonArray = jsonObject.getJSONArray("colorList");
+                jsonArray = jsonObject.optJSONArray("colorList");
                 int count = jsonArray.length();
-                for (int i = 0; i < count; i++) {
-                    JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
-                    String colorName = jsonObject1.getString("colorName");
-                    //设置颜色
-                    Bean bean = new Bean();
-                    bean.setName(colorName);
-                    bean.setStates("1");
-                    mColorList.add(bean);
+                if(count>0){
+                    for (int i = 0; i < count; i++) {
+                        JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
+                        String colorName = jsonObject1.getString("colorName");
+                        //设置颜色
+                        Bean bean = new Bean();
+                        bean.setName(colorName);
+                        bean.setStates("1");
+                        mColorList.add(bean);
+                    }
+                    setColorData();
                 }
-                setColorData();
                 dialog.cancle();
             } catch (JSONException e) {
                 e.printStackTrace();
