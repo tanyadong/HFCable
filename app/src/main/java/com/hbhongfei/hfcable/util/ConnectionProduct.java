@@ -63,7 +63,6 @@ public class ConnectionProduct {
      * 根据种类查询产品
      */
     public void connInterByType(String newProducts, int pageNo,Dialog dialog) throws JSONException {
-        Toast.makeText(context,"产品-加载",Toast.LENGTH_SHORT).show();
         this.dialog = dialog;
         page = pageNo;
         url = Url.url("/androidProduct/getProduct");
@@ -79,7 +78,6 @@ public class ConnectionProduct {
      * @param jsonObject
      */
     private void analysisDataOfProduct(JSONObject jsonObject){
-        Toast.makeText(context,"产品-解析成功",Toast.LENGTH_SHORT).show();
         try {
             list=new ArrayList<>();
             final JSONObject json_page = jsonObject.getJSONObject("page");
@@ -150,7 +148,6 @@ public class ConnectionProduct {
     private Response.Listener<JSONObject> jsonObjectProductListener = new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject jsonObject) {
-            Toast.makeText(context,"产品-加载成功",Toast.LENGTH_SHORT).show();
             analysisDataOfProduct(jsonObject);
         }
     };
@@ -163,7 +160,7 @@ public class ConnectionProduct {
         public void onErrorResponse(VolleyError volleyError) {
             MySingleton mySingleton = new MySingleton(context);
             if (mySingleton.getCache(url)!=null){
-                Toast.makeText(context,"没有网络-产品",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"没有网络",Toast.LENGTH_SHORT).show();
                 analysisDataOfProduct(mySingleton.getCache(url));
             }
         }

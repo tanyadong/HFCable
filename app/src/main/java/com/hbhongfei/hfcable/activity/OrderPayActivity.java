@@ -284,7 +284,7 @@ public class OrderPayActivity extends AppCompatActivity implements
                 } else {
                     String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
                     String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
-                    Toast.makeText(this,errorMsg+"--"+extraMsg,Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this,errorMsg+"--"+extraMsg,Toast.LENGTH_SHORT).show();
                     CustomDialog.payDialog(this,result);
                 }
 

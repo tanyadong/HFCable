@@ -539,6 +539,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             holder.time.setText(DateUtils.convertTimeToFormat(date));
             //设置头像
             String url = Url.url((String) map.get("headPortrait"));
+//            Toast.makeText(MineFragment.this.getContext(),url+"----",Toast.LENGTH_SHORT).show();
             Glide.with(mContext)
                     .load(url)
                     .placeholder(R.mipmap.head_portrait)

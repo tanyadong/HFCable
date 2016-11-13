@@ -469,7 +469,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         map.put("packages", packages);
         map.put("quantity", pop_num.getText().toString());
         map.put("userName", S_phoneNumber);
-        Toast.makeText(this, packages, Toast.LENGTH_SHORT).show();
         if (packages.equals("10米")) {
             //10米价格增长
             unitPrice = product.getPrice();  //价格

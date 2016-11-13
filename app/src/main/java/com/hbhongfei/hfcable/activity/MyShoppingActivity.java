@@ -122,14 +122,12 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
      * 其键是组元素的Id(通常是一个唯一指定组元素身份的值)
      */
     private void initDatas() {
-        shaftConnInter();
         connInter();
-
     }
 
 
     /**
-     * 连接服务
+     * 购物车连接服务
      */
     public void connInter() {
         dialog = new Dialog(this.context);
@@ -243,7 +241,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                 } else {
                     clearCart();
                 }
-                dialog.cancle();
+                shaftConnInter();
             } catch (JSONException e) {
                 e.printStackTrace();
                 dialog.cancle();
@@ -279,13 +277,12 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     };
 
     /**
-     * 获取产品种类服务
+     * 获取包装方式
      */
     public void shaftConnInter() {
         String url = Url.url("/androidShaft/list");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 shaftjsonObjectListener, errorListener);
-
         MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
@@ -298,12 +295,15 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             JSONArray jsonArray;
             packageMap = new HashMap<>();
             try {
-                jsonArray = jsonObject.getJSONArray("list");
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
-                    String shaftName = jsonObject1.getString("shaftName");
-                    String shaftPrice = jsonObject1.getString("shaftPrice");
-                    packageMap.put(shaftName, shaftPrice);
+                jsonArray = jsonObject.optJSONArray("list");
+                if (jsonArray!=null){
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
+                        String shaftName = jsonObject1.getString("shaftName");
+                        String shaftPrice = jsonObject1.getString("shaftPrice");
+                        packageMap.put(shaftName, shaftPrice);
+                    }
+                    dialog.cancle();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -319,7 +319,7 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         children.clear();
         totalCount = 0;
         totalPrice = 0.00;
-        tvTotalPrice.setText("￥" +df.format(totalPrice) );
+        tvTotalPrice.setText("￥" + df.format(totalPrice));
         tvGoToPay.setText("去支付(" + totalCount + ")");
         initDatas();
     }
@@ -709,9 +709,9 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             try {
                 String s = jsonObject.getString("delete");
                 if (s.equals("success")) {
-                    Toast.makeText(MyShoppingActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyShoppingActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                 } else if (s.equals("filed")) {
-                    Toast.makeText(MyShoppingActivity.this,"删除失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyShoppingActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

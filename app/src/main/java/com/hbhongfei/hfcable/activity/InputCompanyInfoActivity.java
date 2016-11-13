@@ -168,7 +168,6 @@ public class InputCompanyInfoActivity extends AppCompatActivity implements View.
         params.put("companyName",S_companName);
         params.put("legalPersonName",S_legalName);
         params.put("companyTel",S_companyTel);
-        Toast.makeText(this,S_phone+"-"+S_name+"-"+S_sex+"-"+S_birthday+"-"+S_companName+"-"+S_legalName+"-"+S_companyTel,Toast.LENGTH_SHORT).show();
         String url = Url.url("/androidUser/addPersonInfo");
         RequestQueue mQueue = Volley.newRequestQueue(this);
         //使用自己书写的NormalPostRequest类，

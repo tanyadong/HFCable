@@ -298,22 +298,22 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             MySingleton mySingleton = new MySingleton(IndexFragment.this.getActivity());
             if (mySingleton.getCache(urlType) != null) {
                 if(!NetUtils.isConnected(getActivity())){
-                    Toast.makeText(IndexFragment.this.getContext(), "没有网络-种类", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(IndexFragment.this.getContext(), "没有网络", Toast.LENGTH_SHORT).show();
                 }
                 noInternet.setVisibility(View.GONE);
                 //加载种类
                 analysisDataOfType(mySingleton.getCache(urlType));
             } else {
                 if (volleyError instanceof NoConnectionError) {
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦-种类", "点击设置", IndexFragment.this);
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", IndexFragment.this);
                 } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦-种类", "服务器出错啦", new IErrorOnclick() {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
                         @Override
                         public void errorClick() {
                         }
                     });
                 } else {
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦-种类", "出错啦", new IErrorOnclick() {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
                         @Override
                         public void errorClick() {
 
@@ -462,16 +462,16 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 analysisDataOfCompany(mySingleton.getCache(urlCompany));
             } else {
                 if (volleyError instanceof NoConnectionError) {
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦-公司", "点击设置", IndexFragment.this);
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "没有网络哦", "点击设置", IndexFragment.this);
                 } else if (volleyError instanceof NetworkError || volleyError instanceof ServerError || volleyError instanceof TimeoutError) {
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦-公司", "服务器出错啦", new IErrorOnclick() {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "服务器出错啦", new IErrorOnclick() {
                         @Override
                         public void errorClick() {
 
                         }
                     });
                 } else {
-                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦-公司", "出错啦", new IErrorOnclick() {
+                    Error.toSetting(noInternet, R.mipmap.internet_no, "不好啦", "出错啦", new IErrorOnclick() {
                         @Override
                         public void errorClick() {
 
