@@ -43,7 +43,7 @@ public class SplashActivity extends Activity {
         if (context == null || className == null || "".equalsIgnoreCase(className)) {
             return false;
         }
-        String mResultStr = context.getSharedPreferences(SHAREDPREFERENCES_NAME, Context.MODE_WORLD_READABLE)
+        String mResultStr = context.getSharedPreferences(SHAREDPREFERENCES_NAME, Context.MODE_PRIVATE)
                 .getString(KEY_GUIDE_ACTIVITY, "");//取得所有类名 如 com.my.MainActivity
         if (mResultStr.equalsIgnoreCase("false")) {
             return false;
