@@ -53,7 +53,6 @@ public class InfoDetailActivity extends AppCompatActivity {
         asyncBitmapLoader.loadImage(this,infoDetail_img,information.getImgUrl());
         infoDetail_content.setText(information.getDetailContent());
         infoDetail_time.setText(information.getTime());
-//        loadContentData(information.getContentUrl());
     }
 
 

@@ -30,6 +30,9 @@
     <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
     <!-- 拨打电话权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <!--解决部分手机不能安装的问题-->
+    <uses-library android:name="com.google.android.maps"
+        android:required="false"/>
 
     <!--
         android:allowBackup="true"-->

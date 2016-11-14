@@ -10,18 +10,14 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 
 import com.hbhongfei.hfcable.R;
 
@@ -199,7 +195,8 @@ public class GuideActivity extends Activity {
 
         @Override
         public void restoreState(Parcelable arg0, ClassLoader arg1) {
-            for (int i = 0; i < mViews.size(); i++) {
+            int count=mViews.size();
+            for (int i = 0; i < count; i++) {
 
             }
         }

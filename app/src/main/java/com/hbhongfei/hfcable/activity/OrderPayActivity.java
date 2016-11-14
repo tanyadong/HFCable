@@ -140,7 +140,8 @@ public class OrderPayActivity extends AppCompatActivity implements
         client_ip = GetIP.GetIp();
         subject = "弘飞线缆";
         buffer = new StringBuffer();
-        for (int i=0;i<array.size();i++){
+        int count=array.size();
+        for (int i=0;i<count;i++){
             buffer.append(array.get(i));
             if (i!=array.size()-1){
                 buffer.append(",");

@@ -95,7 +95,8 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
             List<Product> list=new ArrayList<>();
             JSONArray jsonArray=jsonObject.optJSONArray("productList");
             if(jsonArray.length()>0){
-                for(int i=0;i<jsonArray.length();i++){
+                int count=jsonArray.length();
+                for(int i=0;i<count;i++){
                     JSONObject jsonObject1=jsonArray.getJSONObject(i);
                     Product product=new Product();
                     product.setId(jsonObject1.getString("id"));
@@ -109,7 +110,8 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
                     //有图片时加入到产品图片集合
                     if(jsonArray1.length()>0){
                         ArrayList<String> list1=new ArrayList<>();
-                        for(int j=0;j<jsonArray1.length();j++){
+                        int img_count=jsonArray1.length();
+                        for(int j=0;j<img_count;j++){
                             list1.add((String) jsonArray1.get(j));
                         }
                         product.setProductImages(list1);

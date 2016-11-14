@@ -107,10 +107,11 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
         JSONArray jsonArray;
         List<String> type_list=new ArrayList<>();
         try {
-            jsonArray = jsonObject.getJSONArray("list");
+            jsonArray = jsonObject.optJSONArray("list");
             if (jsonArray.length()>0){
                 type_list.add("全部");
-                for(int i=0;i<jsonArray.length();i++){
+                int count=jsonArray.length();
+                for(int i=0;i<count;i++){
                     JSONObject jsonObject1 = (JSONObject)jsonArray.getJSONObject(i);
                     String typeName=jsonObject1.getString("typeName");
                     type_list.add(typeName);

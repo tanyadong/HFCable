@@ -29,7 +29,6 @@ public class AddressListAdapter extends BaseAdapter {
 	String phoneNum;
 	ListView listView;
 	LinearLayout linearLayout;
-	SweetAlertDialog sweetAlertDialog=null;
 	Activity activity;
 	public AddressListAdapter(
 			Activity activity,Context context, List<ShoppingAddress> nList, String S_phone, ListView listView, LinearLayout linearLayout) {

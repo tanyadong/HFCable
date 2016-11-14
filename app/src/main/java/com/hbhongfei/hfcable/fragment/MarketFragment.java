@@ -139,7 +139,8 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
                 return true;
             }
         });
-        for (int i = 0; i < myExpandableListViewAdapter.getGroupCount(); i++) {
+        int groupCount=myExpandableListViewAdapter.getGroupCount();
+        for (int i = 0; i < groupCount; i++) {
             expandableListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
         }
     }
@@ -266,7 +267,8 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         Element table = doc.getElementsByTag("table").first();
         Elements lists = table.getElementsByTag("tr");
         child_list = new ArrayList<>();
-        for (int j = 1; j < lists.size(); j++) {
+        int market_count=lists.size();
+        for (int j = 1; j < market_count; j++) {
             Element item = lists.get(j);
             Elements els = item.getElementsByTag("td");
             MarketInfo marketInfo = new MarketInfo();

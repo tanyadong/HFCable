@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
@@ -313,7 +311,8 @@ private void saveConnection(){
             }else if(requestCode == 2){
                 toCitys = data.getParcelableArrayListExtra("toCitys");
                 StringBuffer ab = new StringBuffer();
-                for (int i = 0; i < toCitys.size(); i++) {
+                int count=toCitys.size();
+                for (int i = 0; i < count; i++) {
                     if(i==toCitys.size()-1){//如果是最后一个城市就不需要逗号
                         ab.append(toCitys.get(i).getCity());
                     }else{
@@ -352,7 +351,6 @@ private void saveConnection(){
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 deleteConnection();
-//								sweetAlertDialog.dismiss();
                             }
                         })
                         .show();

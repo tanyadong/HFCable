@@ -262,8 +262,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         List<String> type_list = new ArrayList<>();
         try {
             jsonArray = jsonObject.optJSONArray("list");
-            if (jsonArray!=null&&jsonArray.length()>=5){
-                for (int i = 0; i < jsonArray.length(); i++) {
+            int type_count=jsonArray.length();
+            if (jsonArray!=null&&type_count>=5){
+                for (int i = 0; i < type_count; i++) {
                     JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
                     String typeName = jsonObject1.getString("typeName");
                     type_list.add(typeName);
@@ -366,7 +367,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 company.setZipCode(jsonObject1.getInt("zipCode"));
                 JSONArray jsonArray1 = jsonObject1.getJSONArray("list");
                 ArrayList<String> list1 = new ArrayList<>();
-                for (int j = 0; j < jsonArray1.length(); j++) {
+                int array_count=jsonArray1.length();
+                for (int j = 0; j < array_count; j++) {
                     JSONObject jsonObject2 = jsonArray1.getJSONObject(j);
                     list1.add(jsonObject2.getString("image"));
                     String url = Url.url(jsonObject2.getString("image"));
@@ -692,7 +694,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         @Override
         public void onPageSelected(int position) {
             Log.i("zj", "onPagerChange position=" + position);
-            for (int i = 0; i < list.size(); i++) {
+            int page_count=list.size();
+            for (int i = 0; i < page_count; i++) {
                 dotViewList.get(i).setImageResource(R.mipmap.point_unpressed);
             }
             dotViewList.get(position).setImageResource(R.mipmap.point_pressed);

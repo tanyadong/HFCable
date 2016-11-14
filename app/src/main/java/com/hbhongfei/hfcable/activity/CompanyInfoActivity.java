@@ -55,7 +55,6 @@ public class CompanyInfoActivity extends AppCompatActivity {
         companyInfo_introduce_textView.setText(company.getDescription());
         //网络加载图片
         String url= Url.url(company.getLogo());
-//        logo.setTag(url);
         Glide.with(this)
                 .load(url)
                 .placeholder(R.mipmap.background)

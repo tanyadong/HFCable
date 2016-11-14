@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,8 +69,8 @@ public class CitySelect1Activity extends AppCompatActivity implements OnClickLis
 		city = in.getParcelableExtra("city");
 		
 		
-		
-		for (int i = 0; i < tvs.length; i++) {
+		int count=tvs.length;
+		for (int i = 0; i < count; i++) {
 			tvs[i] = (TextView) findViewById(ids[i]);//��Ӧ�ĳ���Id
 			tvs[i].setOnClickListener(this);//ѡ���Ӧ���еĵ���¼�
 		}
@@ -112,8 +111,7 @@ public class CitySelect1Activity extends AppCompatActivity implements OnClickLis
 	protected void onStart() {
 		super.onStart();
 		lv_city.setOnItemClickListener(onItemClickListener);
-//		btn_back.setOnClickListener(this);
-//		btn_right.setOnClickListener(this);
+
 	};
 
 
@@ -125,7 +123,6 @@ public class CitySelect1Activity extends AppCompatActivity implements OnClickLis
 			switch (msg.what) {
 
 			case 1:
-				System.out.println("省份列表what=====" + msg.what);
 
 				regions = (ArrayList<MyRegion>) msg.obj;
 				adapter.clear();
@@ -134,7 +131,6 @@ public class CitySelect1Activity extends AppCompatActivity implements OnClickLis
 				break;
 
 			case 2:
-				System.out.println("城市列表what======" + msg.what);
 				regions = (ArrayList<MyRegion>) msg.obj;
 				adapter.clear();
 				adapter.addAll(regions);
@@ -142,7 +138,6 @@ public class CitySelect1Activity extends AppCompatActivity implements OnClickLis
 				break;
 
 			case 3:
-				System.out.println("区/县列表what======" + msg.what);
 				regions = (ArrayList<MyRegion>) msg.obj;
 				adapter.clear();
 				adapter.addAll(regions);
@@ -185,7 +180,6 @@ public class CitySelect1Activity extends AppCompatActivity implements OnClickLis
 					tvs[2].setText("区 ");
 				}
 				
-				//��������б��еĳ��оͳ�ʼ�������б�
 				util.initDistricts(city.getCityCode());
 				current = 2;
 

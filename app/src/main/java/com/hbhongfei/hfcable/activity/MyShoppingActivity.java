@@ -161,7 +161,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                         JSONArray productImages = shoppingCart.getJSONArray("productImage");
                         List<CablesInfo> cablesInfos = new ArrayList<>();
                         List<Product> list_product = new ArrayList<>();
-                        for (int j = 0; j < products.length(); j++) {
+                        int pro_count=products.length();
+                        for (int j = 0; j < pro_count; j++) {
                             /**************购物车信息*****************/
                             JSONObject product = (JSONObject) products.opt(j);
                             JSONArray images = productImages.getJSONArray(j);
@@ -203,7 +204,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                             //有图片时加入到产品图片集合
                             if (jsonArray1.length() > 0) {
                                 ArrayList<String> list1 = new ArrayList<>();
-                                for (int k = 0; k < jsonArray1.length(); k++) {
+                                int img_count=jsonArray1.length();
+                                for (int k = 0; k < img_count; k++) {
                                     list1.add((String) jsonArray1.get(k));
                                 }
                                 product1.setProductImages(list1);
@@ -226,7 +228,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
                     selva.setModifyCountInterface(MyShoppingActivity.this);// 关键步骤2,设置数量增减接口
                     selva.setmListener(MyShoppingActivity.this);//设置监听器接口
                     exListView.setAdapter(selva);
-                    for (int i = 0; i < selva.getGroupCount(); i++) {
+                    int group_count=selva.getGroupCount();
+                    for (int i = 0; i < group_count; i++) {
                         exListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
                     }
                     exListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -297,7 +300,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
             try {
                 jsonArray = jsonObject.optJSONArray("list");
                 if (jsonArray!=null){
-                    for (int i = 0; i < jsonArray.length(); i++) {
+                    int shaft_count=jsonArray.length();
+                    for (int i = 0; i < shaft_count; i++) {
                         JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
                         String shaftName = jsonObject1.getString("shaftName");
                         String shaftPrice = jsonObject1.getString("shaftPrice");
@@ -370,7 +374,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     public void checkGroup(int groupPosition, boolean isChecked) {
         TypeInfo group = groups.get(groupPosition);
         List<CablesInfo> childs = children.get(group.getId());
-        for (int i = 0; i < childs.size(); i++) {
+        int child_count=childs.size();
+        for (int i = 0; i < child_count; i++) {
             childs.get(i).setChoosed(isChecked);
         }
         if (isAllCheck())
@@ -386,7 +391,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         boolean allChildSameState = true;// 判断改组下面的所有子元素是否是同一种状态
         TypeInfo group = groups.get(groupPosition);
         List<CablesInfo> childs = children.get(group.getId());
-        for (int i = 0; i < childs.size(); i++) {
+        int child_count=childs.size();
+        for (int i = 0; i < child_count; i++) {
             // 不全选中
             if (childs.get(i).isChoosed() != isChecked) {
                 allChildSameState = false;
@@ -512,7 +518,8 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
     public void childDelete(int groupPosition, int childPosition) {
         TypeInfo group = groups.get(groupPosition);
         List<CablesInfo> childs = children.get(group.getId());
-        for (int i = 0; i < childs.size(); i++) {
+        int child_count=childs.size();
+        for (int i = 0; i < child_count; i++) {
             delete(childs.get(i).getId());
             children.get(groups.get(groupPosition).getId()).remove(childPosition);
         }
@@ -536,10 +543,12 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
         totalCount = 0;
         totalPrice = 0.00;
         proInfos = new ArrayList<>();
-        for (int i = 0; i < groups.size(); i++) {
+        int groups_count=groups.size();
+        for (int i = 0; i < groups_count; i++) {
             TypeInfo group = groups.get(i);
             List<CablesInfo> childs = children.get(group.getId());
-            for (int j = 0; j < childs.size(); j++) {
+            int child_count=childs.size();
+            for (int j = 0; j < child_count; j++) {
                 Map<String, Object> map = new HashMap<>();
                 CablesInfo cable = childs.get(j);
                 if (cable.isChoosed()) {
@@ -644,11 +653,13 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
      * 全选与反选
      */
     private void doCheckAll() {
-        for (int i = 0; i < groups.size(); i++) {
+        int group_count=groups.size();
+        for (int i = 0; i <group_count; i++) {
             groups.get(i).setChoosed(allChekbox.isChecked());
             TypeInfo group = groups.get(i);
             List<CablesInfo> childs = children.get(group.getId());
-            for (int j = 0; j < childs.size(); j++) {
+            int child_count=childs.size();
+            for (int j = 0; j < child_count; j++) {
                 childs.get(j).setChoosed(allChekbox.isChecked());
             }
         }
@@ -663,14 +674,16 @@ public class MyShoppingActivity extends AppCompatActivity implements MyAdapter_m
      */
     protected void doDelete() {
         List<TypeInfo> toBeDeleteGroups = new ArrayList<>();// 待删除的组元素列表
-        for (int i = 0; i < groups.size(); i++) {
+        int group_count=groups.size();
+        for (int i = 0; i < group_count; i++) {
             TypeInfo group = groups.get(i);
             if (group.isChoosed()) {
                 toBeDeleteGroups.add(group);
             }
             List<CablesInfo> toBeDeleteProducts = new ArrayList<>();// 待删除的子元素列表
             List<CablesInfo> childs = children.get(group.getId());
-            for (int j = 0; j < childs.size(); j++) {
+            int child_count=childs.size();
+            for (int j = 0; j < child_count; j++) {
                 if (childs.get(j).isChoosed()) {
                     toBeDeleteProducts.add(childs.get(j));
                     //链接网络进行删除

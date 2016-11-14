@@ -143,7 +143,8 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
         //Elements
         Element table = doc.getElementsByTag("table").first();
         Elements lists = table.getElementsByTag("tr");
-        for (int i = 1; i < lists.size(); i++) {
+        int count=lists.size();
+        for (int i = 1; i < count; i++) {
             Element item = lists.get(i);
             Elements els = item.getElementsByTag("td");
             averagePrice_list.add(els.get(1).text());
@@ -251,10 +252,12 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
      */
 
     private void setData() {
-        for (int i = 0; i < data_list.size(); i++) {
+        int data_count=data_list.size();
+        for (int i = 0; i < data_count; i++) {
             xVals.add(data_list.get(i));
         }
-        for (int i = 0; i < averagePrice_list.size(); i++) {
+        int averagePrice_count=averagePrice_list.size();
+        for (int i = 0; i < averagePrice_count; i++) {
             boolean isNum = averagePrice_list.get(i).matches("[0-9]+");
             if(isNum){
                 yVals.add(new Entry(Float.parseFloat(averagePrice_list.get(i)), i));

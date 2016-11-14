@@ -3,7 +3,6 @@ package com.hbhongfei.hfcable.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -19,7 +18,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -34,13 +32,11 @@ import com.hbhongfei.hfcable.util.IAlertDialogUploadListener;
 import com.hbhongfei.hfcable.util.IntentConstants;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.UploadImages;
-import com.hbhongfei.hfcable.util.ZipImages;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /*
 发表说说
@@ -211,7 +207,8 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
         public void run() {
             List<String> list = new ArrayList<>();
             List<String> listThumbnail = new ArrayList<>();
-            for (int i=0;i<mDataList.size();i++){
+            int mDataList_count=mDataList.size();
+            for (int i=0;i<mDataList_count;i++){
                 list.add(mDataList.get(i).sourcePath);
                 listThumbnail.add(mDataList.get(i).thumbnailPath);
             }
@@ -302,7 +299,8 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
     public String getString(String s) {
         String path = null;
         if (s == null) return "";
-        for (int i = s.length() - 1; i > 0; i++) {
+        int length=s.length();
+        for (int i = length - 1; i > 0; i++) {
             s.charAt(i);
         }
         return path;
@@ -318,7 +316,6 @@ public class WriteCableRingActivity extends AppCompatActivity implements IAlertD
      */
     @Override
     public void selectFromAlbumClick() {
-
         Intent intent = new Intent(Intent.ACTION_PICK, null);
         intent.setClass(WriteCableRingActivity.this,ImageBucketChooseActivity.class);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");

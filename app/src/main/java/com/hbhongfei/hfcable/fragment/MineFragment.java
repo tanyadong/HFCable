@@ -279,7 +279,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             if (jsonObject.optJSONArray("cableRings") != null) {
                 jsonArray = jsonObject.optJSONArray("cableRings");
                 if (jsonArray.length() != 0) {
-                    for (int i = 0; i < jsonArray.length(); i++) {
+                    int cableRings_count=jsonArray.length();
+                    for (int i = 0; i < cableRings_count; i++) {
                         map = new HashMap<>();
                         JSONObject cableRings = jsonArray.optJSONObject(i);
                         //缆圈信息
@@ -292,8 +293,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                         map.put("headPortrait", user.getString("headPortrait"));//缆圈的发布者头像
                         JSONArray ims = cableRing.getJSONArray("cableRingImages");
                         ArrayList<String> images = new ArrayList<>();
-                        if (ims.length() > 0) {
-                            for (int j = 0; j < ims.length(); j++) {
+                        int imgs_count=ims.length();
+                        if (imgs_count > 0) {
+                            for (int j = 0; j < imgs_count; j++) {
                                 images.add((String) ims.get(j));
                             }
                         }
@@ -302,7 +304,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                         if (cableRings.optJSONArray("comments") != null) {
                             List<Map<String, Object>> listComment = new ArrayList<>();
                             JSONArray comments = cableRings.optJSONArray("comments");
-                            for (int j = 0; j < comments.length(); j++) {
+                            int comments_count=comments.length();
+                            for (int j = 0; j <comments_count; j++) {
                                 Map<String, Object> commentMap = new HashMap<>();
                                 JSONObject comment = comments.optJSONObject(j);
                                 commentMap.put("nickName", comment.getJSONObject("user").getString("nickName"));

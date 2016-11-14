@@ -23,7 +23,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -72,8 +71,6 @@ public class MainActivity extends AppCompatActivity
     private Dialog dialog;
     private AsyncBitmapLoader asyncBitmapLoader;
     private Toolbar toolbar;
-    private Menu mMenu;
-    private boolean flag = true;
     private int id;
     private IndexFragment indexFragment = null;
     private InfoFragment infoFragment = null;

@@ -27,7 +27,6 @@ import com.hbhongfei.hfcable.util.Url;
 public class PictrueFragment extends Fragment {
 
 	private String image;
-	private WindowManager windowManager;
 	@SuppressLint("ValidFragment")
 	public PictrueFragment(String image) {
 		this.image=image;

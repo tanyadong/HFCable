@@ -55,6 +55,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     private String addressId = null;
     private static final String USER = LoginConnection.USER;
     private ArrayList<Map<String, Object>> proInfos;
+    private int pro_count;
     private Map<String, String> packageMap;
     Map<String, String> param;
     private String S_phoneNumber;
@@ -142,7 +143,8 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
             S_money = intent.getDoubleExtra("price", 0.00);
             packageMap = (Map<String, String>) intent.getSerializableExtra("map");
             JSONArray mJsonArray = new JSONArray();
-            for (int i = 0; i < proInfos.size(); i++) {
+             pro_count=proInfos.size();
+            for (int i = 0; i <pro_count; i++) {
                 Map<String, Object> itemMap = proInfos.get(i);
                 Iterator<Map.Entry<String, Object>> iterator = itemMap.entrySet().iterator();
                 JSONObject object = new JSONObject();
@@ -167,12 +169,14 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
             String result = sp.getString("proInfos", "");
             try {
                 JSONArray array = new JSONArray(result);
-                for (int i = 0; i < array.length(); i++) {
+                int count=array.length();
+                for (int i = 0; i <count; i++) {
                     JSONObject itemObject = array.getJSONObject(i);
                     Map<String, Object> itemMap = new HashMap<String, Object>();
                     JSONArray names = itemObject.names();
                     if (names != null) {
-                        for (int j = 0; j < names.length(); j++) {
+                         int name_count=names.length();
+                        for (int j = 0; j < name_count; j++) {
                             String name = names.getString(j);
                             if (name.equals("product_price")) {
                                 Double value = itemObject.getDouble(name);
@@ -203,11 +207,13 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         list_order = new ArrayList<>();;
         if (proInfos != null) {
             random = RandomStringUtils.randomNumeric(20);
-            for (int i = 0; i < proInfos.size(); i++) {
+            pro_count=proInfos.size();
+            for (int i = 0; i < pro_count; i++) {
                 Map map = new HashMap<String, Object>();
                 Map proInfo = proInfos.get(i);
                 //map放入两个键值对，键名与from对应，
-                for (int j = 0; j < from.length; j++) {
+                int from_count=from.length;
+                for (int j = 0; j < from_count; j++) {
                     map.put(from[j], proInfo.get(from[j]));
                 }
                 array.put(i, (String) proInfo.get("product_name"));
@@ -252,7 +258,8 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
 
     public void saveOrder() {
         // 订单编号
-        for (int i = 0; i < proInfos.size(); i++) {
+        pro_count=proInfos.size();
+        for (int i = 0; i < pro_count; i++) {
             param = new HashMap<>();
             Map proInfo = proInfos.get(i);
             param.put("id" + i, (String) proInfo.get("id"));

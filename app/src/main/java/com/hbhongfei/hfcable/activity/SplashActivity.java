@@ -26,7 +26,6 @@ public class SplashActivity extends Activity {
 
         setContentView(R.layout.activity_splash);
         boolean mFirst = isFirstEnter(SplashActivity.this, SplashActivity.this.getClass().getName());
-//        boolean isLogin = isLogin(SplashActivity.this,SplashActivity.this.getClass().getName());
         if (mFirst)
             mHandler.sendEmptyMessageDelayed(SWITCH_GUIDACTIVITY, 5000);
         else

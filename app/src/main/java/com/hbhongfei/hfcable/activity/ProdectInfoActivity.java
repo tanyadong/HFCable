@@ -12,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -294,7 +293,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
      */
     public void setSmallDot(List<ImageView> list) {
         //加入小圆点
-        for (int i = 0; i < list.size(); i++) {
+        int indicator_count=list.size();
+        for (int i = 0; i < indicator_count; i++) {
             ImageView indicator = new ImageView(this);
             if (i == 0) {
                 indicator.setPadding(20, 0, 20, 0);
@@ -493,7 +493,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectCollectionListener, errorListener, map);
         MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
     }
-
     /**
      * 添加购物车成功的监听器
      * 返回的添加购物车的状态信息
@@ -887,8 +886,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                     message.what = 1;
                     message.obj = price_map;
                     handler.sendMessage(message);
-                    //设置包装方式
-                    for (int i = 0; i < package_list.size(); i++) {
+                    int package_count=package_list.size();
+                    for (int i = 0; i < package_count; i++) {
                         Bean bean = new Bean();
                         bean.setName(package_list.get(i));
                         bean.setStates("1");
@@ -1031,8 +1030,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
         @Override
         public void onPageSelected(int position) {
             position1 = position;
-            Log.i("zj", "onPagerChange position=" + position);
-            for (int i = 0; i < list.size(); i++) {
+            int page_count=list.size();
+            for (int i = 0; i < page_count; i++) {
                 dotViewList.get(i).setImageResource(R.mipmap.point_unpressed);
             }
             dotViewList.get(position).setImageResource(R.mipmap.point_pressed);
