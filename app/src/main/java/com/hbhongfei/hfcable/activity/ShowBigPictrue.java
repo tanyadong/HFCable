@@ -22,8 +22,6 @@ import java.util.ArrayList;
 public class ShowBigPictrue extends FragmentActivity {
 
 	private ViewPager viewPager;
-	private int[] resId = { R.mipmap.main_img1, R.mipmap.main_img2,
-			R.mipmap.main_img3,R.mipmap.main_img4};
 	/**得到上一个界面点击图片的位置*/
 	private int position=0;
 	private ArrayList<String> list;

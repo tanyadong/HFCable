@@ -14,7 +14,6 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/prodect_imgView1"
-            android:src="@mipmap/main_img1"
             android:scaleType="fitXY"
             android:layout_width="match_parent"
             android:layout_height="150dp" />
@@ -52,7 +51,6 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/prodect_imgView2"
-            android:src="@mipmap/main_img1"
             android:scaleType="fitXY"
             android:layout_gravity="center"
             android:layout_width="match_parent"

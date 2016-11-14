@@ -30,7 +30,6 @@
             android:layout_height="wrap_content" />
         <ImageView
             android:id="@+id/info_img"
-            android:src="@mipmap/main_img1"
             android:layout_marginTop="10dp"
             android:scaleType="fitXY"
             android:layout_width="fill_parent"

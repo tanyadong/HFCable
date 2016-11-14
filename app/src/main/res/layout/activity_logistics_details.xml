@@ -13,7 +13,6 @@
         <ImageView
             android:id="@+id/img_logistics_proimg"
             android:scaleType="fitXY"
-            android:src="@mipmap/main_img1"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"

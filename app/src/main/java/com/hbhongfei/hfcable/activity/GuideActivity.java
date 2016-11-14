@@ -144,7 +144,7 @@ public class GuideActivity extends Activity {
         for (int i = 0; i < mViews.size(); i++) {
             ImageView indicator = new ImageView(this);
             if (i == 0) {
-                indicator.setPadding(20, 0, 20, 0);
+                indicator.setPadding(10, 0, 10, 0);
                 indicator.setImageResource(R.mipmap.guide_indicator_active);
             }else {
                 indicator.setPadding(20,0,20,0);
