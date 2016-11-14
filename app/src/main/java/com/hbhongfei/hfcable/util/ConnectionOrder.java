@@ -228,7 +228,8 @@ private String url;
                     //有图片时加入到产品图片集合
                     if (array.length() > 0) {
                         ArrayList<String> list1 = new ArrayList<>();
-                        for (int k = 0; k < array.length(); k++) {
+                        int order_count=array.length();
+                        for (int k = 0; k < order_count; k++) {
                             list1.add((String) array.get(k));
                         }
                         product.setProductImages(list1);

@@ -23,7 +23,6 @@ public class ImageFromHttp {
         ImageRequest request=new ImageRequest(url, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap bitmap) {
-//                Toast.makeText(context,url+imageView,Toast.LENGTH_SHORT).show();
                 ImageFromFileCache.saveBitmap(url, bitmap);
                 ImageFromMemoryCache.addBitmapToCache(url, bitmap);
 

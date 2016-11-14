@@ -83,8 +83,9 @@ public class ShoppingAddressListConnection {
             try {
                     List<ShoppingAddress> list = new ArrayList<>();
                     JSONArray jsonArray = jsonObject.getJSONArray("address_list");
-                if(jsonArray.length()>0){
-                    for (int i = 0; i < jsonArray.length(); i++) {
+                int address_count=jsonArray.length();
+                if(address_count>0){
+                    for (int i = 0; i < address_count; i++) {
                         ShoppingAddress shoppingAddress = new ShoppingAddress();
                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                         shoppingAddress.setId(jsonObject1.getString("id"));

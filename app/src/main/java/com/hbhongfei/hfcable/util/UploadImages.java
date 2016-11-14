@@ -44,7 +44,8 @@ public class UploadImages {
         params.put("userName", S_phoneNumber);
 
         List<File> fs = new ArrayList<File>();
-        for (int i = 0; i < list.size(); i++) {
+        int count=list.size();
+        for (int i = 0; i < count; i++) {
             File file = new File(list.get(i));
             if (!file.exists()) {
                 return;

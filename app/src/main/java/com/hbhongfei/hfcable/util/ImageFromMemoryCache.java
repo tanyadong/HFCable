@@ -16,7 +16,6 @@ public class ImageFromMemoryCache {
     private static ImageFromMemoryCache imageCacheInstance = null;
     
     public ImageFromMemoryCache() {
-//        int memClass = ((ActivityManager)MimuApplication.getInstance().getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
         mSoftCache = new LinkedHashMap<String, SoftReference<Bitmap>>(SOFT_CACHE_SIZE, 0.75f, true) {
             private static final long serialVersionUID = 6040103833179403728L;
             @Override

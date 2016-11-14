@@ -36,8 +36,7 @@ public class ImageFromFileCache {
         	}
         	
             final String path = ImageFormFileCacheInstance.getDirectory() + "/" + ImageFormFileCacheInstance.convertUrlToFileName(url);
-           // Log.i("ImageFileCache", "getImage filepath:" + path);
-           // Log.i("ImageFileCache", "getImage url:" + url);
+
             File file = new File(path);
             if (file.exists()) {
             	Log.i("ImageFileCache", "getImage file exists");

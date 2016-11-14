@@ -117,9 +117,10 @@ public class ConnectionProduct {
 
                 JSONArray jsonArray1=jsonObject1.optJSONArray("productImages");
                 //有图片时加入到产品图片集合
-                if(jsonArray1.length()>0){
+                int pro_count=jsonArray1.length();
+                if(pro_count>0){
                     ArrayList<String> list1=new ArrayList<>();
-                    for(int j=0;j<jsonArray1.length();j++){
+                    for(int j=0;j<pro_count;j++){
                         list1.add((String) jsonArray1.get(j));
                     }
                     product.setProductImages(list1);

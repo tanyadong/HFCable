@@ -20,30 +20,7 @@ public class CaheInterceptor implements Interceptor {
 @Override
 public Response intercept(Chain chain) throws IOException {
     Request request = chain.request();
-//    if (NetworkUtils.isNetworkConnected(context)) {
-//        Response response = chain.proceed(request);
-//        int maxAge = 3600;
-//        String cacheControl = request.cacheControl().toString();
-//        Log.e("Tamic", maxAge + "s load cahe:" + cacheControl);
-//        return builder
-//                .removeHeader("Pragma")
-//                .removeHeader("Cache-Control")
-//                .header("Cache-Control", "public, max-age=" + maxAge)
-//                .build();
-//    } else {
-//        Log.e("Tamic", " no network load cahe");
-//        request = request.newBuilder()
-//                .cacheControl(CacheControl.FORCE_CACHE)
-//                .build();
-//        Response response = chain.proceed(request);
-//        //set cahe times is 3 days
-//        int maxStale = 60 * 60 * 24 * 3;
-//        return response.newBuilder()
-//                .removeHeader("Pragma")
-//                .removeHeader("Cache-Control")
-//                .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
-//                .build();
-//    }
+
     //如果没有网络，则启用 FORCE_CACHE
     if (!NetUtils.isConnected(context))
     {

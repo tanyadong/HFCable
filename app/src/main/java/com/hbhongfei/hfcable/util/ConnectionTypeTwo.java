@@ -130,9 +130,10 @@ public class ConnectionTypeTwo {
 
                         JSONArray array=object.getJSONArray("productImages");
                         //有图片时加入到产品图片集合
-                        if(array.length()>0){
+                        int proimg_count=array.length();
+                        if(proimg_count>0){
                             ArrayList<String> list1=new ArrayList<>();
-                            for(int k=0;k<array.length();k++){
+                            for(int k=0;k<proimg_count;k++){
                                 list1.add((String) array.get(k));
                             }
                             product.setProductImages(list1);
@@ -150,7 +151,8 @@ public class ConnectionTypeTwo {
                     myAdapter_typeTwo.addChild(list);
                     mMandler.sendEmptyMessage(0);
                 }
-                for (int i = 0; i < myAdapter_typeTwo.getGroupCount(); i++) {
+                int group_count=myAdapter_typeTwo.getGroupCount();
+                for (int i = 0; i < group_count; i++) {
                     listView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
                 }
             }else {
