@@ -200,8 +200,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         }
         Glide.with(this.getApplicationContext())
                 .load(url)
-                .placeholder(R.mipmap.man)
-                .error(R.mipmap.man)
+                .placeholder(R.mipmap.background)
+                .error(R.mipmap.loading_error)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(image_myOrder);
         tview_order_freight.setText("￥0");

@@ -7,7 +7,6 @@
     android:background="@color/colorWhite"
     android:id="@+id/Rlayout_address_list"
     tools:context="com.hbhongfei.hfcable.activity.AddressListActivity">
-
         <TextView
             android:id="@+id/textview_address_list_name"
             android:textSize="18dp"
@@ -15,17 +14,16 @@
             android:layout_marginLeft="16dp"
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
-            android:layout_height="30dp" />
+            android:layout_height="50dp" />
         <TextView
             android:id="@+id/textview_address_list_phoneNumber"
             android:gravity="center|right"
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
-
             android:layout_toRightOf="@+id/textview_address_list_name"
             android:layout_marginLeft="50dp"
             android:layout_width="wrap_content"
-            android:layout_height="30dp" />
+            android:layout_height="50dp" />
 <View
     android:layout_below="@+id/textview_address_list_name"
     android:layout_width="match_parent"
@@ -37,7 +35,7 @@
             android:id="@+id/textview_address_list_detail_default"
             android:layout_below="@+id/textview_address_list_name"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="16dp"
             android:gravity="center_vertical"
             android:textColor="@color/colorRed"
@@ -50,5 +48,5 @@
             android:layout_width="match_parent"
             android:layout_marginLeft="16dp"
             android:gravity="center_vertical"
-            android:layout_height="30dp" />
+            android:layout_height="50dp" />
 </RelativeLayout>
