@@ -481,7 +481,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             String shaftPrice = price_map.get(packages);
             unitPrice = Double.parseDouble(packages) / 10 * product.getPrice() + Double.parseDouble(shaftPrice);
         }
-        map.put("shoppingPrice", String.valueOf(unitPrice));
+        map.put("shoppingPrice", df.format(unitPrice).toString());
         NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonObjectAddShoppingListener, errorListener, map);
         MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
     }

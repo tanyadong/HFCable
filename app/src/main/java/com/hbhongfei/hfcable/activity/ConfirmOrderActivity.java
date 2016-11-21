@@ -264,7 +264,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
             Map proInfo = proInfos.get(i);
             param.put("id" + i, (String) proInfo.get("id"));
             Double monty = (Double) proInfo.get("product_price") * (Integer) proInfo.get("product_num");
-            param.put("money" + i, df.format(monty));
+            param.put("money" + i, df.format(monty).toString());
             param.put("addressId", addressId);
             param.put("orderNumber", random);
             try {
