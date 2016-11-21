@@ -3,20 +3,15 @@ package com.hbhongfei.hfcable.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +29,6 @@ import com.hbhongfei.hfcable.util.Url;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +48,6 @@ public class InputCompanyInfoActivity extends AppCompatActivity implements View.
 
         //toolbar
         toolbar();
-
         //初始化界面
         initView();
 
@@ -78,6 +70,9 @@ public class InputCompanyInfoActivity extends AppCompatActivity implements View.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             toolbar.setElevation(0);
         }
+        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setDisplayShowTitleEnabled(true);
     }
 
     /**
@@ -100,7 +95,12 @@ public class InputCompanyInfoActivity extends AppCompatActivity implements View.
         Intent intent = getIntent();
         S_phone = intent.getStringExtra("phoneNumber");
         S_password = intent.getStringExtra("password");
-        photo = intent.getStringExtra("photo");
+
+        if(intent.hasExtra("photo") && !intent.getStringExtra("photo").isEmpty()){
+            photo = intent.getStringExtra("photo");
+        }else {
+            photo="";
+        }
         S_name = intent.getStringExtra("nickName");
         S_sex = intent.getStringExtra("sex");
         S_birthday = intent.getStringExtra("birthday");
@@ -213,4 +213,12 @@ public class InputCompanyInfoActivity extends AppCompatActivity implements View.
             dialog.cancle();
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -15,7 +15,7 @@
             android:layout_marginBottom="15dp"
             android:layout_marginTop="13dp"
             android:layout_marginLeft="10dp"
-            android:src="@mipmap/man"
+            android:src="@mipmap/head_portrait"
             android:scaleType="fitXY"/>
         <RelativeLayout
             android:layout_width="wrap_content"

@@ -7,13 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Url;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +26,7 @@ public class ConfirmOrderAdapter extends BaseAdapter {
     private List<Map<String, Object>> list;
     private Map<String, Object> map;
     private LayoutInflater layoutInflater;
+    private DecimalFormat df = new DecimalFormat("0.00");
 
     public ConfirmOrderAdapter(Context context, List<Map<String, Object>> list) {
         layoutInflater = LayoutInflater.from(context);
@@ -69,7 +70,7 @@ public class ConfirmOrderAdapter extends BaseAdapter {
             map = list.get(position);//(String) map.get("product_name")
             holder.product_name.setText((String) map.get("product_name"));
             holder.introduce.setText((String) map.get("color"));
-            holder.product_price.setText((Double) map.get("product_price") + "");
+            holder.product_price.setText(df.format((Double) map.get("product_price")) + "");
             holder.product_num.setText((Integer) map.get("product_num") + "");
             holder.product_package.setText("单位:" + (String) map.get("product_package"));
             String url = Url.url((String) map.get("product_iamge"));

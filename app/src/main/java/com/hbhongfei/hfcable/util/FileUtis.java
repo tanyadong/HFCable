@@ -25,11 +25,28 @@ public class FileUtis {
         try {
             file.createNewFile();
             fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, fos);
             fos.flush();
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static boolean saveBitmap2FileEx(Bitmap bitmap, String filePath) {
+        File file = new File(filePath);
+        FileOutputStream fos = null;
+        try {
+            file.createNewFile();
+            fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }finally {
+            return true;
         }
     }
 

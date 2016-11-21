@@ -62,7 +62,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:text="@string/input_my_info_name"/>
+                android:gravity="right"
+                android:hint="@string/input_my_info_name"
+               />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,6 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
+                android:hint="男"
                 android:text="男"/>
             <ImageView
                 android:layout_width="wrap_content"

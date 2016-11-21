@@ -59,8 +59,8 @@ public class LogisticsDetailsActivity extends AppCompatActivity {
        String url= Url.url(image);
        Glide.with(this.getApplicationContext())
                .load(url)
-               .placeholder(R.mipmap.man)
-               .error(R.mipmap.man)
+               .placeholder(R.mipmap.background)
+               .error(R.mipmap.loading_error)
                .diskCacheStrategy(DiskCacheStrategy.ALL)
                .into(img_logistics_proimg);
        if(state.endsWith("2")){

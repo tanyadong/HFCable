@@ -404,7 +404,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(RegisterActivity.this, "链接网络失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "连接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
             dialog.cancle();
         }

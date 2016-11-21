@@ -7,11 +7,11 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Constants;
 import com.hbhongfei.hfcable.util.CropImageView;
+import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.FileUtis;
 
 
@@ -21,6 +21,8 @@ import com.hbhongfei.hfcable.util.FileUtis;
 public class ImageCropActivity extends Activity {
     private Bitmap mBitmap;
     private String mPhotoPath;
+    private boolean flag = false;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class ImageCropActivity extends Activity {
 
         }
 
+        dialog = new Dialog(this);
         final CropImageView cropImageView = (CropImageView) findViewById(R.id.cropimageview);
         if (!TextUtils.isEmpty(mPhotoPath)) {
             try {
@@ -43,21 +46,30 @@ public class ImageCropActivity extends Activity {
                 e.printStackTrace();
             }
         } else {
-            cropImageView.setImageResoure(R.mipmap.man);
+            cropImageView.setImageResoure(R.mipmap.head_portrait);
         }
-        findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
-
+        findViewById(R.id.ll_sure).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 保存图片到本地
+                dialog.showDialog("保存中....");
                 Bitmap bm = cropImageView.getCropImage();
-                FileUtis.saveBitmap2File(bm, Constants.FILENAME);
+                flag = FileUtis.saveBitmap2FileEx(bm, Constants.FILENAME);
+                if (flag==true){
+                    Intent intent = getIntent();
+                    // 将剪裁图片路径传递回去
+                    intent.putExtra("path", Constants.FILENAME);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    dialog.cancle();
+                }
 
-                Intent intent = getIntent();
-                // 将剪裁图片路径传递回去
-                intent.putExtra("path", Constants.FILENAME);
-                setResult(RESULT_OK, intent);
-                finish();
+            }
+        });
+        findViewById(R.id.ll_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               finish();
             }
         });
     }

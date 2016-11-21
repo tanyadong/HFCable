@@ -382,8 +382,12 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                 break;
             //购物车
             case R.id.prodectList_LLayout_shoppingCat:
-                Intent intent = new Intent(this, MyShoppingActivity.class);
-                startActivity(intent);
+                if (!TextUtils.isEmpty(S_phoneNumber)) {
+                    Intent intent = new Intent(this, MyShoppingActivity.class);
+                    startActivity(intent);
+                }else {
+                    toLogin();
+                }
                 break;
             //添加购物车
             case R.id.prodect_addCart:
@@ -871,8 +875,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             try {
                 price_map = new HashMap();
                 jsonArray = jsonObject.optJSONArray("list");
-                int count = jsonArray.length();
-                if(count>0){
+                if(jsonArray!=null){
+                    int count = jsonArray.length();
                     for (int i = 0; i < count; i++) {
                         JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
                         String shaftName = jsonObject1.getString("shaftName");
@@ -887,13 +891,19 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                     message.obj = price_map;
                     handler.sendMessage(message);
                     int package_count=package_list.size();
-                    for (int i = 0; i < package_count; i++) {
-                        Bean bean = new Bean();
-                        bean.setName(package_list.get(i));
-                        bean.setStates("1");
-                        mPackageList.add(bean);
+                    if(package_count>0){
+                        for (int i = 0; i < package_count; i++) {
+                            Bean bean = new Bean();
+                            bean.setName(package_list.get(i));
+                            bean.setStates("1");
+                            mPackageList.add(bean);
+                        }
+                        setSpecificationsData();
+                    }else {
+                        Toast.makeText(ProdectInfoActivity.this,"该产品没有包装方式",Toast.LENGTH_SHORT).show();
+                        dismiss();
                     }
-                    setSpecificationsData();
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -907,7 +917,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     public void colorConnInter() {
         String url = Url.url("/androidColor/getColor");
         Map<String, String> param = new HashMap<>();
-
         param.put("typeTwoName", product.getTypeTwo().getTypeTwoName());
         NormalPostRequest normalPostRequest = new NormalPostRequest(url, jsonColorListener, errorListener, param);
         MySingleton.getInstance(this).addToRequestQueue(normalPostRequest);
@@ -922,8 +931,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             JSONArray jsonArray;
             try {
                 jsonArray = jsonObject.optJSONArray("colorList");
-                int count = jsonArray.length();
-                if(count>0){
+                if(jsonArray!=null){
+                    int count = jsonArray.length();
                     for (int i = 0; i < count; i++) {
                         JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
                         String colorName = jsonObject1.getString("colorName");
@@ -934,6 +943,9 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                         mColorList.add(bean);
                     }
                     setColorData();
+                }else {
+                    Toast.makeText(ProdectInfoActivity.this,"该产品没有添加颜色",Toast.LENGTH_SHORT).show();
+                    dismiss();
                 }
                 dialog.cancle();
             } catch (JSONException e) {

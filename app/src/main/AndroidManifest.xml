@@ -31,8 +31,7 @@
     <!-- 拨打电话权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <!--解决部分手机不能安装的问题-->
-    <uses-library android:name="com.google.android.maps"
-        android:required="false"/>
+
 
     <!--
         android:allowBackup="true"-->
@@ -171,6 +170,10 @@
             android:label="@string/logistics_detail"
             android:launchMode="singleTask"
           />
+        <activity android:name=".activity.InputCompanyInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="设置公司信息">
+        </activity>
         <!-- Ping++ sdk -->
         <activity
             android:name="com.pingplusplus.android.PaymentActivity"
@@ -203,6 +206,9 @@
             android:label="@string/title_activity_pay_success"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <uses-library android:name="com.google.android.maps"
+            android:required="false"/>
     </application>
 
 </manifest>

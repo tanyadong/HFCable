@@ -20,7 +20,7 @@
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/man" />
+            android:src="@mipmap/head_portrait" />
 
         <TextView
             android:id="@+id/name"

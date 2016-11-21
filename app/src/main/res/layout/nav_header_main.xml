@@ -16,7 +16,7 @@
         android:layout_height="70dp"
         android:paddingTop="5dp"
         android:layout_gravity="center_horizontal"
-        android:src="@mipmap/man" />
+        android:src="@mipmap/head_portrait" />
 
     <TextView
         android:id="@+id/Tview_mine_myName"

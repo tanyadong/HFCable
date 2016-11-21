@@ -606,10 +606,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         }
         //连接获取公司的服务
         connInterGetCompanyInfo();
-        //获取种类
-//        connInter();
-        //加载“新型产品”模块数据
-//        setDate();
+
         mHasLoadedOnce = true;
     }
     @Override

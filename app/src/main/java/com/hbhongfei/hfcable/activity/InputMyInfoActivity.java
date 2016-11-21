@@ -20,6 +20,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -70,7 +71,6 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_my_info);
-
         //toolbar
         toolbar();
 
@@ -95,6 +95,9 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             toolbar.setElevation(0);
         }
+        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setDisplayShowTitleEnabled(true);
     }
 
     /**
@@ -122,7 +125,6 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
         S_phone = intent.getStringExtra("phoneNumber");
         S_Info = intent.getStringExtra("register");
         S_password = intent.getStringExtra("password");
-//        S_Info = "company";
         if (S_Info.equals("person")){
             //个人信息完善
             this.Tsave.setText("保存");
@@ -176,10 +178,15 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
                         intent.setClass(this,InputCompanyInfoActivity.class);
                         intent.putExtra("phoneNumber",S_phone);
                         intent.putExtra("password",S_password);
-                        intent.putExtra("photo",photo);
+                        if(!TextUtils.isEmpty(photo)){
+                            intent.putExtra("photo",photo);
+                        }else {
+                            intent.putExtra("photo","");
+                        }
                         intent.putExtra("nickName",S_name);
                         intent.putExtra("sex",S_sex);
                         intent.putExtra("birthday",S_birthday);
+                        Log.i("end","asdasdas");
                         startActivity(intent);
                     }
                 }
@@ -191,8 +198,8 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
      * 是否为空
      */
     private boolean IsEmpty(){
-        if (TextUtils.isEmpty(S_birthday)||TextUtils.isEmpty(photo)||TextUtils.isEmpty(S_name)||TextUtils.isEmpty(S_sex)){
-            Toast.makeText(this,"数据不能为空",Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(S_birthday) || TextUtils.isEmpty(S_name)||TextUtils.isEmpty(S_sex)){
+            Toast.makeText(this,"请完善信息",Toast.LENGTH_SHORT).show();
             return false;
         }else{
             return true;
@@ -204,7 +211,7 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
      * 选择拍照还是相册
      */
     private void showDialog(){
-        drawable = InputMyInfoActivity.this.getResources().getDrawable(R.mipmap.man);
+        drawable = InputMyInfoActivity.this.getResources().getDrawable(R.mipmap.head_portrait);
         new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                 .setTitleText("选择途径")
                 .setContentText("一张美美的头像")
@@ -355,7 +362,6 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
         ImageView done = (ImageView) view.findViewById(R.id.Image_sex_done);
         ImageView close = (ImageView) view.findViewById(R.id.Image_sex_close);
         done.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Tsex.setText(S_sex);
@@ -425,9 +431,17 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(InputMyInfoActivity.this,"链接网络失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(InputMyInfoActivity.this,"连接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
             dialog.cancle();
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
