@@ -2,11 +2,9 @@ package com.hbhongfei.hfcable.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -18,7 +16,6 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.activity.OrderDetailActivity;
 import com.hbhongfei.hfcable.adapter.MyOrder_all_Adapter;
 import com.hbhongfei.hfcable.pojo.Logistics;
 import com.hbhongfei.hfcable.pojo.Order;
@@ -48,16 +45,15 @@ public class ConnectionOrder {
     private MyOrder_all_Adapter myOrder_all_adapter;
     private Activity activity;
     private LinearLayout noInternet;
-    public boolean isResult;
     private Dialog dialog;
 private String url;
-    public ConnectionOrder(Activity activity, Context context, ListView listView, LinearLayout noInternet,boolean isResult,Dialog dialog) {
+    public ConnectionOrder(Activity activity, Context context, ListView listView, LinearLayout noInternet,Dialog dialog) {
         this.context = context;
         this.listView = listView;
         this.activity = activity;
         this.noInternet = noInternet;
-        this.isResult=isResult;
         this.dialog=dialog;
+
     }
 
     Handler mMandler = new Handler() {
@@ -249,23 +245,6 @@ private String url;
                     mMandler.sendEmptyMessage(0);
                 }
 
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent=new Intent(context.getApplicationContext(), OrderDetailActivity.class);
-                        intent.putExtra("order",list.get(position));
-                        intent.putExtra("position",position);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-
-                        mMandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                isResult=true;
-                            }
-                        });
-                    }
-                });
 
             } else {
                 //没有数据

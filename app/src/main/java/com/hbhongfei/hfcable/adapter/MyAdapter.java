@@ -148,7 +148,7 @@ public class MyAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         Intent intent=new Intent(context, ProdectInfoActivity.class);
-                        intent.putExtra("product",itemList.get(1));
+                        intent.putExtra("product",itemList.get(position));
                         intent.putExtra("tag",tag);
                         context.startActivity(intent);
                     }

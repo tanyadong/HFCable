@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.adapter.MyOrder_all_Adapter;
 import com.hbhongfei.hfcable.util.ConnectionOrder;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
@@ -38,6 +39,7 @@ public class MyOrderUnSendFragment extends Fragment implements BGARefreshLayout.
     private int pageNo=1;
     private Dialog dialog;
     ConnectionOrder connectionOrder=null;
+    MyOrder_all_Adapter myOrderAllAdapter=null;
     private LinearLayout noInternet;
     /** 标志位，标志已经初始化完成 */
     private boolean isPrepared;
@@ -64,8 +66,8 @@ public class MyOrderUnSendFragment extends Fragment implements BGARefreshLayout.
         isResult=false;
         isViewCreated=true;
         dialog=new Dialog(getActivity());
-
-        connectionOrder = new ConnectionOrder(MyOrderUnSendFragment.this.getActivity(),MyOrderUnSendFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult,dialog);
+        myOrderAllAdapter=new MyOrder_all_Adapter(this.getActivity(),isResult);
+        connectionOrder = new ConnectionOrder(MyOrderUnSendFragment.this.getActivity(),MyOrderUnSendFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,dialog);
 
         isPrepared = true;
         return v;
@@ -74,7 +76,7 @@ public class MyOrderUnSendFragment extends Fragment implements BGARefreshLayout.
     @Override
     public void onResume() {
         super.onResume();
-        if(connectionOrder.isResult){
+        if(myOrderAllAdapter.isResult){
             getValues();
             isResult=false;
         }

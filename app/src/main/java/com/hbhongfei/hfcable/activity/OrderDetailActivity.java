@@ -58,6 +58,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     private String state;//物流状态
     Dialog dialog;
     Intent intent=new Intent();
+    private boolean isResult=false;
+    MyOrder_all_Adapter myOrder_all_adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +74,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     protected void onResume() {
         super.onResume();
         //数据
+        myOrder_all_adapter=new MyOrder_all_Adapter(this,true);
         setValues();
         onClick();
     }
@@ -229,7 +232,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        MyOrder_all_Adapter myOrder_all_adapter=new MyOrder_all_Adapter(this);
         switch (v.getId()){
             case R.id.rl_order_logistics:
                 toLogisticsActivity();
@@ -248,7 +250,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 toLogisticsActivity();
                 break;
             case R.id.btn_order_goPay:
-
                 Intent intent=new Intent(this, OrderPayActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("money",String.valueOf(order.getMoney()));
@@ -258,7 +259,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 array.put(0,order.getShoppingCart().getProduct().introduce);
                 bundle.putSparseParcelableArray("introduce",array);
                 intent.putExtras(bundle);
-
                 startActivity(intent);
                 break;
             case R.id.btn_order_confirmReceipt:
@@ -336,9 +336,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            setResult(RESULT_CANCELED, null);
+            myOrder_all_adapter.isResult=true;
             this.finish();
             return true;
         }else {

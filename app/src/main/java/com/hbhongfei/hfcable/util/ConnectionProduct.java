@@ -130,12 +130,12 @@ public class ConnectionProduct {
             if(page==1) {
                 adapter = new MyAdapter(context, R.layout.intentionlayout, list);
                 listView.setDivider(null);
+                listView.setDividerHeight(10);
                 listView.setAdapter(adapter);
             }else{
                 adapter.addItem(list);
                 mHandler.sendEmptyMessage(1);
             }
-
             dialog.cancle();
         } catch (JSONException e) {
             e.printStackTrace();

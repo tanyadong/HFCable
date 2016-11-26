@@ -1,14 +1,16 @@
 package com.hbhongfei.hfcable.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.activity.OrderDetailActivity;
 import com.hbhongfei.hfcable.activity.OrderPayActivity;
 import com.hbhongfei.hfcable.pojo.Order;
 import com.hbhongfei.hfcable.util.Error;
@@ -47,19 +50,31 @@ public class MyOrder_all_Adapter extends BaseAdapter{
     protected int resource;
     private ArrayList<Order> list;
     private int position_tag;
-    private ListView listView;
     private LinearLayout linearLayout;
-    public MyOrder_all_Adapter(Activity context){
+    public static boolean isResult;
+    private ListView listView;
+    public MyOrder_all_Adapter(Context context){
         this.context=context;
+    }
+    public MyOrder_all_Adapter(Context context,boolean isResult){
+        this.context=context;
+        this.isResult=isResult;
     }
     public MyOrder_all_Adapter(Context context, int resource, ArrayList<Order> list, ListView listView,LinearLayout nointent){
         inflater = LayoutInflater.from(context);
         this.context =context;
         this.list = list;
         this.resource = resource;
-        this.listView=listView;
         this.linearLayout=nointent;
+        this.listView=listView;
     }
+
+    Handler mMandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
     public void addItems(ArrayList<Order> list){
         this.list.addAll(list);
         notifyDataSetChanged();
@@ -263,7 +278,22 @@ public class MyOrder_all_Adapter extends BaseAdapter{
             }
 
         }
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent=new Intent(context.getApplicationContext(), OrderDetailActivity.class);
+                intent.putExtra("order",list.get(position));
+                intent.putExtra("position",position);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                mMandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        isResult=true;
+                    }
+                });
+            }
+        });
         return convertView;
     }
 

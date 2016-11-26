@@ -240,7 +240,7 @@
     <string name="input_company_info_name_legal">填写公司法人姓名</string>
     <string name="input_company_info_tel">填写公司联系电话</string>
 
-<!--物流详情-->
+    <!--物流详情-->
     <string name="logistics_detail">物流详情</string>
     <!--album_select_dialog-->
     <string name="dialog_selectFromAlbum">从相册中选择</string>

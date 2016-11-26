@@ -46,6 +46,7 @@ import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NetUtils;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
+import com.hbhongfei.hfcable.util.ToastUtil;
 import com.hbhongfei.hfcable.util.Url;
 
 import org.json.JSONArray;
@@ -507,9 +508,9 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
             try {
                 String msg = jsonObject.getString("msg");
                 if (TextUtils.equals(msg, "成功")) {
-                    Toast.makeText(ProdectInfoActivity.this,"添加购物车成功",Toast.LENGTH_SHORT).show();
+                    ToastUtil.showCompletedCustomToastShortWithResId(ProdectInfoActivity.this,R.layout.view_tips,"添加购物车成功",R.mipmap.success);
                 } else {
-                    Toast.makeText(ProdectInfoActivity.this,"添加购物车失败",Toast.LENGTH_SHORT).show();
+                    ToastUtil.showCompletedCustomToastShortWithResId(ProdectInfoActivity.this,R.layout.view_tips,"添加购物车失败",R.mipmap.error);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -534,7 +535,7 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
                     prodectList_img_collect.setImageResource(R.mipmap.heart);
                     prodectList_tview_collect.setText("收藏");
                 } else if (TextUtils.equals(msg, "取消收藏失败")) {
-                    Toast.makeText(ProdectInfoActivity.this, "取消收藏失败", Toast.LENGTH_SHORT).show();
+                    ToastUtil.showCompletedCustomToastShortWithResId(ProdectInfoActivity.this,R.layout.view_tips,"取消收藏失败",R.mipmap.error);
                 } else {
                     Toast.makeText(ProdectInfoActivity.this, "收藏失败", Toast.LENGTH_SHORT).show();
                 }

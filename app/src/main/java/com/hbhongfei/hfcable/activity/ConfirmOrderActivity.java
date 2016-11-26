@@ -56,7 +56,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     private static final String USER = LoginConnection.USER;
     private ArrayList<Map<String, Object>> proInfos;
     private int pro_count;
-    private Map<String, String> packageMap;
     Map<String, String> param;
     private String S_phoneNumber;
     private Double S_money;
@@ -141,7 +140,6 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         if (intent.getSerializableExtra("proInfos") != null) {
             proInfos = (ArrayList<Map<String, Object>>) intent.getSerializableExtra("proInfos");
             S_money = intent.getDoubleExtra("price", 0.00);
-            packageMap = (Map<String, String>) intent.getSerializableExtra("map");
             JSONArray mJsonArray = new JSONArray();
              pro_count=proInfos.size();
             for (int i = 0; i <pro_count; i++) {

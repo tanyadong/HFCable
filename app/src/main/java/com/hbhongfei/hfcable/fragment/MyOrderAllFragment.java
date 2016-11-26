@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.adapter.MyOrder_all_Adapter;
 import com.hbhongfei.hfcable.util.ConnectionOrder;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
@@ -38,6 +39,7 @@ public class MyOrderAllFragment  extends Fragment implements BGARefreshLayout.BG
     private String S_phoneNumber;
     private int pageNo=1;
     ConnectionOrder connectionOrder=null;
+    MyOrder_all_Adapter myOrderAllAdapter=null;
     private LinearLayout noInternet;
     private Dialog dialog;
     public boolean isResult;//是否从订单详情返回
@@ -61,7 +63,8 @@ public class MyOrderAllFragment  extends Fragment implements BGARefreshLayout.BG
         initRefreshLayout();
         isResult=false;
         dialog=new Dialog(getActivity());
-        connectionOrder = new ConnectionOrder(MyOrderAllFragment.this.getActivity(),MyOrderAllFragment.this.getContext(),ListView_myOrderAll,noInternet,isResult,dialog);
+        myOrderAllAdapter=new MyOrder_all_Adapter(this.getActivity(),isResult);
+        connectionOrder = new ConnectionOrder(MyOrderAllFragment.this.getActivity(),MyOrderAllFragment.this.getContext(),ListView_myOrderAll,noInternet,dialog);
         return v;
     }
 
@@ -83,11 +86,11 @@ public class MyOrderAllFragment  extends Fragment implements BGARefreshLayout.BG
 
     @Override
     public void onResume() {
-        if(connectionOrder.isResult){
+        super.onResume();
+        if(myOrderAllAdapter.isResult){
             getValues();
             isResult=false;
         }
-        super.onResume();
     }
     /**
      * 初始化界面
@@ -112,7 +115,6 @@ public class MyOrderAllFragment  extends Fragment implements BGARefreshLayout.BG
      * 获取数据
      */
     private void getValues(){
-
         SharedPreferences spf = this.getActivity().getSharedPreferences(USER, Context.MODE_PRIVATE);
         S_phoneNumber = spf.getString("phoneNumber", null);
         pageNo=1;

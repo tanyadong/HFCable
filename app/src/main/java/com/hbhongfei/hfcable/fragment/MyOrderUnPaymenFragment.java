@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.adapter.MyOrder_all_Adapter;
 import com.hbhongfei.hfcable.util.ConnectionOrder;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.LoginConnection;
@@ -38,6 +39,7 @@ public class MyOrderUnPaymenFragment extends Fragment implements BGARefreshLayou
     private int pageNo=1;
     private Dialog dialog;
     ConnectionOrder connectionOrder=null;
+    MyOrder_all_Adapter myOrderAllAdapter=null;
     private LinearLayout noInternet;
     /** 是否已被加载过一次，第二次就不再去请求数据了 */
     public boolean isResult;//是否从订单详情返回
@@ -62,7 +64,9 @@ public class MyOrderUnPaymenFragment extends Fragment implements BGARefreshLayou
         isResult=false;
         isViewCreated=true;
         dialog=new Dialog(getActivity());
-        connectionOrder = new ConnectionOrder(MyOrderUnPaymenFragment.this.getActivity(),MyOrderUnPaymenFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,isResult,dialog);
+        myOrderAllAdapter=new MyOrder_all_Adapter(this.getActivity(),isResult);
+
+        connectionOrder = new ConnectionOrder(MyOrderUnPaymenFragment.this.getActivity(),MyOrderUnPaymenFragment.this.getContext(), ListView_myOrderUnPayment,noInternet,dialog);
         return v;
     }
     @Override
@@ -83,7 +87,7 @@ public class MyOrderUnPaymenFragment extends Fragment implements BGARefreshLayou
     @Override
     public void onResume() {
         super.onResume();
-        if(connectionOrder.isResult){
+        if(myOrderAllAdapter.isResult){
             getValues();
             isResult=false;
         }

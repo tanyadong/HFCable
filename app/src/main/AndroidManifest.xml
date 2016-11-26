@@ -4,6 +4,7 @@
     package="com.hbhongfei.hfcable">
 
     <uses-permission android:name="android.permission.NFC" />
+
     <uses-permission-sdk-23 android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission-sdk-23 android:name="android.permission.NFC" />
 
@@ -27,14 +28,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
     <!-- 拨打电话权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <!--解决部分手机不能安装的问题-->
 
-
-    <!--
-        android:allowBackup="true"-->
+    <!-- 解决部分手机不能安装的问题 -->
+    <!--         android:allowBackup="true" -->
     <application
         android:name=".util.Log"
         android:icon="@mipmap/app_logo"
@@ -64,8 +63,9 @@
             android:name=".activity.MyInfoActivity"
             android:label="@string/myInfo_title"
             android:parentActivityName=".activity.MainActivity" />
-        <activity android:name=".activity.ProdectInfoActivity"
-            android:label="@string/prodect_lable"/>
+        <activity
+            android:name=".activity.ProdectInfoActivity"
+            android:label="@string/prodect_lable" />
         <activity android:name=".activity.ShowBigPictrue" />
         <activity
             android:name=".activity.CompanyInfoActivity"
@@ -100,36 +100,42 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ReceiptAddressActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:label="收货地址"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- 添加购物车 -->
-        <activity android:name=".activity.AddRecietAddress"
+        <activity
+            android:name=".activity.AddRecietAddress"
             android:label="收货地址"
-            android:parentActivityName=".activity.AddressListActivity"/>
+            android:parentActivityName=".activity.AddressListActivity" />
         <!-- 画图 -->
-        <activity android:name=".activity.MarketChartActivity"
+        <activity
+            android:name=".activity.MarketChartActivity"
             android:label="@string/market_price_trend"
-            android:parentActivityName=".activity.MainActivity"
-            />
-        <activity android:name=".activity.CitySelect1Activity"
-            android:label="@string/add_address_selectCity"/>
-
-        <activity android:name=".activity.GuideActivity" android:theme="@style/theme_fullScreen"/>
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
+            android:name=".activity.CitySelect1Activity"
+            android:label="@string/add_address_selectCity" />
+        <activity
+            android:name=".activity.GuideActivity"
+            android:theme="@style/theme_fullScreen" />
 
         <!-- 项目 -->
-        <activity android:name=".activity.ProjectActivity"
-            android:parentActivityName=".activity.MainActivity"
-            android:label="@string/new_project_lable"/>
+        <activity
+            android:name=".activity.ProjectActivity"
+            android:label="@string/new_project_lable"
+            android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.ConfirmOrderActivity"
             android:label="@string/comfirm_order_sure"
             android:parentActivityName=".activity.MyShoppingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.SplashActivity"
+        <activity
+            android:name=".activity.SplashActivity"
             android:theme="@style/theme_splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -139,17 +145,19 @@
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".activity.InputMyInfoActivity"
             android:label="@string/title_activity_input_my_info"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.WriteCableRingActivity"
-            android:launchMode="singleTask"
             android:label="发布揽圈"
+            android:launchMode="singleTask"
             android:parentActivityName=".activity.MainActivity" />
         <activity android:name=".activity.ImageBucketChooseActivity" />
         <activity android:name=".activity.ImageChooseActivity" />
@@ -161,19 +169,20 @@
             android:label="@string/receiptAddress_lale"
             android:parentActivityName=".activity.ConfirmOrderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <!--订单详情-->
-        <activity android:name=".activity.OrderDetailActivity"
+        <!-- 订单详情 -->
+        <activity
+            android:name=".activity.OrderDetailActivity"
             android:label="@string/order_detail"
-            android:parentActivityName=".activity.MyOrderActivity"/>
-        <!--物流详情-->
-        <activity android:name=".activity.LogisticsDetailsActivity"
+            android:parentActivityName=".activity.MyOrderActivity" />
+        <!-- 物流详情 -->
+        <activity
+            android:name=".activity.LogisticsDetailsActivity"
             android:label="@string/logistics_detail"
-            android:launchMode="singleTask"
-          />
-        <activity android:name=".activity.InputCompanyInfoActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="设置公司信息">
-        </activity>
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.InputCompanyInfoActivity"
+            android:label="设置公司信息"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- Ping++ sdk -->
         <activity
             android:name="com.pingplusplus.android.PaymentActivity"
@@ -207,8 +216,13 @@
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <uses-library android:name="com.google.android.maps"
-            android:required="false"/>
+        <uses-library
+            android:name="com.google.android.maps"
+            android:required="false" />
+
+        <activity android:name=".activity.Test">
+
+        </activity>
     </application>
 
 </manifest>
