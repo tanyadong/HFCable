@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ClearCacheRequest;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.Volley;
 
@@ -47,7 +46,7 @@ public class MySingleton {
     public <T> void addToRequestQueue(Request<T> req) {
         File cacheDir = new File(mCtx.getCacheDir(), "volley");
         DiskBasedCache cache = new DiskBasedCache(cacheDir);
-        mRequestQueue.start();
+//        mRequestQueue.start();
 
         // clear all volley caches.
 //        mRequestQueue.add(new ClearCacheRequest(cache, null));

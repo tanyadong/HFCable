@@ -43,12 +43,13 @@ public class ConnectionTypeTwo {
     public int totalCount;
     private MyAdapter_typeTwo myAdapter_typeTwo;
     private Activity activity;
+
     private LinearLayout noInternet;
     private String url;
     public ConnectionTypeTwo(Activity activity, Context context, ExpandableListView listView, LinearLayout noInternet) {
         this.context = context;
         this.listView=listView;
-        this.activity = activity;
+        this.activity=activity;
         this.noInternet = noInternet;
     }
     Handler mMandler=new Handler(){
@@ -66,7 +67,7 @@ public class ConnectionTypeTwo {
      * */
     public void connInterByType(String typeName,int pageNo) throws JSONException {
         page=pageNo;
-         url= Url.url("/androidTypeTwo/getTypeTwo");
+        url= Url.url("/androidTypeTwo/getTypeTwo");
         Map<String,String> map=new HashMap<>();
         map.put("typeName",typeName);
         map.put("pageNo",String.valueOf(pageNo));
@@ -220,6 +221,7 @@ public class ConnectionTypeTwo {
                     });
                 }
             }
+
         }
     };
 }

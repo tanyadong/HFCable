@@ -67,7 +67,9 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
         //初始化
         initView();
         initRefreshLayout();
+        //初始化数据，根据上个界面传的种类查询二级种类和产品
         setValues();
+        //获取种类
         connInter();
     }
 
@@ -209,11 +211,13 @@ public class ProdectListActivity extends AppCompatActivity implements BGARefresh
         try {
             typtTwoConnection=new ConnectionTypeTwo(ProdectListActivity.this,ProdectListActivity.this,prodectList_listView,noInternet);
             dialog.showDialog("正在加载中");
+            Log.i("ConnectionTypeTwo",typeName+","+pageNo+" ----");
+
             typtTwoConnection.connInterByType(typeName,pageNo);
             dialog.cancle();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    } catch (JSONException e) {
+        e.printStackTrace();
+    }
     }
     /**
      * 点击事件
