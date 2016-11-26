@@ -102,6 +102,19 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
                     product.setId(jsonObject1.getString("id"));
                     product.setPrice(jsonObject1.getDouble("price"));
                     product.setSpecifications(jsonObject1.getString("specifications"));
+                    product.setApplicationRange(jsonObject1.getString("applicationRange"));
+                    product.setSpecifications(jsonObject1.getString("specifications"));
+                    product.introduce=(jsonObject1.getString("introduce"));
+                    product.setConductorMaterial(jsonObject1.getString("conductorMaterial"));
+                    product.setCoreNumber(jsonObject1.getString("coreNumber"));
+                    product.setCrossSection(jsonObject1.getString("crossSection"));
+                    product.setImplementationStandards(jsonObject1.getString("implementationStandards"));
+                    product.setDiameterLimit(jsonObject1.getString("diameterLimit"));
+                    product.setOutsideDiameter(jsonObject1.getString("outsideDiameter"));
+                    product.setSheathMaterial(jsonObject1.getString("sheathMaterial"));
+                    product.setVoltage(jsonObject1.getString("voltage"));
+                    product.setReferenceWeight(jsonObject1.getString("referenceWeight"));
+                    product.setPurpose(jsonObject1.getString("purpose"));
                     TypeTwo typeTwo = new TypeTwo();
                     JSONObject jsonObject2=jsonObject1.getJSONObject("typeTwo");
                     typeTwo.setTypeTwoName(jsonObject2.getString("typeTwoName"));
@@ -128,6 +141,7 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
             }
             MyAdapter adapter = new MyAdapter(MyFavoriteActivity.this, R.layout.intentionlayout,list);
             list_myFavorite.setDivider(null);
+            list_myFavorite.setDividerHeight(10);
             list_myFavorite.setAdapter(adapter);
             dialog.cancle();
         } catch (JSONException e) {
