@@ -7,9 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.Project;
-import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Url;
 
 public class ProjectActivity extends AppCompatActivity {
@@ -39,10 +40,13 @@ public class ProjectActivity extends AppCompatActivity {
         project_content.setText(project.getIntroduce());
         String imgurl=project.getProjectImg();
         String url= Url.url(imgurl);
-        project_img.setTag(url);
+        Glide.with(this)
+                .load(url)
+                .placeholder(R.mipmap.background)
+                .error(R.mipmap.loading_error)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into( project_img );
 
-        AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-        asyncBitmapLoader.loadImage(this,project_img,url);
     }
 
     /**
