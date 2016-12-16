@@ -345,7 +345,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
      */
     private void analysisDataOfCompany(JSONObject jsonObject) {
         JSONArray jsonArray;
-        List<Company> company_list = new ArrayList<>();
         try {
             if(jsonObject.optJSONArray("companyList") != null && jsonObject.optJSONArray("project_list") != null ){
                 jsonArray = jsonObject.getJSONArray("companyList");
@@ -562,7 +561,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-
                 return null;
             }
 

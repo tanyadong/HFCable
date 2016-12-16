@@ -63,7 +63,7 @@
         android:layout_marginTop="10dp"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:text="@string/input_my_info_save"
+        android:text="@string/input_company_save"
         android:textColor="@color/colorWhite"/>
 
 </RelativeLayout>

@@ -186,7 +186,6 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
                         intent.putExtra("nickName",S_name);
                         intent.putExtra("sex",S_sex);
                         intent.putExtra("birthday",S_birthday);
-                        Log.i("end","asdasdas");
                         startActivity(intent);
                     }
                 }
@@ -386,7 +385,11 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
         dialog.showDialog("正在保存...");
         Map<String,String> params =new HashMap<>();
         params.put("phoneNumber", S_phone);
-        params.put("photo",photo);
+        if(TextUtils.isEmpty(photo)) {
+            params.put("photo","");
+        }else {
+            params.put("photo",photo);
+        }
         params.put("nickName",S_name);
         params.put("tag","0");
         params.put("sex",S_sex);
@@ -407,7 +410,6 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
             try {
                 String s = jsonObject.getString("savePersonInfo");
                 if (s.equals("success")){
-                    Toast.makeText(InputMyInfoActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                     SharedPreferences.Editor editor = InputMyInfoActivity.this.getSharedPreferences(USER, Context.MODE_PRIVATE).edit();
                     editor.putString("tag", "0");
                     editor.apply();
@@ -416,7 +418,7 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
                     dialog.cancle();
                 }else {
                     dialog.cancle();
-                    Toast.makeText(InputMyInfoActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InputMyInfoActivity.this,"保存失败",Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -431,8 +433,9 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(InputMyInfoActivity.this,"连接网络失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(InputMyInfoActivity.this,"连接网络失败"+volleyError.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
+
             dialog.cancle();
         }
     };

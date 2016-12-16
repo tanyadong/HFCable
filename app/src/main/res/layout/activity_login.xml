@@ -19,7 +19,6 @@
         android:id="@+id/LLayout_login_user_password"
         android:layout_below="@id/Img_login_head"
         android:layout_marginTop="40dp"
-        android:background="@color/colorWhite"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -34,20 +33,24 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="15dp"
                 android:src="@mipmap/login_username"/>
-
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/userName_txtIl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/Txt_login_user"
                 android:layout_gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:maxLength="20"
+                android:maxLength="11"
                 android:layout_marginLeft="15dp"
                 android:inputType="phone"
                 android:digits="1234567890"
                 android:drawablePadding="20sp"
                 android:hint="@string/login_tel"
                 android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
         <!--中间分割线-->
@@ -55,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#E8E8E8"
+            android:layout_marginTop="5dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
 
@@ -70,22 +74,26 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
                 android:src="@mipmap/login_password"/>
-
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passward_txtIl"
+                android:layout_toRightOf="@id/Img_login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/Txt_login_password"
                 android:layout_gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:maxLength="20"
+                android:maxLength="16"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/Img_login_password"
                 android:layout_marginLeft="15dp"
                 android:inputType="textPassword"
                 android:digits="1234567890abcedfghijklmnopqrstuvwxyz@."
                 android:drawablePadding="20sp"
                 android:hint="@string/login_password"
                 android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
         </RelativeLayout>
     </LinearLayout>
 
