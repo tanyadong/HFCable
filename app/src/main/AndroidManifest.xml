@@ -78,7 +78,8 @@
         <activity
             android:name=".activity.InfoDetailActivity"
             android:label="资讯详情"
-            android:parentActivityName=".activity.MainActivity" />
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.MyPasswordActivity"
             android:label="@string/title_activity_my_password"
