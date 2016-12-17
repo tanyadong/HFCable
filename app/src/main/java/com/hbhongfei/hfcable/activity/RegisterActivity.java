@@ -19,8 +19,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.CheckPhoneNumber;
-import com.hbhongfei.hfcable.util.Dialog;
-import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NormalPostRequest;
 import com.hbhongfei.hfcable.util.Url;
@@ -42,9 +40,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextView TView_tel_fragment_get_verification_code;
     private String S_user, S_password, S_password_sure, S_verificationCode, S_w;
     private Button Btn_register;
-    private LoginConnection loginConnection;
-    private Dialog dialog;
-    private boolean SMSTag = false;
     private TimeCount time;
 
     private static final String APPKEY = "15b45ded52e12";
@@ -62,12 +57,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 // 短信验证成功后，操作
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {// 提交验证码成功
                     //进行注册操作
-                    SMSTag = true;
                     checkPhone();
                 } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                     // 验证码发送成功
                     Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
-
                 }
             } else {
                 ((Throwable) data).printStackTrace();
@@ -145,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
      * 初始化界面
      */
     private void initView() {
-        dialog = new Dialog(this);
+//        dialog = new Dialog(this);
         time = new TimeCount(60000, 1000);
         this.Txt_tel_fragment_user = (EditText) findViewById(R.id.Txt_tel_fragment_user);
         this.Txt_tel_fragment_password = (EditText) findViewById(R.id.Txt_tel_fragment_password);
@@ -246,10 +239,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void checkPhone() {
         if (S_w.equals("register")) {
             //注册
-            dialog.showDialog("正在注册...");
+//            dialog.showDialog("正在注册...");
         } else if (S_w.equals("forget")) {
             //找回密码
-            dialog.showDialog("正在找回...");
+//            dialog.showDialog("正在找回...");
         }
         Map<String, String> params = new HashMap<>();
         params.put("userName", S_user);
@@ -272,7 +265,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     if (S_w.equals("register")) {
                         //注册
                         Toast.makeText(RegisterActivity.this, "手机号已经注册，请更换手机号或者找回密码", Toast.LENGTH_SHORT).show();
-                        dialog.cancle();
+//                        dialog.cancle();
                     } else if (S_w.equals("forget")) {
                         //找回密码
                         updateConnInter();
@@ -281,16 +274,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     if (S_w.equals("register")) {
                         //进行注册
                         registerConnInter();
-
                     } else if (S_w.equals("forget")) {
                         //找回密码
                         Toast.makeText(RegisterActivity.this, "手机号未注册，请注册", Toast.LENGTH_SHORT).show();
-                        dialog.cancle();
+//                        dialog.cancle();
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                dialog.cancle();
+//                dialog.cancle();
             }
         }
     };
@@ -318,16 +310,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             try {
                 String s = jsonObject.getString("updatePassword");
                 if (s.equals("success")) {
-                    dialog.cancle();
+//                    dialog.cancle();
                     Toast.makeText(RegisterActivity.this, "更新密码成功", Toast.LENGTH_SHORT).show();
                     finish();
                 } else if (s.equals("filed")) {
-                    dialog.cancle();
+//                    dialog.cancle();
                     Toast.makeText(RegisterActivity.this, "更新密码失败", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                dialog.cancle();
+//                dialog.cancle();
             }
         }
     };
@@ -354,8 +346,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             try {
                 String s = jsonObject.getString("add");
                 if (s.equals("success")) {
-                    dialog.cancle();
-                    Toast.makeText(RegisterActivity.this, "请完善信息", Toast.LENGTH_SHORT).show();
+//                    dialog.cancle();
                     //弹出dialog
                     new SweetAlertDialog(RegisterActivity.this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                             .setTitleText("选择信息")
@@ -388,12 +379,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             })
                             .show();
                 } else {
-                    dialog.cancle();
+//                    dialog.cancle();
                     Toast.makeText(RegisterActivity.this, "失败", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                dialog.cancle();
+//                dialog.cancle();
             }
         }
     };
@@ -406,7 +397,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(RegisterActivity.this, "连接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
-            dialog.cancle();
+//            dialog.cancle();
         }
     };
 

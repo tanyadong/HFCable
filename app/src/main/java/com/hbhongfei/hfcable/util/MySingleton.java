@@ -46,10 +46,6 @@ public class MySingleton {
     public <T> void addToRequestQueue(Request<T> req) {
         File cacheDir = new File(mCtx.getCacheDir(), "volley");
         DiskBasedCache cache = new DiskBasedCache(cacheDir);
-//        mRequestQueue.start();
-
-        // clear all volley caches.
-//        mRequestQueue.add(new ClearCacheRequest(cache, null));
         getRuquestQueue().add(req);
     }
 

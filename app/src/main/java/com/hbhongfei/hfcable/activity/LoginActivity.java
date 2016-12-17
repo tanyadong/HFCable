@@ -1,10 +1,9 @@
 package com.hbhongfei.hfcable.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -13,18 +12,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.util.CheckPhoneNumber;
 import com.hbhongfei.hfcable.util.LoginConnection;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText Txt_login_user,Txt_login_password;
     private TextView Txt_login_forget_password,Txt_login_sign_in;
     private Button Btn_login_login;
-    private String S_user,S_password,S_tag;
+    private String S_user,S_password;
     private boolean Tag =true;
     private LoginConnection loginConnection;
+    private TextInputLayout userNmaeTxtInput, passwardTxtInput;
     private static final String USER = LoginConnection.USER;
 
     @Override
@@ -49,6 +48,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         this.Txt_login_forget_password = (TextView) findViewById(R.id.Txt_login_forget_password);
         this.Txt_login_sign_in = (TextView) findViewById(R.id.Txt_login_sign_in);
         this.Btn_login_login = (Button) findViewById(R.id.Btn_login_login);
+        userNmaeTxtInput = (TextInputLayout) findViewById(R.id.userName_txtIl);
+        passwardTxtInput = (TextInputLayout) findViewById(R.id.passward_txtIl);
     }
 
     /**
@@ -107,7 +108,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             loginConnection.connInter(S_user,S_password);
         }
     }
-
+    /**
+     * 验证手机号格式是否正确
+     *
+     * @return true 表示正确，false表示不正确
+     */
+    private boolean checkPhoneNumber(String s) {
+        return CheckPhoneNumber.checkPhoneNum(s);
+    }
     /**
      * 验证是否为空
      */

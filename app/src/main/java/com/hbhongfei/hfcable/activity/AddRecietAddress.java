@@ -106,7 +106,7 @@ public class AddRecietAddress extends AppCompatActivity implements View.OnClickL
         Intent intent=getIntent();
         tag=intent.getStringExtra("tag");
         shoppingAddress= (ShoppingAddress) intent.getSerializableExtra("shoppingAddress");
-       if(shoppingAddress!=null) {
+       if(shoppingAddress != null) {
            consigne_editview.setText(shoppingAddress.getConsignee());
            add_phone_editview.setText(shoppingAddress.getPhone());
            add_addressDetail_editview.setText(shoppingAddress.getDetailAddress());

@@ -130,7 +130,6 @@ public class MyAdapter extends BaseAdapter {
                 vh.prodect_introduce2.setText(itemList.get(1).getSpecifications());
                 vh.prodect_price2.setText(String.valueOf(itemList.get(1).getPrice()));
                 //有图片时加载
-                System.out.println(itemList.get(1).getProductImages().toString());
                 if(itemList.get(1).getProductImages().size()!=0){
                     String url=Url.url(itemList.get(1).getProductImages().get(0));
                     //加载图片
@@ -148,7 +147,7 @@ public class MyAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         Intent intent=new Intent(context, ProdectInfoActivity.class);
-                        intent.putExtra("product",itemList.get(position));
+                        intent.putExtra("product",itemList.get(1));
                         intent.putExtra("tag",tag);
                         context.startActivity(intent);
                     }

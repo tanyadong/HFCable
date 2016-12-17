@@ -130,7 +130,7 @@ public class ConnectionProduct {
             if(page==1) {
                 adapter = new MyAdapter(context, R.layout.intentionlayout, list);
                 listView.setDivider(null);
-                listView.setDividerHeight(10);
+                listView.setDividerHeight(0);
                 listView.setAdapter(adapter);
             }else{
                 adapter.addItem(list);

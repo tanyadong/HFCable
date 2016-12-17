@@ -62,7 +62,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     private int count;
     private LinearLayout noInternet;
     public Handler mHandler;
-    private String info_time,info_content;
     Information information=null;
 
     /** 标志位，标志已经初始化完成 */
@@ -201,7 +200,8 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     private List<Information>  loadData( final int index){
             final String url="http://news.cableabc.com/gc_"+index+".html";
         String info_html= netWork(url);
-        if(info_html!=null){
+        if (info_html != null) {
+
             return parse(info_html);
         }
         return null;

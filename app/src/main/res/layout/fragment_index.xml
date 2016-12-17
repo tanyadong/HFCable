@@ -16,7 +16,6 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <LinearLayout
                 android:id="@+id/ll_top"
                 android:layout_width="match_parent"
@@ -184,7 +183,6 @@
                     android:layout_marginTop="15dp"
                     android:background="@null"
                     android:fadeScrollbars="false"/>
-
             </LinearLayout>
 
             <include
