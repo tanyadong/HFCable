@@ -5,12 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -69,9 +70,8 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     private ImageView img1;
     private ViewPager mviewPager;
     private LinearLayout prodectList_LLayout_phone, prodectList_LLayout_collect, prodectList_LLayout_shoppingCat, Layout_add;
-    private TextView prodectInto_simpleDeclaration, prodectInfo_price,
-            prodectInfo_intro, prodectInfo_package, prodectInfo_model, prodectInfo_coreType,
-            prodectInfo_type, prodectInfo_detail, prodectInfo_last_price;
+    private TextView prodectInto_simpleDeclaration, prodectInfo_price, prodectInfo_package, prodectInfo_model, prodectInfo_coreType,
+            prodectInfo_last_price;
     private TextView prodectInfo_voltage, prodectInfo_crossSection, prodectInfo_coreNumber,
             prodectInfo_purpose, prodectInfo_applicationRange, prodectInfo_outsideDiameter,
             prodectInfo_diameterLimit, prodectInfo_implementationStandards, prodectInfo_conductorMaterial,
@@ -177,8 +177,14 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
      */
     private void toolBar() {
         tag = getIntent().getStringExtra("tag");
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.product_info_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setElevation(0);
+        }
+        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void initVIew() {

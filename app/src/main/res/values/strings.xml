@@ -254,4 +254,6 @@
 
     <!--最新项目-->
     <string name="new_project_lable">最新项目</string>
+
+    <string name="transition_book_img">transition_book_img</string>
 </resources>

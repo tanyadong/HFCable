@@ -1,5 +1,7 @@
 package com.hbhongfei.hfcable.adapter;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -35,10 +37,12 @@ public class ImagePaperAdapter extends PagerAdapter {
         //Warning：不要在这里调用removeView  
     }
 	
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		// TODO Auto-generated method stub
 		ImageView view = list.get(position) ;
+		view.setTransitionName("transition_book_img");
 		ViewParent vp =  view.getParent();
 		if(vp != null){
 			ViewGroup parent = (ViewGroup)vp;
@@ -47,9 +51,6 @@ public class ImagePaperAdapter extends PagerAdapter {
 		//上面这些语句必须加上，如果不加的话，就会产生则当用户滑到第四个的时候就会触发这个异常
 		//原因是我们试图把一个有父组件的View添加到另一个组件。
 		((ViewPager)container).addView(list.get(position));
-		
-		System.out.println("------------");
-
 		return list.get(position);
 	}
 

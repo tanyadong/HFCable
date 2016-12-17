@@ -1,45 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.hbhongfei.hfcable.activity.ProdectInfoActivity">
+    <android.support.design.widget.CoordinatorLayout
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.AppBarOverlay">
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-    <ScrollView
+                <RelativeLayout
+                    android:id="@+id/slideView"
+                    android:fitsSystemWindows="true"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.7"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/myviewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <!--小圆点-->
+                    <LinearLayout
+                        android:id="@+id/dotLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:paddingLeft="10dp" />
+                </RelativeLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/product_info_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1">
-
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <RelativeLayout
-                android:id="@+id/slideView"
-                android:layout_width="match_parent"
-                android:layout_height="300dp">
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/myviewPager"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-                <!--小圆点-->
-                <LinearLayout
-                    android:id="@+id/dotLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:paddingLeft="10dp" />
-            </RelativeLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,7 +80,7 @@
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="10dp"
                     android:textSize="@dimen/text_size"
-                    android:text="zheshiyikuan" />
+                     />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -394,96 +420,97 @@
 
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
-    <LinearLayout
-        android:id="@+id/prodect_bottom"
+</android.support.design.widget.CoordinatorLayout>
+
+<LinearLayout
+    android:id="@+id/prodect_bottom"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/prodectlayout_background"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+<LinearLayout
+    android:id="@+id/prodectList_LLayout_phone"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/prodectList_img_phone"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@drawable/prodectlayout_background"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@mipmap/telephone" />
 
-        <LinearLayout
-            android:id="@+id/prodectList_LLayout_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/prodectList_img_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@mipmap/telephone" />
-
-            <TextView
-                android:id="@+id/prodectList_tview_phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="@string/prodect_phone" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/prodectList_LLayout_collect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/prodectList_img_collect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/heart" />
-
-            <TextView
-                android:id="@+id/prodectList_tview_collect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="@string/prodect_collect" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/prodectList_LLayout_shoppingCat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/prodectList_img_shoppingCat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/shoppingcat" />
-
-            <TextView
-                android:id="@+id/prodectList_tview_shoppingCat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="@string/prodect_shoppingCat" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/prodect_addCart"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="2"
-            android:background="@color/colorRed"
-            android:gravity="center"
-            android:text="添加购物车"
-            android:textColor="@color/white" />
-    </LinearLayout>
-
+    <TextView
+        android:id="@+id/prodectList_tview_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="@string/prodect_phone" />
 </LinearLayout>
 
+<LinearLayout
+    android:id="@+id/prodectList_LLayout_collect"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
 
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/prodectList_img_collect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/heart" />
+
+    <TextView
+        android:id="@+id/prodectList_tview_collect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="@string/prodect_collect" />
+</LinearLayout>
+
+<LinearLayout
+    android:id="@+id/prodectList_LLayout_shoppingCat"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/prodectList_img_shoppingCat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/shoppingcat" />
+
+    <TextView
+        android:id="@+id/prodectList_tview_shoppingCat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="@string/prodect_shoppingCat" />
+</LinearLayout>
+
+<TextView
+    android:id="@+id/prodect_addCart"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_weight="2"
+    android:background="@color/colorRed"
+    android:gravity="center"
+    android:text="添加购物车"
+    android:textColor="@color/white" />
+</LinearLayout>
+
+</RelativeLayout>
