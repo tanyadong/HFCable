@@ -1,170 +1,58 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="com.hbhongfei.hfcable.activity.CompanyInfoActivity">
-<LinearLayout
-    android:id="@+id/companyInfo_LLayout"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <!--公司logo-->
-<ImageView
-    android:id="@+id/companyInfo_logo"
-    android:layout_gravity="center"
-    android:scaleType="fitXY"
-    android:layout_width="match_parent"
-    android:layout_height="200dp" />
-    <TextView
-        android:id="@+id/companyInfo_name_textView"
-        android:gravity="center"
-        android:textSize="18dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/company_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <!--公司简介标题-->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <View  android:layout_height="1px"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:background="#6d6d6e"
-            />
-        <TextView
-            android:text="@string/company_introduce"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <View  android:layout_height="1px"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:background="#6d6d6e"
-            />
-    </LinearLayout>
-    <!--公司介绍内容-->
-    <TextView
-        android:id="@+id/companyInfo_introduce_textView"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <!--主营产品-->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <View  android:layout_height="1px"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:background="#6d6d6e"
-            />
-        <TextView
-            android:text="@string/company_majorProduct"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <View  android:layout_height="1px"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:background="#6d6d6e"
-            />
-    </LinearLayout>
-    <TextView
-        android:id="@+id/companyInfo_product_textView"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <!--联系方式-->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <View  android:layout_height="1px"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:background="#6d6d6e"
-            />
-        <TextView
-            android:text="@string/company_contactWay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <View  android:layout_height="1px"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:background="#6d6d6e"
-            />
-    </LinearLayout>
-<!--公司地址-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/companyInfo_address"
-            android:text="@string/company_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/companyInfo_address_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+    android:layout_height="match_parent" >
 
-    <!--公司电话-->
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/abl_company_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/companyInfo_tel"
-            android:text="@string/company_telphone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/companyInfo_tel_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <!--公司邮编-->
-    <LinearLayout
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/ctl_info_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="@color/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            <ImageView
+                android:id="@+id/companyInfo_logo"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:fitsSystemWindows="true"
+                android:layout_height="250dp" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_company_info"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_collapseMode="pin"  />
+        </android.support.design.widget.CollapsingToolbarLayout>
+        <LinearLayout
+            android:id="@+id/company_info_LL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite">
+            <TextView
+                android:id="@+id/companyInfo_name_textView"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text="@string/company_name"
+                android:textColor="@color/colorWhite"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+        </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/companyInfo_postcode"
-            android:text="@string/company_postcode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/companyInfo_postcode_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <!--公司邮箱-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/companyInfo_email"
-            android:text="@string/company_emali"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/companyInfo_email_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-</LinearLayout>
-</ScrollView>
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <include layout="@layout/include_company_info"/>
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>
