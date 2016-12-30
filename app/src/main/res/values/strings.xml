@@ -217,10 +217,10 @@
     <string name="market_lable">资讯详情</string>
     <string name="market_area">市场/地区</string>
     <string name="market_product_name">产品名称</string>
-    <string name="market_average_price">均价</string>
+    <string name="market_average_price">平均价格:</string>
     <string name="market_fallorise">跌涨</string>
-    <string name="market_minprice">最低价</string>
-    <string name="market_maxprice">最高价</string>
+    <string name="market_min_price">最低价格:</string>
+    <string name="market_max_price">最高价格:</string>
     <string name="market_factory_area">厂家/地区</string>
     <string name="market_data">日期</string>
     <string name="market_price_trend">价格走势</string>
