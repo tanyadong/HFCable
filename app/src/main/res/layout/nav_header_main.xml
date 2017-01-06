@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?attr/colorPrimaryDark"
-    android:gravity="center"
+    android:layout_height="@dimen/nav_header_height"
+    android:gravity="bottom"
+    android:background="@color/colorRed"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:id="@+id/Iamge_mine_head"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginTop="20dp"
+        android:paddingTop="5dp"
+        android:layout_gravity="center_horizontal"
         android:src="@mipmap/head_portrait" />
 
     <TextView
         android:id="@+id/Tview_mine_myName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="18sp"
-        android:gravity="center"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:layout_gravity="center_horizontal"
         android:text="用户名"
+        android:layout_marginRight="10dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 </LinearLayout>
