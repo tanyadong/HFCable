@@ -71,7 +71,8 @@
         <activity
             android:name=".activity.CompanyInfoActivity"
             android:label="@string/company_info"
-            android:parentActivityName=".activity.MainActivity" />
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.ProdectListActivity"
             android:label="@string/prodectList_lable"
@@ -126,7 +127,8 @@
         <activity
             android:name=".activity.ProjectActivity"
             android:label="@string/new_project_lable"
-            android:parentActivityName=".activity.MainActivity" />
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ConfirmOrderActivity"
             android:label="@string/comfirm_order_sure"

@@ -1,31 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.hbhongfei.hfcable.activity.ProjectActivity">
-<TextView
-    android:id="@+id/project_title_tv"
-    android:gravity="center"
-    android:text="ssaasd"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
-    <ImageView
-        android:id="@+id/project_img"
-        android:layout_below="@+id/project_title_tv"
-        android:layout_marginTop="10dp"
-        android:src="@mipmap/ic_launcher"
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/abl_project_info"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:scaleType="fitXY"/>
-    <TextView
-        android:id="@+id/project_content_tv"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/project_img"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/ctl_project_info_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="@color/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            <ImageView
+                android:id="@+id/project_img"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:fitsSystemWindows="true"
+                android:layout_height="250dp" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_project_info"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_collapseMode="pin"  />
+        </android.support.design.widget.CollapsingToolbarLayout>
+        <LinearLayout
+            android:id="@+id/project_info_LL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite">
+            <TextView
+                android:id="@+id/project_title_tv"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:textColor="@color/colorBalck"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+        </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</RelativeLayout>
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <include layout="@layout/include_project"/>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

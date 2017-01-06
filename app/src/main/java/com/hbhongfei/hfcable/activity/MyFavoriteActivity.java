@@ -1,10 +1,13 @@
 package com.hbhongfei.hfcable.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -17,10 +20,12 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MyAdapter;
+import com.hbhongfei.hfcable.adapter.ProductRecyclerAdapter;
 import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.pojo.TypeTwo;
 import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Error;
+import com.hbhongfei.hfcable.util.FullyGridLayoutManager;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.MySingleton;
@@ -37,13 +42,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import listener.RecyclerItemClickListener;
+
 public class MyFavoriteActivity extends AppCompatActivity implements IErrorOnclick {
-    private ListView list_myFavorite;
     private LinearLayout noInternet;
     String S_phoneNumber;
     private static final String USER = LoginConnection.USER;
     private Dialog dialog;
     private String url;
+    private ProductRecyclerAdapter productRecyclerAdapter;
+    private RecyclerView productRecView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +67,7 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
      */
     private void initView(){
         dialog = new Dialog(this);
-        list_myFavorite = (ListView) findViewById(R.id.listView_myFavorite);
+        productRecView = (RecyclerView) findViewById(R.id.listView_myFavorite);
         noInternet = (LinearLayout) findViewById(R.id.no_internet_my_favorite);
     }
     private void setValues(){
@@ -139,10 +147,22 @@ public class MyFavoriteActivity extends AppCompatActivity implements IErrorOncli
                     }
                 });
             }
-            MyAdapter adapter = new MyAdapter(MyFavoriteActivity.this, R.layout.intentionlayout,list);
-            list_myFavorite.setDivider(null);
-            list_myFavorite.setDividerHeight(10);
-            list_myFavorite.setAdapter(adapter);
+//            MyAdapter adapter = new MyAdapter(MyFavoriteActivity.this, R.layout.intentionlayout,list);
+//            list_myFavorite.setDivider(null);
+//            list_myFavorite.setDividerHeight(10);
+//            list_myFavorite.setAdapter(adapter);
+            productRecyclerAdapter = new ProductRecyclerAdapter(MyFavoriteActivity.this,list);
+            //RecyclerView子项的点击事件
+            productRecView.addOnItemTouchListener(new RecyclerItemClickListener(this, productRecyclerAdapter.onItemClickListener));
+            productRecView.setAdapter(productRecyclerAdapter);
+            //解决scorllview嵌套recycleview冲突问题
+            final FullyGridLayoutManager manager = new FullyGridLayoutManager(this, 2);
+            manager.setOrientation(GridLayoutManager.VERTICAL);
+            manager.setSmoothScrollbarEnabled(true);
+            manager.setAutoMeasureEnabled(true);
+            productRecView.setLayoutManager(manager);
+            productRecView.setHasFixedSize(true);
+            productRecView.setNestedScrollingEnabled(false);
             dialog.cancle();
         } catch (JSONException e) {
             e.printStackTrace();
