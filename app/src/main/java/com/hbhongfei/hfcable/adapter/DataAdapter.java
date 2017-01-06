@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.util.Information;
+import com.hbhongfei.hfcable.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +21,33 @@ import java.util.List;
 public class DataAdapter extends BaseAdapter {
 	Context mContext = null;
 	LayoutInflater inflater;
-	List<Information> newsData = new ArrayList<Information>();
-	public DataAdapter(Context context, List<Information> nList) {
+	List<Information> newsData = null;
+//	public DataAdapter(Context context, List<Information> nList) {
+//		mContext = context;
+//		inflater = LayoutInflater.from(context);
+//		newsData.addAll(nList);
+//	}
+//	public DataAdapter(Context context, Information information) {
+//		mContext = context;
+//		inflater = LayoutInflater.from(context);
+//		newsData.add(information);
+//		notifyDataSetChanged();
+//	}
+	public DataAdapter(Context context) {
 		mContext = context;
 		inflater = LayoutInflater.from(context);
-		newsData = nList;
+		if (newsData == null) {
+			newsData = new ArrayList<>();
+		}
 	}
-	public List<Information> addItems(ArrayList<Information> list){
-		newsData.addAll(list);
+	public List<Information> addItems(ArrayList<Information> information) {
+		newsData.addAll(information);
 		notifyDataSetChanged();
+		return newsData;
+	}
+
+	public List<Information> updateItems(ArrayList<Information> list) {
+		newsData = list;
 		return newsData;
 	}
 	@Override
@@ -48,6 +67,7 @@ public class DataAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+
 		HolderView hView = null;
 		if (null == convertView) {
 			hView = new HolderView();
@@ -64,12 +84,9 @@ public class DataAdapter extends BaseAdapter {
 		hView.brief.setText(newsData.get(position).getBrief());
 		hView.time.setText(newsData.get(position).getTime());
 
-
+		ToastUtil.showShort(mContext,position+"  ////"+newsData.size()+"");
 		if (null != newsData.get(position).getImgUrl()
 				&& !"".equals(newsData.get(position).getImgUrl())) {
-			/*hView.image.setTag(newsData.get(position).getImgUrl());
-			AsyncBitmapLoader asyncBitmapLoader=new AsyncBitmapLoader();
-			asyncBitmapLoader.loadImage(mContext,hView.image,newsData.get(position).getImgUrl());*/
 			Glide.with(mContext)
 					.load(newsData.get(position).getImgUrl())
 					.placeholder(R.mipmap.background)

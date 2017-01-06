@@ -14,7 +14,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -30,6 +30,7 @@ repositories {
     }
 }
 dependencies {
+    compile 'com.android.support:cardview-v7:23.+'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile name: 'SMSSDK-2.1.1', ext: 'aar'
@@ -55,6 +56,6 @@ dependencies {
     compile files('libs/jai-imageio-1.1.jar')
     compile files('libs/okhttp-3.4.1.jar')
     compile files('libs/jsoup-1.7.3.jar')
-//    compile 'com.google.code.gson:gson:2.8.0'
-//    compile 'com.google.code.gson:gson-parent:2.8.0'
+    compile files('libs/android-support-v7-cardview.jar')
+    compile 'io.github.yavski:fab-speed-dial:1.0.1'//可展开的flaotbutton
 }

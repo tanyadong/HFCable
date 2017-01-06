@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     app:layout_collapseParallaxMultiplier="1.0"
     tools:context="com.hbhongfei.hfcable.fragment.IndexFragment">
-
     <ScrollView
+        android:fillViewport="true"
         android:id="@+id/scrollView_index"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -176,13 +176,13 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <com.hbhongfei.hfcable.util.NoScrollListView
-                    android:id="@+id/lv"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView_gird"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@null"
-                    android:fadeScrollbars="false"/>
+                    android:layout_gravity="center_horizontal|top"
+                    android:scrollbars="none" />
             </LinearLayout>
 
             <include

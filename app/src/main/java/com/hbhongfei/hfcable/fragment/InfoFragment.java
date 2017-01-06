@@ -11,10 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
@@ -35,7 +33,6 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
@@ -52,11 +49,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     private View view;
     private ListView info_listView;
     private DataAdapter mAdapter = null;
-    ArrayList<Information> info_list=null;
-
-    Button reload = null;
-    LinearLayout loadLayout = null;
-    TextView loading = null;
+    ArrayList<Information> info_list = null;
     String total = null;
     private int index = 0;
     private int count;
@@ -76,10 +69,11 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view= inflater.inflate(R.layout.fragment_info, container, false);
+        mAdapter = new DataAdapter(getActivity());
         //声明一个队列
         setHasOptionsMenu(true);
         initRefreshLayout();
-// 初始化handler
+        // 初始化handler
         handlerMessage();
         initView(view);
         initOkHttpClient();
@@ -117,6 +111,9 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         dialog.showDialog("正在加载中...");
         if(NetUtils.isConnected(getActivity())){
             new MyAsyncTack().execute();
+//            loadData(index);
+//            mRefreshLayout.endLoadingMore();
+//            mRefreshLayout.endRefreshing();
         }else {
             dialog.cancle();
             Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
@@ -134,7 +131,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         public MessageHandler(Looper looper) {
             super(looper);
         }
-
         @Override
         public void handleMessage(Message msg) {
             int iswitch = msg.arg1;
@@ -159,9 +155,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      */
     private  void  initView(View view){
         info_listView = (ListView) view.findViewById(R.id.fragment_info_listView);
-        loadLayout= (LinearLayout) view.findViewById(R.id.fragment_load_layout);
-        loading = (TextView) view.findViewById(R.id.fragment_loading);
-        reload = (Button)view.findViewById(R.id.fragment_reload);
         noInternet = (LinearLayout) view.findViewById(R.id.no_internet_info);
     }
     private void initRefreshLayout() {
@@ -175,11 +168,11 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         mRefreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
     }
     /**
-     * 初始化数据
-     * @param list
+     * 初始化据
+     * @param
      */
     private  void setValues(final ArrayList<Information> list){
-        mAdapter = new DataAdapter(getActivity(), list);
+        mAdapter.updateItems(list);
         //添加头和尾
         info_listView.setAdapter(mAdapter);
         info_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -197,11 +190,10 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     /**
      * 加载数据
      */
-    private List<Information>  loadData( final int index){
-            final String url="http://news.cableabc.com/gc_"+index+".html";
+    private ArrayList<Information>  loadData( final int index)  {
+        final String url="http://news.cableabc.com/gc_"+index+".html";
         String info_html= netWork(url);
         if (info_html != null) {
-
             return parse(info_html);
         }
         return null;
@@ -211,7 +203,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      * 解析html
      * @param
      */
-    protected List<Information>  parse(String html) {
+    protected ArrayList<Information>  parse(String html) {
         info_list=new ArrayList<Information>();
         //初始化okhttp
         Document doc = Jsoup.parse(html);
@@ -233,8 +225,22 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             information.setImgUrl(link.getElementsByTag("img").attr("src"));
             information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
              final String data_html=loadContentData(information.getContentUrl());
-             information=parseContent(data_html,information);
-             info_list.add(information);
+             final Information info=parseContent(data_html,information);
+             info_list.add(info);
+             getActivity().runOnUiThread(new Runnable() {
+                 @Override
+                 public void run() {
+                     dialog.cancle();
+                     if(index==0){
+                         setValues(info_list);
+                     } else {
+                         mAdapter.addItems(info_list);
+                     }
+                     mRefreshLayout.endLoadingMore();
+                     mRefreshLayout.endRefreshing();
+                 }
+             });
+
          }
         return info_list;
 
@@ -244,7 +250,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
             File sdcache=getActivity().getExternalCacheDir();
             int cacheSize = 10 * 1024 * 1024;
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
-
                     .addInterceptor(new CaheInterceptor(getActivity()))
                     .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
             mOkHttpClient = builder.build();
@@ -337,7 +342,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         index=0;
         if(NetUtils.isConnected(getActivity())){
-            info_list.clear();
             new MyAsyncTack().execute();
         }else{
             makeText(getActivity(),"网络连接失败，请检查您的网络",Toast.LENGTH_SHORT).show();
@@ -373,26 +377,26 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     /**
      * 异步执行加载
      */
-    class MyAsyncTack extends AsyncTask<Void,Void,List<Information>> {
+    class MyAsyncTack extends AsyncTask<Void,Void,ArrayList<Information>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
         @Override
-        protected List<Information>  doInBackground(Void... params) {
+        protected ArrayList<Information>  doInBackground(Void... params) {
             return loadData(index);
         }
 
         @Override
-        protected void   onPostExecute(List<Information> list ) {
+        protected void   onPostExecute(ArrayList<Information> list ) {
             dialog.cancle();
-            if(index==0){
-                setValues(info_list);
-            }else {
-                mAdapter.addItems(info_list);
-            }
-            mRefreshLayout.endLoadingMore();
-            mRefreshLayout.endRefreshing();
+//            if(index==0){
+//                setValues(list);
+//            }else {
+//                mAdapter.addItems(list);
+//            }
+//            mRefreshLayout.endLoadingMore();
+//            mRefreshLayout.endRefreshing();
             super.onPostExecute(list);
         }
     }

@@ -3,10 +3,6 @@
 
     <solid android:color="@android:color/white"></solid>
     <!--stroke 边框宽度 及颜色-->
-    <stroke android:color="#b6b2b2" android:width="2px"></stroke>
-    <padding
-        android:left="6dp"
-        android:top="0dp"
-        android:right="6dp"
-        android:bottom="0dp" />
+    <stroke android:color="#b6b2b2"></stroke>
+    
 </shape>

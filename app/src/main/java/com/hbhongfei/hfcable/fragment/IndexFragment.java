@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,6 @@ import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.MySingleton;
 import com.hbhongfei.hfcable.util.NetUtils;
-import com.hbhongfei.hfcable.util.NoScrollListView;
 import com.hbhongfei.hfcable.util.Url;
 
 import org.json.JSONArray;
@@ -73,7 +73,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     private LayoutInflater inflater;
     private ScrollView scrollView;
     private ViewPager mviewPager;
-    private NoScrollListView listView;
+//    private NoScrollListView listView;
     private ImageView img1;
     private Button btn_typeName1, btn_typeName2, btn_typeName3, btn_typeName4, btn_typeName5, btn_typeName6;
     ConnectionProduct connectionProduct;
@@ -101,8 +101,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     Intent intent;
     private Dialog dialog;
     private String urlType,urlCompany;
-
-
+    private RecyclerView productRecView;
     //Toast显示状态
     private Handler handler = new Handler() {
         @Override
@@ -167,8 +166,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         view.requestFocus();
         inflater = LayoutInflater.from(getActivity());
         scrollView= (ScrollView) view.findViewById(R.id.scrollView_index);
-        listView = (NoScrollListView) view.findViewById(R.id.lv);
-        connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),listView);
+        productRecView = (RecyclerView) view.findViewById(R.id.recyclerView_gird);
+        connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),productRecView);
         mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
         dotLayout = (LinearLayout)view.findViewById(R.id.dotLayout);
 
@@ -263,7 +262,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         try {
             jsonArray = jsonObject.optJSONArray("list");
             int type_count=jsonArray.length();
-            if (jsonArray!=null&&type_count>=5){
+            if (jsonArray!= null&&type_count >= 5){
                 for (int i = 0; i < type_count; i++) {
                     JSONObject jsonObject1 = (JSONObject) jsonArray.getJSONObject(i);
                     String typeName = jsonObject1.getString("typeName");

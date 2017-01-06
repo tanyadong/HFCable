@@ -1,15 +1,16 @@
 package com.hbhongfei.hfcable.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.ListView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.adapter.MyAdapter;
+import com.hbhongfei.hfcable.adapter.ProductRecyclerAdapter;
 import com.hbhongfei.hfcable.pojo.Product;
 import com.hbhongfei.hfcable.pojo.TypeTwo;
 
@@ -22,23 +23,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import listener.RecyclerItemClickListener;
+
 /**
  * Created by 谭亚东 on 2016/8/2.
  * 获取种类服务
  */
 public class ConnectionProduct {
     private Context context;
-    private ListView listView;
-    private MyAdapter adapter;
+    private RecyclerView productRecyclerView;
+    private ProductRecyclerAdapter productRecyclerAdapter;
     private List<Product> list;
     private int page = 1;
     private String url;
     public int countPage = 0;
     private Dialog dialog;
 
-    public ConnectionProduct(Context context, ListView listView) {
+    public ConnectionProduct(Context context, RecyclerView productRecyclerView) {
         this.context = context;
-        this.listView = listView;
+        this.productRecyclerView = productRecyclerView;
 
     }
 
@@ -50,7 +53,7 @@ public class ConnectionProduct {
             switch (msg.what) {
                 case 1:
                     //告诉适配器，数据变化了，从新加载listview
-                    adapter.notifyDataSetChanged();
+                    productRecyclerAdapter.notifyDataSetChanged();
                     break;
                 default:
                     break;
@@ -128,12 +131,20 @@ public class ConnectionProduct {
                 list.add(product);
             }
             if(page==1) {
-                adapter = new MyAdapter(context, R.layout.intentionlayout, list);
-                listView.setDivider(null);
-                listView.setDividerHeight(0);
-                listView.setAdapter(adapter);
+                productRecyclerAdapter = new ProductRecyclerAdapter((Activity) context, list);
+                //RecyclerView子项的点击事件
+                productRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(context, productRecyclerAdapter.onItemClickListener));
+                productRecyclerView.setAdapter(productRecyclerAdapter);
+                //解决scorllview嵌套recycleview冲突问题
+                final FullyGridLayoutManager manager = new FullyGridLayoutManager(context, 2);
+                manager.setOrientation(GridLayoutManager.VERTICAL);
+                manager.setSmoothScrollbarEnabled(true);
+                manager.setAutoMeasureEnabled(true);
+                productRecyclerView.setLayoutManager(manager);
+                productRecyclerView.setHasFixedSize(true);
+                productRecyclerView.setNestedScrollingEnabled(false);
             }else{
-                adapter.addItem(list);
+                productRecyclerAdapter.addItem(list);
                 mHandler.sendEmptyMessage(1);
             }
             dialog.cancle();

@@ -1,21 +1,22 @@
 package com.hbhongfei.hfcable.fragment;
 
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.activity.MarketChartActivity;
+import com.hbhongfei.hfcable.adapter.MarketRecyclerAdapter;
 import com.hbhongfei.hfcable.adapter.MyExpandableListViewAdapter;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
 import com.hbhongfei.hfcable.util.CaheInterceptor;
@@ -33,11 +34,11 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
+import listener.RecyclerItemClickListener;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.OkHttpClient;
@@ -49,12 +50,9 @@ import okhttp3.Response;
  * A simple {@link Fragment} subclass.
  */
 public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick  {
-    private ExpandableListView expandableListView;
-    private LinearLayout ll_market_head;
+    private RecyclerView marketRecyclerView;
     private ArrayList<String> group_list;
     private ArrayList<MarketInfo> child_list;
-    ArrayList<List<MarketInfo>> list;
-    private ArrayList<List<MarketInfo>> item_list=new ArrayList<>();;;
     private View view;
     private Dialog dialog;
     private Request request;
@@ -65,16 +63,12 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     //下拉和分页框架
     private BGARefreshLayout mRefreshLayout;
     private MyExpandableListViewAdapter myExpandableListViewAdapter=null;
+    private MarketRecyclerAdapter marketRecyclerAdapter = null;
     int index=1;
     private LinearLayout noInternet;
 
 
     private OkHttpClient mOkHttpClient;
-    //****************************************************************
-    // 判断应用是否初次加载，读取SharedPreferences中的guide_activity字段
-    //****************************************************************
-    private static final String SHAREDPREFERENCES_NAME = "my_pref";
-    private static final String KEY_GUIDE_ACTIVITY = "guide_activity";
     public MarketFragment() {
     }
 
@@ -125,31 +119,37 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     /**
      * 动态加载数据
      */
-    private void setValues(final ArrayList<List<MarketInfo>> item_list1) {
-        myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list1, expandableListView);
-        expandableListView.setAdapter(myExpandableListViewAdapter);
-        //为ExpandableListView的子列表单击事件设置监听器
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                Intent intent = new Intent(getActivity(), MarketChartActivity.class);
-                intent.putExtra("marketInfo",item_list1.get(groupPosition).get(childPosition));
-                startActivity(intent);
-                return true;
-            }
-        });
-        int groupCount=myExpandableListViewAdapter.getGroupCount();
-        for (int i = 0; i < groupCount; i++) {
-            expandableListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
-        }
+    private void setValues(final ArrayList<MarketInfo> item_list1) {
+        marketRecyclerAdapter = new MarketRecyclerAdapter(getActivity(), item_list1);
+        //RecyclerView子项的点击事件
+        marketRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), marketRecyclerAdapter.onItemClickListener));
+        marketRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        marketRecyclerView.setAdapter(marketRecyclerAdapter);
+        marketRecyclerView.setHasFixedSize(true);
+        marketRecyclerView.setNestedScrollingEnabled(false);
+//        myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list1, expandableListView);
+//        expandableListView.setAdapter(myExpandableListViewAdapter);
+//        //为ExpandableListView的子列表单击事件设置监听器
+//        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+//            @Override
+//            public boolean onChildClick(ExpandableListView parent, View v,
+//                                        int groupPosition, int childPosition, long id) {
+//                Intent intent = new Intent(getActivity(), MarketChartActivity.class);
+//                intent.putExtra("marketInfo",item_list1.get(groupPosition).get(childPosition));
+//                startActivity(intent);
+//                return true;
+//            }
+//        });
+//        int groupCount=myExpandableListViewAdapter.getGroupCount();
+//        for (int i = 0; i < groupCount; i++) {
+//            expandableListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
+//        }
     }
 
     private void initView(View view) {
         group_list = new ArrayList<>();
         dialog = new Dialog(getActivity());
-        ll_market_head= (LinearLayout) view.findViewById(R.id.market_title_llayout);
-        expandableListView = (ExpandableListView) view.findViewById(R.id.market_expendlist);
+        marketRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_market);
         noInternet = (LinearLayout) view.findViewById(R.id.no_internet_market);
     }
     private void initOkHttpClient() {
@@ -190,9 +190,9 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         dialog.showDialog("正在加载中");
         if (NetUtils.isConnected(getActivity())) {
-            for (int i = 1; i <= 4; i++) {
-                new MarketTask().execute(i);
-            }
+//            for (int i = 1; i <= 4; i++) {
+                new MarketTask().execute(1);
+//            }
             mRefreshLayout.endRefreshing();
         }else{
             dialog.cancle();
@@ -225,15 +225,17 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
          */
         @Override
         protected void onPostExecute(final String html) {
+            Log.w("html",html);
             if(html.isEmpty()){
                 return;
             }
-           list=parseHtml(html);
-            if(list.size()==4){
+            Log.w("start","-----------------------------------");
+           parseHtml(html);
+//            if(list.size()==4){
                 dialog.cancle();
-                ll_market_head.setVisibility(View.VISIBLE);
-                setValues(list);
-            }
+//                ll_market_head.setVisibility(View.VISIBLE);
+                setValues(child_list);
+//            }
         }
     }
     /**
@@ -247,9 +249,9 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         group_list.add("塑料");
         dialog.showDialog("正在加载中");
         if (NetUtils.isConnected(getActivity())){
-            for (int i=1;i<=4;i++){
-                new MarketTask().execute(i);
-            }
+//            for (int i=1;i<=4;i++){
+                new MarketTask().execute(1);
+//            }
         }else {
             dialog.cancle();
             Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MarketFragment.this);
@@ -261,7 +263,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
      * 解析html
      * @param html
      */
-    public ArrayList<List<MarketInfo>> parseHtml(final String html) {
+    public ArrayList<MarketInfo> parseHtml(final String html) {
         Document doc = Jsoup.parse(html);
         //Elements
         Element table = doc.getElementsByTag("table").first();
@@ -285,9 +287,9 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
             marketInfo.setTrend("http://material.cableabc.com" + url);
             child_list.add(marketInfo);
         }
-        //父列表添加子列表
-        item_list.add(child_list);
-        return item_list;
+//        //父列表添加子列表
+//        item_list.add(child_list);
+        return child_list;
     }
 
     @Override
@@ -302,6 +304,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         if (!isPrepared || !isVisible || mHasLoadedOnce) {
             return;
         }
+        Log.w("asadsads","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa--------");
         try {
             initValues();
         } catch (IOException e) {
