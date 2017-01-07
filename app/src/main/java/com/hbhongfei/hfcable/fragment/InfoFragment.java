@@ -56,6 +56,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     private LinearLayout noInternet;
     public Handler mHandler;
     Information information=null;
+    private int firstIndex = 0;
 
     /** 标志位，标志已经初始化完成 */
     private boolean isPrepared;
@@ -111,9 +112,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         dialog.showDialog("正在加载中...");
         if(NetUtils.isConnected(getActivity())){
             new MyAsyncTack().execute();
-//            loadData(index);
-//            mRefreshLayout.endLoadingMore();
-//            mRefreshLayout.endRefreshing();
         }else {
             dialog.cancle();
             Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",InfoFragment.this);
@@ -169,21 +167,19 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      * 初始化据
      * @param
      */
-    private  void setValues(final ArrayList<Information> list){
+    /*private  void setValues(final ArrayList<Information> list){
         mAdapter.updateItems(list);
         //添加头和尾
         info_listView.setAdapter(mAdapter);
         info_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
                 Intent intent = new Intent(getActivity(), InfoDetailActivity.class);
                 intent.putExtra("data", list.get(position));
                 getActivity().startActivity(intent);
             }
         });
-
-    }
+    }*/
 
     /**
      * 加载数据
@@ -218,21 +214,20 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         Elements topnews = doc.getElementsByClass("list31_newlist1");
          for (Element link : topnews) {
              information = new Information();
-            information.setTitle(link.getElementsByClass("list31_title1").text());
-            information.setBrief(link.getElementsByClass("list31_text1").text());
-            information.setImgUrl(link.getElementsByTag("img").attr("src"));
-            information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
-             final String data_html=loadContentData(information.getContentUrl());
-             final Information info=parseContent(data_html,information);
-             info_list.add(info);
+             information.setTitle(link.getElementsByClass("list31_title1").text());
+             information.setBrief(link.getElementsByClass("list31_text1").text());
+             information.setImgUrl(link.getElementsByTag("img").attr("src"));
+             information.setContentUrl(link.getElementsByClass("Pic").attr("href"));
+             final String data_html = loadContentData(information.getContentUrl());
+             final Information info = parseContent(data_html,information);
              getActivity().runOnUiThread(new Runnable() {
                  @Override
                  public void run() {
                      dialog.cancle();
-                     if(index==0){
-                         setValues(info_list);
-                     } else {
-                         mAdapter.addItems(info_list);
+                     mAdapter.addItem(info);
+                     if(firstIndex==0){//只设置一次adapter
+                         info_listView.setAdapter(mAdapter);
+                         firstIndex++;
                      }
                      mRefreshLayout.endLoadingMore();
                      mRefreshLayout.endRefreshing();
@@ -388,13 +383,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         @Override
         protected void   onPostExecute(ArrayList<Information> list ) {
             dialog.cancle();
-//            if(index==0){
-//                setValues(list);
-//            }else {
-//                mAdapter.addItems(list);
-//            }
-//            mRefreshLayout.endLoadingMore();
-//            mRefreshLayout.endRefreshing();
             super.onPostExecute(list);
         }
     }

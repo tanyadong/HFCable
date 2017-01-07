@@ -1,6 +1,7 @@
 package com.hbhongfei.hfcable.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hbhongfei.hfcable.R;
+import com.hbhongfei.hfcable.activity.InfoDetailActivity;
 import com.hbhongfei.hfcable.util.Information;
 import com.hbhongfei.hfcable.util.ToastUtil;
 
@@ -22,17 +24,6 @@ public class DataAdapter extends BaseAdapter {
 	Context mContext = null;
 	LayoutInflater inflater;
 	List<Information> newsData = null;
-//	public DataAdapter(Context context, List<Information> nList) {
-//		mContext = context;
-//		inflater = LayoutInflater.from(context);
-//		newsData.addAll(nList);
-//	}
-//	public DataAdapter(Context context, Information information) {
-//		mContext = context;
-//		inflater = LayoutInflater.from(context);
-//		newsData.add(information);
-//		notifyDataSetChanged();
-//	}
 	public DataAdapter(Context context) {
 		mContext = context;
 		inflater = LayoutInflater.from(context);
@@ -40,16 +31,13 @@ public class DataAdapter extends BaseAdapter {
 			newsData = new ArrayList<>();
 		}
 	}
-	public List<Information> addItems(ArrayList<Information> information) {
-		newsData.addAll(information);
+
+	public List<Information> addItem(Information information) {
+		newsData.add(information);
 		notifyDataSetChanged();
 		return newsData;
 	}
 
-	public List<Information> updateItems(ArrayList<Information> list) {
-		newsData = list;
-		return newsData;
-	}
 	@Override
 	public int getCount() {
 		return newsData.size();
@@ -66,7 +54,7 @@ public class DataAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 
 		HolderView hView = null;
 		if (null == convertView) {
@@ -84,7 +72,6 @@ public class DataAdapter extends BaseAdapter {
 		hView.brief.setText(newsData.get(position).getBrief());
 		hView.time.setText(newsData.get(position).getTime());
 
-		ToastUtil.showShort(mContext,position+"  ////"+newsData.size()+"");
 		if (null != newsData.get(position).getImgUrl()
 				&& !"".equals(newsData.get(position).getImgUrl())) {
 			Glide.with(mContext)
@@ -96,6 +83,15 @@ public class DataAdapter extends BaseAdapter {
 		} else {
 			hView.image.setImageResource(R.mipmap.loading_error);
 		}
+		convertView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(mContext, InfoDetailActivity.class);
+				intent.putExtra("data", newsData.get(position));
+				mContext.startActivity(intent);
+			}
+		});
+
 		return convertView;
 	}
 
