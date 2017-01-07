@@ -169,8 +169,6 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
         //在chart上的右下角加描述
         mChart.setDescription("曲线图");
         mChart.setNoDataTextDescription("没有数据");
-        //设置Y轴上的单位
-//        mChart.setUnit("元/吨");
         //设置透明度
         mChart.setAlpha(0.8f);
         //设置网格底下的那条线的颜色
@@ -187,7 +185,6 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
         //设置是否能扩大扩小
         mChart.setPinchZoom(true);
 
-
         // 设置背景颜色
         // mChart.setBackgroundColor(Color.GRAY);
         //设置点击chart图对应的数据弹出标注
@@ -197,7 +194,6 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
         mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
         // set the marker to the chart
         mChart.setMarkerView(mv);
-
         // highlighted Entry)
         mChart.setHighlightIndicatorEnabled(true);
         //设置字体格式，如正楷
@@ -214,8 +210,6 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
         xl.setSpaceBetweenLabels(4); // 设置数据之间的间距
 
         YLabels yl = mChart.getYLabels();
-//        yl.setDrawUnitsInYLabel(false);
-//         yl.setPosition(YLabels.YLabelPosition.LEFT); // set the position
         yl.setTypeface(tf); // 设置字体
         yl.setTextSize(10f); // s设置字体大小
 //        yl.setLabelCount(5); // 设置Y轴最多显示的数据个数

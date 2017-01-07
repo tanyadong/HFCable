@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,12 @@ import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.Error;
 import com.hbhongfei.hfcable.util.IErrorOnclick;
 import com.hbhongfei.hfcable.util.NetUtils;
+import com.wangjie.androidbucket.utils.ABTextUtil;
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
+import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
+import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
 
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -34,6 +39,7 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
@@ -49,7 +55,7 @@ import okhttp3.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick  {
+public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick, RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
     private RecyclerView marketRecyclerView;
     private ArrayList<String> group_list;
     private ArrayList<MarketInfo> child_list;
@@ -66,13 +72,13 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     private MarketRecyclerAdapter marketRecyclerAdapter = null;
     int index=1;
     private LinearLayout noInternet;
-
-
+    private RapidFloatingActionHelper rfabHelper;
+    private RapidFloatingActionLayout rfaLayout;
+    private RapidFloatingActionButton rfaButton;
     private OkHttpClient mOkHttpClient;
+    private int position = 1;
     public MarketFragment() {
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,6 +86,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         initView(view);
         initRefreshLayout();
         initOkHttpClient(); //初始化okhttp请求
+        initFBA(view);
         isPrepared = true;
         //懒加载
         lazyLoad();
@@ -122,28 +129,14 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     private void setValues(final ArrayList<MarketInfo> item_list1) {
         marketRecyclerAdapter = new MarketRecyclerAdapter(getActivity(), item_list1);
         //RecyclerView子项的点击事件
+        final LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setSmoothScrollbarEnabled(true);
+        manager.setAutoMeasureEnabled(true);
+        marketRecyclerView.setLayoutManager(manager);
         marketRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), marketRecyclerAdapter.onItemClickListener));
-        marketRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         marketRecyclerView.setAdapter(marketRecyclerAdapter);
         marketRecyclerView.setHasFixedSize(true);
         marketRecyclerView.setNestedScrollingEnabled(false);
-//        myExpandableListViewAdapter = new MyExpandableListViewAdapter(getActivity(), group_list, item_list1, expandableListView);
-//        expandableListView.setAdapter(myExpandableListViewAdapter);
-//        //为ExpandableListView的子列表单击事件设置监听器
-//        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-//            @Override
-//            public boolean onChildClick(ExpandableListView parent, View v,
-//                                        int groupPosition, int childPosition, long id) {
-//                Intent intent = new Intent(getActivity(), MarketChartActivity.class);
-//                intent.putExtra("marketInfo",item_list1.get(groupPosition).get(childPosition));
-//                startActivity(intent);
-//                return true;
-//            }
-//        });
-//        int groupCount=myExpandableListViewAdapter.getGroupCount();
-//        for (int i = 0; i < groupCount; i++) {
-//            expandableListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
-//        }
     }
 
     private void initView(View view) {
@@ -160,6 +153,57 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
                 .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
         mOkHttpClient = builder.build();
 
+    }
+    private void initFBA(View view) {
+        rfaLayout = (RapidFloatingActionLayout) view.findViewById(R.id.rfab_group_sample_rl);
+        rfaButton = (RapidFloatingActionButton) view.findViewById(R.id.rfab_group_sample_rfab);
+        RapidFloatingActionContentLabelList rfaContent = new RapidFloatingActionContentLabelList(getContext());
+        rfaContent.setOnRapidFloatingActionContentLabelListListener(this);
+        List<RFACLabelItem> items = new ArrayList<>();
+        items.add(new RFACLabelItem<Integer>()
+                .setLabel(getResources().getString(R.string.market_copper))
+                .setResId(R.mipmap.copper)
+                .setIconNormalColor(0xffFFA500)
+                .setIconPressedColor(0xffFFFFE0)
+                .setLabelColor(0xffFFA500)
+                .setWrapper(0)
+        );
+        items.add(new RFACLabelItem<Integer>()
+                .setLabel(getResources().getString(R.string.market_aluminum))
+                .setResId(R.mipmap.aluminum)
+                .setIconNormalColor(0xffF5DEB3)
+                .setIconPressedColor(0xffC0C0dd)
+                .setLabelColor(0xffF5DEB3)
+                .setWrapper(1)
+        );
+        items.add(new RFACLabelItem<Integer>()
+                .setLabel(getResources().getString(R.string.market_rubber))
+                .setResId(R.mipmap.rubber)
+                .setIconNormalColor(0xff056f00)
+                .setIconPressedColor(0xff0d5302)
+                .setLabelColor(0xff056f00)
+                .setWrapper(2)
+        );
+        items.add(new RFACLabelItem<Integer>()
+                .setLabel(getResources().getString(R.string.market_plastic))
+                .setResId(R.mipmap.plastic)
+                .setIconNormalColor(0xff00BFFF)
+                .setIconPressedColor(0xffF0FFFF)
+                .setLabelColor(0xff00BFFF)
+                .setWrapper(3)
+        );
+        rfaContent
+                .setItems(items)
+                .setIconShadowRadius(ABTextUtil.dip2px(getContext(), 5))
+                .setIconShadowColor(0xff888888)
+                .setIconShadowDy(ABTextUtil.dip2px(getContext(), 5))
+        ;
+        rfabHelper = new RapidFloatingActionHelper(
+                getContext(),
+                rfaLayout,
+                rfaButton,
+                rfaContent
+        ).build();
     }
     private  String netWork(final int index) {
         final String url = "http://material.cableabc.com/matermarket/spotshow_00" + index + ".html";
@@ -190,9 +234,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         dialog.showDialog("正在加载中");
         if (NetUtils.isConnected(getActivity())) {
-//            for (int i = 1; i <= 4; i++) {
-                new MarketTask().execute(1);
-//            }
+                new MarketTask().execute(position);
             mRefreshLayout.endRefreshing();
         }else{
             dialog.cancle();
@@ -201,10 +243,31 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         }
         dialog.cancle();
     }
-
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
         return false;
+    }
+    /**
+     * @author 谭亚东
+     * @Description: 展开的文字点击事件
+     * @date 2017/1/7  17:14
+     */
+    @Override
+    public void onRFACItemLabelClick(int i, RFACLabelItem rfacLabelItem) {
+        rfabHelper.toggleContent();
+        position = i+1;
+        new MarketTask().execute(i+1);
+    }
+    /**
+     * @author 谭亚东
+     * @Description: 图片的点击事件
+     * @date 2017/1/7  17:14
+     */
+    @Override
+    public void onRFACItemIconClick(int i, RFACLabelItem rfacLabelItem) {
+        position = i+1;
+        new MarketTask().execute(i+1);
+        rfabHelper.toggleContent();
     }
 
 
@@ -225,33 +288,21 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
          */
         @Override
         protected void onPostExecute(final String html) {
-            Log.w("html",html);
             if(html.isEmpty()){
                 return;
             }
-            Log.w("start","-----------------------------------");
            parseHtml(html);
-//            if(list.size()==4){
-                dialog.cancle();
-//                ll_market_head.setVisibility(View.VISIBLE);
-                setValues(child_list);
-//            }
+            dialog.cancle();
+            setValues(child_list);
         }
     }
     /**
      * 初始化数据
      */
     public void initValues() throws IOException {
-        //父列表数据
-        group_list.add("铜");
-        group_list.add("铝");
-        group_list.add("橡胶");
-        group_list.add("塑料");
         dialog.showDialog("正在加载中");
         if (NetUtils.isConnected(getActivity())){
-//            for (int i=1;i<=4;i++){
-                new MarketTask().execute(1);
-//            }
+            new MarketTask().execute(1);
         }else {
             dialog.cancle();
             Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MarketFragment.this);
@@ -287,8 +338,6 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
             marketInfo.setTrend("http://material.cableabc.com" + url);
             child_list.add(marketInfo);
         }
-//        //父列表添加子列表
-//        item_list.add(child_list);
         return child_list;
     }
 
@@ -304,7 +353,6 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         if (!isPrepared || !isVisible || mHasLoadedOnce) {
             return;
         }
-        Log.w("asadsads","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa--------");
         try {
             initValues();
         } catch (IOException e) {
@@ -316,5 +364,10 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     @Override
     public void errorClick() {
         NetUtils.openSetting(MarketFragment.this.getActivity());
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        position = 1;
     }
 }

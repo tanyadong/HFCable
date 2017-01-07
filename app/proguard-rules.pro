@@ -42,6 +42,7 @@
 -printseeds seeds.txt            #未混淆的类和成员
 -printusage unused.txt           #打印未被使用的代码
 -printmapping mapping.txt        #混淆前后的映射
+-keep class io.codetail.animation.arcanimator.** { *; }
 
 #-keep public class * extends android.support.** #如果有引用v4或者v7包，需添加
 #-libraryjars libs/xxx.jar        #混淆第三方jar包，其中xxx为jar包名

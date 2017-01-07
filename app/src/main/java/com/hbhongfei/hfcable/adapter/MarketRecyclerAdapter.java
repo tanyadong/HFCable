@@ -2,20 +2,15 @@ package com.hbhongfei.hfcable.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.activity.MarketChartActivity;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
-import com.hbhongfei.hfcable.util.ScreenUtils;
 
 import java.util.List;
 
@@ -24,15 +19,13 @@ import listener.RecyclerItemClickListener;
 
 public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAdapter.ViewHolder> {
     protected List<MarketInfo> list;
-    private static final int ANIMATED_ITEMS_COUNT = 4;
     private Activity context;
-    private boolean animateItems = false;
-    private int lastAnimatedPosition = -1;
     protected String tag;
     private MarketInfo marketInfo;
     public MarketRecyclerAdapter(Activity context , List<MarketInfo> mlist) {
-        TypedValue mTypedValue = new TypedValue();
-        context.getTheme().resolveAttribute(R.attr.selectableItemBackground, mTypedValue, true);
+        if (list != null) {
+            list.clear();
+        }
         list = mlist;
         this.context = context;
     }
@@ -60,28 +53,6 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
             market_data= (TextView) v.findViewById(R.id.market_data);
         }
     }
-    private void runEnterAnimation(View view, int position) {
-        if (position > lastAnimatedPosition) {
-            lastAnimatedPosition = position;
-            view.setTranslationY(ScreenUtils.getScreenHeight(context));
-            view.animate()
-                    .translationY(0)
-                    .setStartDelay(100 * position)
-                    .setInterpolator(new DecelerateInterpolator(3.f))
-                    .setDuration(700)
-                    .start();
-        }
-    }
-
-//    public List<Product> updateItems(List<Product> books, boolean animated) {
-//        List<Product> list = new ArrayList<>();
-//        animateItems = animated;
-//        lastAnimatedPosition = -1;
-//        list.addAll(books);
-//        notifyDataSetChanged();
-//        return list;
-//    }
-
 
     @Override
     public MarketRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
@@ -96,7 +67,6 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        runEnterAnimation(holder.layout1, position);
         marketInfo = list.get(position);
         holder.market_area.setText(marketInfo.getArea());
         holder.market_product_name.setText(marketInfo.getProductName());
@@ -122,13 +92,7 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
         public void onItemClick(View view, int position) {
             Intent intent = new Intent(context, MarketChartActivity.class);
             intent.putExtra("marketInfo",list.get(position));
-            intent.putExtra("tag",tag);
-
-            ActivityOptionsCompat options =
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(context,
-                            view.findViewById(R.id.market_ll),context.getString(R.string.transition_book_img));
-            ActivityCompat.startActivity(context, intent, options.toBundle());
-
+            context.startActivity(intent);
         }
     };
 }

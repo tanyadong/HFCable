@@ -19,17 +19,8 @@
     <string name="company_info">公司信息</string>
     <string name="company_name">河北弘飞线缆有限公司</string>
     <string name="company_introduce">公司简介</string>
+    <string name="company_introduce_content"></string>
     <string name="project_introduce">项目简介</string>
-    <string name="company_introduce_content">该公司成立于1995年，注册资金1000晚，是河北省著名企业00000000000000000000000
-        000000000000000000000000
-        000000000000000000000000000000000000000
-        000000000000000000000000000000000000000
-        0000000000000000000000000000000000000000
-        0000000000000000000000000000000000
-        00000000000000000000000000000000000
-        000000000000000000000000000000
-        0000000000000000000000000000000000
-        0000000000000000000000000000000000000000000000000000000000000000000000</string>
     <string name="company_majorProduct">主营产品</string>
     <string name="company_contactWay">联系方式</string>
     <string name="company_address">地址：</string>
@@ -227,7 +218,10 @@
     <string name="market_price_trend">价格走势</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="market_copper">铜</string>
+    <string name="market_aluminum">铝</string>
+    <string name="market_rubber">橡胶</string>
+    <string name="market_plastic">塑料</string>
     <!--InputMyInfo-->
     <string name="title_activity_input_my_info">设置个人资料</string>
     <string name="input_my_info_head">头像</string>
@@ -257,4 +251,8 @@
     <string name="new_project_lable">最新项目</string>
 
     <string name="transition_book_img">transition_book_img</string>
+
+
+    <!-- 用于通过唯一的identificationCode获取 -->
+    <string name="rfab_identification_code_fragment_a">RFAB_IDENTIFICATION_CODE_FRAGMENT_A</string>
 </resources>

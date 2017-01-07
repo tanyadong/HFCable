@@ -120,8 +120,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         }
         mHasLoadedOnce=true;
     }
-
-
     /**
      * @author tanyadong
      * @Description: handler,处理返回结果

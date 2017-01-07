@@ -36,5 +36,10 @@ public abstract class BaseFragment extends Fragment {
      * 延迟加载 
      * 子类必须重写此方法 
      */  
-    protected abstract void lazyLoad();  
+    protected abstract void lazyLoad();
+//
+//    public void onInitialRFAB(RapidFloatingActionButton rfab) {
+//    }
+//
+//    public abstract String getRfabIdentificationCode();
 }  

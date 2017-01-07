@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -31,6 +30,7 @@ import android.widget.TextView;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MainFragmentAdapter;
+import com.hbhongfei.hfcable.fragment.BaseFragment;
 import com.hbhongfei.hfcable.fragment.IndexFragment;
 import com.hbhongfei.hfcable.fragment.InfoFragment;
 import com.hbhongfei.hfcable.fragment.MarketFragment;
@@ -38,7 +38,6 @@ import com.hbhongfei.hfcable.fragment.MineFragment;
 import com.hbhongfei.hfcable.util.AsyncBitmapLoader;
 import com.hbhongfei.hfcable.util.Constants;
 import com.hbhongfei.hfcable.util.CustomDialog;
-import com.hbhongfei.hfcable.util.Dialog;
 import com.hbhongfei.hfcable.util.IAlertDialogListener;
 import com.hbhongfei.hfcable.util.LoginConnection;
 import com.hbhongfei.hfcable.util.UpLoadImage;
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ViewPager.OnPageChangeListener, IAlertDialogListener {
 
     private ViewPager viewPager;
-    private List<Fragment> list_fragment;
+    private List<BaseFragment> list_fragment;
     private LinearLayout layout_index, layout_info, layout_market, layout_mine;
     private ImageView imageView_index, imageView_info, imageView_market, imageView_mine;
     private TextView textView_index, textView_info, textView_market, textView_mine;
@@ -68,7 +67,6 @@ public class MainActivity extends AppCompatActivity
     private Bitmap b;
     private int tag = 0;
     private UpLoadImage upLoadImage;
-    private Dialog dialog;
     private AsyncBitmapLoader asyncBitmapLoader;
     private Toolbar toolbar;
     private int id;
@@ -76,7 +74,6 @@ public class MainActivity extends AppCompatActivity
     private InfoFragment infoFragment = null;
     private MarketFragment marketFragment = null;
     private MineFragment mineFragment = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +81,7 @@ public class MainActivity extends AppCompatActivity
 
         //toolbar
         toolbar();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -93,6 +91,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //初始化界面
         initView();
+
         //点击事件
         click();
     }
@@ -108,7 +107,6 @@ public class MainActivity extends AppCompatActivity
             toolbar.setElevation(0);
         }
     }
-
     @Override
     protected void onPostResume() {
         id = SplashActivity.ID;
@@ -245,7 +243,6 @@ public class MainActivity extends AppCompatActivity
         myName = (TextView) headerLayout.findViewById(R.id.Tview_mine_myName);
 
         upLoadImage = new UpLoadImage(this);
-        dialog = new Dialog(this);
     }
     /**
      * 初始化数据
@@ -369,6 +366,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
+
         boolean isLogin = isLogin(MainActivity.this, MainActivity.this.getClass().getName());
         switch (v.getId()) {
             case R.id.ll_main_page:
@@ -384,7 +382,6 @@ public class MainActivity extends AppCompatActivity
                 viewPager.setCurrentItem(2);
                 break;
             case R.id.ll_main_mine:
-//                if (isLogin) {
                     showMine();
                     viewPager.setCurrentItem(3);
                 break;
@@ -458,6 +455,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case 2:
                 showMarket();
+
                 break;
             case 3:
                 showMine();
@@ -508,4 +506,5 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Constants.PHOTONAME)));
         startActivityForResult(intent, Constants.TAKE_PHOTO);
     }
+
 }

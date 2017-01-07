@@ -606,6 +606,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
         mHasLoadedOnce = true;
     }
+
     @Override
     public void errorClick() {
         NetUtils.openSetting(IndexFragment.this.getActivity());
