@@ -44,7 +44,6 @@ import java.util.List;
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
-import listener.RecyclerItemClickListener;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.OkHttpClient;
@@ -57,7 +56,6 @@ import okhttp3.Response;
  */
 public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,IErrorOnclick, RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
     private RecyclerView marketRecyclerView;
-    private ArrayList<String> group_list;
     private ArrayList<MarketInfo> child_list;
     private View view;
     private Dialog dialog;
@@ -133,14 +131,13 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         manager.setSmoothScrollbarEnabled(true);
         manager.setAutoMeasureEnabled(true);
         marketRecyclerView.setLayoutManager(manager);
-        marketRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), marketRecyclerAdapter.onItemClickListener));
+//        marketRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), marketRecyclerAdapter.onItemClickListener));
         marketRecyclerView.setAdapter(marketRecyclerAdapter);
         marketRecyclerView.setHasFixedSize(true);
         marketRecyclerView.setNestedScrollingEnabled(false);
     }
 
     private void initView(View view) {
-        group_list = new ArrayList<>();
         dialog = new Dialog(getActivity());
         marketRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_market);
         noInternet = (LinearLayout) view.findViewById(R.id.no_internet_market);

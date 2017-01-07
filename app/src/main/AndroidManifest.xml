@@ -114,6 +114,7 @@
         <!-- 画图 -->
         <activity
             android:name=".activity.MarketChartActivity"
+            android:launchMode="singleTask"
             android:label="@string/market_price_trend"
             android:parentActivityName=".activity.MainActivity" />
         <activity
