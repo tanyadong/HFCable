@@ -224,6 +224,9 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
                  @Override
                  public void run() {
                      dialog.cancle();
+                     if (info == null){
+                         return;
+                     }
                      mAdapter.addItem(info);
                      if(firstIndex==0){//只设置一次adapter
                          info_listView.setAdapter(mAdapter);
@@ -311,6 +314,9 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      * @param html
      */
     protected Information parseContent(String html, final Information info) {
+        if (html.isEmpty() || html.equals("") || html == null){
+            return null;
+        }
         Document doc = Jsoup.parse(html);
         //获取资讯时间
         Elements time = doc.getElementsByClass("contentspage");
