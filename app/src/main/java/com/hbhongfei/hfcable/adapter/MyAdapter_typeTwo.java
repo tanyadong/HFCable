@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hbhongfei.hfcable.R;
@@ -96,10 +97,16 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
         if (convertView == null) {
             gholder = new GroupViewHolder();
             convertView = View.inflate(context, R.layout.market_parentlist_layout, null);
-            gholder.tv_group_name = (TextView) convertView.findViewById(R.id.parent_text);
+            gholder.tv_group_name = (TextView) convertView.findViewById(R.id.parent_text);//二级种类名
+            gholder.img_type_two_direction = (ImageView) convertView.findViewById(R.id.type_two_direction_img);//向下向上箭头
             convertView.setTag(gholder);
         } else {
             gholder = (GroupViewHolder) convertView.getTag();
+        }
+        if (isExpanded) {//展开子项，为打开状态
+            gholder.img_type_two_direction.setBackgroundResource(R.mipmap.type_two_up);
+        } else {//隐藏子项，为关闭状态
+            gholder.img_type_two_direction.setBackgroundResource(R.mipmap.type_two_down);
         }
         final TypeTwo group = (TypeTwo) getGroup(groupPosition);
         gholder.tv_group_name.setText(group.getTypeTwoName());
@@ -140,16 +147,12 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
 
     }
 
-
-
-
-
-
     /**
      * 组元素绑定器
      */
     private class GroupViewHolder {
         TextView tv_group_name;
+        ImageView img_type_two_direction;
     }
 
     /**

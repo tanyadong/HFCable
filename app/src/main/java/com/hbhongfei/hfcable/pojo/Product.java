@@ -26,7 +26,7 @@ public class Product implements java.io.Serializable {
 	private String conductorMaterial;//导体材质
 	private String sheathMaterial;//护套材质
 	private String referenceWeight;//参考重量
-//	private String length;//长度
+	private String isNew;//是否是新产品
 
 
 	private ArrayList<String> productImages=new ArrayList<String>();
@@ -38,7 +38,7 @@ public class Product implements java.io.Serializable {
 	}
 
 
-	public Product(String id, Double price, String specifications, TypeTwo typeTwo, String voltage, String crossSection, String coreNumber, String purpose, String applicationRange, String outsideDiameter, String diameterLimit, String implementationStandards, String conductorMaterial, String sheathMaterial, String referenceWeight, ArrayList<String> productImages) {
+	public Product(String id, String isNew,Double price, String specifications, TypeTwo typeTwo, String voltage, String crossSection, String coreNumber, String purpose, String applicationRange, String outsideDiameter, String diameterLimit, String implementationStandards, String conductorMaterial, String sheathMaterial, String referenceWeight, ArrayList<String> productImages) {
 		this.id = id;
 		this.price = price;
 		this.specifications = specifications;
@@ -56,6 +56,7 @@ public class Product implements java.io.Serializable {
 		this.sheathMaterial = sheathMaterial;
 		this.referenceWeight = referenceWeight;
 		this.productImages = productImages;
+		this.isNew = isNew;
 	}
 
 	public String getId() {
@@ -73,6 +74,14 @@ public class Product implements java.io.Serializable {
 
 	public void setProductImages(ArrayList<String> productImages) {
 		this.productImages = productImages;
+	}
+
+	public String getIsNew() {
+		return isNew;
+	}
+
+	public void setIsNew(String isNew) {
+		this.isNew = isNew;
 	}
 
 	public Double getPrice() {
@@ -214,6 +223,7 @@ public class Product implements java.io.Serializable {
 				", conductorMaterial='" + conductorMaterial + '\'' +
 				", sheathMaterial='" + sheathMaterial + '\'' +
 				", referenceWeight='" + referenceWeight + '\'' +
+				", isNew='" + isNew + '\'' +
 				", productImages=" + productImages +
 				'}';
 	}

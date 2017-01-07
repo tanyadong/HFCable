@@ -15,14 +15,14 @@
         <LinearLayout
             android:id="@+id/prodectType_spinner"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/prodectType_textView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical|center_horizontal"
                 android:singleLine="true"
@@ -30,8 +30,8 @@
                 android:textColor="@color/colorOrange" />
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_below="@+id/prodectType_textView"
                 android:layout_gravity="center"
                 android:src="@mipmap/arrow_down" />
@@ -47,26 +47,15 @@
         android:id="@+id/rl_expandable_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_weight="1">-->
+        <ExpandableListView
+            android:id="@+id/prodectlist_listView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/colorWhite"
+            android:childIndicator="@null"
+            android:groupIndicator="@null">
+        </ExpandableListView>
 
-            <ExpandableListView
-                android:id="@+id/prodectlist_listView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:childIndicator="@null"
-                android:groupIndicator="@null">
-            </ExpandableListView>
-
-            <!--<include-->
-                <!--android:id="@+id/no_internet_product_list"-->
-                <!--layout="@layout/internet_no"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:visibility="gone" />-->
-        <!--</LinearLayout>-->
     </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
 </LinearLayout>

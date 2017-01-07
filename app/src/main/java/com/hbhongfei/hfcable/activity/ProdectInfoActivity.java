@@ -1063,21 +1063,4 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    /**
-     * actionBar返回键
-     *
-     * @param item
-     * @return
-     */
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // TODO Auto-generated method stub
-//        if (item.getItemId() == android.R.id.home) {
-//            finish();
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-
 }

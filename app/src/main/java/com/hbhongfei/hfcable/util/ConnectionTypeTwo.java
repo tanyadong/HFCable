@@ -128,7 +128,7 @@ public class ConnectionTypeTwo {
                         product.setVoltage(object.getString("voltage"));
                         product.setReferenceWeight(object.getString("referenceWeight"));
                         product.setPurpose(object.getString("purpose"));
-
+                        product.setIsNew(object.getString("newProducts"));
                         JSONArray array=object.getJSONArray("productImages");
                         //有图片时加入到产品图片集合
                         int proimg_count=array.length();
