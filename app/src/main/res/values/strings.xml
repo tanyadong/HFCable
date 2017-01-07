@@ -177,6 +177,7 @@
 
 
     <!--收货地址管理-->
+    <string name="address_list_manage">管理</string>
     <string name="add_receiptAddress">新增收货地址</string>
     <string name="receiptAddress_lale">收货地址</string>
     <string name="title_activity_receipt_address">收货地址管理</string>

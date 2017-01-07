@@ -242,7 +242,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }else{
-                    Toast.makeText(this,"请确认收获地址哦",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this,"请添加收获地址",Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.Layout_confirm_order_location:

@@ -1,11 +1,14 @@
 package com.hbhongfei.hfcable.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -78,6 +81,18 @@ public class AddressListActivity extends AppCompatActivity {
         shoppingAddressListConnection.addressListConnection();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_address_list_order, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent();
+        intent.setClass(this,ReceiptAddressActivity.class);
+        startActivity(intent);
+        return super.onOptionsItemSelected(item);
+    }
 
 }

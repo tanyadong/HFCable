@@ -83,25 +83,27 @@ public class ShoppingAddressListConnection {
             try {
                     List<ShoppingAddress> list = new ArrayList<>();
                     JSONArray jsonArray = jsonObject.getJSONArray("address_list");
-                int address_count=jsonArray.length();
-                if(address_count>0){
-                    for (int i = 0; i < address_count; i++) {
-                        ShoppingAddress shoppingAddress = new ShoppingAddress();
-                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                        shoppingAddress.setId(jsonObject1.getString("id"));
-                        shoppingAddress.setConsignee(jsonObject1.getString("consignee"));
-                        shoppingAddress.setDetailAddress(jsonObject1.getString("detailAddress"));
-                        shoppingAddress.setLocalArea(jsonObject1.getString("localArea"));
-                        shoppingAddress.setPhone(jsonObject1.getString("phone"));
-                        shoppingAddress.setTag(jsonObject1.getInt("tag"));
-                        list.add(shoppingAddress);
-                    }
+                    int address_count=jsonArray.length();
+                    if(address_count>0){
+                        for (int i = 0; i < address_count; i++) {
+                            ShoppingAddress shoppingAddress = new ShoppingAddress();
+                            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                            shoppingAddress.setId(jsonObject1.getString("id"));
+                            shoppingAddress.setConsignee(jsonObject1.getString("consignee"));
+                            shoppingAddress.setDetailAddress(jsonObject1.getString("detailAddress"));
+                            shoppingAddress.setLocalArea(jsonObject1.getString("localArea"));
+                            shoppingAddress.setPhone(jsonObject1.getString("phone"));
+                            shoppingAddress.setTag(jsonObject1.getInt("tag"));
+                            list.add(shoppingAddress);
+                        }
+                        if (list != null){
+                            linearLayout.setVisibility(View.GONE);
+                        }
                         addressListAdapter = new AddressListAdapter(activity, context, list, phoneNum, listView, linearLayout);
                         listView.setAdapter(addressListAdapter);
                         listView.setDivider(null);
                         listView.setDividerHeight(30);
                         dialog.cancle();
-
                 }else{
                     dialog.cancle();
                     linearLayout.setVisibility(View.VISIBLE);
