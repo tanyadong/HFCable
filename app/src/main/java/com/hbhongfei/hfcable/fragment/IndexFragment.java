@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -232,6 +233,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         mviewPager.setAdapter(adapter);
         mviewPager.setCurrentItem(0);
         mviewPager.setOnPageChangeListener(new MyPageChangeListener());
+        Toast.makeText(this.getContext(), Build.VERSION.SDK_INT+"",Toast.LENGTH_SHORT).show();
     }
 
     /**

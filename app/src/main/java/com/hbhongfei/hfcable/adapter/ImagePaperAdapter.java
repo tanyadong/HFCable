@@ -15,19 +15,16 @@ public class ImagePaperAdapter extends PagerAdapter {
 
 	private ArrayList<ImageView>list;
 	public ImagePaperAdapter(ArrayList<ImageView> list) {
-		// TODO Auto-generated constructor stub
 		this.list = list;
 	}
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		return list.size();
 	}
 
 	@Override
 	public boolean isViewFromObject(View arg0, Object arg1) {
-		// TODO Auto-generated method stub
 		return arg0 == arg1;
 	}
 	
@@ -40,9 +37,10 @@ public class ImagePaperAdapter extends PagerAdapter {
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
-		// TODO Auto-generated method stub
 		ImageView view = list.get(position) ;
-		view.setTransitionName("transition_book_img");
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//版本在5.0以上才能添加此动画
+			view.setTransitionName("transition_book_img");
+		}
 		ViewParent vp =  view.getParent();
 		if(vp != null){
 			ViewGroup parent = (ViewGroup)vp;

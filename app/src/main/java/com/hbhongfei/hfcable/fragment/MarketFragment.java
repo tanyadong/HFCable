@@ -142,8 +142,12 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         marketRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_market);
         noInternet = (LinearLayout) view.findViewById(R.id.no_internet_market);
     }
+
     private void initOkHttpClient() {
         File sdcache=getActivity().getExternalCacheDir();
+        if (sdcache == null){
+            return;
+        }
         int cacheSize = 10 * 1024 * 1024;
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(new CaheInterceptor(getActivity()))

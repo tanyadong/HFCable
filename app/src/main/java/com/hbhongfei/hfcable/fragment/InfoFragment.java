@@ -243,12 +243,15 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
     }
 
     public void initOkHttpClient() {
-            File sdcache=getActivity().getExternalCacheDir();
-            int cacheSize = 10 * 1024 * 1024;
-            OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                    .addInterceptor(new CaheInterceptor(getActivity()))
-                    .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
-            mOkHttpClient = builder.build();
+        File sdcache=getActivity().getExternalCacheDir();
+        if (sdcache == null){
+            return;
+        }
+        int cacheSize = 10 * 1024 * 1024;
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .addInterceptor(new CaheInterceptor(getActivity()))
+                .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
+        mOkHttpClient = builder.build();
     }
     public  String netWork(String url) {
         CacheControl.Builder builder = new CacheControl.Builder();
