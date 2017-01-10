@@ -395,7 +395,6 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
         params.put("sex",S_sex);
         params.put("birthday",S_birthday);
         String url = Url.url("/androidUser/addPersonInfo");
-        System.out.println(url);
         //使用自己书写的NormalPostRequest类，
         Request<JSONObject> request = new NormalPostRequest(url,jsonObjectListener,errorListener, params);
         MySingleton.getInstance(this).addToRequestQueue(request);
@@ -435,7 +434,6 @@ public class InputMyInfoActivity extends AppCompatActivity implements View.OnCli
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(InputMyInfoActivity.this,"连接网络失败"+volleyError.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
-
             dialog.cancle();
         }
     };
