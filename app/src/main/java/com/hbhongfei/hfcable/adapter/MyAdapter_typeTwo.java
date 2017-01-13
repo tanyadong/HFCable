@@ -27,9 +27,6 @@ public class MyAdapter_typeTwo extends BaseExpandableListAdapter {
     private ArrayList<ArrayList<Product>> children;
     private Context context;
 
-    public  int flag = 0;
-
-
     /**
      * 构造函数
      *

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.android.volley.NetworkError;
@@ -72,9 +70,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     private String typeName;
     private LinearLayout noInternet;
     private LayoutInflater inflater;
-    private ScrollView scrollView;
     private ViewPager mviewPager;
-//    private NoScrollListView listView;
     private ImageView img1;
     private Button btn_typeName1, btn_typeName2, btn_typeName3, btn_typeName4, btn_typeName5, btn_typeName6;
     ConnectionProduct connectionProduct;
@@ -166,7 +162,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         inflater = LayoutInflater.from(getActivity());
-        scrollView= (ScrollView) view.findViewById(R.id.scrollView_index);
         productRecView = (RecyclerView) view.findViewById(R.id.recyclerView_gird);
         connectionProduct=new ConnectionProduct(IndexFragment.this.getActivity(),productRecView);
         mviewPager = (ViewPager)view.findViewById(R.id.myviewPager);
@@ -233,7 +228,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         mviewPager.setAdapter(adapter);
         mviewPager.setCurrentItem(0);
         mviewPager.setOnPageChangeListener(new MyPageChangeListener());
-        Toast.makeText(this.getContext(), Build.VERSION.SDK_INT+"",Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -299,9 +293,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             dialog.cancle();
             MySingleton mySingleton = new MySingleton(IndexFragment.this.getActivity());
             if (mySingleton.getCache(urlType) != null) {
-                if(!NetUtils.isConnected(getActivity())){
-                    Toast.makeText(IndexFragment.this.getContext(), "没有网络", Toast.LENGTH_SHORT).show();
-                }
                 noInternet.setVisibility(View.GONE);
                 //加载种类
                 analysisDataOfType(mySingleton.getCache(urlType));

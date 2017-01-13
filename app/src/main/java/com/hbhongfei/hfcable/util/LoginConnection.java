@@ -145,7 +145,7 @@ public class LoginConnection {
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(context,"链接网络失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,"网络连接异常，请检查您的网络", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
             //dialog消失
             dialog.cancle();

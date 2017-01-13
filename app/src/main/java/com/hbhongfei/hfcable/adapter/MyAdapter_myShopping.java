@@ -36,14 +36,9 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
     private Context context;
     private CheckInterface checkInterface;
     private ModifyCountInterface modifyCountInterface;
-    public  int flag = 0;
     private GroupEdtorListener mListener;
-    private Map<String,String> map;
     private DecimalFormat df = new DecimalFormat("0.00");
 
-    public GroupEdtorListener getmListener() {
-        return mListener;
-    }
 
     public void setmListener(GroupEdtorListener mListener) {
         this.mListener = mListener;
@@ -60,7 +55,6 @@ public class MyAdapter_myShopping extends BaseExpandableListAdapter {
         this.groups = groups;
         this.children = children;
         this.context = context;
-        this.map = map;
     }
 
     public void setCheckInterface(CheckInterface checkInterface) {

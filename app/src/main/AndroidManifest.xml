@@ -12,7 +12,6 @@
 
     <!-- 拍照的权限 -->
     <uses-permission android:name="ANDROID.PERMISSION.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -27,7 +26,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
     <!-- 拨打电话权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
@@ -220,14 +218,9 @@
             android:label="@string/title_activity_pay_success"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <uses-library
             android:name="com.google.android.maps"
             android:required="false" />
-
-        <activity android:name=".activity.Test">
-
-        </activity>
     </application>
 
 </manifest>

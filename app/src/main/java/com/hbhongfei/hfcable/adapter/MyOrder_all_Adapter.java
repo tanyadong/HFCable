@@ -53,9 +53,6 @@ public class MyOrder_all_Adapter extends BaseAdapter{
     private LinearLayout linearLayout;
     public static boolean isResult;
     private ListView listView;
-    public MyOrder_all_Adapter(Context context){
-        this.context=context;
-    }
     public MyOrder_all_Adapter(Context context,boolean isResult){
         this.context=context;
         this.isResult=isResult;
