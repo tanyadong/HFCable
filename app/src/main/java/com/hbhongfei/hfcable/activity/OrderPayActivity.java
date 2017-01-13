@@ -42,6 +42,8 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class OrderPayActivity extends AppCompatActivity implements
         View.OnClickListener{
@@ -128,13 +130,19 @@ public class OrderPayActivity extends AppCompatActivity implements
         dialog=new Dialog(this);
         Intent intent = getIntent();
         S_money = intent.getStringExtra("money");
+        //判断钱后边是否有两位
+        Pattern pattern = Pattern.compile("^(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){2})?$");
+        Matcher isMoney = pattern.matcher(S_money);
+        if ( !isMoney.matches() ) {//不是后边有两位小数的情况，进行加0
+            S_money = S_money + "0";
+        }
         order_no = intent.getStringExtra("order_no");
         order_payMoney_textview.setText("￥"+S_money);
         Bundle bundle = intent.getExtras();
         array = bundle.getSparseParcelableArray("introduce");
         String replaceable = String.format("[%s, \\s.]", NumberFormat.getCurrencyInstance(Locale.CHINA).getCurrency().getSymbol(Locale.CHINA));
-        String cleanString = S_money.toString().replaceAll(replaceable, "");
-        amount = Integer.valueOf(new BigDecimal(cleanString).toString());
+        String moneyStr = S_money.toString().replaceAll(replaceable, "");
+        amount = Integer.valueOf(new BigDecimal(moneyStr).toString());
 
         //获取ipv4
         client_ip = GetIP.GetIp();
