@@ -75,11 +75,9 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         handlerMessage();
         initView(view);
         initOkHttpClient();
-
         isPrepared = true;
-        dialog=new Dialog(getActivity());
-        index=0;
         lazyLoad();
+
         return view;
     }
 
@@ -297,7 +295,7 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
      * @param html
      */
     protected Information parseContent(String html, final Information info) {
-        if (html.isEmpty() || html.equals("") || html == null){
+        if (html == null){
             return null;
         }
         Document doc = Jsoup.parse(html);

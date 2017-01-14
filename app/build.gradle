@@ -8,8 +8,8 @@ android {
         applicationId "com.hbhongfei.hfcable"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 5
-        versionName "2.5.0"
+        versionCode 6
+        versionName "2.6.0"
         multiDexEnabled true
     }
     buildTypes {

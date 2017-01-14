@@ -85,7 +85,12 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         initOkHttpClient(); //初始化okhttp请求
         isPrepared = true;
         //懒加载
-        lazyLoad();
+//        lazyLoad();
+        try {
+            initValues();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return view;
     }
 
@@ -345,15 +350,15 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
 
     @Override
     protected void lazyLoad() {
-        if (!isPrepared || !isVisible || mHasLoadedOnce) {
-            return;
-        }
-        try {
-            initValues();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mHasLoadedOnce=true;
+//        if (!isPrepared || !isVisible || mHasLoadedOnce) {
+//            return;
+//        }
+//        try {
+//            initValues();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        mHasLoadedOnce=true;
     }
 
     @Override
