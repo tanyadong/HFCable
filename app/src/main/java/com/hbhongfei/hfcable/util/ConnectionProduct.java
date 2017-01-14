@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -172,7 +171,6 @@ public class ConnectionProduct {
         public void onErrorResponse(VolleyError volleyError) {
             MySingleton mySingleton = new MySingleton(context);
             if (mySingleton.getCache(url)!=null){
-                Toast.makeText(context,"没有网络",Toast.LENGTH_SHORT).show();
                 analysisDataOfProduct(mySingleton.getCache(url));
             }
         }

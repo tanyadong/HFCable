@@ -1,7 +1,6 @@
 package com.hbhongfei.hfcable.fragment;
 
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,13 +9,11 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
-import com.hbhongfei.hfcable.activity.InfoDetailActivity;
 import com.hbhongfei.hfcable.adapter.DataAdapter;
 import com.hbhongfei.hfcable.util.CaheInterceptor;
 import com.hbhongfei.hfcable.util.Dialog;
@@ -80,8 +77,9 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         initOkHttpClient();
 
         isPrepared = true;
+        dialog=new Dialog(getActivity());
+        index=0;
         lazyLoad();
-
         return view;
     }
 
@@ -163,24 +161,6 @@ public class InfoFragment extends BaseFragment implements BGARefreshLayout.BGARe
         stickinessRefreshViewHolder.setLoadingMoreText("正在加载中");
         mRefreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
     }
-    /**
-     * 初始化据
-     * @param
-     */
-    /*private  void setValues(final ArrayList<Information> list){
-        mAdapter.updateItems(list);
-        //添加头和尾
-        info_listView.setAdapter(mAdapter);
-        info_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                Intent intent = new Intent(getActivity(), InfoDetailActivity.class);
-                intent.putExtra("data", list.get(position));
-                getActivity().startActivity(intent);
-            }
-        });
-    }*/
-
     /**
      * 加载数据
      */

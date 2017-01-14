@@ -286,7 +286,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
             try {
                 String msg = jsonObject.getString("msg");
                 if (msg.equals("success")) {
-                    Toast.makeText(ConfirmOrderActivity.this, "保存订单成功", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ConfirmOrderActivity.this, "保存订单成功", Toast.LENGTH_SHORT).show();
                 } else if (msg.equals("fail")) {
                     Toast.makeText(ConfirmOrderActivity.this, "保存订单失败", Toast.LENGTH_SHORT).show();
                 }/*else if(msg.equals("have")){
@@ -372,7 +372,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(ConfirmOrderActivity.this, "链接网络失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ConfirmOrderActivity.this, "连接网络失败", Toast.LENGTH_SHORT).show();
             Log.e("TAG", volleyError.getMessage(), volleyError);
         }
     };

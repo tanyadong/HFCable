@@ -11,7 +11,6 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,7 +61,6 @@ public class OrderPayActivity extends AppCompatActivity implements
     //支付支付渠道
     private static final String CHANNEL_ALIPAY = "alipay";
     private MyRadioGroup radioGroup;
-    private RadioButton radioButton_apliy, radioButton_weixin, radioButton_yinlian;
     LinearLayout appliy_layout, weixin_layout, yinlian_layout;
     private TextView order_payMoney_textview;
     private Button btn_confimgPay;
@@ -112,9 +110,6 @@ public class OrderPayActivity extends AppCompatActivity implements
     private void initView() {
         order_payMoney_textview = (TextView) findViewById(R.id.order_payMoney_textview);
         radioGroup = (MyRadioGroup) findViewById(R.id.radio_group);
-        radioButton_apliy = (RadioButton) findViewById(R.id.order_pay_alipay_radioBtn);
-        radioButton_weixin = (RadioButton) findViewById(R.id.order_pay_weixin_radioBtn);
-        radioButton_yinlian = (RadioButton) findViewById(R.id.order_pay_yinlian_radioBtn);
         weixin_layout = (LinearLayout) findViewById(R.id.order_pay_weixin_LLayout);
         appliy_layout = (LinearLayout) findViewById(R.id.order_pay_alipay_LLayout);
         yinlian_layout = (LinearLayout) findViewById(R.id.order_pay_yinlian_LLayout);

@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.adapter.MarketRecyclerAdapter;
-import com.hbhongfei.hfcable.adapter.MyExpandableListViewAdapter;
 import com.hbhongfei.hfcable.pojo.MarketInfo;
 import com.hbhongfei.hfcable.util.CaheInterceptor;
 import com.hbhongfei.hfcable.util.Dialog;
@@ -66,7 +65,6 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     private boolean mHasLoadedOnce;
     //下拉和分页框架
     private BGARefreshLayout mRefreshLayout;
-    private MyExpandableListViewAdapter myExpandableListViewAdapter=null;
     private MarketRecyclerAdapter marketRecyclerAdapter = null;
     int index=1;
     private LinearLayout noInternet;
@@ -82,9 +80,9 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_market, container, false);
         initView(view);
+        initFBA(view);
         initRefreshLayout();
         initOkHttpClient(); //初始化okhttp请求
-        initFBA(view);
         isPrepared = true;
         //懒加载
         lazyLoad();
@@ -96,9 +94,6 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case 0:
-                    myExpandableListViewAdapter.notifyDataSetChanged();
-                    break;
                 case 2:
                     dialog.cancle();
                     Error.toSetting(noInternet,R.mipmap.internet_no,"没有网络哦","点击设置",MarketFragment.this);
@@ -131,7 +126,6 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
         manager.setSmoothScrollbarEnabled(true);
         manager.setAutoMeasureEnabled(true);
         marketRecyclerView.setLayoutManager(manager);
-//        marketRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), marketRecyclerAdapter.onItemClickListener));
         marketRecyclerView.setAdapter(marketRecyclerAdapter);
         marketRecyclerView.setHasFixedSize(true);
         marketRecyclerView.setNestedScrollingEnabled(false);
@@ -189,7 +183,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
                 .setLabel(getResources().getString(R.string.market_plastic))
                 .setResId(R.mipmap.plastic)
                 .setIconNormalColor(0xff00BFFF)
-                .setIconPressedColor(0xffF0FFFF)
+                .setIconPressedColor(0xff00BFF0)
                 .setLabelColor(0xff00BFFF)
                 .setWrapper(3)
         );
@@ -235,7 +229,7 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) throws JSONException {
         dialog.showDialog("正在加载中");
         if (NetUtils.isConnected(getActivity())) {
-                new MarketTask().execute(position);
+            new MarketTask().execute(position);
             mRefreshLayout.endRefreshing();
         }else{
             dialog.cancle();
@@ -289,10 +283,10 @@ public class MarketFragment extends BaseFragment implements BGARefreshLayout.BGA
          */
         @Override
         protected void onPostExecute(final String html) {
-            if(html.isEmpty()){
+            if(html == null){
                 return;
             }
-           parseHtml(html);
+            parseHtml(html);
             dialog.cancle();
             setValues(child_list);
         }

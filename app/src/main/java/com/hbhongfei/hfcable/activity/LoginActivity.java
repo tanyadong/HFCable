@@ -2,6 +2,7 @@ package com.hbhongfei.hfcable.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -17,7 +18,8 @@ import com.hbhongfei.hfcable.util.LoginConnection;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText Txt_login_user,Txt_login_password;
+    private EditText Txt_login_user;
+    private TextInputEditText Txt_login_password;
     private TextView Txt_login_forget_password,Txt_login_sign_in;
     private Button Btn_login_login;
     private String S_user,S_password;
@@ -32,8 +34,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         //初始化界面
         initView();
-
-
         //初始化点击事件
         click();
     }
@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private void initView(){
         this.Txt_login_user = (EditText) findViewById(R.id.Txt_login_user);
-        this.Txt_login_password = (EditText) findViewById(R.id.Txt_login_password);
+        this.Txt_login_password = (TextInputEditText) findViewById(R.id.Txt_login_password);
         this.Txt_login_forget_password = (TextView) findViewById(R.id.Txt_login_forget_password);
         this.Txt_login_sign_in = (TextView) findViewById(R.id.Txt_login_sign_in);
         this.Btn_login_login = (Button) findViewById(R.id.Btn_login_login);

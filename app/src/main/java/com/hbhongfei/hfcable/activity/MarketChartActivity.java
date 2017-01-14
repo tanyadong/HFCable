@@ -282,5 +282,4 @@ public class MarketChartActivity extends AppCompatActivity implements IErrorOncl
         NetUtils.openSetting(this);
     }
 
-
 }
