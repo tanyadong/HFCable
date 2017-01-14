@@ -42,19 +42,23 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".activity.MyFavoriteActivity"
             android:label="我的收藏"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MyOrderActivity"
             android:label="@string/myOrder_lable"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MyShoppingActivity"
             android:label="我的购物车"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:parentActivityName=".activity.MainActivity" />
         <activity
@@ -64,76 +68,93 @@
         <activity
             android:name=".activity.ProdectInfoActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:label="@string/prodect_lable" />
         <activity android:name=".activity.ShowBigPictrue" />
         <activity
             android:name=".activity.CompanyInfoActivity"
             android:label="@string/company_info"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.ProdectListActivity"
             android:label="@string/prodectList_lable"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.InfoDetailActivity"
             android:label="资讯详情"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.MyPasswordActivity"
             android:label="@string/title_activity_my_password"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.MyNameActivity"
             android:label="@string/title_activity_my_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.OrderPayActivity"
             android:label="@string/title_activity_order_pay"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.ConfirmOrderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.RegisterActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ReceiptAddressActivity"
             android:label="收货地址"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <!-- 添加购物车 -->
         <activity
             android:name=".activity.AddRecietAddress"
             android:label="收货地址"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.AddressListActivity" />
         <!-- 画图 -->
         <activity
             android:name=".activity.MarketChartActivity"
             android:launchMode="singleTask"
             android:label="@string/market_price_trend"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.MainActivity" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.CitySelect1Activity"
             android:label="@string/add_address_selectCity" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.GuideActivity"
             android:theme="@style/theme_fullScreen" />
 
         <!-- 项目 -->
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.ProjectActivity"
             android:label="@string/new_project_lable"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.ConfirmOrderActivity"
             android:label="@string/comfirm_order_sure"
             android:parentActivityName=".activity.MyShoppingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.SplashActivity"
             android:theme="@style/theme_splash">
             <intent-filter>
@@ -142,7 +163,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ImageCropActivity" />
+        <activity android:name=".activity.ImageCropActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
@@ -156,35 +178,46 @@
         <activity
             android:name=".activity.InputMyInfoActivity"
             android:label="@string/title_activity_input_my_info"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.WriteCableRingActivity"
             android:label="发布揽圈"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:parentActivityName=".activity.MainActivity" />
-        <activity android:name=".activity.ImageBucketChooseActivity" />
-        <activity android:name=".activity.ImageChooseActivity" />
-        <activity android:name=".activity.ImageZoomActivity" />
-        <activity android:name=".activity.CommentActivity" />
+
+        <activity android:name=".activity.ImageBucketChooseActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.ImageChooseActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.ImageZoomActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.CommentActivity"
+            android:screenOrientation="portrait"/>
         <!-- 地址列表 -->
         <activity
             android:name=".activity.AddressListActivity"
             android:label="@string/receiptAddress_lale"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.ConfirmOrderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <!-- 订单详情 -->
         <activity
             android:name=".activity.OrderDetailActivity"
             android:label="@string/order_detail"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activity.MyOrderActivity" />
         <!-- 物流详情 -->
         <activity
             android:name=".activity.LogisticsDetailsActivity"
             android:label="@string/logistics_detail"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.InputCompanyInfoActivity"
             android:label="设置公司信息"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- Ping++ sdk -->
         <activity
@@ -216,6 +249,7 @@
         <activity
             android:name=".activity.PayStateActivity"
             android:label="@string/title_activity_pay_success"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <uses-library
