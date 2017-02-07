@@ -33,26 +33,22 @@ public class SkuAdapter extends BaseAdapter {
     }
     @Override  
     public int getCount() {  
-        // TODO Auto-generated method stub  
-        return list.size();  
+        return list.size();
     }  
   
     @Override  
     public Object getItem(int position) {  
-        // TODO Auto-generated method stub  
-        return list.get(position);  
+        return list.get(position);
     }  
   
     @Override  
     public long getItemId(int position) {  
-        // TODO Auto-generated method stub  
-        return position;  
+        return position;
     }  
   
     @Override  
     public View getView(final int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub  
-        ViewHolder holder;  
+        ViewHolder holder;
         if (convertView == null) {  
             holder = new ViewHolder();  
             convertView = mInflater.inflate(R.layout.gridview_item, null);

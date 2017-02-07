@@ -140,7 +140,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            // TODO Auto-generated method stub
             super.handleMessage(msg);
             if (msg.what == 100) {
                 mviewPager.setCurrentItem(currentItem);
@@ -1004,7 +1003,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
     private class SlideShowTask implements Runnable {
         @Override
         public void run() {
-            // TODO Auto-generated method stub
             synchronized (mviewPager) {
                 currentItem = (currentItem + 1) % list.size();
                 handler.sendEmptyMessage(100);
@@ -1021,7 +1019,6 @@ public class ProdectInfoActivity extends AppCompatActivity implements View.OnCli
 
         @Override
         public void onPageScrollStateChanged(int arg0) {
-            // TODO Auto-generated method stub
             switch (arg0) {
                 case 1:// 手势滑动，空闲中
                     isAutoPlay = false;

@@ -23,12 +23,28 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/companyInfo_introduce_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="5"
+                android:ellipsize="end"
+                android:textColor="@color/colorBalck"
                 android:layout_margin="25dp"/>
+            <LinearLayout
+                android:id="@+id/companyInfo_introduce_textView_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/companyInfo_introduce_textView_img"
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="15dp"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

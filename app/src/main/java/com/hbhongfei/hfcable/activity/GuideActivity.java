@@ -120,7 +120,6 @@ public class GuideActivity extends Activity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 mPopupWindow.dismiss();
                 setGuided();
                 Intent intent=new Intent(GuideActivity.this,MainActivity.class);

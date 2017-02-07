@@ -4,6 +4,9 @@ android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
     defaultConfig {
         applicationId "com.hbhongfei.hfcable"
         minSdkVersion 15

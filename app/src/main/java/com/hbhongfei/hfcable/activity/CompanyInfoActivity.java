@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,12 +20,13 @@ import com.hbhongfei.hfcable.R;
 import com.hbhongfei.hfcable.pojo.Company;
 import com.hbhongfei.hfcable.util.Url;
 
-public class CompanyInfoActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
-    private ImageView logo;
+public class CompanyInfoActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener,OnClickListener {
+    private ImageView logo,companyInfo_introduce_textView_img;
     private TextView companyInfo_name_textView,companyInfo_introduce_textView,companyInfo_product_textView,
             companyInfo_address,companyInfo_tel,companyInfo_postcode_textView,companyInfo_email_textView;
     private AppBarLayout companyInfoABL;
-    private LinearLayout companyInfoLL;
+    private LinearLayout companyInfoLL,companyInfo_introduce_textView_ll;
+    private boolean imgExpendBl = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +50,9 @@ public class CompanyInfoActivity extends AppCompatActivity implements AppBarLayo
         companyInfo_product_textView= (TextView) findViewById(R.id.companyInfo_product_textView);
         companyInfoABL = (AppBarLayout) findViewById(R.id.abl_company_info);
         companyInfoLL = (LinearLayout) findViewById(R.id.company_info_LL);
+        companyInfo_introduce_textView_img = (ImageView) findViewById(R.id.companyInfo_introduce_textView_img);
+        companyInfo_introduce_textView_ll = (LinearLayout) findViewById(R.id.companyInfo_introduce_textView_ll);
+        companyInfo_introduce_textView_img.setBackgroundResource(R.mipmap.type_two_down);
     }
 
     /**
@@ -75,6 +81,7 @@ public class CompanyInfoActivity extends AppCompatActivity implements AppBarLayo
      */
     private void setOnclick(){
         companyInfoABL.addOnOffsetChangedListener(this);
+        companyInfo_introduce_textView_ll.setOnClickListener(this);
     }
 
     /**
@@ -110,6 +117,23 @@ public class CompanyInfoActivity extends AppCompatActivity implements AppBarLayo
             companyInfoLL.setBackgroundColor(Color.parseColor("#ff0000"));
             companyInfo_name_textView.setTextColor(Color.parseColor("#ffffff"));
         } else { //中间状态
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.companyInfo_introduce_textView_ll:
+                if(!imgExpendBl){
+                    companyInfo_introduce_textView.setMaxLines(100);
+                    companyInfo_introduce_textView_img.setBackgroundResource(R.mipmap.type_two_up);
+                    imgExpendBl = true;
+                } else {
+                    companyInfo_introduce_textView.setMaxLines(5);
+                    companyInfo_introduce_textView_img.setBackgroundResource(R.mipmap.type_two_down);
+                    imgExpendBl = false;
+                }
+                break;
         }
     }
 }
